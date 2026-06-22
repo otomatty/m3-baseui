@@ -29,11 +29,19 @@ export const trigger = style({
   letterSpacing: vars.sys.typescale.bodyLarge.letterSpacing,
   transition: `border-color 150ms ${vars.sys.motion.easing.standard}`,
   selectors: {
+    // M3 outlined-field focus-outline-width = 3px; padding drops 2px to keep
+    // the content position steady as the 1px border grows to 3px.
     '&[data-popup-open], &:focus-visible': {
-      border: `2px solid rgb(${vars.sys.color.primary})`,
-      paddingInline: '15px',
+      border: `3px solid rgb(${vars.sys.color.primary})`,
+      paddingInline: '14px',
     },
-    '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+    // M3 disabled (per-token, not a blanket fade): outline on-surface/0.12,
+    // label/value on-surface/0.38.
+    '&[data-disabled]': {
+      borderColor: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+      pointerEvents: 'none',
+    },
   },
 });
 
@@ -50,6 +58,8 @@ export const icon = style({
   transition: `transform 150ms ${vars.sys.motion.easing.standard}`,
   selectors: {
     [`${trigger}[data-popup-open] &`]: { transform: 'rotate(180deg)' },
+    // M3 disabled: leading/trailing icon on-surface/0.38
+    [`${trigger}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });
 
