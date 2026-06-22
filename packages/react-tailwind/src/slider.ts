@@ -3,16 +3,23 @@
  *
  * 4dp rail (surface-container-highest) with a primary active indicator and a
  * 20dp primary thumb carrying a 40dp circular state layer (hover/focus/drag).
+ *
+ * Disabled follows M3 per-token opacities (not a blanket fade): inactive track
+ * on-surface/0.12, active track + handle on-surface/0.38. The root carries a
+ * `group` so the descendant parts can react to Base UI's data-disabled on Root.
  */
 import { createSlider } from '@m3/core';
-import { tv } from 'tailwind-variants';
+import { tv } from './tv';
 
 export const sliderTv = tv({
   slots: {
-    root: 'relative flex items-center select-none w-full touch-none',
+    root: 'group relative flex items-center select-none w-full touch-none',
     control: 'relative flex items-center w-full h-10',
-    track: 'relative w-full h-1 rounded-full bg-surface-container-highest',
-    indicator: 'absolute h-1 rounded-full bg-primary',
+    track: [
+      'relative w-full h-1 rounded-full bg-surface-container-highest',
+      'group-data-[disabled]:bg-on-surface/[0.12]',
+    ],
+    indicator: ['absolute h-1 rounded-full bg-primary', 'group-data-[disabled]:bg-on-surface/[0.38]'],
     thumb: [
       'relative size-5 rounded-full bg-primary outline-none',
       'before:content-[""] before:absolute before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2',
@@ -20,7 +27,7 @@ export const sliderTv = tv({
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       'data-[dragging]:before:opacity-[var(--md-sys-state-pressed)]',
-      'data-[disabled]:opacity-[0.38]',
+      'group-data-[disabled]:bg-on-surface/[0.38]',
     ],
     value: 'text-label-large text-on-surface-variant tabular-nums',
   },
