@@ -35,17 +35,28 @@ export const selectTv = tv({
       'focus:outline-none',
     ],
     item: [
-      'group relative grid grid-cols-[24px_1fr] items-center gap-2 h-12 px-3 overflow-hidden',
+      'group relative grid grid-cols-[24px_1fr_auto] items-center gap-2 h-12 px-3 overflow-hidden',
       'cursor-pointer select-none outline-none text-body-large text-on-surface',
       'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
       'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // M3 trailing supporting text (e.g. meta) sits in the last column.
+      '[&_[data-slot=select-trailing]]:pl-4 [&_[data-slot=select-trailing]]:text-label-large [&_[data-slot=select-trailing]]:text-on-surface-variant',
     ],
     itemIndicator:
       'inline-flex items-center justify-center text-primary invisible group-data-[selected]:visible',
     groupLabel: 'px-3 py-2 text-label-small text-on-surface-variant',
+    // Sticky scroll affordances at the popup edges; surface-tinted with a chevron.
+    scrollUpArrow: [
+      'sticky top-0 z-[1] flex items-center justify-center h-6 cursor-default',
+      'bg-surface-container text-on-surface-variant [&>svg]:size-5',
+    ],
+    scrollDownArrow: [
+      'sticky bottom-0 z-[1] flex items-center justify-center h-6 cursor-default',
+      'bg-surface-container text-on-surface-variant [&>svg]:size-5',
+    ],
   },
 });
 
@@ -58,4 +69,6 @@ export const Select = createSelect({
   item: s.item(),
   itemIndicator: s.itemIndicator(),
   groupLabel: s.groupLabel(),
+  scrollUpArrow: s.scrollUpArrow(),
+  scrollDownArrow: s.scrollDownArrow(),
 });

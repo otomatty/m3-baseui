@@ -378,18 +378,28 @@ export function App() {
                 <Select.Portal>
                   <Select.Positioner sideOffset={4}>
                     <Select.Popup>
+                      <Select.ScrollUpArrow />
                       {[
-                        ['apple', 'りんご'],
-                        ['banana', 'バナナ'],
-                        ['cherry', 'さくらんぼ'],
-                      ].map(([value, label]) => (
+                        ['apple', 'りんご', '01'],
+                        ['banana', 'バナナ', '02'],
+                        ['cherry', 'さくらんぼ', '03'],
+                        ['grape', 'ぶどう', '04'],
+                        ['melon', 'メロン', '05'],
+                        ['orange', 'オレンジ', '06'],
+                        ['peach', 'もも', '07'],
+                        ['pear', 'なし', '08'],
+                        ['kiwi', 'キウイ', '09'],
+                        ['mango', 'マンゴー', '10'],
+                      ].map(([value, label, meta]) => (
                         <Select.Item key={value} value={value}>
                           <Select.ItemIndicator>
                             <Icon name="check" size={20} />
                           </Select.ItemIndicator>
                           <Select.ItemText>{label}</Select.ItemText>
+                          <span data-slot="select-trailing">{meta}</span>
                         </Select.Item>
                       ))}
+                      <Select.ScrollDownArrow />
                     </Select.Popup>
                   </Select.Positioner>
                 </Select.Portal>
