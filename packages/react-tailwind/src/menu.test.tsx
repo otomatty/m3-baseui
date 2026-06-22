@@ -28,6 +28,26 @@ describe('Menu tokens', () => {
     expect(m.item()).toContain('[&_[data-slot=menu-leading]>svg]:size-6');
   });
 
+  test('disabled is per-token (no blanket opacity): label on-surface/0.38, icons 0.38, no state layer', () => {
+    // label + leading/trailing icon dim per-token; the state layer is suppressed
+    expect(m.item()).toContain('data-[disabled]:text-on-surface/[0.38]');
+    expect(m.item()).toContain('data-[disabled]:before:opacity-0');
+    expect(m.item()).toContain(
+      'data-[disabled]:[&_[data-slot=menu-leading]]:text-on-surface/[0.38]',
+    );
+    expect(m.item()).toContain(
+      'data-[disabled]:[&_[data-slot=menu-trailing]]:text-on-surface/[0.38]',
+    );
+    // the old blanket opacity is gone from every interactive item
+    expect(m.item()).not.toContain('data-[disabled]:opacity-[0.38]');
+    expect(m.submenuTrigger()).not.toContain('data-[disabled]:opacity-[0.38]');
+    expect(m.checkboxItem()).not.toContain('data-[disabled]:opacity-[0.38]');
+    expect(m.radioItem()).not.toContain('data-[disabled]:opacity-[0.38]');
+    expect(m.submenuTrigger()).toContain('data-[disabled]:text-on-surface/[0.38]');
+    expect(m.checkboxItem()).toContain('data-[disabled]:text-on-surface/[0.38]');
+    expect(m.radioItem()).toContain('data-[disabled]:text-on-surface/[0.38]');
+  });
+
   test('submenu trigger spreads its label + chevron and stays lit while open', () => {
     expect(m.submenuTrigger()).toContain('justify-between');
     expect(m.submenuTrigger()).toContain(

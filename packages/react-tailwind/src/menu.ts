@@ -25,7 +25,10 @@ export const menuTv = tv({
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // M3 disabled (per-token, not a blanket fade): label + leading/trailing
+      // icon on-surface/0.38, no state layer.
+      'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
+      'data-[disabled]:[&_[data-slot=menu-leading]]:text-on-surface/[0.38] data-[disabled]:[&_[data-slot=menu-trailing]]:text-on-surface/[0.38]',
       // M3 leading icon (24dp) + trailing supporting text (shortcut/meta).
       '[&_[data-slot=menu-leading]]:inline-flex [&_[data-slot=menu-leading]]:text-on-surface-variant [&_[data-slot=menu-leading]>svg]:size-6',
       '[&_[data-slot=menu-trailing]]:ml-auto [&_[data-slot=menu-trailing]]:pl-4 [&_[data-slot=menu-trailing]]:text-label-large [&_[data-slot=menu-trailing]]:text-on-surface-variant',
@@ -41,7 +44,9 @@ export const menuTv = tv({
       'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
       'data-[popup-open]:before:opacity-[var(--md-sys-state-hover)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // M3 disabled (per-token): label + leading icon on-surface/0.38, no state layer.
+      'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
+      'data-[disabled]:[&_[data-slot=menu-leading]]:text-on-surface/[0.38]',
       '[&_[data-slot=menu-leading]]:inline-flex [&_[data-slot=menu-leading]]:text-on-surface-variant [&_[data-slot=menu-leading]>svg]:size-6',
     ],
     // Selectable items: 24dp leading indicator column + label.
@@ -52,7 +57,8 @@ export const menuTv = tv({
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // M3 disabled (per-token): label on-surface/0.38, no state layer.
+      'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
     ],
     radioItem: [
       'group relative grid grid-cols-[24px_1fr] items-center gap-3 h-12 px-3 overflow-hidden',
@@ -61,7 +67,8 @@ export const menuTv = tv({
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // M3 disabled (per-token): label on-surface/0.38, no state layer.
+      'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
     ],
     itemIndicator:
       'inline-flex items-center justify-center text-on-surface invisible group-data-[checked]:visible',
