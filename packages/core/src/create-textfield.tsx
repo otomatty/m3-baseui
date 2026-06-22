@@ -59,7 +59,10 @@ export function createTextField(resolve: TextFieldClassResolver) {
       <Field.Root
         className={cx('group', c.root, className)}
         disabled={disabled}
-        {...(error ? { 'data-invalid': '' } : {})}
+        // Drive Base UI Field's invalid state so it propagates data-invalid to
+        // the Control/Label/Description parts (not just the Root DOM node),
+        // letting consumers style the composed control on error.
+        invalid={error || undefined}
       >
         <div className={c.field}>
           {leadingIcon ? (

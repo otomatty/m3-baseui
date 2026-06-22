@@ -15,9 +15,17 @@ import { createSlot } from './slot';
 /** Enqueue and manage snackbars (re-export of Base UI's `useToastManager`). */
 export const useSnackbar = Toast.useToastManager;
 
-// Toast.Portal's inferred type references an internal (non-portable) module, so
-// pin it to a hand-written, portable props type for the emitted declarations.
-type PortalProps = { children?: React.ReactNode; container?: HTMLElement | null };
+// Toast.Portal's inferred type references an internal (non-portable) Base UI
+// module, so pin it to a hand-written, portable props type. Keep it faithful to
+// the real component: a div's attributes (className/style/children/…) plus the
+// floating-ui container (element, ShadowRoot, or ref) and Base UI's render prop.
+type PortalProps = React.HTMLAttributes<HTMLDivElement> & {
+  container?: HTMLElement | ShadowRoot | null | React.RefObject<HTMLElement | ShadowRoot | null>;
+  keepMounted?: boolean;
+  render?:
+    | React.ReactElement
+    | ((props: Record<string, unknown>, state: Record<string, unknown>) => React.ReactElement);
+};
 const Portal = Toast.Portal as unknown as React.ComponentType<PortalProps>;
 
 export function createSnackbar(classes: SnackbarClasses) {

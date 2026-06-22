@@ -9,10 +9,14 @@ describe('TextField', () => {
     expect(screen.getByLabelText('名前')).toHaveProperty('tagName', 'INPUT');
   });
 
-  test('error marks the input invalid and flags the root with data-invalid', () => {
+  test('error drives Base UI Field invalid state across root and control', () => {
     const { container } = render(<TextField label="メール" error supportingText="必須です" />);
-    expect(screen.getByLabelText('メール')).toHaveAttribute('aria-invalid', 'true');
-    // The error color keys off data-invalid on the Field.Root (the group).
+    const input = screen.getByLabelText('メール');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    // invalid must propagate through Field (not just the root DOM node) so the
+    // control — which consumers can style via inputClassName — is also flagged.
+    expect(input).toHaveAttribute('data-invalid');
+    // The error color keys off data-invalid on the Field.Root (the group) too.
     expect(container.querySelector('[data-invalid]')).not.toBeNull();
   });
 
