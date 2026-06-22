@@ -8,7 +8,7 @@ export const Tabs = createTabs((variant) => ({
   root,
   list,
   tab: tab({ variant }),
-  indicator,
+  indicator: indicator({ variant }),
   panel,
 }));
 export type { TabsVariant } from '@m3/core';

@@ -14,7 +14,7 @@ export const root = style({
 export const list = style({
   position: 'relative',
   display: 'flex',
-  borderBottom: `1px solid rgb(${vars.sys.color.outlineVariant})`,
+  borderBottom: `1px solid rgb(${vars.sys.color.surfaceVariant})`,
 });
 
 export const tab = recipe({
@@ -69,17 +69,27 @@ export const tab = recipe({
   },
 });
 
-export const indicator = style({
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  height: '3px',
-  width: 'var(--active-tab-width)',
-  transform: 'translateX(var(--active-tab-left))',
-  borderTopLeftRadius: '3px',
-  borderTopRightRadius: '3px',
-  background: `rgb(${vars.sys.color.primary})`,
-  transition: `width 200ms ${vars.sys.motion.easing.standard}, transform 200ms ${vars.sys.motion.easing.standard}`,
+export const indicator = recipe({
+  base: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: 'var(--active-tab-width)',
+    transform: 'translateX(var(--active-tab-left))',
+    background: `rgb(${vars.sys.color.primary})`,
+    transition: `width 200ms ${vars.sys.motion.easing.standard}, transform 200ms ${vars.sys.motion.easing.standard}`,
+  },
+  variants: {
+    variant: {
+      // primary: 3dp active indicator with rounded top corners
+      primary: { height: '3px', borderTopLeftRadius: '3px', borderTopRightRadius: '3px' },
+      // secondary: 2dp square active indicator
+      secondary: { height: '2px' },
+    },
+  },
+  defaultVariants: {
+    variant: 'primary',
+  },
 });
 
 export const panel = style({

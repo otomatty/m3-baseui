@@ -6,12 +6,12 @@
  * secondary → on-surface). Tabs carry a `before:` state layer + ripple.
  */
 import { createTabs } from '@m3/core';
-import { tv } from 'tailwind-variants';
+import { tv } from './tv';
 
 export const tabsTv = tv({
   slots: {
     root: 'flex flex-col',
-    list: 'relative flex border-b border-outline-variant',
+    list: 'relative flex border-b border-surface-variant',
     tab: [
       'relative flex items-center justify-center gap-2 h-12 px-4 overflow-hidden',
       'cursor-pointer select-none border-0 bg-transparent outline-none text-title-small',
@@ -23,7 +23,7 @@ export const tabsTv = tv({
       'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
     ],
     indicator: [
-      'absolute bottom-0 left-0 h-[3px] rounded-t-[3px] bg-primary',
+      'absolute bottom-0 left-0 bg-primary',
       'w-[var(--active-tab-width)] translate-x-[var(--active-tab-left)]',
       'transition-all duration-200 ease-standard',
     ],
@@ -31,8 +31,10 @@ export const tabsTv = tv({
   },
   variants: {
     variant: {
-      primary: { tab: 'data-[active]:text-primary' },
-      secondary: { tab: 'data-[active]:text-on-surface' },
+      // primary: 3dp active indicator with rounded top corners
+      primary: { tab: 'data-[active]:text-primary', indicator: 'h-[3px] rounded-t-[3px]' },
+      // secondary: 2dp square active indicator, active label = on-surface
+      secondary: { tab: 'data-[active]:text-on-surface', indicator: 'h-[2px]' },
     },
   },
   defaultVariants: {
