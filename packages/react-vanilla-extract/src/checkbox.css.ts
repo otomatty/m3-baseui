@@ -17,7 +17,9 @@ export const root = style({
   borderRadius: '2px',
   border: `2px solid rgb(${vars.sys.color.onSurfaceVariant})`,
   background: 'transparent',
-  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+  // Outline is on-surface-variant; the state layer (currentColor) is on-surface
+  // unselected, primary when selected (material-web).
+  color: `rgb(${vars.sys.color.onSurface})`,
   cursor: 'pointer',
   transition: `background-color 150ms ${vars.sys.motion.easing.standard}, border-color 150ms ${vars.sys.motion.easing.standard}`,
   selectors: {
@@ -26,9 +28,19 @@ export const root = style({
       borderColor: `rgb(${vars.sys.color.primary})`,
       color: `rgb(${vars.sys.color.primary})`,
     },
-    '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+    '&[data-disabled]': { pointerEvents: 'none' },
+    // M3 disabled: unselected outline on-surface/38; selected/indeterminate box
+    // on-surface/38 with no outline (the check turns surface, below).
+    '&[data-disabled]:not([data-checked]):not([data-indeterminate])': {
+      borderColor: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+    },
+    '&[data-disabled][data-checked], &[data-disabled][data-indeterminate]': {
+      background: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+      borderColor: 'transparent',
+    },
+    '&[data-disabled]::before': { opacity: 0 },
     '&:focus-visible': {
-      outline: `2px solid rgb(${vars.sys.color.secondary})`,
+      outline: `3px solid rgb(${vars.sys.color.secondary})`,
       outlineOffset: '2px',
     },
     '&::before': {
@@ -62,6 +74,8 @@ export const indicator = style({
   opacity: 0,
   selectors: {
     '&[data-checked], &[data-indeterminate]': { opacity: 1 },
+    // M3 disabled: the check / dash turn the surface color on the faint box
+    [`${root}[data-disabled] &`]: { color: `rgb(${vars.sys.color.surface})` },
     '&[data-indeterminate]::after': {
       content: '""',
       position: 'absolute',
