@@ -22,4 +22,16 @@ describe('TextField', () => {
     fireEvent.change(screen.getByLabelText('バイオ'), { target: { value: 'abcd' } });
     expect(screen.getByText('4/10')).toBeInTheDocument();
   });
+
+  test('counter stays in sync with a controlled value (no input event)', () => {
+    const { rerender } = render(
+      <TextField label="バイオ" showCounter maxLength={10} value="ab" onChange={() => {}} />,
+    );
+    expect(screen.getByText('2/10')).toBeInTheDocument();
+    // External value change (e.g. form reset / prefill) must update the counter.
+    rerender(
+      <TextField label="バイオ" showCounter maxLength={10} value="abcde" onChange={() => {}} />,
+    );
+    expect(screen.getByText('5/10')).toBeInTheDocument();
+  });
 });

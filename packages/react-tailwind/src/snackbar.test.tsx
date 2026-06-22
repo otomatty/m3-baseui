@@ -48,4 +48,42 @@ describe('Snackbar', () => {
     fireEvent.click(screen.getByRole('button', { name: '開く' }));
     expect(screen.getByText('保存しました')).toBeInTheDocument();
   });
+
+  test('childless Action falls back to toast.actionProps.children', () => {
+    function ActionOpener() {
+      const { add } = useSnackbar();
+      return (
+        <button
+          type="button"
+          onClick={() => add({ title: 'アーカイブ', actionProps: { children: '元に戻す' } })}
+        >
+          開く
+        </button>
+      );
+    }
+    function ActionList() {
+      const { toasts } = useSnackbar();
+      return (
+        <>
+          {toasts.map((toast) => (
+            <Snackbar.Root key={toast.id} toast={toast}>
+              <Snackbar.Title />
+              {/* No children: must render the label from actionProps. */}
+              <Snackbar.Action />
+            </Snackbar.Root>
+          ))}
+        </>
+      );
+    }
+    render(
+      <Snackbar.Provider>
+        <ActionOpener />
+        <Snackbar.Viewport>
+          <ActionList />
+        </Snackbar.Viewport>
+      </Snackbar.Provider>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '開く' }));
+    expect(screen.getByRole('button', { name: '元に戻す' })).toBeInTheDocument();
+  });
 });

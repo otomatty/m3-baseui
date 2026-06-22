@@ -40,9 +40,16 @@ export function createTextField(resolve: TextFieldClassResolver) {
     const reactId = React.useId();
     const inputId = id ?? reactId;
 
-    const [count, setCount] = React.useState(() => String(value ?? defaultValue ?? '').length);
+    // When controlled, derive the count from `value` so external changes (form
+    // reset, async prefill, normalization) stay in sync; otherwise track it
+    // locally and update on input.
+    const isControlled = value !== undefined;
+    const [uncontrolledCount, setUncontrolledCount] = React.useState(
+      () => String(defaultValue ?? '').length,
+    );
+    const count = isControlled ? String(value ?? '').length : uncontrolledCount;
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setCount(event.target.value.length);
+      if (!isControlled) setUncontrolledCount(event.target.value.length);
       onChange?.(event);
     };
 

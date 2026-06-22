@@ -29,7 +29,10 @@ export function createSnackbar(classes: SnackbarClasses) {
     Content: createSlot(Toast.Content, classes.content),
     Title: createSlot(Toast.Title, classes.title),
     Description: createSlot(Toast.Description, classes.description),
-    Action: createSlot(Toast.Action, classes.action, { ripple: true }),
+    // No ripple child here: Toast.Action falls back to `toast.actionProps.children`
+    // only when it receives no children, and an injected ripple would suppress that
+    // (blanking the label). The `::before` state layer still gives press feedback.
+    Action: createSlot(Toast.Action, classes.action),
     Close: createSlot(Toast.Close, classes.close),
   };
 }
