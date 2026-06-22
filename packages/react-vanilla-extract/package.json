@@ -1,0 +1,33 @@
+{
+  "name": "@m3/react-vanilla-extract",
+  "version": "0.0.0",
+  "description": "M3 components implemented with vanilla-extract recipes over the shared @m3/core factories.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./button": {
+      "types": "./src/button.ts",
+      "default": "./src/button.ts"
+    }
+  },
+  "files": ["src"],
+  "scripts": {
+    "build": "echo \"@m3/react-vanilla-extract: compiled by the host app's VE plugin\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@m3/core": "workspace:*",
+    "@m3/tokens": "workspace:*"
+  },
+  "peerDependencies": {
+    "@base-ui/react": "^1.6.0",
+    "@vanilla-extract/css": "^1.15.0",
+    "@vanilla-extract/recipes": "^0.5.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  }
+}

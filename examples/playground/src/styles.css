@@ -1,0 +1,11 @@
+/* M3 token vars + Tailwind v4 + M3 @theme preset, in the required order. */
+@import '@m3/tokens/tokens.css';
+@import 'tailwindcss';
+@import '@m3/tokens/theme.css';
+
+body {
+  margin: 0;
+  background: rgb(var(--md-sys-color-surface));
+  color: rgb(var(--md-sys-color-on-surface));
+  font-family: var(--md-ref-typeface-plain, 'Roboto', system-ui, sans-serif);
+}

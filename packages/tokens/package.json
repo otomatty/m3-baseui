@@ -1,0 +1,38 @@
+{
+  "name": "@m3/tokens",
+  "version": "0.0.0",
+  "description": "Single source-of-truth M3 design tokens and generators (CSS vars / vanilla-extract contract / Tailwind v4 @theme).",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./contract.css": {
+      "types": "./src/generated/contract.css.ts",
+      "default": "./src/generated/contract.css.ts"
+    },
+    "./tokens.css": "./styles/tokens.css",
+    "./theme.css": "./styles/theme.css"
+  },
+  "files": [
+    "src",
+    "styles"
+  ],
+  "scripts": {
+    "build": "bun run src/build.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@material/material-color-utilities": "^0.3.0"
+  },
+  "peerDependencies": {
+    "@vanilla-extract/css": "^1.15.0"
+  },
+  "peerDependenciesMeta": {
+    "@vanilla-extract/css": {
+      "optional": true
+    }
+  }
+}

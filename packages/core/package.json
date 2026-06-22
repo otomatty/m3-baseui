@@ -1,0 +1,27 @@
+{
+  "name": "@m3/core",
+  "version": "0.0.0",
+  "description": "Engine-neutral M3 logic: ThemeProvider, dynamic color, Ripple, state layer, and headless component factories.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "files": ["src"],
+  "scripts": {
+    "build": "echo \"@m3/core: source-only package (consumed via TS) — nothing to build\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@m3/tokens": "workspace:*",
+    "@material/material-color-utilities": "^0.3.0"
+  },
+  "peerDependencies": {
+    "@base-ui/react": "^1.6.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  }
+}

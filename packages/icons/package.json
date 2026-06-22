@@ -1,0 +1,21 @@
+{
+  "name": "@m3/icons",
+  "version": "0.0.0",
+  "description": "Material Symbols (variable font) wrapper — optional.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./src/index.tsx",
+      "default": "./src/index.tsx"
+    }
+  },
+  "files": ["src"],
+  "scripts": {
+    "build": "echo \"@m3/icons: source-only package\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  }
+}

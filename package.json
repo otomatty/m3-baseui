@@ -1,0 +1,27 @@
+{
+  "name": "m3-baseui",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Material Design 3 component library built on Base UI — vanilla-extract / Tailwind CSS v4 dual support.",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "gen:tokens": "bun run --filter @m3/tokens build",
+    "build": "bun run --filter '*' build",
+    "typecheck": "bun run --filter '*' typecheck",
+    "clean": "rm -rf packages/*/dist packages/*/*.tsbuildinfo"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "bun": ">=1.1.0"
+  },
+  "license": "MIT"
+}
