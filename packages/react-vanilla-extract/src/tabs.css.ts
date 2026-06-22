@@ -15,12 +15,22 @@ export const list = style({
   position: 'relative',
   display: 'flex',
   borderBottom: `1px solid rgb(${vars.sys.color.surfaceVariant})`,
+  selectors: {
+    // M3 scrollable tabs: horizontal overflow, no wrap, hidden scrollbar.
+    '&[data-scrollable]': {
+      overflowX: 'auto',
+      flexWrap: 'nowrap',
+      scrollbarWidth: 'none',
+    },
+    '&[data-scrollable]::-webkit-scrollbar': { display: 'none' },
+  },
 });
 
 export const tab = recipe({
   base: {
     position: 'relative',
     display: 'flex',
+    flexShrink: 0,
     alignItems: 'center',
     justifyContent: 'center',
     gap: '8px',
@@ -52,12 +62,19 @@ export const tab = recipe({
       '&:focus-visible::before': { opacity: vars.sys.state.focus },
       '&:active::before': { opacity: vars.sys.state.pressed },
       '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+      // Icon slot (24dp), centered.
+      '& [data-slot="tab-icon"]': { display: 'inline-flex' },
+      '& [data-slot="tab-icon"] > svg': { width: '24px', height: '24px' },
     },
   },
   variants: {
     variant: {
       primary: {
-        selectors: { '&[data-active]': { color: `rgb(${vars.sys.color.primary})` } },
+        selectors: {
+          '&[data-active]': { color: `rgb(${vars.sys.color.primary})` },
+          // M3 icon-above layout: stack icon over label, 64dp tall.
+          '&[data-with-icon]': { flexDirection: 'column', height: '64px', gap: '4px' },
+        },
       },
       secondary: {
         selectors: { '&[data-active]': { color: `rgb(${vars.sys.color.onSurface})` } },

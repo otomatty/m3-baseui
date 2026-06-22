@@ -26,8 +26,14 @@ type RootProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
   /** M3 tabs style. @default 'primary' */
   variant?: TabsVariant;
 };
-type ListProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>;
-type TabProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Tab>;
+type ListProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & {
+  /** Enable horizontal scrolling when the tabs overflow (M3 scrollable tabs). */
+  scrollable?: boolean;
+};
+type TabProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Tab> & {
+  /** Leading/above icon (24dp). On primary tabs it stacks above the label. */
+  icon?: React.ReactNode;
+};
 type IndicatorProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Indicator>;
 type PanelProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Panel>;
 
@@ -49,12 +55,15 @@ export function createTabs(resolve: TabsClassResolver) {
   Root.displayName = 'M3Tabs.Root';
 
   const List = React.forwardRef<React.ElementRef<typeof TabsPrimitive.List>, ListProps>(
-    function List({ className, ...props }, ref) {
+    function List({ className, scrollable, ...props }, ref) {
       const classes = useTabsClasses();
+      const marker: { [key: `data-${string}`]: string } = {};
+      if (scrollable) marker['data-scrollable'] = '';
       return (
         <TabsPrimitive.List
           ref={ref}
           className={mergeClassName(classes.list, className)}
+          {...marker}
           {...props}
         />
       );
@@ -63,12 +72,24 @@ export function createTabs(resolve: TabsClassResolver) {
   List.displayName = 'M3Tabs.List';
 
   const Tab = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Tab>, TabProps>(function Tab(
-    { className, children, ...props },
+    { className, children, icon, ...props },
     ref,
   ) {
     const classes = useTabsClasses();
+    const marker: { [key: `data-${string}`]: string } = {};
+    if (icon != null) marker['data-with-icon'] = '';
     return (
-      <TabsPrimitive.Tab ref={ref} className={mergeClassName(classes.tab, className)} {...props}>
+      <TabsPrimitive.Tab
+        ref={ref}
+        className={mergeClassName(classes.tab, className)}
+        {...marker}
+        {...props}
+      >
+        {icon != null ? (
+          <span data-slot="tab-icon" aria-hidden="true">
+            {icon}
+          </span>
+        ) : null}
         {children}
         <Ripple />
       </TabsPrimitive.Tab>

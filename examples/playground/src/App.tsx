@@ -270,6 +270,34 @@ export function App() {
                 レビューのコンテンツ
               </Tabs.Panel>
             </Tabs.Root>
+
+            {/* primary tabs with icon-above layout */}
+            <Tabs.Root defaultValue="home" variant="primary" className="mt-4">
+              <Tabs.List>
+                <Tabs.Tab value="home" icon={<Icon name="home" size={24} />}>
+                  ホーム
+                </Tabs.Tab>
+                <Tabs.Tab value="search" icon={<Icon name="search" size={24} />}>
+                  検索
+                </Tabs.Tab>
+                <Tabs.Tab value="profile" icon={<Icon name="person" size={24} />}>
+                  プロフィール
+                </Tabs.Tab>
+                <Tabs.Indicator />
+              </Tabs.List>
+            </Tabs.Root>
+
+            {/* scrollable tabs */}
+            <Tabs.Root defaultValue="t1" variant="secondary" className="mt-4 max-w-xs">
+              <Tabs.List scrollable>
+                {['t1', 't2', 't3', 't4', 't5', 't6', 't7', 't8'].map((t) => (
+                  <Tabs.Tab key={t} value={t}>
+                    タブ {t.slice(1)}
+                  </Tabs.Tab>
+                ))}
+                <Tabs.Indicator />
+              </Tabs.List>
+            </Tabs.Root>
           </Section>
 
           <Section title="Menu / Select / Tooltip / Dialog">

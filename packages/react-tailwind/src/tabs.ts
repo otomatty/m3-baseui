@@ -11,11 +11,18 @@ import { tv } from './tv';
 export const tabsTv = tv({
   slots: {
     root: 'flex flex-col',
-    list: 'relative flex border-b border-surface-variant',
+    list: [
+      'relative flex border-b border-surface-variant',
+      // M3 scrollable tabs: horizontal overflow, no wrap, hidden scrollbar.
+      'data-[scrollable]:overflow-x-auto data-[scrollable]:flex-nowrap',
+      'data-[scrollable]:[scrollbar-width:none] data-[scrollable]:[&::-webkit-scrollbar]:hidden',
+    ],
     tab: [
-      'relative flex items-center justify-center gap-2 h-12 px-4 overflow-hidden',
+      'relative flex shrink-0 items-center justify-center gap-2 h-12 px-4 overflow-hidden',
       'cursor-pointer select-none border-0 bg-transparent outline-none text-title-small',
       'text-on-surface-variant',
+      // Icon slot (24dp), centered.
+      '[&_[data-slot=tab-icon]]:inline-flex [&_[data-slot=tab-icon]>svg]:size-6',
       'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
@@ -31,8 +38,12 @@ export const tabsTv = tv({
   },
   variants: {
     variant: {
-      // primary: 3dp active indicator with rounded top corners
-      primary: { tab: 'data-[active]:text-primary', indicator: 'h-[3px] rounded-t-[3px]' },
+      // primary: 3dp active indicator with rounded top corners; icon stacks
+      // above the label (64dp tall) when a tab carries an icon.
+      primary: {
+        tab: 'data-[active]:text-primary data-[with-icon]:flex-col data-[with-icon]:h-16 data-[with-icon]:gap-1',
+        indicator: 'h-[3px] rounded-t-[3px]',
+      },
       // secondary: 2dp square active indicator, active label = on-surface
       secondary: { tab: 'data-[active]:text-on-surface', indicator: 'h-[2px]' },
     },
