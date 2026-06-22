@@ -35,6 +35,8 @@ interface SlotProps {
 export interface SlotOptions {
   /** Append the M3 pointer ripple as the last child (button-like surfaces). */
   ripple?: boolean;
+  /** Props applied to the part by default; the caller can still override them. */
+  defaultProps?: Record<string, unknown>;
 }
 
 /**
@@ -59,6 +61,7 @@ export function createSlot<P extends SlotProps>(
       children
     );
     return React.createElement(Part, {
+      ...options.defaultProps,
       ...(rest as P),
       ref,
       className: mergeClassName(baseClass, className),

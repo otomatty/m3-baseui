@@ -23,7 +23,11 @@ export function createSelect(classes: SelectClasses) {
     List: SelectPrimitive.List,
     Item: createSlot(SelectPrimitive.Item, classes.item, { ripple: true }),
     ItemText: SelectPrimitive.ItemText,
-    ItemIndicator: createSlot(SelectPrimitive.ItemIndicator, classes.itemIndicator),
+    // keepMounted so the 24px indicator column stays populated on every item
+    // (labels align); the check glyph is hidden via CSS unless the item is selected.
+    ItemIndicator: createSlot(SelectPrimitive.ItemIndicator, classes.itemIndicator, {
+      defaultProps: { keepMounted: true },
+    }),
     Group: SelectPrimitive.Group,
     GroupLabel: createSlot(SelectPrimitive.GroupLabel, classes.groupLabel),
   };

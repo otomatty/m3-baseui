@@ -22,4 +22,17 @@ describe('Chip', () => {
       'data-[pressed]:bg-secondary-container',
     );
   });
+
+  test('disabled native button chip dims via :disabled (not only data-disabled)', () => {
+    render(
+      <Chip variant="assist" disabled>
+        Assist
+      </Chip>,
+    );
+    const chip = screen.getByRole('button', { name: 'Assist' });
+    expect(chip).toBeDisabled();
+    // Native <button> exposes `disabled`, not Base UI's data-disabled, so the
+    // styles must also target :disabled.
+    expect(chip.className).toContain('disabled:opacity-[0.38]');
+  });
 });

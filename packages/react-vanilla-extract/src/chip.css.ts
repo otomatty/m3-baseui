@@ -45,6 +45,7 @@ export const chip = recipe({
         outlineOffset: '2px',
       },
       '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+      '&:disabled': { opacity: 0.38, pointerEvents: 'none' },
     },
   },
   variants: {

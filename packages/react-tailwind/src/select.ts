@@ -30,7 +30,7 @@ export const selectTv = tv({
       'focus:outline-none',
     ],
     item: [
-      'relative grid grid-cols-[24px_1fr] items-center gap-2 h-12 px-3 overflow-hidden',
+      'group relative grid grid-cols-[24px_1fr] items-center gap-2 h-12 px-3 overflow-hidden',
       'cursor-pointer select-none outline-none text-body-large text-on-surface',
       'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
@@ -38,7 +38,8 @@ export const selectTv = tv({
       'active:before:opacity-[var(--md-sys-state-pressed)]',
       'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
     ],
-    itemIndicator: 'inline-flex items-center justify-center text-primary',
+    itemIndicator:
+      'inline-flex items-center justify-center text-primary invisible group-data-[selected]:visible',
     groupLabel: 'px-3 py-2 text-label-small text-on-surface-variant',
   },
 });

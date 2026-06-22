@@ -20,6 +20,7 @@ export const chipTv = tv({
       'active:before:opacity-[var(--md-sys-state-pressed)]',
       'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
       'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      'disabled:opacity-[0.38] disabled:pointer-events-none',
     ],
     remove: [
       'inline-flex items-center justify-center shrink-0 size-[18px] -mr-1 ml-1 rounded-full border-0 bg-transparent',

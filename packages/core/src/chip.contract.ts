@@ -35,6 +35,8 @@ export interface ChipOwnProps {
   onRemove?: () => void;
   /** Accessible label for the remove button. @default 'Remove' */
   removeLabel?: string;
+  /** Disable the chip (native `disabled` on button variants, `data-disabled` on filter). */
+  disabled?: boolean;
   /** Show the pointer-origin ripple on press. @default true */
   ripple?: boolean;
 }

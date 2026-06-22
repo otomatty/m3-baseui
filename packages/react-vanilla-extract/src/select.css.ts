@@ -110,6 +110,12 @@ export const itemIndicator = style({
   alignItems: 'center',
   justifyContent: 'center',
   color: `rgb(${vars.sys.color.primary})`,
+  // keepMounted keeps the indicator in every item's grid; hide the glyph unless
+  // the parent item is selected so the 24px column stays reserved (labels align).
+  visibility: 'hidden',
+  selectors: {
+    [`${item}[data-selected] &`]: { visibility: 'visible' },
+  },
 });
 
 export const groupLabel = style({
