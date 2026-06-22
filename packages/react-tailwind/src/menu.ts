@@ -6,7 +6,7 @@
  * + ripple as the VE build.
  */
 import { createMenu } from '@m3/core';
-import { tv } from 'tailwind-variants';
+import { tv } from './tv';
 
 export const menuTv = tv({
   slots: {
