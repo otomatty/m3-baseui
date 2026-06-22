@@ -64,6 +64,15 @@ describe('Select tokens', () => {
     expect(s.item()).toContain('grid-cols-[24px_1fr_auto]');
     expect(s.item()).toContain('[&_[data-slot=select-trailing]]:text-on-surface-variant');
   });
+
+  test('disabled item is per-token (no blanket opacity): label + trailing on-surface/0.38, no state layer', () => {
+    expect(s.item()).toContain('data-[disabled]:text-on-surface/[0.38]');
+    expect(s.item()).toContain('data-[disabled]:before:opacity-0');
+    expect(s.item()).toContain(
+      'data-[disabled]:[&_[data-slot=select-trailing]]:text-on-surface/[0.38]',
+    );
+    expect(s.item()).not.toContain('data-[disabled]:opacity-[0.38]');
+  });
 });
 
 describe('Select parts', () => {

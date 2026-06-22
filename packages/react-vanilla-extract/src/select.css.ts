@@ -111,7 +111,13 @@ export const item = style({
     '&:hover::before': { opacity: vars.sys.state.hover },
     '&[data-highlighted]::before': { opacity: vars.sys.state.hover },
     '&:active::before': { opacity: vars.sys.state.pressed },
-    '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+    // M3 disabled (per-token, not a blanket fade): label + trailing supporting
+    // text on-surface/0.38, no state layer.
+    '&[data-disabled]': {
+      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+      pointerEvents: 'none',
+    },
+    '&[data-disabled]::before': { opacity: 0 },
     // M3 trailing supporting text sits in the last column.
     '& [data-slot="select-trailing"]': {
       paddingLeft: '16px',
@@ -120,6 +126,9 @@ export const item = style({
       fontSize: vars.sys.typescale.labelLarge.fontSize,
       lineHeight: vars.sys.typescale.labelLarge.lineHeight,
       letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+    },
+    '&[data-disabled] [data-slot="select-trailing"]': {
+      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
     },
   },
 });
