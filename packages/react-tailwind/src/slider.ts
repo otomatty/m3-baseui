@@ -19,7 +19,10 @@ export const sliderTv = tv({
       'relative w-full h-1 rounded-full bg-surface-container-highest',
       'group-data-[disabled]:bg-on-surface/[0.12]',
     ],
-    indicator: ['absolute h-1 rounded-full bg-primary', 'group-data-[disabled]:bg-on-surface/[0.38]'],
+    indicator: [
+      'absolute h-1 rounded-full bg-primary',
+      'group-data-[disabled]:bg-on-surface/[0.38]',
+    ],
     thumb: [
       'relative size-5 rounded-full bg-primary outline-none',
       'before:content-[""] before:absolute before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2',
