@@ -36,6 +36,14 @@ export const root = style({
     // M3 pressed state layer inverts: unselected→primary, selected→on-surface
     '&:active': { color: `rgb(${vars.sys.color.primary})` },
     '&[data-checked]:active': { color: `rgb(${vars.sys.color.onSurface})` },
+    // M3 error: error ring + error state layer in every interaction state
+    '&[data-error]': {
+      borderColor: `rgb(${vars.sys.color.error})`,
+      color: `rgb(${vars.sys.color.error})`,
+    },
+    '&[data-error]:active, &[data-error][data-checked]:active': {
+      color: `rgb(${vars.sys.color.error})`,
+    },
     '&:focus-visible': {
       outline: `3px solid rgb(${vars.sys.color.secondary})`,
       outlineOffset: '2px',
@@ -70,6 +78,7 @@ export const indicator = style({
   transition: `width 150ms ${vars.sys.motion.easing.standard}, height 150ms ${vars.sys.motion.easing.standard}, opacity 150ms`,
   selectors: {
     '&[data-checked]': { width: '10px', height: '10px', opacity: 1 },
+    [`${root}[data-error] &`]: { background: `rgb(${vars.sys.color.error})` },
     [`${root}[data-disabled] &`]: { background: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });

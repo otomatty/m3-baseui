@@ -52,4 +52,23 @@ describe('Select tokens', () => {
     expect(s.popup()).toContain('shadow-level2');
     expect(s.popup()).toContain('rounded-extra-small');
   });
+
+  test('scroll arrows stick to the popup edges with the surface color', () => {
+    expect(s.scrollUpArrow()).toContain('sticky');
+    expect(s.scrollUpArrow()).toContain('top-0');
+    expect(s.scrollUpArrow()).toContain('bg-surface-container');
+    expect(s.scrollDownArrow()).toContain('bottom-0');
+  });
+
+  test('item reserves a trailing supporting-text slot', () => {
+    expect(s.item()).toContain('grid-cols-[24px_1fr_auto]');
+    expect(s.item()).toContain('[&_[data-slot=select-trailing]]:text-on-surface-variant');
+  });
+});
+
+describe('Select parts', () => {
+  test('namespace exposes the scroll arrow parts', () => {
+    expect(Select.ScrollUpArrow).toBeDefined();
+    expect(Select.ScrollDownArrow).toBeDefined();
+  });
 });

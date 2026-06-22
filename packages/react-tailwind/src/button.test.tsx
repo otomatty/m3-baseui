@@ -62,4 +62,21 @@ describe('Button', () => {
     expect(btn.className).toContain('hover:shadow-level1');
     expect(btn.className).toContain('data-[pressed]:shadow-none');
   });
+
+  test('leading icon mounts an icon slot and trims the leading padding to 16dp (M3)', () => {
+    render(<Button startIcon={<svg data-testid="lead" />}>Save</Button>);
+    const btn = screen.getByRole('button', { name: 'Save' });
+    expect(btn).toHaveAttribute('data-with-start-icon');
+    expect(btn.querySelector('[data-slot="button-icon"]')).not.toBeNull();
+    expect(screen.getByTestId('lead')).toBeInTheDocument();
+    expect(btn.className).toContain('data-[with-start-icon]:pl-4');
+  });
+
+  test('trailing icon mounts an icon slot and trims the trailing padding to 16dp (M3)', () => {
+    render(<Button endIcon={<svg data-testid="trail" />}>Next</Button>);
+    const btn = screen.getByRole('button', { name: 'Next' });
+    expect(btn).toHaveAttribute('data-with-end-icon');
+    expect(screen.getByTestId('trail')).toBeInTheDocument();
+    expect(btn.className).toContain('data-[with-end-icon]:pr-4');
+  });
 });

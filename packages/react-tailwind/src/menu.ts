@@ -26,9 +26,45 @@ export const menuTv = tv({
       'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
       'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // M3 leading icon (24dp) + trailing supporting text (shortcut/meta).
+      '[&_[data-slot=menu-leading]]:inline-flex [&_[data-slot=menu-leading]]:text-on-surface-variant [&_[data-slot=menu-leading]>svg]:size-6',
+      '[&_[data-slot=menu-trailing]]:ml-auto [&_[data-slot=menu-trailing]]:pl-4 [&_[data-slot=menu-trailing]]:text-label-large [&_[data-slot=menu-trailing]]:text-on-surface-variant',
     ],
     separator: ['my-2 h-px border-0 bg-outline-variant'],
     groupLabel: ['px-3 py-2 text-label-small text-on-surface-variant'],
+    // Submenu trigger: item look + trailing chevron, highlighted while open.
+    submenuTrigger: [
+      'relative flex items-center justify-between gap-3 h-12 px-3 overflow-hidden cursor-pointer select-none outline-none',
+      'text-label-large text-on-surface',
+      'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
+      'hover:before:opacity-[var(--md-sys-state-hover)]',
+      'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
+      'data-[popup-open]:before:opacity-[var(--md-sys-state-hover)]',
+      'active:before:opacity-[var(--md-sys-state-pressed)]',
+      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      '[&_[data-slot=menu-leading]]:inline-flex [&_[data-slot=menu-leading]]:text-on-surface-variant [&_[data-slot=menu-leading]>svg]:size-6',
+    ],
+    // Selectable items: 24dp leading indicator column + label.
+    checkboxItem: [
+      'group relative grid grid-cols-[24px_1fr] items-center gap-3 h-12 px-3 overflow-hidden',
+      'cursor-pointer select-none outline-none text-label-large text-on-surface',
+      'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
+      'hover:before:opacity-[var(--md-sys-state-hover)]',
+      'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
+      'active:before:opacity-[var(--md-sys-state-pressed)]',
+      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+    ],
+    radioItem: [
+      'group relative grid grid-cols-[24px_1fr] items-center gap-3 h-12 px-3 overflow-hidden',
+      'cursor-pointer select-none outline-none text-label-large text-on-surface',
+      'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
+      'hover:before:opacity-[var(--md-sys-state-hover)]',
+      'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
+      'active:before:opacity-[var(--md-sys-state-pressed)]',
+      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+    ],
+    itemIndicator:
+      'inline-flex items-center justify-center text-on-surface invisible group-data-[checked]:visible',
   },
 });
 
@@ -38,4 +74,8 @@ export const Menu = createMenu({
   item: m.item(),
   separator: m.separator(),
   groupLabel: m.groupLabel(),
+  submenuTrigger: m.submenuTrigger(),
+  checkboxItem: m.checkboxItem(),
+  radioItem: m.radioItem(),
+  itemIndicator: m.itemIndicator(),
 });

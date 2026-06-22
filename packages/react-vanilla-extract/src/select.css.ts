@@ -83,7 +83,7 @@ export const popup = style({
 export const item = style({
   position: 'relative',
   display: 'grid',
-  gridTemplateColumns: '24px 1fr',
+  gridTemplateColumns: '24px 1fr auto',
   alignItems: 'center',
   gap: '8px',
   height: '48px',
@@ -112,8 +112,34 @@ export const item = style({
     '&[data-highlighted]::before': { opacity: vars.sys.state.hover },
     '&:active::before': { opacity: vars.sys.state.pressed },
     '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+    // M3 trailing supporting text sits in the last column.
+    '& [data-slot="select-trailing"]': {
+      paddingLeft: '16px',
+      color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+      fontFamily: vars.sys.typescale.labelLarge.fontFamily,
+      fontSize: vars.sys.typescale.labelLarge.fontSize,
+      lineHeight: vars.sys.typescale.labelLarge.lineHeight,
+      letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+    },
   },
 });
+
+// Sticky scroll affordances at the popup edges; surface-tinted with a chevron.
+const scrollArrowBase = {
+  position: 'sticky',
+  zIndex: 1,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '24px',
+  cursor: 'default',
+  background: `rgb(${vars.sys.color.surfaceContainer})`,
+  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+  selectors: { '& > svg': { width: '20px', height: '20px' } },
+} as const;
+
+export const scrollUpArrow = style({ ...scrollArrowBase, top: 0 });
+export const scrollDownArrow = style({ ...scrollArrowBase, bottom: 0 });
 
 export const itemIndicator = style({
   display: 'inline-flex',

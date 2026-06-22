@@ -32,6 +32,38 @@ describe('Switch', () => {
     expect(thumb).toContain('group-active:data-[checked]:left-5');
   });
 
+  test('handle shifts color on hover/press per M3 state', () => {
+    const s = switchTv();
+    const thumb = s.thumb();
+    // unselected handle: outline → on-surface-variant on hover/press
+    expect(thumb).toContain('group-hover:bg-on-surface-variant');
+    expect(thumb).toContain('group-active:bg-on-surface-variant');
+    // selected handle: on-primary → primary-container on hover/press
+    expect(thumb).toContain('group-hover:data-[checked]:bg-primary-container');
+    expect(thumb).toContain('group-active:data-[checked]:bg-primary-container');
+  });
+
+  test('renders handle icons and enlarges the unchecked handle', () => {
+    render(
+      <Switch
+        icons={{
+          checked: <span data-testid="on">on</span>,
+          unchecked: <span data-testid="off">off</span>,
+        }}
+      />,
+    );
+    // both icons stay mounted; CSS reveals the active one per state
+    expect(screen.getByTestId('on')).toBeInTheDocument();
+    expect(screen.getByTestId('off')).toBeInTheDocument();
+    // thumb carries the with-icon marker that enlarges the unchecked handle
+    expect(screen.getByRole('switch').querySelector('[data-with-icon]')).not.toBeNull();
+  });
+
+  test('with-icon sizing only applies to the unchecked handle', () => {
+    const s = switchTv();
+    expect(s.thumb()).toContain('data-[with-icon]:data-[unchecked]:size-6');
+  });
+
   test('disabled uses M3 track/handle tokens, not a blanket opacity', () => {
     const s = switchTv();
     const root = s.root();

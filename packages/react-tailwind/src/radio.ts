@@ -20,6 +20,9 @@ export const radioTv = tv({
       // M3 pressed state layer inverts: unselected→primary, selected→on-surface
       'active:text-primary',
       'data-[checked]:active:text-on-surface',
+      // M3 error: error ring + error state layer in every interaction state
+      'data-[error]:border-error data-[error]:text-error data-[error]:active:text-error',
+      'data-[error]:data-[checked]:border-error data-[error]:data-[checked]:text-error data-[error]:data-[checked]:active:text-error',
       'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
       // M3 disabled: ring (and dot) turn on-surface/38; no state layer.
       'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0',
@@ -34,6 +37,7 @@ export const radioTv = tv({
       'block rounded-full bg-primary pointer-events-none',
       'size-0 opacity-0 transition-all duration-150 ease-standard',
       'data-[checked]:size-2.5 data-[checked]:opacity-100',
+      'group-data-[error]:bg-error',
       'group-data-[disabled]:bg-on-surface/38',
     ],
   },

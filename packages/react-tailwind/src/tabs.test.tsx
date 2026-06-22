@@ -65,3 +65,39 @@ describe('Tabs tokens', () => {
     expect(s.indicator()).not.toContain('rounded-t-[3px]');
   });
 });
+
+describe('Tabs layout extensions', () => {
+  test('primary tab with icon stacks vertically and grows to 64dp (M3)', () => {
+    render(
+      <Tabs.Root defaultValue="a" variant="primary">
+        <Tabs.List>
+          <Tabs.Tab value="a" icon={<svg data-testid="ti" />}>
+            Home
+          </Tabs.Tab>
+          <Tabs.Indicator />
+        </Tabs.List>
+      </Tabs.Root>,
+    );
+    const tab = screen.getByRole('tab', { name: 'Home' });
+    expect(tab).toHaveAttribute('data-with-icon');
+    expect(tab.querySelector('[data-slot="tab-icon"]')).not.toBeNull();
+    expect(screen.getByTestId('ti')).toBeInTheDocument();
+    // primary icon-above layout
+    expect(tab.className).toContain('data-[with-icon]:flex-col');
+    expect(tab.className).toContain('data-[with-icon]:h-16');
+  });
+
+  test('scrollable list enables horizontal overflow (M3 scrollable tabs)', () => {
+    render(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List scrollable>
+          <Tabs.Tab value="a">A</Tabs.Tab>
+          <Tabs.Indicator />
+        </Tabs.List>
+      </Tabs.Root>,
+    );
+    const list = screen.getByRole('tablist');
+    expect(list).toHaveAttribute('data-scrollable');
+    expect(list.className).toContain('data-[scrollable]:overflow-x-auto');
+  });
+});

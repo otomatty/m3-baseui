@@ -14,10 +14,19 @@ import type { ChipClassResolver, ChipProps } from './chip.contract';
 import { cx } from './utils';
 import { Ripple } from './ripple/Ripple';
 
+/**
+ * Build the M3 Chip bound to one engine's class resolver.
+ *
+ * @param resolve - Turns the variant/elevated state into the chip's slot classes.
+ * @returns A `forwardRef` Chip covering the assist/filter/input/suggestion types.
+ */
 export function createChip(resolve: ChipClassResolver) {
+  /** Renders the chip body per `variant`, plus optional avatar/remove/check slots. */
   function Chip(
     {
       variant = 'assist',
+      elevated,
+      avatar,
       selected,
       onSelectedChange,
       onRemove,
@@ -29,9 +38,15 @@ export function createChip(resolve: ChipClassResolver) {
     }: ChipProps,
     forwardedRef: React.Ref<HTMLElement>,
   ): React.JSX.Element {
-    const classes = resolve({ variant });
+    const classes = resolve({ variant, elevated });
     const cls = cx(classes.root, className);
     const rippleNode = ripple ? <Ripple /> : null;
+    const avatarNode =
+      avatar != null ? (
+        <span className={classes.avatar} data-slot="avatar" aria-hidden="true">
+          {avatar}
+        </span>
+      ) : null;
 
     if (variant === 'filter') {
       return (
@@ -42,6 +57,7 @@ export function createChip(resolve: ChipClassResolver) {
           className={cls}
           {...rest}
         >
+          {avatarNode}
           {/* M3 leading checkmark: kept mounted, revealed via data-pressed in CSS */}
           <span className={classes.check} data-slot="check" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -57,6 +73,7 @@ export function createChip(resolve: ChipClassResolver) {
     if (variant === 'input') {
       return (
         <span ref={forwardedRef as React.Ref<HTMLSpanElement>} className={cls} {...rest}>
+          {avatarNode}
           {children}
           {onRemove ? (
             <button
@@ -85,6 +102,7 @@ export function createChip(resolve: ChipClassResolver) {
         className={cls}
         {...rest}
       >
+        {avatarNode}
         {children}
         {rippleNode}
       </button>

@@ -5,6 +5,25 @@
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@m3/tokens/contract.css';
 
+// M3 Expressive container widths per size × width.
+const WIDTHS = {
+  xs: { narrow: '28px', default: '32px', wide: '40px' },
+  s: { narrow: '32px', default: '40px', wide: '52px' },
+  m: { narrow: '48px', default: '56px', wide: '72px' },
+  l: { narrow: '64px', default: '96px', wide: '128px' },
+  xl: { narrow: '104px', default: '136px', wide: '184px' },
+} as const;
+
+const widthCompounds = Object.entries(WIDTHS).flatMap(([size, w]) =>
+  Object.entries(w).map(([width, value]) => ({
+    variants: { size, width } as {
+      size: keyof typeof WIDTHS;
+      width: 'narrow' | 'default' | 'wide';
+    },
+    style: { width: value },
+  })),
+);
+
 export const iconButton = recipe({
   base: {
     position: 'relative',
@@ -12,9 +31,6 @@ export const iconButton = recipe({
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    width: '40px',
-    height: '40px',
-    padding: '8px',
     border: 'none',
     background: 'transparent',
     borderRadius: vars.sys.shape.full,
@@ -110,8 +126,23 @@ export const iconButton = recipe({
       true: {},
       false: {},
     },
+    // Container height + icon size per M3 Expressive size; width comes from the
+    // (size, width) compound variants below.
+    size: {
+      xs: { height: '32px', selectors: { '& > svg': { width: '20px', height: '20px' } } },
+      s: { height: '40px', selectors: { '& > svg': { width: '24px', height: '24px' } } },
+      m: { height: '56px', selectors: { '& > svg': { width: '24px', height: '24px' } } },
+      l: { height: '96px', selectors: { '& > svg': { width: '32px', height: '32px' } } },
+      xl: { height: '136px', selectors: { '& > svg': { width: '40px', height: '40px' } } },
+    },
+    width: {
+      narrow: {},
+      default: {},
+      wide: {},
+    },
   },
   compoundVariants: [
+    ...widthCompounds,
     {
       variants: { variant: 'standard', selected: true },
       style: { color: `rgb(${vars.sys.color.primary})` },
@@ -153,5 +184,7 @@ export const iconButton = recipe({
   ],
   defaultVariants: {
     variant: 'standard',
+    size: 's',
+    width: 'default',
   },
 });

@@ -31,13 +31,17 @@ export {
 } from './button.contract';
 export {
   ICON_BUTTON_VARIANTS,
+  ICON_BUTTON_SIZES,
+  ICON_BUTTON_WIDTHS,
   type IconButtonVariant,
+  type IconButtonSize,
+  type IconButtonWidth,
   type IconButtonOwnProps,
   type IconButtonProps,
   type IconButtonResolverArgs,
   type IconButtonClassResolver,
 } from './icon-button.contract';
-export type { SwitchClasses } from './switch.contract';
+export type { SwitchClasses, SwitchIcons } from './switch.contract';
 export type { CheckboxClasses } from './checkbox.contract';
 export type { RadioClasses } from './radio.contract';
 export {

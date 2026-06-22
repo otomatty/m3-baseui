@@ -44,4 +44,19 @@ describe('Radio', () => {
     expect(root).toContain('active:text-primary');
     expect(root).toContain('data-[checked]:active:text-on-surface');
   });
+
+  test('error prop sets data-error and tints with error tokens (M3)', () => {
+    render(
+      <RadioGroup defaultValue="a">
+        <Radio value="a" aria-label="A" error />
+      </RadioGroup>,
+    );
+    const el = screen.getByRole('radio', { name: 'A' });
+    expect(el).toHaveAttribute('data-error');
+    const r = radioTv();
+    expect(r.root()).toContain('data-[error]:border-error');
+    expect(r.root()).toContain('data-[error]:text-error');
+    // the dot turns error too
+    expect(r.indicator()).toContain('group-data-[error]:bg-error');
+  });
 });

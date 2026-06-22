@@ -125,6 +125,14 @@ export function App() {
                 </Button>
               ))}
             </div>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="filled" startIcon={<Icon name="add" size={18} />}>
+                Leading
+              </Button>
+              <Button variant="tonal" endIcon={<Icon name="arrow_forward" size={18} />}>
+                Trailing
+              </Button>
+            </div>
           </Section>
 
           <Section title="Icon Button">
@@ -148,6 +156,31 @@ export function App() {
                 <Icon name="delete" />
               </IconButton>
             </div>
+            {/* M3 Expressive sizes (xs → xl) */}
+            <div className="flex flex-wrap items-center gap-3 mt-3">
+              <IconButton variant="tonal" size="xs" aria-label="XS">
+                <Icon name="favorite" size={20} />
+              </IconButton>
+              <IconButton variant="tonal" size="s" aria-label="S">
+                <Icon name="favorite" size={24} />
+              </IconButton>
+              <IconButton variant="tonal" size="m" aria-label="M">
+                <Icon name="favorite" size={24} />
+              </IconButton>
+              <IconButton variant="tonal" size="l" aria-label="L">
+                <Icon name="favorite" size={32} />
+              </IconButton>
+              <IconButton variant="tonal" size="xl" aria-label="XL">
+                <Icon name="favorite" size={40} />
+              </IconButton>
+              {/* narrow / default / wide widths */}
+              <IconButton variant="filled" size="m" width="narrow" aria-label="Narrow">
+                <Icon name="add" size={24} />
+              </IconButton>
+              <IconButton variant="filled" size="m" width="wide" aria-label="Wide">
+                <Icon name="add" size={24} />
+              </IconButton>
+            </div>
           </Section>
 
           <Section title="Selection controls">
@@ -156,6 +189,13 @@ export function App() {
                 <Switch defaultChecked />
                 <Switch />
                 <Switch disabled defaultChecked />
+                <Switch
+                  defaultChecked
+                  icons={{
+                    checked: <Icon name="check" size={16} />,
+                    unchecked: <Icon name="close" size={16} />,
+                  }}
+                />
               </div>
               <label className="flex items-center gap-2 text-body-medium cursor-pointer">
                 <Checkbox defaultChecked /> Checkbox
@@ -163,12 +203,18 @@ export function App() {
               <label className="flex items-center gap-2 text-body-medium cursor-pointer">
                 <Checkbox indeterminate /> Indeterminate
               </label>
+              <label className="flex items-center gap-2 text-body-medium cursor-pointer">
+                <Checkbox error /> Error
+              </label>
               <RadioGroup defaultValue="a">
                 <label className="flex items-center gap-2 text-body-medium cursor-pointer">
                   <Radio value="a" /> オプション A
                 </label>
                 <label className="flex items-center gap-2 text-body-medium cursor-pointer">
                   <Radio value="b" /> オプション B
+                </label>
+                <label className="flex items-center gap-2 text-body-medium cursor-pointer">
+                  <Radio value="c" error /> エラー
                 </label>
               </RadioGroup>
             </div>
@@ -185,6 +231,12 @@ export function App() {
               <Chip variant="suggestion">Suggestion</Chip>
               <Chip variant="input" onRemove={() => {}}>
                 Input
+              </Chip>
+              <Chip variant="assist" elevated>
+                <Icon name="bolt" size={18} /> Elevated
+              </Chip>
+              <Chip variant="input" avatar={<Icon name="person" size={18} />} onRemove={() => {}}>
+                Avatar
               </Chip>
             </div>
           </Section>
@@ -218,6 +270,34 @@ export function App() {
                 レビューのコンテンツ
               </Tabs.Panel>
             </Tabs.Root>
+
+            {/* primary tabs with icon-above layout */}
+            <Tabs.Root defaultValue="home" variant="primary" className="mt-4">
+              <Tabs.List>
+                <Tabs.Tab value="home" icon={<Icon name="home" size={24} />}>
+                  ホーム
+                </Tabs.Tab>
+                <Tabs.Tab value="search" icon={<Icon name="search" size={24} />}>
+                  検索
+                </Tabs.Tab>
+                <Tabs.Tab value="profile" icon={<Icon name="person" size={24} />}>
+                  プロフィール
+                </Tabs.Tab>
+                <Tabs.Indicator />
+              </Tabs.List>
+            </Tabs.Root>
+
+            {/* scrollable tabs */}
+            <Tabs.Root defaultValue="t1" variant="secondary" className="mt-4 max-w-xs">
+              <Tabs.List scrollable>
+                {['t1', 't2', 't3', 't4', 't5', 't6', 't7', 't8'].map((t) => (
+                  <Tabs.Tab key={t} value={t}>
+                    タブ {t.slice(1)}
+                  </Tabs.Tab>
+                ))}
+                <Tabs.Indicator />
+              </Tabs.List>
+            </Tabs.Root>
           </Section>
 
           <Section title="Menu / Select / Tooltip / Dialog">
@@ -227,8 +307,60 @@ export function App() {
                 <Menu.Portal>
                   <Menu.Positioner sideOffset={8}>
                     <Menu.Popup>
-                      <Menu.Item>プロフィール</Menu.Item>
-                      <Menu.Item>設定</Menu.Item>
+                      <Menu.Item>
+                        <span data-slot="menu-leading">
+                          <Icon name="person" size={24} />
+                        </span>
+                        プロフィール
+                      </Menu.Item>
+                      <Menu.Item>
+                        <span data-slot="menu-leading">
+                          <Icon name="content_copy" size={24} />
+                        </span>
+                        コピー
+                        <span data-slot="menu-trailing">⌘C</span>
+                      </Menu.Item>
+                      <Menu.Separator />
+                      <Menu.CheckboxItem defaultChecked>
+                        <Menu.CheckboxItemIndicator>
+                          <Menu.Check />
+                        </Menu.CheckboxItemIndicator>
+                        通知を表示
+                      </Menu.CheckboxItem>
+                      <Menu.RadioGroup defaultValue="list">
+                        <Menu.RadioItem value="list">
+                          <Menu.RadioItemIndicator>
+                            <Menu.Check />
+                          </Menu.RadioItemIndicator>
+                          リスト表示
+                        </Menu.RadioItem>
+                        <Menu.RadioItem value="grid">
+                          <Menu.RadioItemIndicator>
+                            <Menu.Check />
+                          </Menu.RadioItemIndicator>
+                          グリッド表示
+                        </Menu.RadioItem>
+                      </Menu.RadioGroup>
+                      <Menu.Separator />
+                      <Menu.SubmenuRoot>
+                        <Menu.SubmenuTrigger>
+                          <span className="flex items-center gap-3">
+                            <span data-slot="menu-leading">
+                              <Icon name="share" size={24} />
+                            </span>
+                            共有
+                          </span>
+                          <Icon name="chevron_right" size={20} />
+                        </Menu.SubmenuTrigger>
+                        <Menu.Portal>
+                          <Menu.Positioner>
+                            <Menu.Popup>
+                              <Menu.Item>メール</Menu.Item>
+                              <Menu.Item>リンクをコピー</Menu.Item>
+                            </Menu.Popup>
+                          </Menu.Positioner>
+                        </Menu.Portal>
+                      </Menu.SubmenuRoot>
                       <Menu.Separator />
                       <Menu.Item>ログアウト</Menu.Item>
                     </Menu.Popup>
@@ -246,18 +378,28 @@ export function App() {
                 <Select.Portal>
                   <Select.Positioner sideOffset={4}>
                     <Select.Popup>
+                      <Select.ScrollUpArrow />
                       {[
-                        ['apple', 'りんご'],
-                        ['banana', 'バナナ'],
-                        ['cherry', 'さくらんぼ'],
-                      ].map(([value, label]) => (
+                        ['apple', 'りんご', '01'],
+                        ['banana', 'バナナ', '02'],
+                        ['cherry', 'さくらんぼ', '03'],
+                        ['grape', 'ぶどう', '04'],
+                        ['melon', 'メロン', '05'],
+                        ['orange', 'オレンジ', '06'],
+                        ['peach', 'もも', '07'],
+                        ['pear', 'なし', '08'],
+                        ['kiwi', 'キウイ', '09'],
+                        ['mango', 'マンゴー', '10'],
+                      ].map(([value, label, meta]) => (
                         <Select.Item key={value} value={value}>
                           <Select.ItemIndicator>
                             <Icon name="check" size={20} />
                           </Select.ItemIndicator>
                           <Select.ItemText>{label}</Select.ItemText>
+                          <span data-slot="select-trailing">{meta}</span>
                         </Select.Item>
                       ))}
+                      <Select.ScrollDownArrow />
                     </Select.Popup>
                   </Select.Positioner>
                 </Select.Portal>

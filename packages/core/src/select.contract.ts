@@ -9,4 +9,8 @@ export interface SelectClasses {
   item: string;
   itemIndicator: string;
   groupLabel: string;
+  /** Sticky scroll-up affordance at the top of a scrollable popup. */
+  scrollUpArrow: string;
+  /** Sticky scroll-down affordance at the bottom of a scrollable popup. */
+  scrollDownArrow: string;
 }

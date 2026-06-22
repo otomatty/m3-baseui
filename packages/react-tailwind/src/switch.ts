@@ -24,9 +24,16 @@ export const switchTv = tv({
     ],
     thumb: [
       'absolute top-1/2 -translate-y-1/2 left-[6px] size-4 rounded-full pointer-events-none',
+      'flex items-center justify-center',
       'bg-outline text-on-surface',
       'transition-all duration-200 ease-standard',
       'data-[checked]:left-[22px] data-[checked]:size-6 data-[checked]:bg-on-primary data-[checked]:text-primary',
+      // M3 with-icon: the unchecked handle grows to 24dp to fit its icon
+      'data-[with-icon]:data-[unchecked]:left-1 data-[with-icon]:data-[unchecked]:size-6',
+      // M3 handle interaction colors: unselected outline→on-surface-variant,
+      // selected on-primary→primary-container on hover/focus/press
+      'group-hover:bg-on-surface-variant group-focus-visible:bg-on-surface-variant group-active:bg-on-surface-variant',
+      'group-hover:data-[checked]:bg-primary-container group-focus-visible:data-[checked]:bg-primary-container group-active:data-[checked]:bg-primary-container',
       // M3 squish: handle grows to 28px while pressed, staying on its side
       'group-active:left-0 group-active:size-7',
       'group-active:data-[checked]:left-5 group-active:data-[checked]:size-7',
@@ -40,8 +47,22 @@ export const switchTv = tv({
       'group-focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       'group-active:before:opacity-[var(--md-sys-state-pressed)]',
     ],
+    // Handle icons (16dp). Both stay mounted; the root's data-checked reveals one.
+    iconChecked: [
+      'hidden group-data-[checked]:inline-flex items-center justify-center',
+      'text-on-primary-container [&>svg]:size-4',
+    ],
+    iconUnchecked: [
+      'inline-flex group-data-[checked]:hidden items-center justify-center',
+      'text-surface-container-highest [&>svg]:size-4',
+    ],
   },
 });
 
 const s = switchTv();
-export const Switch = createSwitch({ root: s.root(), thumb: s.thumb() });
+export const Switch = createSwitch({
+  root: s.root(),
+  thumb: s.thumb(),
+  iconChecked: s.iconChecked(),
+  iconUnchecked: s.iconUnchecked(),
+});

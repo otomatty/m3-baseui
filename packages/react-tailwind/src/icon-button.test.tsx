@@ -78,6 +78,36 @@ describe('IconButton', () => {
     expect(btn.className).toContain('disabled:text-on-surface/38');
   });
 
+  test('defaults to the 40dp (small) container for back-compat', () => {
+    render(<IconButton aria-label="D">●</IconButton>);
+    expect(screen.getByRole('button', { name: 'D' }).className).toContain('h-10');
+  });
+
+  test('M3 Expressive size + width variants set container dimensions', () => {
+    render(
+      <>
+        <IconButton aria-label="XS" size="xs">
+          ●
+        </IconButton>
+        <IconButton aria-label="XL" size="xl">
+          ●
+        </IconButton>
+        <IconButton aria-label="L-Wide" size="l" width="wide">
+          ●
+        </IconButton>
+        <IconButton aria-label="L-Narrow" size="l" width="narrow">
+          ●
+        </IconButton>
+      </>,
+    );
+    // height scales per size (xs 32dp → xl 136dp)
+    expect(screen.getByRole('button', { name: 'XS' }).className).toContain('h-8');
+    expect(screen.getByRole('button', { name: 'XL' }).className).toContain('h-[136px]');
+    // width scales per (size, width): large/wide = 128dp, large/narrow = 64dp
+    expect(screen.getByRole('button', { name: 'L-Wide' }).className).toContain('w-32');
+    expect(screen.getByRole('button', { name: 'L-Narrow' }).className).toContain('w-16');
+  });
+
   test('mounts a ripple host by default and omits it when disabled', () => {
     const { rerender } = render(<IconButton aria-label="R">●</IconButton>);
     expect(

@@ -14,14 +14,29 @@ import type { CheckboxClasses } from './checkbox.contract';
 import { mergeClassName } from './slot';
 
 type RootProps = React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>;
+type CheckboxProps = RootProps & {
+  /** M3 error state: tints the box, check, and state layer with error tokens. */
+  error?: boolean;
+};
 
+/**
+ * Build the M3 Checkbox bound to one engine's slot classes.
+ *
+ * @param classes - Engine-resolved class strings for the box, indicator, and icon.
+ * @returns A `forwardRef` Checkbox accepting Base UI's props plus `error`.
+ */
 export function createCheckbox(classes: CheckboxClasses) {
-  const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, RootProps>(
-    function Checkbox({ className, ...props }, ref) {
+  const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, CheckboxProps>(
+    /** Renders the box + check/indeterminate indicator, tinting on `error`. */
+    function Checkbox({ className, error, ...props }, ref) {
+      const errorProps: { [key: `data-${string}`]: string } | undefined = error
+        ? { 'data-error': '' }
+        : undefined;
       return (
         <CheckboxPrimitive.Root
           ref={ref}
           className={mergeClassName(classes.root, className)}
+          {...errorProps}
           {...props}
         >
           <CheckboxPrimitive.Indicator className={classes.indicator} keepMounted>

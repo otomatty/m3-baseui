@@ -8,10 +8,28 @@
 import { createIconButton } from '@m3/core';
 import { tv } from 'tailwind-variants';
 
+// M3 Expressive container widths (px) per size × width. Tailwind v4's dynamic
+// spacing scale resolves any integer (e.g. w-13 = 52px, w-46 = 184px).
+const WIDTHS = {
+  xs: { narrow: 'w-7', default: 'w-8', wide: 'w-10' }, // 28 / 32 / 40
+  s: { narrow: 'w-8', default: 'w-10', wide: 'w-13' }, // 32 / 40 / 52
+  m: { narrow: 'w-12', default: 'w-14', wide: 'w-18' }, // 48 / 56 / 72
+  l: { narrow: 'w-16', default: 'w-24', wide: 'w-32' }, // 64 / 96 / 128
+  xl: { narrow: 'w-26', default: 'w-34', wide: 'w-46' }, // 104 / 136 / 184
+} as const;
+
+const widthCompounds = Object.entries(WIDTHS).flatMap(([size, w]) =>
+  Object.entries(w).map(([width, klass]) => ({
+    size: size as keyof typeof WIDTHS,
+    width: width as 'narrow' | 'default' | 'wide',
+    class: klass,
+  })),
+);
+
 export const iconButton = tv({
   base: [
     'relative inline-flex items-center justify-center shrink-0',
-    'size-10 rounded-full overflow-hidden cursor-pointer select-none border-0 bg-transparent p-2',
+    'rounded-full overflow-hidden cursor-pointer select-none border-0 bg-transparent',
     'transition-[box-shadow,background-color,color] duration-200 ease-standard',
     // State layer overlay
     'before:absolute before:inset-0 before:rounded-[inherit] before:bg-current before:opacity-0 before:pointer-events-none',
@@ -56,8 +74,23 @@ export const iconButton = tv({
       true: '',
       false: '',
     },
+    // Container height + icon size per M3 Expressive size. Width comes from the
+    // (size, width) compound variants below.
+    size: {
+      xs: 'h-8 [&>svg]:size-5',
+      s: 'h-10 [&>svg]:size-6',
+      m: 'h-14 [&>svg]:size-6',
+      l: 'h-24 [&>svg]:size-8',
+      xl: 'h-[136px] [&>svg]:size-10',
+    },
+    width: {
+      narrow: '',
+      default: '',
+      wide: '',
+    },
   },
   compoundVariants: [
+    ...widthCompounds,
     { variant: 'standard', selected: true, class: 'text-primary' },
     { variant: 'filled', selected: false, class: 'bg-surface-container-highest text-primary' },
     {
@@ -79,10 +112,12 @@ export const iconButton = tv({
   ],
   defaultVariants: {
     variant: 'standard',
+    size: 's',
+    width: 'default',
   },
 });
 
-export const IconButton = createIconButton(({ variant, selected }) =>
-  iconButton({ variant, selected }),
+export const IconButton = createIconButton(({ variant, selected, size, width }) =>
+  iconButton({ variant, selected, size, width }),
 );
 export type { IconButtonProps, IconButtonVariant } from '@m3/core';

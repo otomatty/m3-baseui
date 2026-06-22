@@ -16,6 +16,7 @@ import { Ripple } from './ripple/Ripple';
 
 const TabsClassContext = React.createContext<TabsSlotClasses | null>(null);
 
+/** Read the variant's slot classes shared by `Tabs.Root`; throws if used outside. */
 function useTabsClasses(): TabsSlotClasses {
   const ctx = React.useContext(TabsClassContext);
   if (!ctx) throw new Error('Tabs parts must be used within <Tabs.Root>.');
@@ -26,12 +27,26 @@ type RootProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
   /** M3 tabs style. @default 'primary' */
   variant?: TabsVariant;
 };
-type ListProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>;
-type TabProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Tab>;
+type ListProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & {
+  /** Enable horizontal scrolling when the tabs overflow (M3 scrollable tabs). */
+  scrollable?: boolean;
+};
+type TabProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Tab> & {
+  /** Leading/above icon (24dp). On primary tabs it stacks above the label. */
+  icon?: React.ReactNode;
+};
 type IndicatorProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Indicator>;
 type PanelProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Panel>;
 
+/**
+ * Build the M3 Tabs namespace (Root, List, Tab, Indicator, Panel) bound to one
+ * engine's class resolver.
+ *
+ * @param resolve - Turns the `variant` into the full slot-class map.
+ * @returns A namespace of Base UI tabs parts; Root shares classes via context.
+ */
 export function createTabs(resolve: TabsClassResolver) {
+  /** Resolves the variant's slot classes once and shares them via context. */
   const Root = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>, RootProps>(
     function Root({ variant = 'primary', className, ...props }, ref) {
       const classes = React.useMemo(() => resolve(variant), [variant]);
@@ -48,13 +63,17 @@ export function createTabs(resolve: TabsClassResolver) {
   );
   Root.displayName = 'M3Tabs.Root';
 
+  /** The tab strip; `scrollable` marks it for horizontal overflow. */
   const List = React.forwardRef<React.ElementRef<typeof TabsPrimitive.List>, ListProps>(
-    function List({ className, ...props }, ref) {
+    function List({ className, scrollable, ...props }, ref) {
       const classes = useTabsClasses();
+      const marker: { [key: `data-${string}`]: string } = {};
+      if (scrollable) marker['data-scrollable'] = '';
       return (
         <TabsPrimitive.List
           ref={ref}
           className={mergeClassName(classes.list, className)}
+          {...marker}
           {...props}
         />
       );
@@ -62,13 +81,26 @@ export function createTabs(resolve: TabsClassResolver) {
   );
   List.displayName = 'M3Tabs.List';
 
+  /** A single tab + ripple; an `icon` mounts the icon slot (stacked on primary). */
   const Tab = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Tab>, TabProps>(function Tab(
-    { className, children, ...props },
+    { className, children, icon, ...props },
     ref,
   ) {
     const classes = useTabsClasses();
+    const marker: { [key: `data-${string}`]: string } = {};
+    if (icon != null) marker['data-with-icon'] = '';
     return (
-      <TabsPrimitive.Tab ref={ref} className={mergeClassName(classes.tab, className)} {...props}>
+      <TabsPrimitive.Tab
+        ref={ref}
+        className={mergeClassName(classes.tab, className)}
+        {...marker}
+        {...props}
+      >
+        {icon != null ? (
+          <span data-slot="tab-icon" aria-hidden="true">
+            {icon}
+          </span>
+        ) : null}
         {children}
         <Ripple />
       </TabsPrimitive.Tab>
@@ -76,6 +108,7 @@ export function createTabs(resolve: TabsClassResolver) {
   });
   Tab.displayName = 'M3Tabs.Tab';
 
+  /** The animated active-tab underline (reads Base UI's active-tab CSS vars). */
   const Indicator = React.forwardRef<
     React.ElementRef<typeof TabsPrimitive.Indicator>,
     IndicatorProps
@@ -91,6 +124,7 @@ export function createTabs(resolve: TabsClassResolver) {
   });
   Indicator.displayName = 'M3Tabs.Indicator';
 
+  /** The content panel shown for the active tab value. */
   const Panel = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Panel>, PanelProps>(
     function Panel({ className, ...props }, ref) {
       const classes = useTabsClasses();

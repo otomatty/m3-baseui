@@ -13,6 +13,8 @@ export type ChipVariant = (typeof CHIP_VARIANTS)[number];
 
 export interface ChipResolverArgs {
   variant: ChipVariant;
+  /** Elevated style: filled surface with elevation instead of an outline. */
+  elevated?: boolean;
 }
 
 export interface ChipSlotClasses {
@@ -22,6 +24,8 @@ export interface ChipSlotClasses {
   remove: string;
   /** The leading checkmark (filter chips, revealed when selected). */
   check: string;
+  /** The leading avatar (24dp circle). */
+  avatar: string;
 }
 
 export type ChipClassResolver = (args: ChipResolverArgs) => ChipSlotClasses;
@@ -29,6 +33,10 @@ export type ChipClassResolver = (args: ChipResolverArgs) => ChipSlotClasses;
 export interface ChipOwnProps {
   /** M3 chip type. @default 'assist' */
   variant?: ChipVariant;
+  /** Elevated style: filled surface with elevation instead of an outline. */
+  elevated?: boolean;
+  /** Leading avatar (24dp circle), e.g. an `<img>`. */
+  avatar?: React.ReactNode;
   /** Selected state for `filter` chips. */
   selected?: boolean;
   /** Selection change handler for `filter` chips. */

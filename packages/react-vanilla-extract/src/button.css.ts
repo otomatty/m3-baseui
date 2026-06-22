@@ -55,6 +55,16 @@ export const button = recipe({
         outline: `3px solid rgb(${vars.sys.color.secondary})`,
         outlineOffset: '2px',
       },
+      // M3 with-icon padding: the icon side trims to 16dp (label side stays 24dp).
+      '&[data-with-start-icon]': { paddingLeft: '16px' },
+      '&[data-with-end-icon]': { paddingRight: '16px' },
+      // Icon slot: 18dp, centered.
+      '& [data-slot="button-icon"]': {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      '& [data-slot="button-icon"] > svg': { width: '18px', height: '18px' },
     },
   },
   variants: {
