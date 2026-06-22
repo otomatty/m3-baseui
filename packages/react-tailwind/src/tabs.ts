@@ -31,8 +31,8 @@ export const tabsTv = tv({
   },
   variants: {
     variant: {
-      primary: { tab: 'data-[selected]:text-primary' },
-      secondary: { tab: 'data-[selected]:text-on-surface' },
+      primary: { tab: 'data-[active]:text-primary' },
+      secondary: { tab: 'data-[active]:text-on-surface' },
     },
   },
   defaultVariants: {

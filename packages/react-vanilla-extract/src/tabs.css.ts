@@ -57,10 +57,10 @@ export const tab = recipe({
   variants: {
     variant: {
       primary: {
-        selectors: { '&[data-selected]': { color: `rgb(${vars.sys.color.primary})` } },
+        selectors: { '&[data-active]': { color: `rgb(${vars.sys.color.primary})` } },
       },
       secondary: {
-        selectors: { '&[data-selected]': { color: `rgb(${vars.sys.color.onSurface})` } },
+        selectors: { '&[data-active]': { color: `rgb(${vars.sys.color.onSurface})` } },
       },
     },
   },
