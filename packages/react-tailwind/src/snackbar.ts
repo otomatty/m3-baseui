@@ -37,9 +37,13 @@ export const snackbarTv = tv({
       'active:before:opacity-[var(--md-sys-state-pressed)]',
     ],
     close: [
-      'inline-flex items-center justify-center shrink-0 size-8 rounded-full',
+      'relative inline-flex items-center justify-center shrink-0 size-8 rounded-full overflow-hidden',
       'bg-transparent border-0 cursor-pointer text-inverse-on-surface outline-none',
-      'hover:opacity-80',
+      'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
+      'hover:before:opacity-[var(--md-sys-state-hover)]',
+      'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
+      'active:before:opacity-[var(--md-sys-state-pressed)]',
+      'data-[pressed]:before:opacity-[var(--md-sys-state-pressed)]',
     ],
   },
 });

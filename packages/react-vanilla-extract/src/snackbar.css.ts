@@ -105,12 +105,14 @@ export const action = style({
 });
 
 export const close = style({
+  position: 'relative',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
   width: '32px',
   height: '32px',
+  overflow: 'hidden',
   borderRadius: vars.sys.shape.full,
   background: 'transparent',
   border: 'none',
@@ -118,6 +120,18 @@ export const close = style({
   outline: 'none',
   color: `rgb(${vars.sys.color.inverseOnSurface})`,
   selectors: {
-    '&:hover': { opacity: 0.8 },
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      background: 'currentColor',
+      opacity: 0,
+      pointerEvents: 'none',
+      transition: `opacity 100ms ${vars.sys.motion.easing.standard}`,
+    },
+    '&:hover::before': { opacity: vars.sys.state.hover },
+    '&:focus-visible::before': { opacity: vars.sys.state.focus },
+    '&:active::before': { opacity: vars.sys.state.pressed },
+    '&[data-pressed]::before': { opacity: vars.sys.state.pressed },
   },
 });

@@ -33,7 +33,9 @@ export const fab = recipe({
       '&:hover::before': { opacity: vars.sys.state.hover },
       '&:focus-visible::before': { opacity: vars.sys.state.focus },
       '&:active::before': { opacity: vars.sys.state.pressed },
+      '&[data-pressed]::before': { opacity: vars.sys.state.pressed },
       '&:disabled': { opacity: 0.38, pointerEvents: 'none', boxShadow: 'none' },
+      '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none', boxShadow: 'none' },
     },
   },
   variants: {

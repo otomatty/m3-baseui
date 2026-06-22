@@ -86,7 +86,7 @@ function SnackbarList() {
             <Snackbar.Title />
             {toast.description ? <Snackbar.Description /> : null}
           </Snackbar.Content>
-          {toast.actionProps ? <Snackbar.Action>元に戻す</Snackbar.Action> : null}
+          {toast.actionProps ? <Snackbar.Action /> : null}
           <Snackbar.Close aria-label="閉じる">
             <Icon name="close" size={20} />
           </Snackbar.Close>

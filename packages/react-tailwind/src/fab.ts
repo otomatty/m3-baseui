@@ -18,7 +18,9 @@ export const fabTv = tv({
     'hover:before:opacity-[var(--md-sys-state-hover)]',
     'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
     'active:before:opacity-[var(--md-sys-state-pressed)]',
+    'data-[pressed]:before:opacity-[var(--md-sys-state-pressed)]',
     'disabled:opacity-[0.38] disabled:pointer-events-none disabled:shadow-none',
+    'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none data-[disabled]:shadow-none',
   ],
   variants: {
     size: {
