@@ -27,19 +27,34 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 // Indeterminate spinner shows a 3/4 arc while it rotates.
 const INDETERMINATE_FRACTION = 0.75;
 
-/** Guard against a non-positive `max` (would yield NaN / invalid ARIA ranges). */
-const normalizeMax = (max: number): number => (max > 0 ? max : 100);
+/**
+ * Normalize a determinate progress pair: a positive `max` (a non-positive one
+ * would yield NaN / invalid ARIA ranges) and the value clamped to `[0, max]` so
+ * `aria-valuenow` and the drawn indicator never exceed the range. A `null` value
+ * stays `null` (indeterminate).
+ */
+function normalizeProgress(
+  value: number | null,
+  max: number,
+): { safeMax: number; clampedValue: number | null } {
+  const safeMax = max > 0 ? max : 100;
+  const clampedValue = value == null ? null : Math.max(0, Math.min(safeMax, value));
+  return { safeMax, clampedValue };
+}
 
 export function createProgress(classes: ProgressClasses) {
   const Linear = React.forwardRef<HTMLDivElement, LinearProgressProps>(function Linear(
     { value = null, max = 100, className, ...props },
     ref,
   ) {
+    // Base UI uses the forwarded value/max raw for both aria and the indicator
+    // width, so clamp here to keep the range valid for out-of-bounds input.
+    const { safeMax, clampedValue } = normalizeProgress(value, max);
     return (
       <Progress.Root
         ref={ref}
-        value={value ?? null}
-        max={normalizeMax(max)}
+        value={clampedValue}
+        max={safeMax}
         className={mergeClassName(classes.linear.root, className)}
         {...props}
       >
@@ -57,8 +72,7 @@ export function createProgress(classes: ProgressClasses) {
   ) {
     // Clamp the value so the drawn arc and the announced `aria-valuenow` agree,
     // and guard a non-positive `max` (would make `value / max` NaN).
-    const safeMax = normalizeMax(max);
-    const clampedValue = value == null ? null : Math.max(0, Math.min(safeMax, value));
+    const { safeMax, clampedValue } = normalizeProgress(value, max);
     const indeterminate = clampedValue == null;
     const fraction = indeterminate ? INDETERMINATE_FRACTION : clampedValue / safeMax;
     const dashoffset = CIRCUMFERENCE * (1 - fraction);

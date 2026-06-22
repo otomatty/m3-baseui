@@ -24,6 +24,14 @@ describe('Progress.Linear', () => {
     expect(bar).toHaveAttribute('aria-valuemax', '100');
     expect(bar).not.toHaveAttribute('data-indeterminate');
   });
+
+  test('clamps an out-of-range determinate value to [0, max]', () => {
+    render(<Progress.Linear value={150} max={100} aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    // aria-valuenow must never exceed aria-valuemax.
+    expect(bar).toHaveAttribute('aria-valuenow', '100');
+    expect(bar).toHaveAttribute('aria-valuemax', '100');
+  });
 });
 
 describe('Progress.Circular', () => {
