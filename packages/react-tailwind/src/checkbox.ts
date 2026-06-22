@@ -19,6 +19,9 @@ export const checkboxTv = tv({
       'transition-colors duration-150 ease-standard',
       'data-[checked]:bg-primary data-[checked]:border-primary data-[checked]:text-primary',
       'data-[indeterminate]:bg-primary data-[indeterminate]:border-primary data-[indeterminate]:text-primary',
+      // M3 pressed state layer inverts: unselected→primary, selected→on-surface
+      'active:text-primary',
+      'data-[checked]:active:text-on-surface data-[indeterminate]:active:text-on-surface',
       'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
       'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0',
       // M3 disabled: unselected outline on-surface/38; selected/indeterminate

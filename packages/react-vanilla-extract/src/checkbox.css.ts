@@ -39,6 +39,11 @@ export const root = style({
       borderColor: 'transparent',
     },
     '&[data-disabled]::before': { opacity: 0 },
+    // M3 pressed state layer inverts: unselected→primary, selected→on-surface
+    '&:active': { color: `rgb(${vars.sys.color.primary})` },
+    '&[data-checked]:active, &[data-indeterminate]:active': {
+      color: `rgb(${vars.sys.color.onSurface})`,
+    },
     '&:focus-visible': {
       outline: `3px solid rgb(${vars.sys.color.secondary})`,
       outlineOffset: '2px',

@@ -17,6 +17,9 @@ export const radioTv = tv({
       'border-on-surface-variant text-on-surface',
       'transition-colors duration-150 ease-standard',
       'data-[checked]:border-primary data-[checked]:text-primary',
+      // M3 pressed state layer inverts: unselected→primary, selected→on-surface
+      'active:text-primary',
+      'data-[checked]:active:text-on-surface',
       'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
       // M3 disabled: ring (and dot) turn on-surface/38; no state layer.
       'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0',

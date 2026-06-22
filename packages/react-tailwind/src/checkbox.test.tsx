@@ -38,4 +38,11 @@ describe('Checkbox', () => {
     expect(root).not.toContain('text-on-surface-variant');
     expect(root).toContain('data-[checked]:text-primary');
   });
+
+  test('pressed state layer inverts color (M3): unselected→primary, selected→on-surface', () => {
+    const root = checkboxTv().root();
+    expect(root).toContain('active:text-primary');
+    expect(root).toContain('data-[checked]:active:text-on-surface');
+    expect(root).toContain('data-[indeterminate]:active:text-on-surface');
+  });
 });
