@@ -42,14 +42,20 @@ describe('Chip', () => {
   test('filter chip renders a leading checkmark that reveals on selection (M3)', () => {
     render(<Chip variant="filter">F</Chip>);
     const chip = screen.getByRole('button', { name: 'F' });
-    // The checkmark stays in the DOM and is revealed via data-pressed in CSS.
-    expect(chip.querySelector('svg')).not.toBeNull();
-    expect(chipTv({ variant: 'filter' }).check()).toContain('group-data-[pressed]:opacity-100');
+    // The checkmark stays in the DOM (data-slot hook) and is revealed via
+    // data-pressed in CSS.
+    const check = chip.querySelector('[data-slot="check"]');
+    expect(check).not.toBeNull();
+    expect((check as HTMLElement).className.split(' ')).toContain(
+      'group-data-[pressed]:opacity-100',
+    );
   });
 
   test('assist chips have no leading checkmark', () => {
     render(<Chip variant="assist">A</Chip>);
-    expect(screen.getByRole('button', { name: 'A' }).querySelector('svg')).toBeNull();
+    expect(
+      screen.getByRole('button', { name: 'A' }).querySelector('[data-slot="check"]'),
+    ).toBeNull();
   });
 
   test('disabled selected filter chip uses on-surface/12 container (M3)', () => {

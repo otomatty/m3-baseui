@@ -32,18 +32,24 @@ export const iconButton = tv({
     // container is on-surface/12; outlined disabled outline is on-surface/12
     // (material-web parity).
     variant: {
-      standard: ['text-on-surface-variant', 'disabled:text-on-surface/38'],
+      standard: [
+        'text-on-surface-variant',
+        'disabled:text-on-surface/38 data-[disabled]:text-on-surface/38',
+      ],
       filled: [
         'bg-primary text-on-primary',
         'disabled:bg-on-surface/12 disabled:text-on-surface/38',
+        'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38',
       ],
       tonal: [
         'bg-secondary-container text-on-secondary-container',
         'disabled:bg-on-surface/12 disabled:text-on-surface/38',
+        'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38',
       ],
       outlined: [
         'border border-outline text-on-surface-variant',
         'disabled:border-on-surface/12 disabled:text-on-surface/38',
+        'data-[disabled]:border-on-surface/12 data-[disabled]:text-on-surface/38',
       ],
     },
     selected: {
@@ -62,7 +68,13 @@ export const iconButton = tv({
     {
       variant: 'outlined',
       selected: true,
-      class: 'bg-inverse-surface text-inverse-on-surface border-transparent',
+      class: [
+        'bg-inverse-surface text-inverse-on-surface border-transparent',
+        // M3 disabled + selected: faint on-surface/12 container, no outline
+        // (icon falls back to on-surface/38 from the variant). NOT transparent.
+        'disabled:bg-on-surface/12 disabled:border-transparent',
+        'data-[disabled]:bg-on-surface/12 data-[disabled]:border-transparent',
+      ],
     },
   ],
   defaultVariants: {

@@ -33,11 +33,10 @@ describe('Radio', () => {
   });
 
   test('unselected state layer tints with on-surface, selected with primary (M3)', () => {
-    const r = radioTv();
-    const root = r.root();
-    expect(root).toContain('text-on-surface ');
-    expect(root).not.toContain('text-on-surface-variant');
-    expect(root).toContain('data-[checked]:text-primary');
+    const tokens = radioTv().root().split(' ');
+    expect(tokens).toContain('text-on-surface');
+    expect(tokens).not.toContain('text-on-surface-variant');
+    expect(tokens).toContain('data-[checked]:text-primary');
   });
 
   test('pressed state layer inverts color (M3): unselected→primary, selected→on-surface', () => {

@@ -136,6 +136,18 @@ export const iconButton = recipe({
         background: `rgb(${vars.sys.color.inverseSurface})`,
         color: `rgb(${vars.sys.color.inverseOnSurface})`,
         borderColor: 'transparent',
+        selectors: {
+          // M3 disabled + selected: faint on-surface/12 container, no outline
+          // (icon falls back to on-surface/38 from the variant). NOT transparent.
+          '&:disabled': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            borderColor: 'transparent',
+          },
+          '&[data-disabled]': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            borderColor: 'transparent',
+          },
+        },
       },
     },
   ],

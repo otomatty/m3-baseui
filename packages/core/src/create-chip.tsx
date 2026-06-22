@@ -43,7 +43,7 @@ export function createChip(resolve: ChipClassResolver) {
           {...rest}
         >
           {/* M3 leading checkmark: kept mounted, revealed via data-pressed in CSS */}
-          <span className={classes.check} aria-hidden="true">
+          <span className={classes.check} data-slot="check" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
               <path fill="currentColor" d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
             </svg>
