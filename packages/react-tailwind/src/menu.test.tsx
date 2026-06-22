@@ -52,5 +52,6 @@ describe('Menu parts', () => {
     expect(Menu.RadioItem).toBeDefined();
     expect(Menu.CheckboxItemIndicator).toBeDefined();
     expect(Menu.RadioItemIndicator).toBeDefined();
+    expect(Menu.Check).toBeDefined();
   });
 });

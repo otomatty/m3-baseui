@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { render, screen } from '@testing-library/react';
-import { IconButton, iconButton } from './icon-button';
+import { IconButton } from './icon-button';
 
 describe('IconButton', () => {
   test('renders the standard variant by default', () => {
@@ -84,14 +84,28 @@ describe('IconButton', () => {
   });
 
   test('M3 Expressive size + width variants set container dimensions', () => {
-    const args = { variant: 'standard', selected: undefined } as const;
+    render(
+      <>
+        <IconButton aria-label="XS" size="xs">
+          ●
+        </IconButton>
+        <IconButton aria-label="XL" size="xl">
+          ●
+        </IconButton>
+        <IconButton aria-label="L-Wide" size="l" width="wide">
+          ●
+        </IconButton>
+        <IconButton aria-label="L-Narrow" size="l" width="narrow">
+          ●
+        </IconButton>
+      </>,
+    );
     // height scales per size (xs 32dp → xl 136dp)
-    expect(iconButton({ ...args, size: 'xs' })).toContain('h-8');
-    expect(iconButton({ ...args, size: 'xl' })).toContain('h-[136px]');
-    // width scales per (size, width): large/wide = 128dp
-    expect(iconButton({ ...args, size: 'l', width: 'wide' })).toContain('w-32');
-    // large/narrow = 64dp
-    expect(iconButton({ ...args, size: 'l', width: 'narrow' })).toContain('w-16');
+    expect(screen.getByRole('button', { name: 'XS' }).className).toContain('h-8');
+    expect(screen.getByRole('button', { name: 'XL' }).className).toContain('h-[136px]');
+    // width scales per (size, width): large/wide = 128dp, large/narrow = 64dp
+    expect(screen.getByRole('button', { name: 'L-Wide' }).className).toContain('w-32');
+    expect(screen.getByRole('button', { name: 'L-Narrow' }).className).toContain('w-16');
   });
 
   test('mounts a ripple host by default and omits it when disabled', () => {
