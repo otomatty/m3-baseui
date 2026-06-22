@@ -26,10 +26,30 @@ type ItemProps = Omit<React.ComponentPropsWithoutRef<typeof Toggle>, 'children'>
 
 export function createNavigationBar(classes: NavigationBarClasses) {
   const Root = React.forwardRef<HTMLDivElement, RootProps>(function Root(
-    { className, ...props },
+    { className, value, defaultValue, onValueChange, ...props },
     ref,
   ) {
-    return <ToggleGroup ref={ref} className={mergeClassName(classes.root, className)} {...props} />;
+    // M3 navigation bars always keep one destination active. Base UI's
+    // ToggleGroup still toggles off (emitting `[]`) when the pressed item is
+    // tapped again, so Root owns the value and drops that deselect emission —
+    // for both controlled and uncontrolled consumers.
+    const [internal, setInternal] = React.useState<readonly string[]>(defaultValue ?? []);
+    const isControlled = value !== undefined;
+    const current = isControlled ? value : internal;
+    const handleValueChange: NonNullable<RootProps['onValueChange']> = (next, details) => {
+      if (next.length === 0) return;
+      if (!isControlled) setInternal(next);
+      onValueChange?.(next, details);
+    };
+    return (
+      <ToggleGroup
+        ref={ref}
+        value={current}
+        onValueChange={handleValueChange}
+        className={mergeClassName(classes.root, className)}
+        {...props}
+      />
+    );
   });
   Root.displayName = 'M3NavigationBar.Root';
 
