@@ -22,6 +22,10 @@ export const checkboxTv = tv({
       // M3 pressed state layer inverts: unselected→primary, selected→on-surface
       'active:text-primary',
       'data-[checked]:active:text-on-surface data-[indeterminate]:active:text-on-surface',
+      // M3 error: error outline + error-filled box; state layer stays error
+      'data-[error]:border-error data-[error]:text-error data-[error]:active:text-error',
+      'data-[error]:data-[checked]:bg-error data-[error]:data-[checked]:border-error data-[error]:data-[checked]:text-error data-[error]:data-[checked]:active:text-error',
+      'data-[error]:data-[indeterminate]:bg-error data-[error]:data-[indeterminate]:border-error data-[error]:data-[indeterminate]:text-error data-[error]:data-[indeterminate]:active:text-error',
       'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
       'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0',
       // M3 disabled: unselected outline on-surface/38; selected/indeterminate
@@ -38,6 +42,8 @@ export const checkboxTv = tv({
     ],
     indicator: [
       'group/cb relative inline-flex items-center justify-center size-full pointer-events-none text-on-primary',
+      // M3 error: the check / dash turn on-error on the error-filled box
+      'group-data-[error]:text-on-error',
       // M3 disabled: the check / dash turn the surface color on the faint box
       'group-data-[disabled]:text-surface',
       'opacity-0 data-[checked]:opacity-100 data-[indeterminate]:opacity-100',

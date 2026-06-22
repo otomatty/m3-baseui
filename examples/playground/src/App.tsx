@@ -170,12 +170,18 @@ export function App() {
               <label className="flex items-center gap-2 text-body-medium cursor-pointer">
                 <Checkbox indeterminate /> Indeterminate
               </label>
+              <label className="flex items-center gap-2 text-body-medium cursor-pointer">
+                <Checkbox error /> Error
+              </label>
               <RadioGroup defaultValue="a">
                 <label className="flex items-center gap-2 text-body-medium cursor-pointer">
                   <Radio value="a" /> オプション A
                 </label>
                 <label className="flex items-center gap-2 text-body-medium cursor-pointer">
                   <Radio value="b" /> オプション B
+                </label>
+                <label className="flex items-center gap-2 text-body-medium cursor-pointer">
+                  <Radio value="c" error /> エラー
                 </label>
               </RadioGroup>
             </div>

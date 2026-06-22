@@ -14,15 +14,23 @@ import type { RadioClasses } from './radio.contract';
 import { mergeClassName } from './slot';
 
 type RadioRootProps = React.ComponentPropsWithoutRef<typeof RadioPrimitive.Root>;
+type RadioProps = RadioRootProps & {
+  /** M3 error state: tints the ring, dot, and state layer with error tokens. */
+  error?: boolean;
+};
 type RadioGroupProps = React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive>;
 
 export function createRadio(classes: RadioClasses) {
-  const Radio = React.forwardRef<React.ElementRef<typeof RadioPrimitive.Root>, RadioRootProps>(
-    function Radio({ className, ...props }, ref) {
+  const Radio = React.forwardRef<React.ElementRef<typeof RadioPrimitive.Root>, RadioProps>(
+    function Radio({ className, error, ...props }, ref) {
+      const errorProps: { [key: `data-${string}`]: string } | undefined = error
+        ? { 'data-error': '' }
+        : undefined;
       return (
         <RadioPrimitive.Root
           ref={ref}
           className={mergeClassName(classes.root, className)}
+          {...errorProps}
           {...props}
         >
           <RadioPrimitive.Indicator className={classes.indicator} keepMounted />

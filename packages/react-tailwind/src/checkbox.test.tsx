@@ -49,4 +49,19 @@ describe('Checkbox', () => {
     expect(tokens).toContain('data-[checked]:active:text-on-surface');
     expect(tokens).toContain('data-[indeterminate]:active:text-on-surface');
   });
+
+  test('error prop sets data-error and tints with error tokens (M3)', () => {
+    render(<Checkbox error />);
+    const el = screen.getByRole('checkbox');
+    expect(el).toHaveAttribute('data-error');
+    const tokens = el.className.split(' ');
+    // unselected error: error outline + error state layer
+    expect(tokens).toContain('data-[error]:border-error');
+    expect(tokens).toContain('data-[error]:text-error');
+    // selected error: error-filled box
+    expect(tokens).toContain('data-[error]:data-[checked]:bg-error');
+    // check turns on-error on the error-filled box
+    const indicator = el.querySelector('span');
+    expect(indicator?.className.split(' ')).toContain('group-data-[error]:text-on-error');
+  });
 });

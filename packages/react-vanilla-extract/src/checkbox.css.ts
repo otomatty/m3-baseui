@@ -44,6 +44,20 @@ export const root = style({
     '&[data-checked]:active, &[data-indeterminate]:active': {
       color: `rgb(${vars.sys.color.onSurface})`,
     },
+    // M3 error: error outline + error-filled box; state layer stays error
+    '&[data-error]': {
+      borderColor: `rgb(${vars.sys.color.error})`,
+      color: `rgb(${vars.sys.color.error})`,
+    },
+    '&[data-error][data-checked], &[data-error][data-indeterminate]': {
+      background: `rgb(${vars.sys.color.error})`,
+      borderColor: `rgb(${vars.sys.color.error})`,
+      color: `rgb(${vars.sys.color.error})`,
+    },
+    '&[data-error]:active, &[data-error][data-checked]:active, &[data-error][data-indeterminate]:active':
+      {
+        color: `rgb(${vars.sys.color.error})`,
+      },
     '&:focus-visible': {
       outline: `3px solid rgb(${vars.sys.color.secondary})`,
       outlineOffset: '2px',
@@ -79,6 +93,8 @@ export const indicator = style({
   opacity: 0,
   selectors: {
     '&[data-checked], &[data-indeterminate]': { opacity: 1 },
+    // M3 error: the check / dash turn on-error on the error-filled box
+    [`${root}[data-error] &`]: { color: `rgb(${vars.sys.color.onError})` },
     // M3 disabled: the check / dash turn the surface color on the faint box
     [`${root}[data-disabled] &`]: { color: `rgb(${vars.sys.color.surface})` },
     '&[data-indeterminate]::after': {

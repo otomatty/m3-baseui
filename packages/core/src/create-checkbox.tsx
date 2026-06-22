@@ -14,14 +14,22 @@ import type { CheckboxClasses } from './checkbox.contract';
 import { mergeClassName } from './slot';
 
 type RootProps = React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>;
+type CheckboxProps = RootProps & {
+  /** M3 error state: tints the box, check, and state layer with error tokens. */
+  error?: boolean;
+};
 
 export function createCheckbox(classes: CheckboxClasses) {
-  const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, RootProps>(
-    function Checkbox({ className, ...props }, ref) {
+  const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, CheckboxProps>(
+    function Checkbox({ className, error, ...props }, ref) {
+      const errorProps: { [key: `data-${string}`]: string } | undefined = error
+        ? { 'data-error': '' }
+        : undefined;
       return (
         <CheckboxPrimitive.Root
           ref={ref}
           className={mergeClassName(classes.root, className)}
+          {...errorProps}
           {...props}
         >
           <CheckboxPrimitive.Indicator className={classes.indicator} keepMounted>
