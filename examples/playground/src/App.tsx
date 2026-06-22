@@ -156,6 +156,13 @@ export function App() {
                 <Switch defaultChecked />
                 <Switch />
                 <Switch disabled defaultChecked />
+                <Switch
+                  defaultChecked
+                  icons={{
+                    checked: <Icon name="check" size={16} />,
+                    unchecked: <Icon name="close" size={16} />,
+                  }}
+                />
               </div>
               <label className="flex items-center gap-2 text-body-medium cursor-pointer">
                 <Checkbox defaultChecked /> Checkbox

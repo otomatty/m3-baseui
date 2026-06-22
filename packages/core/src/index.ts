@@ -37,7 +37,7 @@ export {
   type IconButtonResolverArgs,
   type IconButtonClassResolver,
 } from './icon-button.contract';
-export type { SwitchClasses } from './switch.contract';
+export type { SwitchClasses, SwitchIcons } from './switch.contract';
 export type { CheckboxClasses } from './checkbox.contract';
 export type { RadioClasses } from './radio.contract';
 export {

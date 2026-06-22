@@ -46,6 +46,9 @@ export const thumb = style({
   left: '6px',
   width: '16px',
   height: '16px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   borderRadius: vars.sys.shape.full,
   transform: 'translateY(-50%)',
   background: `rgb(${vars.sys.color.outline})`,
@@ -53,6 +56,8 @@ export const thumb = style({
   pointerEvents: 'none',
   transition: `all 200ms ${vars.sys.motion.easing.standard}`,
   selectors: {
+    // M3 with-icon: the unchecked handle grows to 24dp to fit its icon
+    '&[data-with-icon][data-unchecked]': { left: '4px', width: '24px', height: '24px' },
     '&::before': {
       content: '""',
       position: 'absolute',
@@ -73,8 +78,22 @@ export const thumb = style({
       background: `rgb(${vars.sys.color.onPrimary})`,
       color: `rgb(${vars.sys.color.primary})`,
     },
+    // M3 handle interaction colors: unselected outline→on-surface-variant,
+    // selected on-primary→primary-container on hover/focus/press
+    [`${root}:hover &`]: { background: `rgb(${vars.sys.color.onSurfaceVariant})` },
+    [`${root}:focus-visible &`]: { background: `rgb(${vars.sys.color.onSurfaceVariant})` },
+    [`${root}[data-checked]:hover &`]: { background: `rgb(${vars.sys.color.primaryContainer})` },
+    [`${root}[data-checked]:focus-visible &`]: {
+      background: `rgb(${vars.sys.color.primaryContainer})`,
+    },
+    [`${root}[data-checked]:active &`]: { background: `rgb(${vars.sys.color.primaryContainer})` },
     // M3 squish: handle grows to 28px while pressed, staying on its side
-    [`${root}:active &`]: { left: '0px', width: '28px', height: '28px' },
+    [`${root}:active &`]: {
+      left: '0px',
+      width: '28px',
+      height: '28px',
+      background: `rgb(${vars.sys.color.onSurfaceVariant})`,
+    },
     [`${root}[data-checked]:active &`]: { left: '20px', width: '28px', height: '28px' },
     // M3 disabled handle: on-surface/38 (unselected), surface (selected)
     [`${root}[data-disabled] &`]: { background: `rgb(${vars.sys.color.onSurface} / 0.38)` },
@@ -82,5 +101,31 @@ export const thumb = style({
     [`${root}:hover &::before`]: { opacity: vars.sys.state.hover },
     [`${root}:focus-visible &::before`]: { opacity: vars.sys.state.focus },
     [`${root}:active &::before`]: { opacity: vars.sys.state.pressed },
+  },
+});
+
+// Handle icons (16dp). Both stay mounted; the root's data-checked reveals one.
+const iconBase = {
+  display: 'none',
+  alignItems: 'center',
+  justifyContent: 'center',
+} as const;
+
+export const iconChecked = style({
+  ...iconBase,
+  color: `rgb(${vars.sys.color.onPrimaryContainer})`,
+  selectors: {
+    [`${root}[data-checked] &`]: { display: 'inline-flex' },
+    '& > svg': { width: '16px', height: '16px' },
+  },
+});
+
+export const iconUnchecked = style({
+  ...iconBase,
+  display: 'inline-flex',
+  color: `rgb(${vars.sys.color.surfaceContainerHighest})`,
+  selectors: {
+    [`${root}[data-checked] &`]: { display: 'none' },
+    '& > svg': { width: '16px', height: '16px' },
   },
 });
