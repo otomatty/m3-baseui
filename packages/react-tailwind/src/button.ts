@@ -17,7 +17,7 @@ export const button = tv({
     'relative inline-flex items-center justify-center gap-2',
     'h-10 px-6 rounded-full overflow-hidden cursor-pointer select-none border-0',
     'text-label-large',
-    'transition-[box-shadow,background-color] duration-200 ease-[var(--md-sys-motion-easing-standard)]',
+    'transition-[box-shadow,background-color,color,border-color] duration-200 ease-[var(--md-sys-motion-easing-standard)]',
     // State layer overlay
     'before:absolute before:inset-0 before:rounded-[inherit] before:bg-current before:opacity-0 before:pointer-events-none',
     'before:transition-opacity before:duration-100',
@@ -25,19 +25,46 @@ export const button = tv({
     'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
     'active:before:opacity-[var(--md-sys-state-pressed)]',
     'data-[pressed]:before:opacity-[var(--md-sys-state-pressed)]',
-    // Focus ring
-    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
-    // Disabled
-    'disabled:opacity-[0.38] disabled:pointer-events-none disabled:shadow-none',
-    'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none data-[disabled]:shadow-none',
+    // Focus ring (M3: 3px secondary, 2px offset)
+    'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
+    // Disabled: no interaction, no state layer, no elevation. Per-variant
+    // colors (container on-surface/12, label on-surface/38) live on each variant.
+    'disabled:pointer-events-none disabled:shadow-none disabled:before:opacity-0',
+    'data-[disabled]:pointer-events-none data-[disabled]:shadow-none data-[disabled]:before:opacity-0',
   ],
   variants: {
+    // M3 elevation per variant: filled/tonal rest level0→hover level1→pressed level0;
+    // elevated rest level1→hover level2→pressed level1. Disabled container is
+    // on-surface/12 and label on-surface/38, matching material-web.
     variant: {
-      filled: 'bg-primary text-on-primary',
-      tonal: 'bg-secondary-container text-on-secondary-container',
-      outlined: 'bg-transparent text-primary border border-outline',
-      elevated: 'bg-surface-container-low text-primary shadow-level1',
-      text: 'bg-transparent text-primary px-3',
+      filled: [
+        'bg-primary text-on-primary',
+        'hover:shadow-level1 focus-visible:shadow-none active:shadow-none data-[pressed]:shadow-none',
+        'disabled:bg-on-surface/12 disabled:text-on-surface/38',
+        'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38',
+      ],
+      tonal: [
+        'bg-secondary-container text-on-secondary-container',
+        'hover:shadow-level1 focus-visible:shadow-none active:shadow-none data-[pressed]:shadow-none',
+        'disabled:bg-on-surface/12 disabled:text-on-surface/38',
+        'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38',
+      ],
+      outlined: [
+        'bg-transparent text-primary border border-outline',
+        'disabled:text-on-surface/38 disabled:border-on-surface/12',
+        'data-[disabled]:text-on-surface/38 data-[disabled]:border-on-surface/12',
+      ],
+      elevated: [
+        'bg-surface-container-low text-primary shadow-level1',
+        'hover:shadow-level2 focus-visible:shadow-level1 active:shadow-level1 data-[pressed]:shadow-level1',
+        'disabled:bg-on-surface/12 disabled:text-on-surface/38',
+        'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38',
+      ],
+      text: [
+        'bg-transparent text-primary px-3',
+        'disabled:text-on-surface/38',
+        'data-[disabled]:text-on-surface/38',
+      ],
     },
   },
   defaultVariants: {

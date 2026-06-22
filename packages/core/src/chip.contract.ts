@@ -20,6 +20,8 @@ export interface ChipSlotClasses {
   root: string;
   /** The trailing remove button (input chips). */
   remove: string;
+  /** The leading checkmark (filter chips, revealed when selected). */
+  check: string;
 }
 
 export type ChipClassResolver = (args: ChipResolverArgs) => ChipSlotClasses;

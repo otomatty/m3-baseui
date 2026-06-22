@@ -17,4 +17,36 @@ describe('Checkbox', () => {
     render(<Checkbox indeterminate />);
     expect(screen.getByRole('checkbox')).toHaveAttribute('data-indeterminate');
   });
+
+  test('disabled uses M3 tokens, not a blanket opacity', () => {
+    render(<Checkbox disabled />);
+    const el = screen.getByRole('checkbox');
+    expect(el).toHaveAttribute('data-disabled');
+    const tokens = el.className.split(' ');
+    // unselected disabled: faint outline
+    expect(tokens).toContain('data-[disabled]:border-on-surface/38');
+    // selected/indeterminate disabled: faint filled box, no outline
+    expect(tokens).toContain('data-[disabled]:data-[checked]:bg-on-surface/38');
+    expect(tokens).toContain('data-[disabled]:data-[indeterminate]:bg-on-surface/38');
+    expect(tokens).not.toContain('data-[disabled]:opacity-[0.38]');
+    // disabled check/dash use the surface color (on the indicator slot)
+    const indicator = el.querySelector('span');
+    expect(indicator?.className.split(' ')).toContain('group-data-[disabled]:text-surface');
+  });
+
+  test('unselected state layer tints with on-surface, selected with primary (M3)', () => {
+    render(<Checkbox />);
+    const tokens = screen.getByRole('checkbox').className.split(' ');
+    expect(tokens).toContain('text-on-surface');
+    expect(tokens).not.toContain('text-on-surface-variant');
+    expect(tokens).toContain('data-[checked]:text-primary');
+  });
+
+  test('pressed state layer inverts color (M3): unselected→primary, selected→on-surface', () => {
+    render(<Checkbox />);
+    const tokens = screen.getByRole('checkbox').className.split(' ');
+    expect(tokens).toContain('active:text-primary');
+    expect(tokens).toContain('data-[checked]:active:text-on-surface');
+    expect(tokens).toContain('data-[indeterminate]:active:text-on-surface');
+  });
 });

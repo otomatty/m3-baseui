@@ -11,20 +11,28 @@ import { tv } from 'tailwind-variants';
 export const chipTv = tv({
   slots: {
     root: [
-      'relative inline-flex items-center justify-center gap-2 box-border',
+      'group relative inline-flex items-center justify-center gap-2 box-border',
       'h-8 px-4 rounded-[8px] overflow-hidden select-none border bg-transparent text-label-large',
       'transition-colors duration-150 ease-standard',
       'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
-      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
-      'disabled:opacity-[0.38] disabled:pointer-events-none',
+      'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
+      // M3 disabled: label on-surface/38, outline on-surface/12; no state layer.
+      'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0',
+      'disabled:pointer-events-none disabled:before:opacity-0',
+      'data-[disabled]:text-on-surface/38 data-[disabled]:border-on-surface/12',
+      'disabled:text-on-surface/38 disabled:border-on-surface/12',
     ],
     remove: [
       'inline-flex items-center justify-center shrink-0 size-[18px] -mr-1 ml-1 rounded-full border-0 bg-transparent',
       'text-on-surface-variant cursor-pointer hover:opacity-80',
+    ],
+    check: [
+      'inline-flex items-center justify-center shrink-0 h-[18px] w-0 -ml-2 opacity-0 overflow-hidden pointer-events-none',
+      'transition-all duration-150 ease-standard',
+      'group-data-[pressed]:w-[18px] group-data-[pressed]:ml-0 group-data-[pressed]:opacity-100',
     ],
   },
   variants: {
@@ -36,6 +44,8 @@ export const chipTv = tv({
         root: [
           'border-outline text-on-surface-variant cursor-pointer',
           'data-[pressed]:bg-secondary-container data-[pressed]:text-on-secondary-container data-[pressed]:border-transparent',
+          // M3 disabled + selected: faint on-surface/12 container
+          'data-[pressed]:data-[disabled]:bg-on-surface/12 data-[pressed]:disabled:bg-on-surface/12',
         ],
       },
     },
@@ -47,6 +57,6 @@ export const chipTv = tv({
 
 export const Chip = createChip(({ variant }) => {
   const c = chipTv({ variant });
-  return { root: c.root(), remove: c.remove() };
+  return { root: c.root(), remove: c.remove(), check: c.check() };
 });
 export type { ChipProps, ChipVariant } from '@m3/core';

@@ -27,7 +27,7 @@ export const button = recipe({
     fontSize: vars.sys.typescale.labelLarge.fontSize,
     lineHeight: vars.sys.typescale.labelLarge.lineHeight,
     letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
-    transitionProperty: 'box-shadow, background-color',
+    transitionProperty: 'box-shadow, background-color, color, border-color',
     transitionDuration: vars.sys.motion.duration.short4,
     transitionTimingFunction: vars.sys.motion.easing.standard,
     selectors: {
@@ -45,38 +45,98 @@ export const button = recipe({
       '&:focus-visible::before': { opacity: vars.sys.state.focus },
       '&[data-pressed]::before': { opacity: vars.sys.state.pressed },
       '&:active::before': { opacity: vars.sys.state.pressed },
-      '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none', boxShadow: 'none' },
-      '&:disabled': { opacity: 0.38, pointerEvents: 'none', boxShadow: 'none' },
+      // Disabled: no interaction, no state layer, no elevation. Per-variant
+      // disabled colors (container on-surface/12, label on-surface/38) below.
+      '&[data-disabled]': { pointerEvents: 'none', boxShadow: 'none' },
+      '&:disabled': { pointerEvents: 'none', boxShadow: 'none' },
+      '&[data-disabled]::before': { opacity: 0 },
+      '&:disabled::before': { opacity: 0 },
       '&:focus-visible': {
-        outline: `2px solid rgb(${vars.sys.color.secondary})`,
+        outline: `3px solid rgb(${vars.sys.color.secondary})`,
         outlineOffset: '2px',
       },
     },
   },
   variants: {
+    // M3 elevation per variant: filled/tonal rest level0→hover level1→pressed
+    // level0; elevated rest level1→hover level2→pressed level1. Disabled
+    // container is on-surface/12 and label on-surface/38 (material-web parity).
     variant: {
       filled: {
         background: `rgb(${vars.sys.color.primary})`,
         color: `rgb(${vars.sys.color.onPrimary})`,
+        selectors: {
+          '&:hover': { boxShadow: vars.sys.elevation.level1 },
+          '&:active': { boxShadow: vars.sys.elevation.level0 },
+          '&[data-pressed]': { boxShadow: vars.sys.elevation.level0 },
+          '&:disabled': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+          '&[data-disabled]': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+        },
       },
       tonal: {
         background: `rgb(${vars.sys.color.secondaryContainer})`,
         color: `rgb(${vars.sys.color.onSecondaryContainer})`,
+        selectors: {
+          '&:hover': { boxShadow: vars.sys.elevation.level1 },
+          '&:active': { boxShadow: vars.sys.elevation.level0 },
+          '&[data-pressed]': { boxShadow: vars.sys.elevation.level0 },
+          '&:disabled': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+          '&[data-disabled]': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+        },
       },
       outlined: {
         background: 'transparent',
         color: `rgb(${vars.sys.color.primary})`,
         border: `1px solid rgb(${vars.sys.color.outline})`,
+        selectors: {
+          '&:disabled': {
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+            borderColor: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+          },
+          '&[data-disabled]': {
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+            borderColor: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+          },
+        },
       },
       elevated: {
         background: `rgb(${vars.sys.color.surfaceContainerLow})`,
         color: `rgb(${vars.sys.color.primary})`,
         boxShadow: vars.sys.elevation.level1,
+        selectors: {
+          '&:hover': { boxShadow: vars.sys.elevation.level2 },
+          '&:active': { boxShadow: vars.sys.elevation.level1 },
+          '&[data-pressed]': { boxShadow: vars.sys.elevation.level1 },
+          '&:disabled': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+          '&[data-disabled]': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+        },
       },
       text: {
         background: 'transparent',
         color: `rgb(${vars.sys.color.primary})`,
         paddingInline: '12px',
+        selectors: {
+          '&:disabled': { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+          '&[data-disabled]': { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+        },
       },
     },
   },

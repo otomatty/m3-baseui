@@ -15,14 +15,24 @@ export const switchTv = tv({
       'bg-surface-container-highest border-outline',
       'transition-colors duration-200 ease-standard',
       'data-[checked]:bg-primary data-[checked]:border-primary',
-      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
+      'data-[disabled]:pointer-events-none',
+      // M3 disabled: faint track + outline (unselected); on-surface/12 track,
+      // no outline (selected). Not a blanket element opacity.
+      'data-[disabled]:bg-surface-container-highest/12 data-[disabled]:border-on-surface/12',
+      'data-[disabled]:data-[checked]:bg-on-surface/12 data-[disabled]:data-[checked]:border-transparent',
     ],
     thumb: [
       'absolute top-1/2 -translate-y-1/2 left-[6px] size-4 rounded-full pointer-events-none',
       'bg-outline text-on-surface',
       'transition-all duration-200 ease-standard',
       'data-[checked]:left-[22px] data-[checked]:size-6 data-[checked]:bg-on-primary data-[checked]:text-primary',
+      // M3 squish: handle grows to 28px while pressed, staying on its side
+      'group-active:left-0 group-active:size-7',
+      'group-active:data-[checked]:left-5 group-active:data-[checked]:size-7',
+      // M3 disabled handle: on-surface/38 (unselected), surface (selected)
+      'group-data-[disabled]:bg-on-surface/38',
+      'group-data-[disabled]:data-[checked]:bg-surface',
       // 40dp circular state layer centered on the thumb
       'before:content-[""] before:absolute before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2',
       'before:size-10 before:rounded-full before:bg-current before:opacity-0 before:transition-opacity before:duration-100',

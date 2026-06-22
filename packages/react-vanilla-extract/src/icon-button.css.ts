@@ -40,28 +40,70 @@ export const iconButton = recipe({
       '&:focus-visible::before': { opacity: vars.sys.state.focus },
       '&[data-pressed]::before': { opacity: vars.sys.state.pressed },
       '&:active::before': { opacity: vars.sys.state.pressed },
-      '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
-      '&:disabled': { opacity: 0.38, pointerEvents: 'none' },
+      // Disabled: no interaction, no state layer. Per-variant disabled colors
+      // (container on-surface/12, icon on-surface/38) live on each variant.
+      '&[data-disabled]': { pointerEvents: 'none' },
+      '&:disabled': { pointerEvents: 'none' },
+      '&[data-disabled]::before': { opacity: 0 },
+      '&:disabled::before': { opacity: 0 },
       '&:focus-visible': {
-        outline: `2px solid rgb(${vars.sys.color.secondary})`,
+        outline: `3px solid rgb(${vars.sys.color.secondary})`,
         outlineOffset: '2px',
       },
     },
   },
   variants: {
+    // Disabled icon is on-surface/38 for every variant; filled/tonal disabled
+    // container is on-surface/12; outlined disabled outline is on-surface/12.
     variant: {
-      standard: { color: `rgb(${vars.sys.color.onSurfaceVariant})` },
+      standard: {
+        color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+        selectors: {
+          '&:disabled': { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+          '&[data-disabled]': { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+        },
+      },
       filled: {
         background: `rgb(${vars.sys.color.primary})`,
         color: `rgb(${vars.sys.color.onPrimary})`,
+        selectors: {
+          '&:disabled': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+          '&[data-disabled]': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+        },
       },
       tonal: {
         background: `rgb(${vars.sys.color.secondaryContainer})`,
         color: `rgb(${vars.sys.color.onSecondaryContainer})`,
+        selectors: {
+          '&:disabled': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+          '&[data-disabled]': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+          },
+        },
       },
       outlined: {
         border: `1px solid rgb(${vars.sys.color.outline})`,
         color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+        selectors: {
+          '&:disabled': {
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+            borderColor: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+          },
+          '&[data-disabled]': {
+            color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+            borderColor: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+          },
+        },
       },
     },
     selected: {
@@ -94,6 +136,18 @@ export const iconButton = recipe({
         background: `rgb(${vars.sys.color.inverseSurface})`,
         color: `rgb(${vars.sys.color.inverseOnSurface})`,
         borderColor: 'transparent',
+        selectors: {
+          // M3 disabled + selected: faint on-surface/12 container, no outline
+          // (icon falls back to on-surface/38 from the variant). NOT transparent.
+          '&:disabled': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            borderColor: 'transparent',
+          },
+          '&[data-disabled]': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+            borderColor: 'transparent',
+          },
+        },
       },
     },
   ],
