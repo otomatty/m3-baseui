@@ -6,7 +6,7 @@
  * data-[starting-style] / data-[ending-style] attributes.
  */
 import { createDialog } from '@m3/core';
-import { tv } from 'tailwind-variants';
+import { tv } from './tv';
 
 export const dialogTv = tv({
   slots: {
