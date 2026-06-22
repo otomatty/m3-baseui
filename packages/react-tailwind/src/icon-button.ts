@@ -20,16 +20,31 @@ export const iconButton = tv({
     'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
     'active:before:opacity-[var(--md-sys-state-pressed)]',
     'data-[pressed]:before:opacity-[var(--md-sys-state-pressed)]',
-    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
-    'disabled:opacity-[0.38] disabled:pointer-events-none',
-    'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+    // Focus ring (M3: 3px secondary, 2px offset)
+    'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
+    // Disabled: no interaction, no state layer. Per-variant disabled colors
+    // (container on-surface/12, icon on-surface/38) live on each variant.
+    'disabled:pointer-events-none disabled:before:opacity-0',
+    'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0',
   ],
   variants: {
+    // Disabled icon is on-surface/38 for every variant; filled/tonal disabled
+    // container is on-surface/12; outlined disabled outline is on-surface/12
+    // (material-web parity).
     variant: {
-      standard: 'text-on-surface-variant',
-      filled: 'bg-primary text-on-primary',
-      tonal: 'bg-secondary-container text-on-secondary-container',
-      outlined: 'border border-outline text-on-surface-variant',
+      standard: ['text-on-surface-variant', 'disabled:text-on-surface/38'],
+      filled: [
+        'bg-primary text-on-primary',
+        'disabled:bg-on-surface/12 disabled:text-on-surface/38',
+      ],
+      tonal: [
+        'bg-secondary-container text-on-secondary-container',
+        'disabled:bg-on-surface/12 disabled:text-on-surface/38',
+      ],
+      outlined: [
+        'border border-outline text-on-surface-variant',
+        'disabled:border-on-surface/12 disabled:text-on-surface/38',
+      ],
     },
     selected: {
       true: '',
