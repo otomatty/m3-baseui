@@ -307,8 +307,60 @@ export function App() {
                 <Menu.Portal>
                   <Menu.Positioner sideOffset={8}>
                     <Menu.Popup>
-                      <Menu.Item>プロフィール</Menu.Item>
-                      <Menu.Item>設定</Menu.Item>
+                      <Menu.Item>
+                        <span data-slot="menu-leading">
+                          <Icon name="person" size={24} />
+                        </span>
+                        プロフィール
+                      </Menu.Item>
+                      <Menu.Item>
+                        <span data-slot="menu-leading">
+                          <Icon name="content_copy" size={24} />
+                        </span>
+                        コピー
+                        <span data-slot="menu-trailing">⌘C</span>
+                      </Menu.Item>
+                      <Menu.Separator />
+                      <Menu.CheckboxItem defaultChecked>
+                        <Menu.CheckboxItemIndicator>
+                          <Menu.Check />
+                        </Menu.CheckboxItemIndicator>
+                        通知を表示
+                      </Menu.CheckboxItem>
+                      <Menu.RadioGroup defaultValue="list">
+                        <Menu.RadioItem value="list">
+                          <Menu.RadioItemIndicator>
+                            <Menu.Check />
+                          </Menu.RadioItemIndicator>
+                          リスト表示
+                        </Menu.RadioItem>
+                        <Menu.RadioItem value="grid">
+                          <Menu.RadioItemIndicator>
+                            <Menu.Check />
+                          </Menu.RadioItemIndicator>
+                          グリッド表示
+                        </Menu.RadioItem>
+                      </Menu.RadioGroup>
+                      <Menu.Separator />
+                      <Menu.SubmenuRoot>
+                        <Menu.SubmenuTrigger>
+                          <span className="flex items-center gap-3">
+                            <span data-slot="menu-leading">
+                              <Icon name="share" size={24} />
+                            </span>
+                            共有
+                          </span>
+                          <Icon name="chevron_right" size={20} />
+                        </Menu.SubmenuTrigger>
+                        <Menu.Portal>
+                          <Menu.Positioner>
+                            <Menu.Popup>
+                              <Menu.Item>メール</Menu.Item>
+                              <Menu.Item>リンクをコピー</Menu.Item>
+                            </Menu.Popup>
+                          </Menu.Positioner>
+                        </Menu.Portal>
+                      </Menu.SubmenuRoot>
                       <Menu.Separator />
                       <Menu.Item>ログアウト</Menu.Item>
                     </Menu.Popup>

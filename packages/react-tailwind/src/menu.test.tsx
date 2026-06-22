@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { menuTv } from './menu';
+import { Menu, menuTv } from './menu';
 
 // Menu is a portal component; per CLAUDE.md interaction is covered by E2E. We
 // assert the M3 token contract on the resolved class strings.
@@ -21,5 +21,36 @@ describe('Menu tokens', () => {
   test('item has a state layer keyed to hover + Base UI data-highlighted', () => {
     expect(m.item()).toContain('hover:before:opacity-[var(--md-sys-state-hover)]');
     expect(m.item()).toContain('data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]');
+  });
+
+  test('item supports a trailing shortcut slot pushed to the end', () => {
+    expect(m.item()).toContain('[&_[data-slot=menu-trailing]]:ml-auto');
+    expect(m.item()).toContain('[&_[data-slot=menu-leading]>svg]:size-6');
+  });
+
+  test('submenu trigger spreads its label + chevron and stays lit while open', () => {
+    expect(m.submenuTrigger()).toContain('justify-between');
+    expect(m.submenuTrigger()).toContain(
+      'data-[popup-open]:before:opacity-[var(--md-sys-state-hover)]',
+    );
+  });
+
+  test('selectable items reserve a 24px leading indicator column', () => {
+    expect(m.checkboxItem()).toContain('grid-cols-[24px_1fr]');
+    expect(m.radioItem()).toContain('grid-cols-[24px_1fr]');
+    // indicator stays mounted but is hidden unless the item is checked
+    expect(m.itemIndicator()).toContain('group-data-[checked]:visible');
+  });
+});
+
+describe('Menu parts', () => {
+  test('namespace exposes submenu + selectable item parts', () => {
+    expect(Menu.SubmenuRoot).toBeDefined();
+    expect(Menu.SubmenuTrigger).toBeDefined();
+    expect(Menu.RadioGroup).toBeDefined();
+    expect(Menu.CheckboxItem).toBeDefined();
+    expect(Menu.RadioItem).toBeDefined();
+    expect(Menu.CheckboxItemIndicator).toBeDefined();
+    expect(Menu.RadioItemIndicator).toBeDefined();
   });
 });
