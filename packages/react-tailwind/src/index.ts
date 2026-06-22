@@ -22,6 +22,13 @@ export type { TabsVariant } from './tabs';
 export { Slider, sliderTv } from './slider';
 export { Select, selectTv } from './select';
 
+export { TextField, textFieldTv } from './textfield';
+export type { TextFieldProps, TextFieldVariant } from './textfield';
+export { NavigationBar, navigationBarTv } from './navigation-bar';
+export { Fab, fabTv } from './fab';
+export type { FabProps, FabSize, FabColor } from './fab';
+export { Snackbar, snackbarTv, useSnackbar } from './snackbar';
+
 export {
   ThemeProvider,
   useTheme,
