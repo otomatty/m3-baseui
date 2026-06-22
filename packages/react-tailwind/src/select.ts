@@ -41,12 +41,15 @@ export const selectTv = tv({
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // M3 disabled (per-token, not a blanket fade): label + trailing supporting
+      // text on-surface/0.38, no state layer.
+      'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
+      'data-[disabled]:[&_[data-slot=select-trailing]]:text-on-surface/[0.38]',
       // M3 trailing supporting text (e.g. meta) sits in the last column.
       '[&_[data-slot=select-trailing]]:pl-4 [&_[data-slot=select-trailing]]:text-label-large [&_[data-slot=select-trailing]]:text-on-surface-variant',
     ],
     itemIndicator:
-      'inline-flex items-center justify-center text-primary invisible group-data-[selected]:visible',
+      'inline-flex items-center justify-center text-primary invisible group-data-[selected]:visible group-data-[disabled]:text-on-surface/[0.38]',
     groupLabel: 'px-3 py-2 text-label-small text-on-surface-variant',
     // Sticky scroll affordances at the popup edges; surface-tinted with a chevron.
     scrollUpArrow: [

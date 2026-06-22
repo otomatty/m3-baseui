@@ -43,7 +43,9 @@ const stateLayerSelectors = {
   '&:hover::before': { opacity: vars.sys.state.hover },
   '&[data-highlighted]::before': { opacity: vars.sys.state.hover },
   '&:active::before': { opacity: vars.sys.state.pressed },
-  '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+  // M3 disabled (per-token, not a blanket fade): label on-surface/0.38, no state layer.
+  '&[data-disabled]': { color: `rgb(${vars.sys.color.onSurface} / 0.38)`, pointerEvents: 'none' },
+  '&[data-disabled]::before': { opacity: 0 },
 } as const;
 
 // Leading icon (24dp) + trailing supporting text (shortcut/meta) slots.
@@ -57,6 +59,13 @@ const slotSelectors = {
     marginLeft: 'auto',
     paddingLeft: '16px',
     color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+  },
+  // M3 disabled: leading/trailing icon on-surface/0.38
+  '&[data-disabled] [data-slot="menu-leading"]': {
+    color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+  },
+  '&[data-disabled] [data-slot="menu-trailing"]': {
+    color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
   },
 } as const;
 
@@ -117,6 +126,10 @@ export const submenuTrigger = style({
       color: `rgb(${vars.sys.color.onSurfaceVariant})`,
     },
     '& [data-slot="menu-leading"] > svg': { width: '24px', height: '24px' },
+    // M3 disabled: leading icon on-surface/0.38
+    '&[data-disabled] [data-slot="menu-leading"]': {
+      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+    },
   },
 });
 
@@ -151,6 +164,8 @@ export const checkboxItem = style({
   selectors: {
     ...stateLayerSelectors,
     [`&[data-checked] ${itemIndicator}`]: { visibility: 'visible' },
+    // M3 disabled: the check/dot indicator dims with its row (own text color).
+    [`&[data-disabled] ${itemIndicator}`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });
 
@@ -159,5 +174,7 @@ export const radioItem = style({
   selectors: {
     ...stateLayerSelectors,
     [`&[data-checked] ${itemIndicator}`]: { visibility: 'visible' },
+    // M3 disabled: the check/dot indicator dims with its row (own text color).
+    [`&[data-disabled] ${itemIndicator}`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });

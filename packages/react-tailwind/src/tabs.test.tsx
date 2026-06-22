@@ -64,6 +64,18 @@ describe('Tabs tokens', () => {
     expect(s.indicator()).toContain('h-[2px]');
     expect(s.indicator()).not.toContain('rounded-t-[3px]');
   });
+
+  test('disabled is per-token (no blanket opacity): label + icon on-surface/0.38, no state layer', () => {
+    const p = tabsTv({ variant: 'primary' });
+    expect(p.tab()).toContain('data-[disabled]:text-on-surface/[0.38]');
+    expect(p.tab()).toContain('data-[disabled]:before:opacity-0');
+    expect(p.tab()).toContain('data-[disabled]:pointer-events-none');
+    // the old blanket opacity is gone
+    expect(p.tab()).not.toContain('data-[disabled]:opacity-[0.38]');
+    // a disabled tab that is also active stays dimmed (combined selector outranks
+    // the variant's data-[active] color)
+    expect(p.tab()).toContain('data-[disabled]:data-[active]:text-on-surface/[0.38]');
+  });
 });
 
 describe('Tabs layout extensions', () => {
@@ -99,5 +111,21 @@ describe('Tabs layout extensions', () => {
     const list = screen.getByRole('tablist');
     expect(list).toHaveAttribute('data-scrollable');
     expect(list.className).toContain('data-[scrollable]:overflow-x-auto');
+  });
+
+  test('disabled tab renders data-disabled and carries the per-token dim class', () => {
+    render(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List>
+          <Tabs.Tab value="a" disabled>
+            Disabled
+          </Tabs.Tab>
+          <Tabs.Indicator />
+        </Tabs.List>
+      </Tabs.Root>,
+    );
+    const tab = screen.getByRole('tab', { name: 'Disabled' });
+    expect(tab).toHaveAttribute('data-disabled');
+    expect(tab.className).toContain('data-[disabled]:text-on-surface/[0.38]');
   });
 });
