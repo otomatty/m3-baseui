@@ -67,6 +67,10 @@ export const tab = recipe({
         color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
         pointerEvents: 'none',
       },
+      // A disabled tab that is also the active value must stay dimmed: the
+      // variant's `&[data-active]` color is emitted after this base rule at
+      // equal specificity, so raise specificity with a combined selector.
+      '&[data-disabled][data-active]': { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
       '&[data-disabled]::before': { opacity: 0 },
       // Icon slot (24dp), centered.
       '& [data-slot="tab-icon"]': { display: 'inline-flex' },

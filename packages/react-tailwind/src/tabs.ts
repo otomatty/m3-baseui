@@ -30,6 +30,9 @@ export const tabsTv = tv({
       // M3 disabled (per-token, not a blanket fade): label + icon on-surface/0.38,
       // no state layer. currentColor carries the dim to the icon slot.
       'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
+      // A disabled tab that is also the active value stays dimmed: the variant's
+      // data-[active] color has equal specificity, so a combined selector wins.
+      'data-[disabled]:data-[active]:text-on-surface/[0.38]',
     ],
     indicator: [
       'absolute bottom-0 left-0 bg-primary',

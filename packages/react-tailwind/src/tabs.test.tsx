@@ -72,6 +72,9 @@ describe('Tabs tokens', () => {
     expect(p.tab()).toContain('data-[disabled]:pointer-events-none');
     // the old blanket opacity is gone
     expect(p.tab()).not.toContain('data-[disabled]:opacity-[0.38]');
+    // a disabled tab that is also active stays dimmed (combined selector outranks
+    // the variant's data-[active] color)
+    expect(p.tab()).toContain('data-[disabled]:data-[active]:text-on-surface/[0.38]');
   });
 });
 
