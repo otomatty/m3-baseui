@@ -22,7 +22,12 @@ export function createList(classes: ListClasses) {
     { className, ...props },
     ref,
   ) {
-    return <ul ref={ref} className={cx(classes.root, className)} {...props} />;
+    // Safari/VoiceOver drops list semantics from a marker-less <ul>, so keep an
+    // explicit role; `{...props}` still lets callers override it.
+    return (
+      // biome-ignore lint/a11y/noRedundantRoles: keeps list semantics when the marker is removed
+      <ul ref={ref} role="list" className={cx(classes.root, className)} {...props} />
+    );
   });
   Root.displayName = 'M3List.Root';
 

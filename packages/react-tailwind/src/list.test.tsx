@@ -11,6 +11,8 @@ describe('List', () => {
       </List.Root>,
     );
     expect(screen.getByRole('list')).toBeInTheDocument();
+    // Explicit role survives marker removal (Safari/VoiceOver).
+    expect(screen.getByRole('list')).toHaveAttribute('role', 'list');
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
     expect(screen.getByText('受信トレイ')).toBeInTheDocument();
   });
