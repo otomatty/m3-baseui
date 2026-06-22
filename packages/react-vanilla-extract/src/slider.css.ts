@@ -28,6 +28,10 @@ export const track = style({
   height: '4px',
   borderRadius: vars.sys.shape.full,
   background: `rgb(${vars.sys.color.surfaceContainerHighest})`,
+  // M3 disabled: inactive track on-surface @ 0.12 (per-token, not a blanket fade)
+  selectors: {
+    [`${root}[data-disabled] &`]: { background: `rgb(${vars.sys.color.onSurface} / 0.12)` },
+  },
 });
 
 export const indicator = style({
@@ -35,6 +39,10 @@ export const indicator = style({
   height: '4px',
   borderRadius: vars.sys.shape.full,
   background: `rgb(${vars.sys.color.primary})`,
+  // M3 disabled: active track on-surface @ 0.38
+  selectors: {
+    [`${root}[data-disabled] &`]: { background: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+  },
 });
 
 export const thumb = style({
@@ -61,7 +69,8 @@ export const thumb = style({
     '&:hover::before': { opacity: vars.sys.state.hover },
     '&:focus-visible::before': { opacity: vars.sys.state.focus },
     '&[data-dragging]::before': { opacity: vars.sys.state.pressed },
-    '&[data-disabled]': { opacity: 0.38 },
+    // M3 disabled: handle on-surface @ 0.38
+    [`${root}[data-disabled] &`]: { background: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });
 

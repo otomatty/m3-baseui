@@ -1,12 +1,16 @@
 /**
  * select.ts — Tailwind classes for the M3 Select.
  *
- * Trigger = outlined field (56dp, primary 2dp border when open/focused). Popup =
- * M3 menu surface sized to the anchor. Items mirror the Menu item (state layer +
- * ripple) with a leading check indicator. Same DOM as the VE build.
+ * Trigger = outlined field (56dp; 3dp primary border when open/focused, per the
+ * M3 outlined-field focus-outline-width). Popup = M3 menu surface sized to the
+ * anchor. Items mirror the Menu item (state layer + ripple) with a leading check
+ * indicator. Same DOM as the VE build.
+ *
+ * Disabled follows the M3 outlined-field per-token opacities (not a blanket
+ * fade): outline on-surface/0.12, label/value + icon on-surface/0.38.
  */
 import { createSelect } from '@m3/core';
-import { tv } from 'tailwind-variants';
+import { tv } from './tv';
 
 export const selectTv = tv({
   slots: {
@@ -15,12 +19,13 @@ export const selectTv = tv({
       'h-14 min-w-[200px] px-4 rounded-extra-small border border-outline bg-transparent',
       'text-on-surface text-body-large cursor-pointer outline-none text-left',
       'transition-colors duration-150 ease-standard',
-      'data-[popup-open]:border-primary data-[popup-open]:border-2 data-[popup-open]:px-[15px]',
-      'focus-visible:border-primary focus-visible:border-2 focus-visible:px-[15px]',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // focus/open = 3dp primary outline; padding drops 2px to keep content steady
+      'data-[popup-open]:border-primary data-[popup-open]:border-[3px] data-[popup-open]:px-[14px]',
+      'focus-visible:border-primary focus-visible:border-[3px] focus-visible:px-[14px]',
+      'data-[disabled]:border-on-surface/[0.12] data-[disabled]:text-on-surface/[0.38] data-[disabled]:pointer-events-none',
     ],
     value: 'flex-1 truncate',
-    icon: 'flex text-on-surface-variant transition-transform duration-150 group-data-[popup-open]:rotate-180',
+    icon: 'flex text-on-surface-variant transition-transform duration-150 group-data-[popup-open]:rotate-180 group-data-[disabled]:text-on-surface/[0.38]',
     popup: [
       'min-w-[var(--anchor-width)] max-h-[var(--available-height)] py-2 overflow-auto',
       'bg-surface-container text-on-surface rounded-extra-small shadow-level2',

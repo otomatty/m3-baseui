@@ -15,7 +15,7 @@ export const popup = style({
   letterSpacing: vars.sys.typescale.bodySmall.letterSpacing,
   borderRadius: vars.sys.shape.extraSmall,
   paddingInline: '8px',
-  paddingBlock: '6px',
+  paddingBlock: '4px',
   maxWidth: '224px',
   userSelect: 'none',
   transformOrigin: 'var(--transform-origin)',

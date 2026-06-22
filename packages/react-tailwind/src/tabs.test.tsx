@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { Tabs } from './tabs';
+import { Tabs, tabsTv } from './tabs';
 
 function Example() {
   return (
@@ -36,5 +36,32 @@ describe('Tabs', () => {
     expect(screen.getByRole('tab', { name: 'A' }).className).toContain(
       'data-[active]:text-primary',
     );
+  });
+});
+
+describe('Tabs tokens', () => {
+  test('inactive label = on-surface-variant; primary active = primary, secondary active = on-surface', () => {
+    const p = tabsTv({ variant: 'primary' });
+    const s = tabsTv({ variant: 'secondary' });
+    expect(p.tab()).toContain('text-on-surface-variant');
+    expect(p.tab()).toContain('data-[active]:text-primary');
+    expect(s.tab()).toContain('data-[active]:text-on-surface');
+  });
+
+  test('bottom divider uses surface-variant', () => {
+    const p = tabsTv({ variant: 'primary' });
+    expect(p.list()).toContain('border-surface-variant');
+    expect(p.list()).not.toContain('border-outline-variant');
+  });
+
+  test('active indicator is primary, 3dp rounded for primary / 2dp square for secondary', () => {
+    const p = tabsTv({ variant: 'primary' });
+    const s = tabsTv({ variant: 'secondary' });
+    expect(p.indicator()).toContain('bg-primary');
+    expect(p.indicator()).toContain('h-[3px]');
+    expect(p.indicator()).toContain('rounded-t-[3px]');
+    expect(s.indicator()).toContain('bg-primary');
+    expect(s.indicator()).toContain('h-[2px]');
+    expect(s.indicator()).not.toContain('rounded-t-[3px]');
   });
 });
