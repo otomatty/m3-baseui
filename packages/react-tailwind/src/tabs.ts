@@ -27,7 +27,9 @@ export const tabsTv = tv({
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // M3 disabled (per-token, not a blanket fade): label + icon on-surface/0.38,
+      // no state layer. currentColor carries the dim to the icon slot.
+      'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
     ],
     indicator: [
       'absolute bottom-0 left-0 bg-primary',

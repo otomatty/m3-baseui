@@ -64,6 +64,15 @@ describe('Tabs tokens', () => {
     expect(s.indicator()).toContain('h-[2px]');
     expect(s.indicator()).not.toContain('rounded-t-[3px]');
   });
+
+  test('disabled is per-token (no blanket opacity): label + icon on-surface/0.38, no state layer', () => {
+    const p = tabsTv({ variant: 'primary' });
+    expect(p.tab()).toContain('data-[disabled]:text-on-surface/[0.38]');
+    expect(p.tab()).toContain('data-[disabled]:before:opacity-0');
+    expect(p.tab()).toContain('data-[disabled]:pointer-events-none');
+    // the old blanket opacity is gone
+    expect(p.tab()).not.toContain('data-[disabled]:opacity-[0.38]');
+  });
 });
 
 describe('Tabs layout extensions', () => {
