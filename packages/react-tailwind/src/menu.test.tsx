@@ -48,6 +48,11 @@ describe('Menu tokens', () => {
     expect(m.radioItem()).toContain('data-[disabled]:text-on-surface/[0.38]');
     // the check/dot indicator dims with its disabled checked row (own text color)
     expect(m.itemIndicator()).toContain('group-data-[disabled]:text-on-surface/[0.38]');
+    // every interactive item type also disables pointer events
+    expect(m.item()).toContain('data-[disabled]:pointer-events-none');
+    expect(m.submenuTrigger()).toContain('data-[disabled]:pointer-events-none');
+    expect(m.checkboxItem()).toContain('data-[disabled]:pointer-events-none');
+    expect(m.radioItem()).toContain('data-[disabled]:pointer-events-none');
   });
 
   test('submenu trigger spreads its label + chevron and stays lit while open', () => {

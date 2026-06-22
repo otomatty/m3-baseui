@@ -109,4 +109,20 @@ describe('Tabs layout extensions', () => {
     expect(list).toHaveAttribute('data-scrollable');
     expect(list.className).toContain('data-[scrollable]:overflow-x-auto');
   });
+
+  test('disabled tab renders data-disabled and carries the per-token dim class', () => {
+    render(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List>
+          <Tabs.Tab value="a" disabled>
+            Disabled
+          </Tabs.Tab>
+          <Tabs.Indicator />
+        </Tabs.List>
+      </Tabs.Root>,
+    );
+    const tab = screen.getByRole('tab', { name: 'Disabled' });
+    expect(tab).toHaveAttribute('data-disabled');
+    expect(tab.className).toContain('data-[disabled]:text-on-surface/[0.38]');
+  });
 });

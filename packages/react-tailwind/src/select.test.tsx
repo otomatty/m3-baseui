@@ -72,6 +72,9 @@ describe('Select tokens', () => {
       'data-[disabled]:[&_[data-slot=select-trailing]]:text-on-surface/[0.38]',
     );
     expect(s.item()).not.toContain('data-[disabled]:opacity-[0.38]');
+    expect(s.item()).toContain('data-[disabled]:pointer-events-none');
+    // the trigger's trailing icon also dims per-token
+    expect(s.icon()).toContain('group-data-[disabled]:text-on-surface/[0.38]');
     // the selected-check indicator dims with its disabled row (own text color)
     expect(s.itemIndicator()).toContain('group-data-[disabled]:text-on-surface/[0.38]');
   });
