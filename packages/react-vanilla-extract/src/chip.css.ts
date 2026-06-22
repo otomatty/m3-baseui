@@ -88,4 +88,7 @@ export const remove = style({
   background: 'transparent',
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
   cursor: 'pointer',
+  selectors: {
+    '&:hover': { opacity: 0.8 },
+  },
 });
