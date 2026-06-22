@@ -38,4 +38,28 @@ describe('Button', () => {
     render(<Button disabled>D</Button>);
     expect(screen.getByRole('button', { name: 'D' })).toBeDisabled();
   });
+
+  test('disabled filled uses M3 container/label tokens, not a blanket opacity', () => {
+    render(<Button disabled>D2</Button>);
+    const btn = screen.getByRole('button', { name: 'D2' });
+    // M3 (material-web): disabled container = on-surface 12%, label = on-surface 38%
+    expect(btn.className).toContain('disabled:bg-on-surface/12');
+    expect(btn.className).toContain('disabled:text-on-surface/38');
+    // ...and not the old whole-element opacity:0.38
+    expect(btn.className).not.toContain('disabled:opacity-[0.38]');
+  });
+
+  test('elevated variant rises one elevation level on hover (M3 elevation)', () => {
+    render(<Button variant="elevated">E</Button>);
+    const btn = screen.getByRole('button', { name: 'E' });
+    expect(btn.className).toContain('shadow-level1');
+    expect(btn.className).toContain('hover:shadow-level2');
+  });
+
+  test('filled variant gains elevation on hover and stays flat when pressed', () => {
+    render(<Button variant="filled">F</Button>);
+    const btn = screen.getByRole('button', { name: 'F' });
+    expect(btn.className).toContain('hover:shadow-level1');
+    expect(btn.className).toContain('data-[pressed]:shadow-none');
+  });
 });
