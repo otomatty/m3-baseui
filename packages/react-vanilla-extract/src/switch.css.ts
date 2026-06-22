@@ -22,9 +22,19 @@ export const root = style({
       background: `rgb(${vars.sys.color.primary})`,
       borderColor: `rgb(${vars.sys.color.primary})`,
     },
-    '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+    '&[data-disabled]': { pointerEvents: 'none' },
+    // M3 disabled: faint track + outline (unselected); on-surface/12 track,
+    // no outline (selected). Not a blanket element opacity.
+    '&[data-disabled]:not([data-checked])': {
+      background: `rgb(${vars.sys.color.surfaceContainerHighest} / 0.12)`,
+      borderColor: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+    },
+    '&[data-disabled][data-checked]': {
+      background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+      borderColor: 'transparent',
+    },
     '&:focus-visible': {
-      outline: `2px solid rgb(${vars.sys.color.secondary})`,
+      outline: `3px solid rgb(${vars.sys.color.secondary})`,
       outlineOffset: '2px',
     },
   },
@@ -63,6 +73,12 @@ export const thumb = style({
       background: `rgb(${vars.sys.color.onPrimary})`,
       color: `rgb(${vars.sys.color.primary})`,
     },
+    // M3 squish: handle grows to 28px while pressed, staying on its side
+    [`${root}:active &`]: { left: '0px', width: '28px', height: '28px' },
+    [`${root}[data-checked]:active &`]: { left: '20px', width: '28px', height: '28px' },
+    // M3 disabled handle: on-surface/38 (unselected), surface (selected)
+    [`${root}[data-disabled] &`]: { background: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+    [`${root}[data-disabled][data-checked] &`]: { background: `rgb(${vars.sys.color.surface})` },
     [`${root}:hover &::before`]: { opacity: vars.sys.state.hover },
     [`${root}:focus-visible &::before`]: { opacity: vars.sys.state.focus },
     [`${root}:active &::before`]: { opacity: vars.sys.state.pressed },
