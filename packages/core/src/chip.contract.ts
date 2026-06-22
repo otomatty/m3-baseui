@@ -13,8 +13,6 @@ export type ChipVariant = (typeof CHIP_VARIANTS)[number];
 
 export interface ChipResolverArgs {
   variant: ChipVariant;
-  /** Selected state (filter chips). */
-  selected: boolean | undefined;
 }
 
 export interface ChipSlotClasses {

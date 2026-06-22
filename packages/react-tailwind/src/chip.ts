@@ -28,30 +28,24 @@ export const chipTv = tv({
   },
   variants: {
     variant: {
-      assist: 'border-outline text-on-surface cursor-pointer',
-      suggestion: 'border-outline text-on-surface-variant cursor-pointer',
-      input: 'border-outline text-on-surface-variant cursor-default pr-2',
-      filter: 'border-outline text-on-surface-variant cursor-pointer',
-    },
-    selected: {
-      true: '',
-      false: '',
+      assist: { root: 'border-outline text-on-surface cursor-pointer' },
+      suggestion: { root: 'border-outline text-on-surface-variant cursor-pointer' },
+      input: { root: 'border-outline text-on-surface-variant cursor-default pr-2' },
+      filter: {
+        root: [
+          'border-outline text-on-surface-variant cursor-pointer',
+          'data-[pressed]:bg-secondary-container data-[pressed]:text-on-secondary-container data-[pressed]:border-transparent',
+        ],
+      },
     },
   },
-  compoundVariants: [
-    {
-      variant: 'filter',
-      selected: true,
-      class: 'bg-secondary-container text-on-secondary-container border-transparent',
-    },
-  ],
   defaultVariants: {
     variant: 'assist',
   },
 });
 
-export const Chip = createChip(({ variant, selected }) => {
-  const c = chipTv({ variant, selected });
+export const Chip = createChip(({ variant }) => {
+  const c = chipTv({ variant });
   return { root: c.root(), remove: c.remove() };
 });
 export type { ChipProps, ChipVariant } from '@m3/core';

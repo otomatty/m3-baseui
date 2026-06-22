@@ -56,23 +56,19 @@ export const chip = recipe({
         cursor: 'default',
         paddingRight: '8px',
       },
-      filter: { color: `rgb(${vars.sys.color.onSurfaceVariant})`, cursor: 'pointer' },
-    },
-    selected: {
-      true: {},
-      false: {},
-    },
-  },
-  compoundVariants: [
-    {
-      variants: { variant: 'filter', selected: true },
-      style: {
-        background: `rgb(${vars.sys.color.secondaryContainer})`,
-        color: `rgb(${vars.sys.color.onSecondaryContainer})`,
-        borderColor: 'transparent',
+      filter: {
+        color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+        cursor: 'pointer',
+        selectors: {
+          '&[data-pressed]': {
+            background: `rgb(${vars.sys.color.secondaryContainer})`,
+            color: `rgb(${vars.sys.color.onSecondaryContainer})`,
+            borderColor: 'transparent',
+          },
+        },
       },
     },
-  ],
+  },
   defaultVariants: {
     variant: 'assist',
   },

@@ -29,7 +29,7 @@ export function createChip(resolve: ChipClassResolver) {
     }: ChipProps,
     forwardedRef: React.Ref<HTMLElement>,
   ): React.JSX.Element {
-    const classes = resolve({ variant, selected });
+    const classes = resolve({ variant });
     const cls = cx(classes.root, className);
     const rippleNode = ripple ? <Ripple /> : null;
 
