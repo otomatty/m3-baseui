@@ -18,7 +18,14 @@ import type { ButtonClassResolver, ButtonProps } from './button.contract';
 import { cx } from './utils';
 import { Ripple } from './ripple/Ripple';
 
+/**
+ * Build the M3 Button bound to one engine's class resolver.
+ *
+ * @param resolve - Turns the variant state into an engine class string.
+ * @returns A `forwardRef` Button supporting polymorphism, icons, and the ripple.
+ */
 export function createButton(resolve: ButtonClassResolver) {
+  /** Renders the button surface with optional leading/trailing icons + ripple. */
   function Button(
     {
       variant = 'filled',

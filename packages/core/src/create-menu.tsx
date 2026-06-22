@@ -22,6 +22,13 @@ function MenuCheck(): React.JSX.Element {
   );
 }
 
+/**
+ * Build the M3 Menu namespace (Root, Popup, Item, submenu, selectable items)
+ * bound to one engine's slot classes.
+ *
+ * @param classes - Engine-resolved class strings for each menu slot.
+ * @returns A namespace of Base UI menu parts wrapped with M3 styling + ripple.
+ */
 export function createMenu(classes: MenuClasses) {
   const CheckboxItemIndicator = createSlot(
     MenuPrimitive.CheckboxItemIndicator,

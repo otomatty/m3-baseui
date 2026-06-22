@@ -14,7 +14,14 @@ import type { IconButtonClassResolver, IconButtonProps } from './icon-button.con
 import { cx } from './utils';
 import { Ripple } from './ripple/Ripple';
 
+/**
+ * Build the M3 Icon Button bound to one engine's class resolver.
+ *
+ * @param resolve - Turns the variant/selected/size/width state into a class string.
+ * @returns A `forwardRef` Icon Button supporting polymorphism, toggle, and ripple.
+ */
 export function createIconButton(resolve: IconButtonClassResolver) {
+  /** Renders the icon-button surface; toggles `aria-pressed`/`data-selected`. */
   function IconButton(
     {
       variant = 'standard',

@@ -20,7 +20,14 @@ type SwitchProps = RootProps & {
   icons?: SwitchIcons;
 };
 
+/**
+ * Build the M3 Switch bound to one engine's slot classes.
+ *
+ * @param classes - Engine-resolved class strings for the track, thumb, and icons.
+ * @returns A `forwardRef` Switch accepting Base UI's props plus optional `icons`.
+ */
 export function createSwitch(classes: SwitchClasses) {
+  /** Renders the track + thumb, mounting handle icons when `icons` is supplied. */
   const Switch = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(
     function Switch({ className, icons, ...props }, ref) {
       // The unchecked handle grows to fit an icon only when one is supplied.

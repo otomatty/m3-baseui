@@ -14,7 +14,14 @@ import type { ChipClassResolver, ChipProps } from './chip.contract';
 import { cx } from './utils';
 import { Ripple } from './ripple/Ripple';
 
+/**
+ * Build the M3 Chip bound to one engine's class resolver.
+ *
+ * @param resolve - Turns the variant/elevated state into the chip's slot classes.
+ * @returns A `forwardRef` Chip covering the assist/filter/input/suggestion types.
+ */
 export function createChip(resolve: ChipClassResolver) {
+  /** Renders the chip body per `variant`, plus optional avatar/remove/check slots. */
   function Chip(
     {
       variant = 'assist',

@@ -19,8 +19,15 @@ type CheckboxProps = RootProps & {
   error?: boolean;
 };
 
+/**
+ * Build the M3 Checkbox bound to one engine's slot classes.
+ *
+ * @param classes - Engine-resolved class strings for the box, indicator, and icon.
+ * @returns A `forwardRef` Checkbox accepting Base UI's props plus `error`.
+ */
 export function createCheckbox(classes: CheckboxClasses) {
   const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, CheckboxProps>(
+    /** Renders the box + check/indeterminate indicator, tinting on `error`. */
     function Checkbox({ className, error, ...props }, ref) {
       const errorProps: { [key: `data-${string}`]: string } | undefined = error
         ? { 'data-error': '' }

@@ -20,7 +20,14 @@ type RadioProps = RadioRootProps & {
 };
 type RadioGroupProps = React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive>;
 
+/**
+ * Build the M3 Radio bound to one engine's slot classes.
+ *
+ * @param classes - Engine-resolved class strings for the ring and dot indicator.
+ * @returns A `forwardRef` Radio accepting Base UI's props plus `error`.
+ */
 export function createRadio(classes: RadioClasses) {
+  /** Renders the ring + dot indicator, tinting with error tokens on `error`. */
   const Radio = React.forwardRef<React.ElementRef<typeof RadioPrimitive.Root>, RadioProps>(
     function Radio({ className, error, ...props }, ref) {
       const errorProps: { [key: `data-${string}`]: string } | undefined = error
@@ -42,6 +49,12 @@ export function createRadio(classes: RadioClasses) {
   return Radio;
 }
 
+/**
+ * Build the M3 RadioGroup wrapper that lays its radios out per the engine class.
+ *
+ * @param rootClass - Engine-resolved layout class for the group container.
+ * @returns A `forwardRef` RadioGroup over Base UI's RadioGroup.
+ */
 export function createRadioGroup(rootClass: string) {
   const RadioGroup = React.forwardRef<
     React.ElementRef<typeof RadioGroupPrimitive>,

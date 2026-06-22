@@ -25,8 +25,16 @@ function Chevron({ up }: { up?: boolean }): React.JSX.Element {
 type ScrollUpProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpArrow>;
 type ScrollDownProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownArrow>;
 
+/**
+ * Build the M3 Select namespace (outlined Trigger, menu-surface Popup, Items,
+ * scroll arrows) bound to one engine's slot classes.
+ *
+ * @param classes - Engine-resolved class strings for each select slot.
+ * @returns A namespace of Base UI select parts wrapped with M3 styling + ripple.
+ */
 export function createSelect(classes: SelectClasses) {
   // Scroll arrows carry a default chevron when the caller supplies no children.
+  /** Sticky top scroll affordance; renders a default up-chevron when empty. */
   const ScrollUpArrow = React.forwardRef<
     React.ElementRef<typeof SelectPrimitive.ScrollUpArrow>,
     ScrollUpProps
@@ -43,6 +51,7 @@ export function createSelect(classes: SelectClasses) {
   });
   ScrollUpArrow.displayName = 'M3Select.ScrollUpArrow';
 
+  /** Sticky bottom scroll affordance; renders a default down-chevron when empty. */
   const ScrollDownArrow = React.forwardRef<
     React.ElementRef<typeof SelectPrimitive.ScrollDownArrow>,
     ScrollDownProps
