@@ -15,6 +15,10 @@ export { createMenu } from './create-menu';
 export { createTabs } from './create-tabs';
 export { createSlider } from './create-slider';
 export { createSelect } from './create-select';
+export { createTextField } from './create-textfield';
+export { createNavigationBar } from './create-navigation-bar';
+export { createFab } from './create-fab';
+export { createSnackbar, useSnackbar } from './create-snackbar';
 
 // Contracts (variant sets + prop types, defined once)
 export {
@@ -56,6 +60,27 @@ export {
 } from './tabs.contract';
 export type { SliderClasses } from './slider.contract';
 export type { SelectClasses } from './select.contract';
+export {
+  TEXT_FIELD_VARIANTS,
+  type TextFieldVariant,
+  type TextFieldOwnProps,
+  type TextFieldProps,
+  type TextFieldResolverArgs,
+  type TextFieldSlotClasses,
+  type TextFieldClassResolver,
+} from './textfield.contract';
+export type { NavigationBarClasses } from './navigation-bar.contract';
+export {
+  FAB_SIZES,
+  FAB_COLORS,
+  type FabSize,
+  type FabColor,
+  type FabOwnProps,
+  type FabProps,
+  type FabResolverArgs,
+  type FabClassResolver,
+} from './fab.contract';
+export type { SnackbarClasses } from './snackbar.contract';
 
 // Slot helpers (for engine packages composing Base UI parts)
 export { createSlot, mergeClassName, type ClassValue, type SlotOptions } from './slot';

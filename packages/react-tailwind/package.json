@@ -57,6 +57,22 @@
       "types": "./src/select.ts",
       "default": "./src/select.ts"
     },
+    "./textfield": {
+      "types": "./src/textfield.ts",
+      "default": "./src/textfield.ts"
+    },
+    "./navigation-bar": {
+      "types": "./src/navigation-bar.ts",
+      "default": "./src/navigation-bar.ts"
+    },
+    "./fab": {
+      "types": "./src/fab.ts",
+      "default": "./src/fab.ts"
+    },
+    "./snackbar": {
+      "types": "./src/snackbar.ts",
+      "default": "./src/snackbar.ts"
+    },
     "./preset.css": "./styles/preset.css",
     "./tokens.css": "./node_modules/@m3/tokens/styles/tokens.css",
     "./theme.css": "./node_modules/@m3/tokens/styles/theme.css"

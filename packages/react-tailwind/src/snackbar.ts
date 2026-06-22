@@ -1,0 +1,56 @@
+/**
+ * snackbar.ts — tailwind-variants slots for the M3 Snackbar.
+ *
+ * Inverse-surface container, extra-small corners, elevation level3. The Action
+ * is an inverse-primary text button with a state layer + ripple. Enter/exit key
+ * off Toast's `data-starting-style` / `data-ending-style`. Same DOM as VE.
+ */
+import { createSnackbar } from '@m3/core';
+import { tv } from 'tailwind-variants';
+
+export { useSnackbar } from '@m3/core';
+
+export const snackbarTv = tv({
+  slots: {
+    viewport: [
+      'fixed bottom-4 left-1/2 -translate-x-1/2 z-50',
+      'flex flex-col gap-2 w-[min(560px,calc(100vw-32px))]',
+    ],
+    root: [
+      'relative flex items-center gap-2 min-h-12 box-border pl-4 pr-2 py-2',
+      'rounded-extra-small bg-inverse-surface text-inverse-on-surface shadow-level3',
+      'text-body-medium',
+      'transition-[opacity,transform] duration-200 ease-emphasized',
+      'data-[starting-style]:opacity-0 data-[starting-style]:translate-y-2',
+      'data-[ending-style]:opacity-0',
+    ],
+    content: 'flex flex-col flex-1 min-w-0 gap-0.5',
+    title: 'text-body-medium',
+    description: 'text-body-small opacity-90',
+    action: [
+      'relative inline-flex items-center justify-center shrink-0 h-9 px-3 overflow-hidden',
+      'rounded-extra-small bg-transparent border-0 cursor-pointer outline-none',
+      'text-inverse-primary text-label-large',
+      'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
+      'hover:before:opacity-[var(--md-sys-state-hover)]',
+      'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
+      'active:before:opacity-[var(--md-sys-state-pressed)]',
+    ],
+    close: [
+      'inline-flex items-center justify-center shrink-0 size-8 rounded-full',
+      'bg-transparent border-0 cursor-pointer text-inverse-on-surface outline-none',
+      'hover:opacity-80',
+    ],
+  },
+});
+
+const s = snackbarTv();
+export const Snackbar = createSnackbar({
+  viewport: s.viewport(),
+  root: s.root(),
+  content: s.content(),
+  title: s.title(),
+  description: s.description(),
+  action: s.action(),
+  close: s.close(),
+});
