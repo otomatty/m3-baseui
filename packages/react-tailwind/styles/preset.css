@@ -10,3 +10,21 @@
 @import '@m3/tokens/tokens.css';
 @import 'tailwindcss';
 @import '@m3/tokens/theme.css';
+
+/*
+ * Component keyframes that can't be expressed as utilities. The linear progress
+ * indeterminate bar slides a 40%-wide indicator across the track; the circular
+ * indeterminate spinner reuses Tailwind's built-in `animate-spin`.
+ */
+@theme {
+  --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;
+}
+
+@keyframes m3-linear-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
