@@ -17,7 +17,9 @@ export const root = style({
   borderRadius: vars.sys.shape.full,
   border: `2px solid rgb(${vars.sys.color.onSurfaceVariant})`,
   background: 'transparent',
-  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+  // Ring is on-surface-variant; the state layer (currentColor) is on-surface
+  // unselected, primary when selected (material-web).
+  color: `rgb(${vars.sys.color.onSurface})`,
   cursor: 'pointer',
   transition: `border-color 150ms ${vars.sys.motion.easing.standard}, color 150ms ${vars.sys.motion.easing.standard}`,
   selectors: {
@@ -25,9 +27,14 @@ export const root = style({
       borderColor: `rgb(${vars.sys.color.primary})`,
       color: `rgb(${vars.sys.color.primary})`,
     },
-    '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+    // M3 disabled: ring (and dot) turn on-surface/38; no state layer.
+    '&[data-disabled]': {
+      pointerEvents: 'none',
+      borderColor: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+    },
+    '&[data-disabled]::before': { opacity: 0 },
     '&:focus-visible': {
-      outline: `2px solid rgb(${vars.sys.color.secondary})`,
+      outline: `3px solid rgb(${vars.sys.color.secondary})`,
       outlineOffset: '2px',
     },
     '&::before': {
@@ -60,6 +67,7 @@ export const indicator = style({
   transition: `width 150ms ${vars.sys.motion.easing.standard}, height 150ms ${vars.sys.motion.easing.standard}, opacity 150ms`,
   selectors: {
     '&[data-checked]': { width: '10px', height: '10px', opacity: 1 },
+    [`${root}[data-disabled] &`]: { background: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });
 

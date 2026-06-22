@@ -10,13 +10,17 @@ import { tv } from 'tailwind-variants';
 export const radioTv = tv({
   slots: {
     root: [
-      'relative inline-flex items-center justify-center shrink-0 box-border',
+      'group relative inline-flex items-center justify-center shrink-0 box-border',
       'size-5 rounded-full border-2 cursor-pointer bg-transparent',
-      'border-on-surface-variant text-on-surface-variant',
+      // Ring is on-surface-variant; the state layer (text/currentColor) is
+      // on-surface unselected, primary when selected (material-web).
+      'border-on-surface-variant text-on-surface',
       'transition-colors duration-150 ease-standard',
       'data-[checked]:border-primary data-[checked]:text-primary',
-      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
+      // M3 disabled: ring (and dot) turn on-surface/38; no state layer.
+      'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0',
+      'data-[disabled]:border-on-surface/38',
       'before:content-[""] before:absolute before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2',
       'before:size-10 before:rounded-full before:bg-current before:opacity-0 before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
@@ -27,6 +31,7 @@ export const radioTv = tv({
       'block rounded-full bg-primary pointer-events-none',
       'size-0 opacity-0 transition-all duration-150 ease-standard',
       'data-[checked]:size-2.5 data-[checked]:opacity-100',
+      'group-data-[disabled]:bg-on-surface/38',
     ],
   },
 });
