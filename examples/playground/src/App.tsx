@@ -148,6 +148,31 @@ export function App() {
                 <Icon name="delete" />
               </IconButton>
             </div>
+            {/* M3 Expressive sizes (xs → xl) */}
+            <div className="flex flex-wrap items-center gap-3 mt-3">
+              <IconButton variant="tonal" size="xs" aria-label="XS">
+                <Icon name="favorite" size={20} />
+              </IconButton>
+              <IconButton variant="tonal" size="s" aria-label="S">
+                <Icon name="favorite" size={24} />
+              </IconButton>
+              <IconButton variant="tonal" size="m" aria-label="M">
+                <Icon name="favorite" size={24} />
+              </IconButton>
+              <IconButton variant="tonal" size="l" aria-label="L">
+                <Icon name="favorite" size={32} />
+              </IconButton>
+              <IconButton variant="tonal" size="xl" aria-label="XL">
+                <Icon name="favorite" size={40} />
+              </IconButton>
+              {/* narrow / default / wide widths */}
+              <IconButton variant="filled" size="m" width="narrow" aria-label="Narrow">
+                <Icon name="add" size={24} />
+              </IconButton>
+              <IconButton variant="filled" size="m" width="wide" aria-label="Wide">
+                <Icon name="add" size={24} />
+              </IconButton>
+            </div>
           </Section>
 
           <Section title="Selection controls">

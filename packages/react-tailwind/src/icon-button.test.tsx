@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { render, screen } from '@testing-library/react';
-import { IconButton } from './icon-button';
+import { IconButton, iconButton } from './icon-button';
 
 describe('IconButton', () => {
   test('renders the standard variant by default', () => {
@@ -76,6 +76,22 @@ describe('IconButton', () => {
     const btn = screen.getByRole('button', { name: 'Off2' });
     expect(btn.className).toContain('disabled:border-on-surface/12');
     expect(btn.className).toContain('disabled:text-on-surface/38');
+  });
+
+  test('defaults to the 40dp (small) container for back-compat', () => {
+    render(<IconButton aria-label="D">●</IconButton>);
+    expect(screen.getByRole('button', { name: 'D' }).className).toContain('h-10');
+  });
+
+  test('M3 Expressive size + width variants set container dimensions', () => {
+    const args = { variant: 'standard', selected: undefined } as const;
+    // height scales per size (xs 32dp → xl 136dp)
+    expect(iconButton({ ...args, size: 'xs' })).toContain('h-8');
+    expect(iconButton({ ...args, size: 'xl' })).toContain('h-[136px]');
+    // width scales per (size, width): large/wide = 128dp
+    expect(iconButton({ ...args, size: 'l', width: 'wide' })).toContain('w-32');
+    // large/narrow = 64dp
+    expect(iconButton({ ...args, size: 'l', width: 'narrow' })).toContain('w-16');
   });
 
   test('mounts a ripple host by default and omits it when disabled', () => {

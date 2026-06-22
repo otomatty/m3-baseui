@@ -31,7 +31,11 @@ export {
 } from './button.contract';
 export {
   ICON_BUTTON_VARIANTS,
+  ICON_BUTTON_SIZES,
+  ICON_BUTTON_WIDTHS,
   type IconButtonVariant,
+  type IconButtonSize,
+  type IconButtonWidth,
   type IconButtonOwnProps,
   type IconButtonProps,
   type IconButtonResolverArgs,
