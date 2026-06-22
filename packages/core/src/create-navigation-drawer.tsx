@@ -61,6 +61,8 @@ export function createNavigationDrawer(classes: NavigationDrawerClasses) {
 
     if (href != null) {
       const anchorProps = rest as React.AnchorHTMLAttributes<HTMLAnchorElement>;
+      // A disabled link drops its `href` (losing the link role + tab stop) and
+      // swallows any caller `onClick`, keeping the row fully inert.
       return (
         <a
           {...anchorProps}
@@ -72,6 +74,14 @@ export function createNavigationDrawer(classes: NavigationDrawerClasses) {
           data-selected={selected ? '' : undefined}
           data-disabled={disabled ? '' : undefined}
           tabIndex={disabled ? -1 : anchorProps.tabIndex}
+          onClick={
+            disabled
+              ? (event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+              : anchorProps.onClick
+          }
         >
           {inner}
         </a>

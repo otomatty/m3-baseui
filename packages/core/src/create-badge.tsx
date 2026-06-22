@@ -22,7 +22,7 @@ export function createBadge(classes: BadgeClasses) {
     const content =
       hasValue && max != null && typeof value === 'number' && value > max ? `${max}+` : value;
     return (
-      <span ref={ref} data-size={size} className={cx(classes.root({ size }), className)} {...rest}>
+      <span {...rest} ref={ref} data-size={size} className={cx(classes.root({ size }), className)}>
         {hasValue ? content : null}
       </span>
     );

@@ -41,6 +41,25 @@ describe('NavigationDrawer', () => {
     expect(link).toHaveAttribute('aria-current', 'page');
   });
 
+  test('disabled link destination drops its href, becomes unfocusable, and blocks clicks', () => {
+    let clicked = false;
+    render(
+      <NavigationDrawer.Root>
+        <NavigationDrawer.Item href="/drafts" disabled onClick={() => (clicked = true)}>
+          下書き
+        </NavigationDrawer.Item>
+      </NavigationDrawer.Root>,
+    );
+    const anchor = screen.getByText('下書き').closest('a');
+    expect(anchor).not.toBeNull();
+    expect(anchor).not.toHaveAttribute('href');
+    expect(anchor).toHaveAttribute('aria-disabled', 'true');
+    expect(anchor).toHaveAttribute('data-disabled');
+    expect(anchor).toHaveAttribute('tabindex', '-1');
+    fireEvent.click(anchor as HTMLAnchorElement);
+    expect(clicked).toBe(false);
+  });
+
   test('disabled destination blocks clicks and exposes data-disabled', () => {
     let clicked = false;
     render(

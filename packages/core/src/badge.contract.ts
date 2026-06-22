@@ -28,4 +28,4 @@ export interface BadgeOwnProps {
   max?: number;
 }
 
-export type BadgeProps = BadgeOwnProps & React.HTMLAttributes<HTMLSpanElement>;
+export type BadgeProps = BadgeOwnProps & Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'>;
