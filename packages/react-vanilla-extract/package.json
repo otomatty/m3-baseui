@@ -69,6 +69,18 @@
       "types": "./src/fab.ts",
       "default": "./src/fab.ts"
     },
+    "./divider": {
+      "types": "./src/divider.ts",
+      "default": "./src/divider.ts"
+    },
+    "./progress": {
+      "types": "./src/progress.ts",
+      "default": "./src/progress.ts"
+    },
+    "./list": {
+      "types": "./src/list.ts",
+      "default": "./src/list.ts"
+    },
     "./snackbar": {
       "types": "./src/snackbar.ts",
       "default": "./src/snackbar.ts"

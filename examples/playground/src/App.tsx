@@ -16,6 +16,9 @@ import {
   TextField,
   NavigationBar,
   Fab,
+  Divider,
+  Progress,
+  List,
   Snackbar,
   useSnackbar,
   ThemeProvider,
@@ -512,6 +515,59 @@ export function App() {
                   プロフィール
                 </NavigationBar.Item>
               </NavigationBar.Root>
+            </div>
+          </Section>
+
+          <Section title="Divider">
+            <div className="max-w-md rounded-large border border-outline-variant bg-surface-container-low p-4">
+              <p className="text-body-medium text-on-surface">最初の段落</p>
+              <Divider inset="middle" />
+              <p className="text-body-medium text-on-surface">次の段落</p>
+              <div className="mt-4 flex h-6 items-center gap-3 text-body-medium text-on-surface">
+                <span>下書き</span>
+                <Divider orientation="vertical" />
+                <span>送信済み</span>
+                <Divider orientation="vertical" />
+                <span>ゴミ箱</span>
+              </div>
+            </div>
+          </Section>
+
+          <Section title="Progress">
+            <div className="flex max-w-md flex-col gap-6">
+              <Progress.Linear value={66} aria-label="ダウンロード" />
+              <Progress.Linear aria-label="読み込み中" />
+              <div className="flex items-center gap-6">
+                <Progress.Circular value={66} aria-label="アップロード" />
+                <Progress.Circular aria-label="処理中" />
+              </div>
+            </div>
+          </Section>
+
+          <Section title="List">
+            <div className="max-w-md overflow-hidden rounded-large border border-outline-variant bg-surface-container-low">
+              <List.Root>
+                <List.Item
+                  interactive
+                  leading={<Icon name="inbox" />}
+                  trailing={<span>24</span>}
+                  supportingText="未読 3 件"
+                >
+                  受信トレイ
+                </List.Item>
+                <Divider inset="inset" />
+                <List.Item
+                  interactive
+                  leading={<Icon name="send" />}
+                  trailing={<Icon name="chevron_right" />}
+                >
+                  送信済み
+                </List.Item>
+                <Divider inset="inset" />
+                <List.Item interactive disabled leading={<Icon name="delete" />}>
+                  ゴミ箱（無効）
+                </List.Item>
+              </List.Root>
             </div>
           </Section>
 

@@ -18,6 +18,9 @@ export { createSelect } from './create-select';
 export { createTextField } from './create-textfield';
 export { createNavigationBar } from './create-navigation-bar';
 export { createFab } from './create-fab';
+export { createDivider } from './create-divider';
+export { createProgress } from './create-progress';
+export { createList } from './create-list';
 export { createSnackbar, useSnackbar } from './create-snackbar';
 
 // Contracts (variant sets + prop types, defined once)
@@ -85,6 +88,33 @@ export {
   type FabClassResolver,
 } from './fab.contract';
 export type { SnackbarClasses } from './snackbar.contract';
+export {
+  DIVIDER_INSETS,
+  DIVIDER_ORIENTATIONS,
+  type DividerInset,
+  type DividerOrientation,
+  type DividerOwnProps,
+  type DividerProps,
+  type DividerResolverArgs,
+  type DividerClassResolver,
+} from './divider.contract';
+export type {
+  ProgressSlotClasses,
+  ProgressClasses,
+  LinearProgressOwnProps,
+  LinearProgressProps,
+  CircularProgressOwnProps,
+  CircularProgressProps,
+} from './progress.contract';
+export {
+  LIST_ITEM_LINES,
+  type ListItemLines,
+  type ListItemResolverArgs,
+  type ListItemSlotClasses,
+  type ListClasses,
+  type ListItemOwnProps,
+  type ListItemProps,
+} from './list.contract';
 
 // Slot helpers (for engine packages composing Base UI parts)
 export { createSlot, mergeClassName, type ClassValue, type SlotOptions } from './slot';

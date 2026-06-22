@@ -10,6 +10,21 @@
  */
 @source "../../../packages/react-tailwind/src";
 
+/* Mirror the component keyframes from @m3/react-tailwind/preset.css (the linear
+ * progress indeterminate slide) so the demo animates without importing preset. */
+@theme {
+  --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;
+}
+
+@keyframes m3-linear-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
 body {
   margin: 0;
   background: rgb(var(--md-sys-color-surface));

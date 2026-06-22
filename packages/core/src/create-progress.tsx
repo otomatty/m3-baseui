@@ -1,0 +1,91 @@
+'use client';
+/**
+ * create-progress.tsx — headless M3 Progress parts (Linear + Circular).
+ *
+ * `Linear` composes Base UI `Progress` (Root/Track/Indicator); the Root exposes
+ * `data-indeterminate` / `data-progressing` / `data-complete`, which the engine
+ * CSS keys off (the indeterminate slide animation lives in CSS). `Circular` is a
+ * self-contained SVG ring with `role="progressbar"`: the active arc is drawn via
+ * `stroke-dasharray`/`stroke-dashoffset` derived from `value`, and the
+ * indeterminate spinner rotates the whole ring (`data-indeterminate`). Each
+ * engine injects slot classes, so both builds share one DOM + `data-*` contract.
+ */
+import * as React from 'react';
+import { Progress } from '@base-ui/react/progress';
+
+import type {
+  CircularProgressProps,
+  LinearProgressProps,
+  ProgressClasses,
+} from './progress.contract';
+import { cx } from './utils';
+import { mergeClassName } from './slot';
+
+// 48dp ring, 4dp stroke → radius (48 − 4) / 2 = 22.
+const RADIUS = 22;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+// Indeterminate spinner shows a 3/4 arc while it rotates.
+const INDETERMINATE_FRACTION = 0.75;
+
+export function createProgress(classes: ProgressClasses) {
+  const Linear = React.forwardRef<HTMLDivElement, LinearProgressProps>(function Linear(
+    { value = null, max = 100, className, ...props },
+    ref,
+  ) {
+    return (
+      <Progress.Root
+        ref={ref}
+        value={value ?? null}
+        max={max}
+        className={mergeClassName(classes.linear.root, className)}
+        {...props}
+      >
+        <Progress.Track className={classes.linear.track}>
+          <Progress.Indicator className={classes.linear.indicator} />
+        </Progress.Track>
+      </Progress.Root>
+    );
+  });
+  Linear.displayName = 'M3Progress.Linear';
+
+  const Circular = React.forwardRef<HTMLSpanElement, CircularProgressProps>(function Circular(
+    { value = null, max = 100, className, ...props },
+    ref,
+  ) {
+    const indeterminate = value == null;
+    const fraction = indeterminate ? INDETERMINATE_FRACTION : Math.max(0, Math.min(1, value / max));
+    const dashoffset = CIRCUMFERENCE * (1 - fraction);
+
+    return (
+      <span
+        ref={ref}
+        role="progressbar"
+        aria-valuemin={indeterminate ? undefined : 0}
+        aria-valuemax={indeterminate ? undefined : max}
+        aria-valuenow={indeterminate ? undefined : (value as number)}
+        data-indeterminate={indeterminate ? '' : undefined}
+        className={cx(classes.circular.root, className)}
+        {...props}
+      >
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          {indeterminate ? null : (
+            <circle className={classes.circular.track} cx="24" cy="24" r={RADIUS} fill="none" />
+          )}
+          <circle
+            className={classes.circular.indicator}
+            cx="24"
+            cy="24"
+            r={RADIUS}
+            fill="none"
+            strokeDasharray={CIRCUMFERENCE}
+            strokeDashoffset={dashoffset}
+            transform="rotate(-90 24 24)"
+          />
+        </svg>
+      </span>
+    );
+  });
+  Circular.displayName = 'M3Progress.Circular';
+
+  return { Linear, Circular };
+}
