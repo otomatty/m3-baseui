@@ -11,6 +11,8 @@ import { vars } from '@m3/tokens/contract.css';
 export const root = style({
   listStyle: 'none',
   margin: 0,
+  // Reset the native <ul> inline padding (~40px) while keeping the 8dp block padding.
+  paddingInline: 0,
   paddingBlock: '8px',
   background: 'transparent',
 });

@@ -16,6 +16,14 @@ describe('Progress.Linear', () => {
     expect(bar).toHaveAttribute('data-indeterminate');
     expect(bar.className).toContain('h-1');
   });
+
+  test('normalizes a non-positive max before forwarding it', () => {
+    render(<Progress.Linear value={5} max={0} aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    // max=0 is sanitized to the 100 fallback, keeping a valid ARIA range.
+    expect(bar).toHaveAttribute('aria-valuemax', '100');
+    expect(bar).not.toHaveAttribute('data-indeterminate');
+  });
 });
 
 describe('Progress.Circular', () => {

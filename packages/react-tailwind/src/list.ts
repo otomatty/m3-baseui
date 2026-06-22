@@ -13,7 +13,7 @@ import { tv } from 'tailwind-variants';
 
 export const listTv = tv({
   slots: {
-    root: 'list-none m-0 py-2 bg-transparent',
+    root: 'list-none m-0 px-0 py-2 bg-transparent',
     item: [
       'group relative flex w-full items-center gap-4 box-border px-4 text-left',
       'bg-transparent border-0 text-on-surface no-underline',

@@ -27,6 +27,9 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 // Indeterminate spinner shows a 3/4 arc while it rotates.
 const INDETERMINATE_FRACTION = 0.75;
 
+/** Guard against a non-positive `max` (would yield NaN / invalid ARIA ranges). */
+const normalizeMax = (max: number): number => (max > 0 ? max : 100);
+
 export function createProgress(classes: ProgressClasses) {
   const Linear = React.forwardRef<HTMLDivElement, LinearProgressProps>(function Linear(
     { value = null, max = 100, className, ...props },
@@ -36,7 +39,7 @@ export function createProgress(classes: ProgressClasses) {
       <Progress.Root
         ref={ref}
         value={value ?? null}
-        max={max}
+        max={normalizeMax(max)}
         className={mergeClassName(classes.linear.root, className)}
         {...props}
       >
@@ -52,9 +55,9 @@ export function createProgress(classes: ProgressClasses) {
     { value = null, max = 100, className, ...props },
     ref,
   ) {
-    // Guard against a non-positive `max` (would make `value / max` NaN) and clamp
-    // the value so the drawn arc and the announced `aria-valuenow` always agree.
-    const safeMax = max > 0 ? max : 100;
+    // Clamp the value so the drawn arc and the announced `aria-valuenow` agree,
+    // and guard a non-positive `max` (would make `value / max` NaN).
+    const safeMax = normalizeMax(max);
     const clampedValue = value == null ? null : Math.max(0, Math.min(safeMax, value));
     const indeterminate = clampedValue == null;
     const fraction = indeterminate ? INDETERMINATE_FRACTION : clampedValue / safeMax;
