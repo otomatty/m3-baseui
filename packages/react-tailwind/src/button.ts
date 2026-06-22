@@ -17,6 +17,11 @@ export const button = tv({
     'relative inline-flex items-center justify-center gap-2',
     'h-10 px-6 rounded-full overflow-hidden cursor-pointer select-none border-0',
     'text-label-large',
+    // M3 with-icon padding: the icon side trims to 16dp (label side stays 24dp).
+    'data-[with-start-icon]:pl-4 data-[with-end-icon]:pr-4',
+    // Icon slot: 18dp, centered.
+    '[&_[data-slot=button-icon]]:inline-flex [&_[data-slot=button-icon]]:items-center [&_[data-slot=button-icon]]:justify-center',
+    '[&_[data-slot=button-icon]>svg]:size-[18px]',
     'transition-[box-shadow,background-color,color,border-color] duration-200 ease-[var(--md-sys-motion-easing-standard)]',
     // State layer overlay
     'before:absolute before:inset-0 before:rounded-[inherit] before:bg-current before:opacity-0 before:pointer-events-none',

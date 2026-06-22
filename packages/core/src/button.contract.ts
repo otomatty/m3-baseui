@@ -22,6 +22,10 @@ export type ButtonClassResolver = (args: ButtonResolverArgs) => string;
 export interface ButtonOwnProps {
   /** M3 button variant. @default 'filled' */
   variant?: ButtonVariant;
+  /** Leading icon (18dp). Trims the leading padding to 16dp (M3). */
+  startIcon?: React.ReactNode;
+  /** Trailing icon (18dp). Trims the trailing padding to 16dp (M3). */
+  endIcon?: React.ReactNode;
   /** Show the pointer-origin ripple on press. @default true */
   ripple?: boolean;
 }

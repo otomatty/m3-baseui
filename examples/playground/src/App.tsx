@@ -125,6 +125,14 @@ export function App() {
                 </Button>
               ))}
             </div>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="filled" startIcon={<Icon name="add" size={18} />}>
+                Leading
+              </Button>
+              <Button variant="tonal" endIcon={<Icon name="arrow_forward" size={18} />}>
+                Trailing
+              </Button>
+            </div>
           </Section>
 
           <Section title="Icon Button">

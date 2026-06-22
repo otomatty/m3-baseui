@@ -22,6 +22,8 @@ export function createButton(resolve: ButtonClassResolver) {
   function Button(
     {
       variant = 'filled',
+      startIcon,
+      endIcon,
       ripple = true,
       className,
       children,
@@ -32,15 +34,32 @@ export function createButton(resolve: ButtonClassResolver) {
   ): React.JSX.Element {
     const cls = cx(resolve({ variant }), className);
 
+    // M3: a leading/trailing icon trims the padding on its side to 16dp. The
+    // data-* markers let the engine CSS apply that without a resolver change.
+    const iconMarkers: { [key: `data-${string}`]: string } = {};
+    if (startIcon != null) iconMarkers['data-with-start-icon'] = '';
+    if (endIcon != null) iconMarkers['data-with-end-icon'] = '';
+
     const element = useRender({
       render: render ?? <button type="button" />,
       ref: forwardedRef,
       props: {
         ...rest,
+        ...iconMarkers,
         className: cls,
         children: (
           <>
+            {startIcon != null ? (
+              <span data-slot="button-icon" aria-hidden="true">
+                {startIcon}
+              </span>
+            ) : null}
             {children}
+            {endIcon != null ? (
+              <span data-slot="button-icon" aria-hidden="true">
+                {endIcon}
+              </span>
+            ) : null}
             {ripple ? <Ripple /> : null}
           </>
         ),
