@@ -37,4 +37,8 @@ export const checkboxTv = tv({
 });
 
 const c = checkboxTv();
-export const Checkbox = createCheckbox({ root: c.root(), indicator: c.indicator(), icon: c.icon() });
+export const Checkbox = createCheckbox({
+  root: c.root(),
+  indicator: c.indicator(),
+  icon: c.icon(),
+});

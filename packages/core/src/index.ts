@@ -33,9 +33,9 @@ export {
   type IconButtonResolverArgs,
   type IconButtonClassResolver,
 } from './icon-button.contract';
-export { type SwitchClasses } from './switch.contract';
-export { type CheckboxClasses } from './checkbox.contract';
-export { type RadioClasses } from './radio.contract';
+export type { SwitchClasses } from './switch.contract';
+export type { CheckboxClasses } from './checkbox.contract';
+export type { RadioClasses } from './radio.contract';
 export {
   CHIP_VARIANTS,
   type ChipVariant,
@@ -45,17 +45,17 @@ export {
   type ChipSlotClasses,
   type ChipClassResolver,
 } from './chip.contract';
-export { type TooltipClasses } from './tooltip.contract';
-export { type DialogClasses } from './dialog.contract';
-export { type MenuClasses } from './menu.contract';
+export type { TooltipClasses } from './tooltip.contract';
+export type { DialogClasses } from './dialog.contract';
+export type { MenuClasses } from './menu.contract';
 export {
   TABS_VARIANTS,
   type TabsVariant,
   type TabsSlotClasses,
   type TabsClassResolver,
 } from './tabs.contract';
-export { type SliderClasses } from './slider.contract';
-export { type SelectClasses } from './select.contract';
+export type { SliderClasses } from './slider.contract';
+export type { SelectClasses } from './select.contract';
 
 // Slot helpers (for engine packages composing Base UI parts)
 export { createSlot, mergeClassName, type ClassValue, type SlotOptions } from './slot';

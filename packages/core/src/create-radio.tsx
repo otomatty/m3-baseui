@@ -35,17 +35,14 @@ export function createRadio(classes: RadioClasses) {
 }
 
 export function createRadioGroup(rootClass: string) {
-  const RadioGroup = React.forwardRef<React.ElementRef<typeof RadioGroupPrimitive>, RadioGroupProps>(
-    function RadioGroup({ className, ...props }, ref) {
-      return (
-        <RadioGroupPrimitive
-          ref={ref}
-          className={mergeClassName(rootClass, className)}
-          {...props}
-        />
-      );
-    },
-  );
+  const RadioGroup = React.forwardRef<
+    React.ElementRef<typeof RadioGroupPrimitive>,
+    RadioGroupProps
+  >(function RadioGroup({ className, ...props }, ref) {
+    return (
+      <RadioGroupPrimitive ref={ref} className={mergeClassName(rootClass, className)} {...props} />
+    );
+  });
   RadioGroup.displayName = 'M3RadioGroup';
   return RadioGroup;
 }

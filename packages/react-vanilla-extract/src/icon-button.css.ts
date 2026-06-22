@@ -70,7 +70,10 @@ export const iconButton = recipe({
     },
   },
   compoundVariants: [
-    { variants: { variant: 'standard', selected: true }, style: { color: `rgb(${vars.sys.color.primary})` } },
+    {
+      variants: { variant: 'standard', selected: true },
+      style: { color: `rgb(${vars.sys.color.primary})` },
+    },
     {
       variants: { variant: 'filled', selected: false },
       style: {

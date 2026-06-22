@@ -52,23 +52,28 @@ export function createTabs(resolve: TabsClassResolver) {
     function List({ className, ...props }, ref) {
       const classes = useTabsClasses();
       return (
-        <TabsPrimitive.List ref={ref} className={mergeClassName(classes.list, className)} {...props} />
+        <TabsPrimitive.List
+          ref={ref}
+          className={mergeClassName(classes.list, className)}
+          {...props}
+        />
       );
     },
   );
   List.displayName = 'M3Tabs.List';
 
-  const Tab = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Tab>, TabProps>(
-    function Tab({ className, children, ...props }, ref) {
-      const classes = useTabsClasses();
-      return (
-        <TabsPrimitive.Tab ref={ref} className={mergeClassName(classes.tab, className)} {...props}>
-          {children}
-          <Ripple />
-        </TabsPrimitive.Tab>
-      );
-    },
-  );
+  const Tab = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Tab>, TabProps>(function Tab(
+    { className, children, ...props },
+    ref,
+  ) {
+    const classes = useTabsClasses();
+    return (
+      <TabsPrimitive.Tab ref={ref} className={mergeClassName(classes.tab, className)} {...props}>
+        {children}
+        <Ripple />
+      </TabsPrimitive.Tab>
+    );
+  });
   Tab.displayName = 'M3Tabs.Tab';
 
   const Indicator = React.forwardRef<

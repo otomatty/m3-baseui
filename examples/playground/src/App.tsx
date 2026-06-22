@@ -245,6 +245,7 @@ export function App() {
             {['#6750A4', '#386A20', '#B3261E', '#00639B'].map((c) => (
               <button
                 key={c}
+                type="button"
                 onClick={() => setSeed(c)}
                 aria-label={`seed ${c}`}
                 className="size-8 rounded-full border border-outline"

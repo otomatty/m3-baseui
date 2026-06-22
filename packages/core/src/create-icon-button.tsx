@@ -16,8 +16,15 @@ import { Ripple } from './ripple/Ripple';
 
 export function createIconButton(resolve: IconButtonClassResolver) {
   function IconButton(
-    { variant = 'standard', selected, ripple = true, className, children, render, ...rest }:
-      IconButtonProps & { render?: useRender.RenderProp },
+    {
+      variant = 'standard',
+      selected,
+      ripple = true,
+      className,
+      children,
+      render,
+      ...rest
+    }: IconButtonProps & { render?: useRender.RenderProp },
     forwardedRef: React.Ref<HTMLButtonElement>,
   ): React.JSX.Element {
     const cls = cx(resolve({ variant, selected }), className);

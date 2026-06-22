@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 
 /** Join class names, dropping falsy entries. */
 export function cx(...parts: Array<string | false | null | undefined>): string {
@@ -6,9 +6,7 @@ export function cx(...parts: Array<string | false | null | undefined>): string {
 }
 
 /** Merge multiple refs into one callback ref. */
-export function mergeRefs<T>(
-  ...refs: Array<React.Ref<T> | undefined>
-): React.RefCallback<T> {
+export function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>): React.RefCallback<T> {
   return (value) => {
     for (const ref of refs) {
       if (typeof ref === 'function') {

@@ -41,5 +41,4 @@ export interface ChipOwnProps {
   ripple?: boolean;
 }
 
-export type ChipProps = ChipOwnProps &
-  Omit<React.HTMLAttributes<HTMLElement>, 'color'>;
+export type ChipProps = ChipOwnProps & Omit<React.HTMLAttributes<HTMLElement>, 'color'>;

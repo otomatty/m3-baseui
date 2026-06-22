@@ -51,7 +51,11 @@ export const chip = recipe({
     variant: {
       assist: { color: `rgb(${vars.sys.color.onSurface})`, cursor: 'pointer' },
       suggestion: { color: `rgb(${vars.sys.color.onSurfaceVariant})`, cursor: 'pointer' },
-      input: { color: `rgb(${vars.sys.color.onSurfaceVariant})`, cursor: 'default', paddingRight: '8px' },
+      input: {
+        color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+        cursor: 'default',
+        paddingRight: '8px',
+      },
       filter: { color: `rgb(${vars.sys.color.onSurfaceVariant})`, cursor: 'pointer' },
     },
     selected: {

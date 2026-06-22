@@ -58,7 +58,9 @@
       "default": "./src/select.ts"
     }
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "build": "echo \"@m3/react-vanilla-extract: compiled by the host app's VE plugin\"",
     "typecheck": "tsc --noEmit"

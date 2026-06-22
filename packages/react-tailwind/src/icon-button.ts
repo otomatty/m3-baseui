@@ -39,8 +39,16 @@ export const iconButton = tv({
   compoundVariants: [
     { variant: 'standard', selected: true, class: 'text-primary' },
     { variant: 'filled', selected: false, class: 'bg-surface-container-highest text-primary' },
-    { variant: 'tonal', selected: false, class: 'bg-surface-container-highest text-on-surface-variant' },
-    { variant: 'outlined', selected: true, class: 'bg-inverse-surface text-inverse-on-surface border-transparent' },
+    {
+      variant: 'tonal',
+      selected: false,
+      class: 'bg-surface-container-highest text-on-surface-variant',
+    },
+    {
+      variant: 'outlined',
+      selected: true,
+      class: 'bg-inverse-surface text-inverse-on-surface border-transparent',
+    },
   ],
   defaultVariants: {
     variant: 'standard',
