@@ -1,0 +1,124 @@
+/**
+ * select.css.ts — vanilla-extract styles for the M3 Select.
+ * Same DOM + data-* hooks as the Tailwind build.
+ */
+import { style } from '@vanilla-extract/css';
+import { vars } from '@m3/tokens/contract.css';
+
+export const trigger = style({
+  position: 'relative',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '8px',
+  boxSizing: 'border-box',
+  height: '56px',
+  minWidth: '200px',
+  paddingInline: '16px',
+  borderRadius: vars.sys.shape.extraSmall,
+  border: `1px solid rgb(${vars.sys.color.outline})`,
+  background: 'transparent',
+  color: `rgb(${vars.sys.color.onSurface})`,
+  textAlign: 'left',
+  cursor: 'pointer',
+  outline: 'none',
+  fontFamily: vars.sys.typescale.bodyLarge.fontFamily,
+  fontWeight: vars.sys.typescale.bodyLarge.fontWeight,
+  fontSize: vars.sys.typescale.bodyLarge.fontSize,
+  lineHeight: vars.sys.typescale.bodyLarge.lineHeight,
+  letterSpacing: vars.sys.typescale.bodyLarge.letterSpacing,
+  transition: `border-color 150ms ${vars.sys.motion.easing.standard}`,
+  selectors: {
+    '&[data-popup-open], &:focus-visible': {
+      border: `2px solid rgb(${vars.sys.color.primary})`,
+      paddingInline: '15px',
+    },
+    '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+  },
+});
+
+export const value = style({
+  flex: 1,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+});
+
+export const icon = style({
+  display: 'flex',
+  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+  transition: `transform 150ms ${vars.sys.motion.easing.standard}`,
+  selectors: {
+    [`${trigger}[data-popup-open] &`]: { transform: 'rotate(180deg)' },
+  },
+});
+
+export const popup = style({
+  minWidth: 'var(--anchor-width)',
+  maxHeight: 'var(--available-height)',
+  paddingBlock: '8px',
+  overflow: 'auto',
+  background: `rgb(${vars.sys.color.surfaceContainer})`,
+  color: `rgb(${vars.sys.color.onSurface})`,
+  borderRadius: vars.sys.shape.extraSmall,
+  boxShadow: vars.sys.elevation.level2,
+  transformOrigin: 'var(--transform-origin)',
+  outline: 'none',
+  transition: `opacity 150ms ${vars.sys.motion.easing.standard}, transform 150ms ${vars.sys.motion.easing.standard}`,
+  selectors: {
+    '&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
+  },
+});
+
+export const item = style({
+  position: 'relative',
+  display: 'grid',
+  gridTemplateColumns: '24px 1fr',
+  alignItems: 'center',
+  gap: '8px',
+  height: '48px',
+  paddingInline: '12px',
+  overflow: 'hidden',
+  cursor: 'pointer',
+  userSelect: 'none',
+  outline: 'none',
+  color: `rgb(${vars.sys.color.onSurface})`,
+  fontFamily: vars.sys.typescale.bodyLarge.fontFamily,
+  fontWeight: vars.sys.typescale.bodyLarge.fontWeight,
+  fontSize: vars.sys.typescale.bodyLarge.fontSize,
+  lineHeight: vars.sys.typescale.bodyLarge.lineHeight,
+  letterSpacing: vars.sys.typescale.bodyLarge.letterSpacing,
+  selectors: {
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      background: 'currentColor',
+      opacity: 0,
+      pointerEvents: 'none',
+      transition: `opacity 100ms ${vars.sys.motion.easing.standard}`,
+    },
+    '&:hover::before': { opacity: vars.sys.state.hover },
+    '&[data-highlighted]::before': { opacity: vars.sys.state.hover },
+    '&:active::before': { opacity: vars.sys.state.pressed },
+    '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+  },
+});
+
+export const itemIndicator = style({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: `rgb(${vars.sys.color.primary})`,
+});
+
+export const groupLabel = style({
+  paddingInline: '12px',
+  paddingBlock: '8px',
+  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+  fontFamily: vars.sys.typescale.labelSmall.fontFamily,
+  fontWeight: vars.sys.typescale.labelSmall.fontWeight,
+  fontSize: vars.sys.typescale.labelSmall.fontSize,
+  lineHeight: vars.sys.typescale.labelSmall.lineHeight,
+  letterSpacing: vars.sys.typescale.labelSmall.letterSpacing,
+});

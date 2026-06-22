@@ -3,6 +3,13 @@
 @import 'tailwindcss';
 @import '@m3/tokens/theme.css';
 
+/*
+ * The Tailwind component class strings live in the @m3/react-tailwind package
+ * source (outside this app's default scan root), so register it as a source so
+ * Tailwind v4 generates the utilities those components reference.
+ */
+@source "../../../packages/react-tailwind/src";
+
 body {
   margin: 0;
   background: rgb(var(--md-sys-color-surface));
