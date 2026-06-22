@@ -63,4 +63,25 @@ describe('Chip', () => {
       'data-[pressed]:data-[disabled]:bg-on-surface/12',
     );
   });
+
+  test('elevated chip uses surface-container-low + level1→level2 elevation (M3)', () => {
+    const root = chipTv({ variant: 'assist', elevated: true }).root();
+    expect(root).toContain('bg-surface-container-low');
+    expect(root).toContain('shadow-level1');
+    expect(root).toContain('hover:shadow-level2');
+    // elevated chips drop the outline
+    expect(root).toContain('border-transparent');
+  });
+
+  test('renders a leading avatar slot when provided', () => {
+    render(
+      <Chip variant="assist" avatar={<img alt="" src="a.png" />}>
+        With avatar
+      </Chip>,
+    );
+    const chip = screen.getByRole('button', { name: 'With avatar' });
+    const avatar = chip.querySelector('[data-slot="avatar"]');
+    expect(avatar).not.toBeNull();
+    expect(avatar?.querySelector('img')).not.toBeNull();
+  });
 });

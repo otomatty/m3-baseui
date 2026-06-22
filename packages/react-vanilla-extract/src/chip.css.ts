@@ -99,9 +99,41 @@ export const chip = recipe({
         },
       },
     },
+    // M3 elevated: filled surface-container-low + elevation level1→level2 on hover,
+    // no outline. Disabled drops the shadow.
+    elevated: {
+      true: {
+        background: `rgb(${vars.sys.color.surfaceContainerLow})`,
+        borderColor: 'transparent',
+        boxShadow: vars.sys.elevation.level1,
+        selectors: {
+          '&:hover': { boxShadow: vars.sys.elevation.level2 },
+          '&:active': { boxShadow: vars.sys.elevation.level1 },
+          '&[data-disabled], &:disabled': { boxShadow: 'none' },
+        },
+      },
+    },
   },
   defaultVariants: {
     variant: 'assist',
+  },
+});
+
+// M3 leading avatar: 24dp circle; negative margin trims the leading padding to 4dp.
+export const avatar = style({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+  width: '24px',
+  height: '24px',
+  marginLeft: '-12px',
+  borderRadius: vars.sys.shape.full,
+  overflow: 'hidden',
+  background: `rgb(${vars.sys.color.primaryContainer})`,
+  color: `rgb(${vars.sys.color.onPrimaryContainer})`,
+  selectors: {
+    '& > img': { width: '100%', height: '100%', objectFit: 'cover' },
   },
 });
 

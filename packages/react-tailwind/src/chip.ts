@@ -34,6 +34,12 @@ export const chipTv = tv({
       'transition-all duration-150 ease-standard',
       'group-data-[pressed]:w-[18px] group-data-[pressed]:ml-0 group-data-[pressed]:opacity-100',
     ],
+    // M3 leading avatar: 24dp circle; negative margin trims the leading padding to 4dp.
+    avatar: [
+      'inline-flex items-center justify-center shrink-0 size-6 -ml-3 rounded-full overflow-hidden',
+      'bg-primary-container text-on-primary-container',
+      '[&>img]:size-full [&>img]:object-cover',
+    ],
   },
   variants: {
     variant: {
@@ -49,14 +55,25 @@ export const chipTv = tv({
         ],
       },
     },
+    // M3 elevated: filled surface-container-low + elevation level1→level2 on hover,
+    // no outline. Disabled drops the shadow.
+    elevated: {
+      true: {
+        root: [
+          'bg-surface-container-low border-transparent shadow-level1',
+          'hover:shadow-level2 active:shadow-level1',
+          'disabled:shadow-none data-[disabled]:shadow-none',
+        ],
+      },
+    },
   },
   defaultVariants: {
     variant: 'assist',
   },
 });
 
-export const Chip = createChip(({ variant }) => {
-  const c = chipTv({ variant });
-  return { root: c.root(), remove: c.remove(), check: c.check() };
+export const Chip = createChip(({ variant, elevated }) => {
+  const c = chipTv({ variant, elevated });
+  return { root: c.root(), remove: c.remove(), check: c.check(), avatar: c.avatar() };
 });
 export type { ChipProps, ChipVariant } from '@m3/core';

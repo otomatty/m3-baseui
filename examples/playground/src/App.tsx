@@ -199,6 +199,12 @@ export function App() {
               <Chip variant="input" onRemove={() => {}}>
                 Input
               </Chip>
+              <Chip variant="assist" elevated>
+                <Icon name="bolt" size={18} /> Elevated
+              </Chip>
+              <Chip variant="input" avatar={<Icon name="person" size={18} />} onRemove={() => {}}>
+                Avatar
+              </Chip>
             </div>
           </Section>
 
