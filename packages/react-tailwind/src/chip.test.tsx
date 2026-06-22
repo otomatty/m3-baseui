@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { Chip } from './chip';
+import { Chip, chipTv } from './chip';
 
 describe('Chip', () => {
   test('uncontrolled filter chip toggles Base UI data-pressed on click', () => {
@@ -23,7 +23,7 @@ describe('Chip', () => {
     );
   });
 
-  test('disabled native button chip dims via :disabled (not only data-disabled)', () => {
+  test('disabled native button chip uses M3 tokens via :disabled (not blanket opacity)', () => {
     render(
       <Chip variant="assist" disabled>
         Assist
@@ -31,8 +31,30 @@ describe('Chip', () => {
     );
     const chip = screen.getByRole('button', { name: 'Assist' });
     expect(chip).toBeDisabled();
+    // M3 (material-web): disabled label = on-surface/38, outline = on-surface/12.
     // Native <button> exposes `disabled`, not Base UI's data-disabled, so the
     // styles must also target :disabled.
-    expect(chip.className).toContain('disabled:opacity-[0.38]');
+    expect(chip.className).toContain('disabled:text-on-surface/38');
+    expect(chip.className).toContain('disabled:border-on-surface/12');
+    expect(chip.className).not.toContain('disabled:opacity-[0.38]');
+  });
+
+  test('filter chip renders a leading checkmark that reveals on selection (M3)', () => {
+    render(<Chip variant="filter">F</Chip>);
+    const chip = screen.getByRole('button', { name: 'F' });
+    // The checkmark stays in the DOM and is revealed via data-pressed in CSS.
+    expect(chip.querySelector('svg')).not.toBeNull();
+    expect(chipTv({ variant: 'filter' }).check()).toContain('group-data-[pressed]:opacity-100');
+  });
+
+  test('assist chips have no leading checkmark', () => {
+    render(<Chip variant="assist">A</Chip>);
+    expect(screen.getByRole('button', { name: 'A' }).querySelector('svg')).toBeNull();
+  });
+
+  test('disabled selected filter chip uses on-surface/12 container (M3)', () => {
+    expect(chipTv({ variant: 'filter' }).root()).toContain(
+      'data-[pressed]:data-[disabled]:bg-on-surface/12',
+    );
   });
 });

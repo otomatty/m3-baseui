@@ -6,6 +6,25 @@ import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@m3/tokens/contract.css';
 
+/**
+ * Leading checkmark for filter chips. Kept mounted but collapsed (width 0,
+ * -8px margin cancels the flex gap); the filter variant reveals it when the
+ * root is pressed/selected, matching material-web.
+ */
+export const check = style({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+  height: '18px',
+  width: 0,
+  marginLeft: '-8px',
+  opacity: 0,
+  overflow: 'hidden',
+  pointerEvents: 'none',
+  transition: `width 150ms ${vars.sys.motion.easing.standard}, margin 150ms ${vars.sys.motion.easing.standard}, opacity 150ms ${vars.sys.motion.easing.standard}`,
+});
+
 export const chip = recipe({
   base: {
     position: 'relative',
@@ -41,11 +60,16 @@ export const chip = recipe({
       '&:focus-visible::before': { opacity: vars.sys.state.focus },
       '&:active::before': { opacity: vars.sys.state.pressed },
       '&:focus-visible': {
-        outline: `2px solid rgb(${vars.sys.color.secondary})`,
+        outline: `3px solid rgb(${vars.sys.color.secondary})`,
         outlineOffset: '2px',
       },
-      '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
-      '&:disabled': { opacity: 0.38, pointerEvents: 'none' },
+      // M3 disabled: label on-surface/38, outline on-surface/12; no state layer.
+      '&[data-disabled], &:disabled': {
+        pointerEvents: 'none',
+        color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+        borderColor: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+      },
+      '&[data-disabled]::before, &:disabled::before': { opacity: 0 },
     },
   },
   variants: {
@@ -65,6 +89,12 @@ export const chip = recipe({
             background: `rgb(${vars.sys.color.secondaryContainer})`,
             color: `rgb(${vars.sys.color.onSecondaryContainer})`,
             borderColor: 'transparent',
+          },
+          // Reveal the leading checkmark when selected
+          [`&[data-pressed] ${check}`]: { width: '18px', marginLeft: 0, opacity: 1 },
+          // M3 disabled + selected: faint on-surface/12 container
+          '&[data-pressed][data-disabled], &[data-pressed]:disabled': {
+            background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
           },
         },
       },
