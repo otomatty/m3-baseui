@@ -49,7 +49,7 @@ export const selectTv = tv({
       '[&_[data-slot=select-trailing]]:pl-4 [&_[data-slot=select-trailing]]:text-label-large [&_[data-slot=select-trailing]]:text-on-surface-variant',
     ],
     itemIndicator:
-      'inline-flex items-center justify-center text-primary invisible group-data-[selected]:visible',
+      'inline-flex items-center justify-center text-primary invisible group-data-[selected]:visible group-data-[disabled]:text-on-surface/[0.38]',
     groupLabel: 'px-3 py-2 text-label-small text-on-surface-variant',
     // Sticky scroll affordances at the popup edges; surface-tinted with a chevron.
     scrollUpArrow: [

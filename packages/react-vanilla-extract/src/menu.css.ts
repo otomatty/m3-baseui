@@ -164,6 +164,8 @@ export const checkboxItem = style({
   selectors: {
     ...stateLayerSelectors,
     [`&[data-checked] ${itemIndicator}`]: { visibility: 'visible' },
+    // M3 disabled: the check/dot indicator dims with its row (own text color).
+    [`&[data-disabled] ${itemIndicator}`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });
 
@@ -172,5 +174,7 @@ export const radioItem = style({
   selectors: {
     ...stateLayerSelectors,
     [`&[data-checked] ${itemIndicator}`]: { visibility: 'visible' },
+    // M3 disabled: the check/dot indicator dims with its row (own text color).
+    [`&[data-disabled] ${itemIndicator}`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });

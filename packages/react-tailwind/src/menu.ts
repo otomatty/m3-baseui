@@ -71,7 +71,7 @@ export const menuTv = tv({
       'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
     ],
     itemIndicator:
-      'inline-flex items-center justify-center text-on-surface invisible group-data-[checked]:visible',
+      'inline-flex items-center justify-center text-on-surface invisible group-data-[checked]:visible group-data-[disabled]:text-on-surface/[0.38]',
   },
 });
 

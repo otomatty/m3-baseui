@@ -160,6 +160,8 @@ export const itemIndicator = style({
   visibility: 'hidden',
   selectors: {
     [`${item}[data-selected] &`]: { visibility: 'visible' },
+    // M3 disabled: the selected-check indicator dims with its row (own text color).
+    [`${item}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });
 

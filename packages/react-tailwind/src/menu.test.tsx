@@ -46,6 +46,8 @@ describe('Menu tokens', () => {
     expect(m.submenuTrigger()).toContain('data-[disabled]:text-on-surface/[0.38]');
     expect(m.checkboxItem()).toContain('data-[disabled]:text-on-surface/[0.38]');
     expect(m.radioItem()).toContain('data-[disabled]:text-on-surface/[0.38]');
+    // the check/dot indicator dims with its disabled checked row (own text color)
+    expect(m.itemIndicator()).toContain('group-data-[disabled]:text-on-surface/[0.38]');
   });
 
   test('submenu trigger spreads its label + chevron and stays lit while open', () => {
