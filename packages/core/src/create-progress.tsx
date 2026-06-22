@@ -28,17 +28,19 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 const INDETERMINATE_FRACTION = 0.75;
 
 /**
- * Normalize a determinate progress pair: a positive `max` (a non-positive one
- * would yield NaN / invalid ARIA ranges) and the value clamped to `[0, max]` so
- * `aria-valuenow` and the drawn indicator never exceed the range. A `null` value
- * stays `null` (indeterminate).
+ * Normalize a determinate progress pair: a finite, positive `max` (NaN, Infinity
+ * or a non-positive value falls back to 100) and the value clamped to `[0, max]`
+ * so `aria-valuenow` and the drawn indicator never exceed the range. A `null` or
+ * non-finite value (e.g. `loaded / total` with `total === 0`) becomes `null`,
+ * rendering the indeterminate state rather than `NaN`/`Infinity`.
  */
 function normalizeProgress(
   value: number | null,
   max: number,
 ): { safeMax: number; clampedValue: number | null } {
-  const safeMax = max > 0 ? max : 100;
-  const clampedValue = value == null ? null : Math.max(0, Math.min(safeMax, value));
+  const safeMax = Number.isFinite(max) && max > 0 ? max : 100;
+  const clampedValue =
+    value == null || !Number.isFinite(value) ? null : Math.max(0, Math.min(safeMax, value));
   return { safeMax, clampedValue };
 }
 

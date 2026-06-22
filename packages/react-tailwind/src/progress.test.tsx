@@ -32,6 +32,14 @@ describe('Progress.Linear', () => {
     expect(bar).toHaveAttribute('aria-valuenow', '100');
     expect(bar).toHaveAttribute('aria-valuemax', '100');
   });
+
+  test('falls back to indeterminate for a non-finite value (e.g. 0 / 0)', () => {
+    render(<Progress.Linear value={0 / 0} aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    // NaN/Infinity must not leak into aria; render indeterminate instead.
+    expect(bar).toHaveAttribute('data-indeterminate');
+    expect(bar).not.toHaveAttribute('aria-valuenow');
+  });
 });
 
 describe('Progress.Circular', () => {
