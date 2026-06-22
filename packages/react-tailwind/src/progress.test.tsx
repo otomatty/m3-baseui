@@ -35,4 +35,13 @@ describe('Progress.Circular', () => {
     expect(bar).not.toHaveAttribute('aria-valuenow');
     expect(container.querySelectorAll('circle')).toHaveLength(1);
   });
+
+  test('clamps the value and survives a non-positive max (no NaN arc)', () => {
+    const { container } = render(<Progress.Circular value={5} max={0} aria-label="処理中" />);
+    const bar = screen.getByRole('progressbar', { name: '処理中' });
+    // value is clamped to safeMax; aria stays in sync and the arc is finite.
+    expect(bar).toHaveAttribute('aria-valuenow', '5');
+    const arc = container.querySelectorAll('circle')[1] as SVGCircleElement;
+    expect(arc.getAttribute('stroke-dashoffset')).not.toContain('NaN');
+  });
 });

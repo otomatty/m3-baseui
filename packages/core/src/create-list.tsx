@@ -65,13 +65,25 @@ export function createList(classes: ListClasses) {
 
     let row: React.ReactNode;
     if (interactive && href != null) {
+      // A disabled link drops its `href` (so it loses the link role + tab stop)
+      // and swallows any caller `onClick`, keeping the row fully inert.
+      const anchorProps = rest as React.AnchorHTMLAttributes<HTMLAnchorElement>;
       row = (
         <a
+          {...anchorProps}
           className={rowClass}
           href={disabled ? undefined : href}
           aria-disabled={disabled || undefined}
           data-disabled={disabled ? '' : undefined}
-          {...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+          tabIndex={disabled ? -1 : anchorProps.tabIndex}
+          onClick={
+            disabled
+              ? (event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+              : anchorProps.onClick
+          }
         >
           {inner}
         </a>

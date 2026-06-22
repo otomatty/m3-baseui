@@ -51,15 +51,40 @@ export interface ListItemOwnProps {
   supportingText?: React.ReactNode;
   /** Force the line count (min-height). Defaults to 2 when `supportingText` is set, else 1. */
   lines?: ListItemLines;
-  /** Render as an interactive row (state layer + ripple, `button`/`a`). */
-  interactive?: boolean;
   /** Disable the row (per-token dimming + `data-disabled`). */
   disabled?: boolean;
-  /** When set on an interactive row, render an `<a>` instead of a `<button>`. */
-  href?: string;
 }
 
-export type ListItemProps = ListItemOwnProps &
-  Omit<React.LiHTMLAttributes<HTMLLIElement>, 'children'> & {
-    children?: React.ReactNode;
-  };
+/** Fields every row variant shares, regardless of the element it renders to. */
+type ListItemSharedProps = ListItemOwnProps & {
+  children?: React.ReactNode;
+  className?: string;
+};
+
+/**
+ * Interactive linked row — rendered as an `<a>`. `interactive` + `href` accept
+ * the native anchor attributes (`target`, `rel`, `download`, …).
+ */
+type ListItemLinkProps = ListItemSharedProps & {
+  interactive: true;
+  href: string;
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof ListItemSharedProps | 'href'>;
+
+/** Interactive button row — rendered as a `<button>`. */
+type ListItemButtonProps = ListItemSharedProps & {
+  interactive: true;
+  href?: undefined;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ListItemSharedProps>;
+
+/** Inert row — rendered as a `<div>` (no state layer). */
+type ListItemInertProps = ListItemSharedProps & {
+  interactive?: false;
+  href?: undefined;
+} & Omit<React.HTMLAttributes<HTMLDivElement>, keyof ListItemSharedProps>;
+
+/**
+ * Props for a list row, discriminated on `interactive`/`href` so the attributes
+ * match the element the factory renders: `<a>` for a linked interactive row,
+ * `<button>` for a non-linked interactive row, `<div>` for an inert row.
+ */
+export type ListItemProps = ListItemLinkProps | ListItemButtonProps | ListItemInertProps;

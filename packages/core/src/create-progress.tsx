@@ -52,8 +52,12 @@ export function createProgress(classes: ProgressClasses) {
     { value = null, max = 100, className, ...props },
     ref,
   ) {
-    const indeterminate = value == null;
-    const fraction = indeterminate ? INDETERMINATE_FRACTION : Math.max(0, Math.min(1, value / max));
+    // Guard against a non-positive `max` (would make `value / max` NaN) and clamp
+    // the value so the drawn arc and the announced `aria-valuenow` always agree.
+    const safeMax = max > 0 ? max : 100;
+    const clampedValue = value == null ? null : Math.max(0, Math.min(safeMax, value));
+    const indeterminate = clampedValue == null;
+    const fraction = indeterminate ? INDETERMINATE_FRACTION : clampedValue / safeMax;
     const dashoffset = CIRCUMFERENCE * (1 - fraction);
 
     return (
@@ -61,8 +65,8 @@ export function createProgress(classes: ProgressClasses) {
         ref={ref}
         role="progressbar"
         aria-valuemin={indeterminate ? undefined : 0}
-        aria-valuemax={indeterminate ? undefined : max}
-        aria-valuenow={indeterminate ? undefined : (value as number)}
+        aria-valuemax={indeterminate ? undefined : safeMax}
+        aria-valuenow={indeterminate ? undefined : clampedValue}
         data-indeterminate={indeterminate ? '' : undefined}
         className={cx(classes.circular.root, className)}
         {...props}

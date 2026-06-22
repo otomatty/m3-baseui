@@ -49,4 +49,36 @@ describe('List', () => {
     expect(button).toBeDisabled();
     expect(button).toHaveAttribute('data-disabled');
   });
+
+  test('linked item renders an anchor and forwards anchor props', () => {
+    render(
+      <List.Root>
+        <List.Item interactive href="/inbox" target="_blank" rel="noreferrer">
+          受信トレイ
+        </List.Item>
+      </List.Root>,
+    );
+    const link = screen.getByRole('link', { name: '受信トレイ' });
+    expect(link).toHaveAttribute('href', '/inbox');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noreferrer');
+  });
+
+  test('disabled linked item drops its href + tab stop and suppresses onClick', () => {
+    let clicked = false;
+    render(
+      <List.Root>
+        <List.Item interactive href="/inbox" disabled onClick={() => (clicked = true)}>
+          受信トレイ
+        </List.Item>
+      </List.Root>,
+    );
+    // No href → not a link role; query by text instead.
+    const row = screen.getByText('受信トレイ').closest('a') as HTMLAnchorElement;
+    expect(row).not.toHaveAttribute('href');
+    expect(row).toHaveAttribute('tabindex', '-1');
+    expect(row).toHaveAttribute('data-disabled');
+    row.click();
+    expect(clicked).toBe(false);
+  });
 });
