@@ -26,6 +26,19 @@ describe('List', () => {
     expect(screen.getByText('2 件の未読')).toBeInTheDocument();
   });
 
+  test('headline keeps both the typescale and the color utility (M3 tv merge)', () => {
+    render(
+      <List.Root>
+        <List.Item>受信トレイ</List.Item>
+      </List.Root>,
+    );
+    const headline = screen.getByText('受信トレイ');
+    // The ./tv wrapper teaches tailwind-merge that text-<typescale> and
+    // text-<color> are independent, so neither is dropped.
+    expect(headline.className).toContain('text-body-large');
+    expect(headline.className).toContain('text-on-surface');
+  });
+
   test('interactive item renders a button with the state layer', () => {
     render(
       <List.Root>

@@ -9,7 +9,7 @@
  * Same DOM as the VE build.
  */
 import { createList } from '@m3/core';
-import { tv } from 'tailwind-variants';
+import { tv } from './tv';
 
 export const listTv = tv({
   slots: {
