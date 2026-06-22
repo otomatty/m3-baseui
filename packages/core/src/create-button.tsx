@@ -20,8 +20,14 @@ import { Ripple } from './ripple/Ripple';
 
 export function createButton(resolve: ButtonClassResolver) {
   function Button(
-    { variant = 'filled', ripple = true, className, children, render, ...rest }:
-      ButtonProps & { render?: useRender.RenderProp },
+    {
+      variant = 'filled',
+      ripple = true,
+      className,
+      children,
+      render,
+      ...rest
+    }: ButtonProps & { render?: useRender.RenderProp },
     forwardedRef: React.Ref<HTMLButtonElement>,
   ): React.JSX.Element {
     const cls = cx(resolve({ variant }), className);

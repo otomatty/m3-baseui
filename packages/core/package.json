@@ -10,7 +10,9 @@
       "default": "./src/index.ts"
     }
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "build": "echo \"@m3/core: source-only package (consumed via TS) — nothing to build\"",
     "typecheck": "tsc --noEmit"

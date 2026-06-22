@@ -10,7 +10,9 @@
       "default": "./src/index.tsx"
     }
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "build": "echo \"@m3/icons: source-only package\"",
     "typecheck": "tsc --noEmit"

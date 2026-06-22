@@ -21,8 +21,8 @@ Layer 2 (CSS variables) is the engine-neutral boundary. Everything above it is e
 | --- | --- |
 | `@m3/tokens` | Single TS token source → generates `tokens.css`, the VE contract, and the Tailwind v4 `@theme` preset |
 | `@m3/core` | `ThemeProvider`, dynamic color, `Ripple`, state-layer model, and the headless component factories |
-| `@m3/react-vanilla-extract` | Button implemented with vanilla-extract recipes |
-| `@m3/react-tailwind` | Button implemented with tailwind-variants + the Tailwind v4 preset |
+| `@m3/react-vanilla-extract` | Components implemented with vanilla-extract recipes |
+| `@m3/react-tailwind` | Components implemented with tailwind-variants + the Tailwind v4 preset |
 | `@m3/icons` | Material Symbols wrapper (optional) |
 | `@m3/example-playground` | Runnable Vite + Tailwind v4 demo |
 
@@ -82,9 +82,28 @@ The component API is identical across engines.
 - **State layer** is a `::before` overlay tinted with `currentColor`, switched by Base UI `data-*` attributes.
 - **Ripple** is a `@m3/core` primitive (Base UI ships none) and honors `prefers-reduced-motion`.
 
+## Components
+
+Each component ships in **both** engines with identical DOM + `data-*` state (drop-in parity). Compound components follow the design's 2-level API: low-level Base UI parts exposed as a namespace (`Menu.Root`, `Select.Trigger`, …).
+
+| Component | API | Notes |
+| --- | --- | --- |
+| `Button` | `<Button variant>` | filled / tonal / outlined / elevated / text |
+| `IconButton` | `<IconButton variant selected?>` | standard / filled / tonal / outlined, toggle support |
+| `Switch` | `<Switch>` | Base UI Switch, M3 track + handle |
+| `Checkbox` | `<Checkbox indeterminate?>` | check + indeterminate dash |
+| `Radio` / `RadioGroup` | `<RadioGroup><Radio value/></RadioGroup>` | — |
+| `Chip` | `<Chip variant>` | assist / filter (toggle) / input (removable) / suggestion |
+| `Tabs` | `<Tabs.Root variant>` parts | primary / secondary, animated indicator |
+| `Slider` | `<Slider.Root>` parts | rail + active indicator + handle state layer |
+| `Menu` | `<Menu.Root>` parts | M3 menu surface, ripple items |
+| `Select` | `<Select.Root>` parts | outlined trigger + menu popup |
+| `Dialog` | `<Dialog.Root>` parts | scrim + surface dialog |
+| `Tooltip` | `<Tooltip.Root>` parts | plain (inverse-surface) tooltip |
+
 ## Roadmap
 
-Per the design doc: simple components next (IconButton / Switch / Checkbox / Radio / Chip), then Base UI-dependent (Select / Menu / Dialog / Tooltip / Tabs / Slider), then composites (TextField / NavigationBar / FAB / Snackbar) — each shipped in both engines with drop-in parity.
+Next per the design doc: composites (TextField / NavigationBar / FAB / Snackbar), plus M3 Expressive motion — each shipped in both engines with drop-in parity.
 
 ## License
 

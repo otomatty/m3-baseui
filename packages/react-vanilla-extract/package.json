@@ -12,9 +12,55 @@
     "./button": {
       "types": "./src/button.ts",
       "default": "./src/button.ts"
+    },
+    "./icon-button": {
+      "types": "./src/icon-button.ts",
+      "default": "./src/icon-button.ts"
+    },
+    "./switch": {
+      "types": "./src/switch.ts",
+      "default": "./src/switch.ts"
+    },
+    "./checkbox": {
+      "types": "./src/checkbox.ts",
+      "default": "./src/checkbox.ts"
+    },
+    "./radio": {
+      "types": "./src/radio.ts",
+      "default": "./src/radio.ts"
+    },
+    "./chip": {
+      "types": "./src/chip.ts",
+      "default": "./src/chip.ts"
+    },
+    "./tooltip": {
+      "types": "./src/tooltip.ts",
+      "default": "./src/tooltip.ts"
+    },
+    "./dialog": {
+      "types": "./src/dialog.ts",
+      "default": "./src/dialog.ts"
+    },
+    "./menu": {
+      "types": "./src/menu.ts",
+      "default": "./src/menu.ts"
+    },
+    "./tabs": {
+      "types": "./src/tabs.ts",
+      "default": "./src/tabs.ts"
+    },
+    "./slider": {
+      "types": "./src/slider.ts",
+      "default": "./src/slider.ts"
+    },
+    "./select": {
+      "types": "./src/select.ts",
+      "default": "./src/select.ts"
     }
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "build": "echo \"@m3/react-vanilla-extract: compiled by the host app's VE plugin\"",
     "typecheck": "tsc --noEmit"

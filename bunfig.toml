@@ -1,0 +1,4 @@
+# happy-dom must register before @testing-library/react is imported, so its
+# preload runs first, then the matcher/cleanup setup.
+[test]
+preload = ["./test/happy-dom.ts", "./test/setup.ts"]
