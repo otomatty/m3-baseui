@@ -11,15 +11,14 @@
  * Used from `tsup.config.ts` via the `onSuccess` hook.
  */
 import { readdir, readFile, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 
 export async function linkVeCss(distDir = 'dist'): Promise<void> {
-  const files = await readdir(distDir);
-  const cssBaseNames = new Set(
-    files.filter((f) => f.endsWith('.css')).map((f) => f.slice(0, -'.css'.length)),
-  );
+  // Recursive so nested entries (e.g. dist/foo/bar.js) are linked too.
+  const files = await readdir(distDir, { recursive: true });
+  const cssBases = files.filter((f) => f.endsWith('.css')).map((f) => f.slice(0, -'.css'.length));
 
-  for (const base of cssBaseNames) {
+  for (const base of cssBases) {
     const jsPath = join(distDir, `${base}.js`);
     let code: string;
     try {
@@ -28,7 +27,8 @@ export async function linkVeCss(distDir = 'dist'): Promise<void> {
       continue; // CSS with no matching JS entry — nothing to link.
     }
 
-    const importLine = `import './${base}.css';`;
+    // The CSS sits next to its JS module, so the import is always same-dir.
+    const importLine = `import './${basename(base)}.css';`;
     if (code.includes(importLine)) continue;
     await writeFile(jsPath, `${importLine}\n${code}`);
 

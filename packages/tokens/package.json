@@ -20,7 +20,7 @@
   "files": [
     "dist",
     "styles",
-    "src"
+    "src/generated"
   ],
   "scripts": {
     "gen": "bun run src/build.ts",

@@ -8,9 +8,25 @@
  *
  * Used from a package's `tsup.config.ts` via the `onSuccess` hook.
  */
-import { readFile, writeFile } from 'node:fs/promises';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { basename, join } from 'node:path';
 
 const DIRECTIVE = '"use client";\n';
+
+/**
+ * Lists the entry `.js` files in a dist directory (top-level, excluding split
+ * `chunk-*.js`). Used to mark every public styling entry as a client module:
+ * the wrappers call the client `create*` factories at module init, so in
+ * Next/RSC they must be client modules themselves — relying on @m3/core's
+ * boundary is not enough.
+ */
+export async function listEntryJs(distDir: string): Promise<string[]> {
+  // Recursive so nested entries (e.g. dist/foo/bar.js) are annotated too.
+  const files = await readdir(distDir, { recursive: true });
+  return files
+    .filter((f) => f.endsWith('.js') && !basename(f).startsWith('chunk-'))
+    .map((f) => join(distDir, f));
+}
 
 export async function addUseClient(files: string[]): Promise<void> {
   for (const file of files) {

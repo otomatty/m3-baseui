@@ -1,5 +1,6 @@
 import { defineConfig } from 'tsup';
 import { vanillaExtractPlugin } from '@vanilla-extract/esbuild-plugin';
+import { addUseClient, listEntryJs } from '../../scripts/add-use-client';
 import { linkVeCss } from '../../scripts/link-ve-css';
 
 /**
@@ -27,5 +28,9 @@ export default defineConfig({
     // esbuild emits the extracted CSS but drops the import from the JS; re-link
     // each entry to its sibling stylesheet so styles load on import.
     await linkVeCss('dist');
+    // Each entry calls a client `create*` factory at module init, so it must be
+    // a client module for Next/RSC. Runs after linkVeCss so `'use client'` ends
+    // up first, before the CSS import.
+    await addUseClient(await listEntryJs('dist'));
   },
 });
