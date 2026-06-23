@@ -22,6 +22,11 @@ export { createDivider } from './create-divider';
 export { createProgress } from './create-progress';
 export { createList } from './create-list';
 export { createSnackbar, useSnackbar } from './create-snackbar';
+export { createItem } from './create-item';
+export { createBadge } from './create-badge';
+export { createCard } from './create-card';
+export { createSegmentedButton } from './create-segmented-button';
+export { createNavigationDrawer } from './create-navigation-drawer';
 
 // Contracts (variant sets + prop types, defined once)
 export {
@@ -115,6 +120,35 @@ export {
   type ListItemOwnProps,
   type ListItemProps,
 } from './list.contract';
+export type { ItemClasses, ItemOwnProps, ItemProps } from './item.contract';
+export {
+  BADGE_SIZES,
+  type BadgeSize,
+  type BadgeResolverArgs,
+  type BadgeClasses,
+  type BadgeOwnProps,
+  type BadgeProps,
+} from './badge.contract';
+export {
+  CARD_VARIANTS,
+  type CardVariant,
+  type CardResolverArgs,
+  type CardClasses,
+  type CardOwnProps,
+  type CardProps,
+} from './card.contract';
+export type {
+  SegmentedButtonClasses,
+  SegmentedButtonItemOwnProps,
+} from './segmented-button.contract';
+export {
+  NAV_DRAWER_VARIANTS,
+  type NavigationDrawerVariant,
+  type NavigationDrawerResolverArgs,
+  type NavigationDrawerClasses,
+  type NavigationDrawerOwnProps,
+  type NavigationDrawerItemOwnProps,
+} from './navigation-drawer.contract';
 
 // Slot helpers (for engine packages composing Base UI parts)
 export { createSlot, mergeClassName, type ClassValue, type SlotOptions } from './slot';

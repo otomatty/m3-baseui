@@ -15,6 +15,11 @@ import {
   Select,
   TextField,
   NavigationBar,
+  NavigationDrawer,
+  SegmentedButton,
+  Card,
+  Badge,
+  Item,
   Fab,
   Divider,
   Progress,
@@ -103,6 +108,9 @@ export function App() {
   const [seed, setSeed] = useState('#6750A4');
   const [filterOn, setFilterOn] = useState(true);
   const [nav, setNav] = useState<string[]>(['home']);
+  const [view, setView] = useState<string[]>(['week']);
+  const [textStyles, setTextStyles] = useState<string[]>(['bold']);
+  const [drawer, setDrawer] = useState('inbox');
 
   return (
     <ThemeProvider seed={seed} scheme="tonalSpot" mode="system">
@@ -515,6 +523,115 @@ export function App() {
                   プロフィール
                 </NavigationBar.Item>
               </NavigationBar.Root>
+            </div>
+          </Section>
+
+          <Section title="Card">
+            <div className="grid max-w-2xl gap-4 sm:grid-cols-3">
+              <Card variant="elevated" className="p-4">
+                <p className="text-title-medium text-on-surface">Elevated</p>
+                <p className="text-body-medium text-on-surface-variant">surface + level1</p>
+              </Card>
+              <Card variant="filled" className="p-4">
+                <p className="text-title-medium text-on-surface">Filled</p>
+                <p className="text-body-medium text-on-surface-variant">container-highest</p>
+              </Card>
+              <Card variant="outlined" className="p-4">
+                <p className="text-title-medium text-on-surface">Outlined</p>
+                <p className="text-body-medium text-on-surface-variant">outline-variant</p>
+              </Card>
+              <Card variant="outlined" interactive className="p-4">
+                <p className="text-title-medium">押せるカード</p>
+                <p className="text-body-medium text-on-surface-variant">state layer + ripple</p>
+              </Card>
+              <Card variant="filled" interactive disabled className="p-4">
+                <p className="text-title-medium">無効カード</p>
+                <p className="text-body-medium">操作できません</p>
+              </Card>
+            </div>
+          </Section>
+
+          <Section title="Badge">
+            <div className="flex items-center gap-8">
+              <span className="relative inline-flex text-on-surface">
+                <Icon name="mail" />
+                <Badge aria-label="新着あり" />
+              </span>
+              <span className="relative inline-flex text-on-surface">
+                <Icon name="notifications" />
+                <Badge value={3} />
+              </span>
+              <span className="relative inline-flex text-on-surface">
+                <Icon name="chat" />
+                <Badge value={120} max={99} />
+              </span>
+            </div>
+          </Section>
+
+          <Section title="Item (行レイアウト primitive)">
+            <div className="max-w-md overflow-hidden rounded-large border border-outline-variant bg-surface-container-low">
+              <Item
+                overline="OVERLINE"
+                supporting="補助テキスト"
+                leading={<Icon name="folder" />}
+                trailing={<Icon name="chevron_right" />}
+              >
+                見出しテキスト
+              </Item>
+            </div>
+          </Section>
+
+          <Section title="SegmentedButton">
+            <div className="flex flex-col gap-4">
+              <SegmentedButton.Root value={view} onValueChange={setView}>
+                <SegmentedButton.Item value="day">日</SegmentedButton.Item>
+                <SegmentedButton.Item value="week">週</SegmentedButton.Item>
+                <SegmentedButton.Item value="month">月</SegmentedButton.Item>
+              </SegmentedButton.Root>
+              <SegmentedButton.Root multiple value={textStyles} onValueChange={setTextStyles}>
+                <SegmentedButton.Item value="bold" icon={<Icon name="format_bold" />}>
+                  太字
+                </SegmentedButton.Item>
+                <SegmentedButton.Item value="italic" icon={<Icon name="format_italic" />}>
+                  斜体
+                </SegmentedButton.Item>
+                <SegmentedButton.Item value="underline" icon={<Icon name="format_underlined" />}>
+                  下線
+                </SegmentedButton.Item>
+              </SegmentedButton.Root>
+            </div>
+          </Section>
+
+          <Section title="NavigationDrawer">
+            <div className="flex flex-wrap gap-6">
+              <NavigationDrawer.Root variant="modal" aria-label="メール" className="max-w-[280px]">
+                <NavigationDrawer.Headline>メール</NavigationDrawer.Headline>
+                <NavigationDrawer.Item
+                  leading={<Icon name="inbox" />}
+                  trailing="24"
+                  selected={drawer === 'inbox'}
+                  onClick={() => setDrawer('inbox')}
+                >
+                  受信トレイ
+                </NavigationDrawer.Item>
+                <NavigationDrawer.Item
+                  leading={<Icon name="send" />}
+                  selected={drawer === 'sent'}
+                  onClick={() => setDrawer('sent')}
+                >
+                  送信済み
+                </NavigationDrawer.Item>
+                <NavigationDrawer.Item
+                  leading={<Icon name="delete" />}
+                  selected={drawer === 'trash'}
+                  onClick={() => setDrawer('trash')}
+                >
+                  ゴミ箱
+                </NavigationDrawer.Item>
+                <NavigationDrawer.Item leading={<Icon name="drafts" />} disabled>
+                  下書き（無効）
+                </NavigationDrawer.Item>
+              </NavigationDrawer.Root>
             </div>
           </Section>
 

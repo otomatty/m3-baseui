@@ -84,6 +84,26 @@
     "./snackbar": {
       "types": "./src/snackbar.ts",
       "default": "./src/snackbar.ts"
+    },
+    "./item": {
+      "types": "./src/item.ts",
+      "default": "./src/item.ts"
+    },
+    "./badge": {
+      "types": "./src/badge.ts",
+      "default": "./src/badge.ts"
+    },
+    "./card": {
+      "types": "./src/card.ts",
+      "default": "./src/card.ts"
+    },
+    "./segmented-button": {
+      "types": "./src/segmented-button.ts",
+      "default": "./src/segmented-button.ts"
+    },
+    "./navigation-drawer": {
+      "types": "./src/navigation-drawer.ts",
+      "default": "./src/navigation-drawer.ts"
     }
   },
   "files": [

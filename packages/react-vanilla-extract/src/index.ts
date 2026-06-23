@@ -37,6 +37,15 @@ export type { LinearProgressProps, CircularProgressProps } from './progress';
 export { List } from './list';
 export type { ListItemProps, ListItemLines } from './list';
 export { Snackbar, useSnackbar } from './snackbar';
+export { Item } from './item';
+export type { ItemProps } from './item';
+export { Badge } from './badge';
+export type { BadgeProps, BadgeSize } from './badge';
+export { Card } from './card';
+export type { CardProps, CardVariant } from './card';
+export { SegmentedButton } from './segmented-button';
+export { NavigationDrawer } from './navigation-drawer';
+export type { NavigationDrawerVariant } from './navigation-drawer';
 
 export {
   ThemeProvider,
