@@ -85,7 +85,9 @@ function assertNoWorkspaceRanges(dir: string, name: string): void {
       stdio: 'ignore',
     });
     const tgz = readdirSync(out).find((f) => f.endsWith('.tgz'));
-    if (!tgz) return;
+    if (!tgz) {
+      throw new Error(`${name}: bun pm pack produced no .tgz artifact to verify`);
+    }
     const manifest = execFileSync('tar', ['-xzOf', join(out, tgz), 'package/package.json'], {
       encoding: 'utf8',
     });
