@@ -20,6 +20,8 @@
     "test:e2e:update": "playwright test --update-snapshots",
     "lint": "biome check .",
     "format": "biome format --write .",
+    "storybook": "bun run --filter @m3/example-storybook dev",
+    "build-storybook": "bun run --filter @m3/example-storybook build",
     "clean": "rm -rf packages/*/dist packages/*/*.tsbuildinfo"
   },
   "devDependencies": {
