@@ -25,6 +25,7 @@ Layer 2 (CSS variables) is the engine-neutral boundary. Everything above it is e
 | `@m3/react-tailwind` | Components implemented with tailwind-variants + the Tailwind v4 preset |
 | `@m3/icons` | Material Symbols wrapper (optional) |
 | `@m3/example-playground` | Runnable Vite + Tailwind v4 demo |
+| `@m3/example-playground-ve` | Same demo rendered with the vanilla-extract build (validates the VE compile) |
 
 Pick **one** engine package — both emit identical DOM and `data-*` state, so they are drop-in compatible.
 
@@ -38,8 +39,13 @@ Pick **one** engine package — both emit identical DOM and `data-*` state, so t
 ```bash
 bun install
 bun run gen:tokens     # generate CSS vars / VE contract / Tailwind preset from src/tokens.ts
-bun run --filter @m3/example-playground dev
+bun run --filter @m3/example-playground dev      # Tailwind v4 build
+bun run --filter @m3/example-playground-ve dev   # vanilla-extract build (same demo)
 ```
+
+The two playgrounds share a single `App.tsx`; the VE playground aliases the
+`@m3/react-tailwind` imports to `@m3/react-vanilla-extract` via Vite, so both
+render identical markup and `data-*` state — a live drop-in compatibility check.
 
 ## Usage (Tailwind v4)
 

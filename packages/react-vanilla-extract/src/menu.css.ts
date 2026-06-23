@@ -2,7 +2,7 @@
  * menu.css.ts — vanilla-extract styles for the M3 Menu.
  * Same DOM + data-* hooks as the Tailwind build.
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@m3/tokens/contract.css';
 
 export const popup = style({
@@ -48,26 +48,32 @@ const stateLayerSelectors = {
   '&[data-disabled]::before': { opacity: 0 },
 } as const;
 
-// Leading icon (24dp) + trailing supporting text (shortcut/meta) slots.
-const slotSelectors = {
-  '& [data-slot="menu-leading"]': {
+/**
+ * Leading icon (24dp) + trailing supporting text (shortcut/meta) slots.
+ * Descendant rules can't live in a VE `style`, so emit them with globalStyle
+ * scoped to each item class — same output as the Tailwind build's `[&_…]` rules.
+ */
+function menuSlots(parent: string, { trailing = false }: { trailing?: boolean } = {}) {
+  globalStyle(`${parent} [data-slot="menu-leading"]`, {
     display: 'inline-flex',
     color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-  },
-  '& [data-slot="menu-leading"] > svg': { width: '24px', height: '24px' },
-  '& [data-slot="menu-trailing"]': {
-    marginLeft: 'auto',
-    paddingLeft: '16px',
-    color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-  },
-  // M3 disabled: leading/trailing icon on-surface/0.38
-  '&[data-disabled] [data-slot="menu-leading"]': {
+  });
+  globalStyle(`${parent} [data-slot="menu-leading"] > svg`, { width: '24px', height: '24px' });
+  // M3 disabled: leading icon on-surface/0.38
+  globalStyle(`${parent}[data-disabled] [data-slot="menu-leading"]`, {
     color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
-  },
-  '&[data-disabled] [data-slot="menu-trailing"]': {
-    color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
-  },
-} as const;
+  });
+  if (trailing) {
+    globalStyle(`${parent} [data-slot="menu-trailing"]`, {
+      marginLeft: 'auto',
+      paddingLeft: '16px',
+      color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+    });
+    globalStyle(`${parent}[data-disabled] [data-slot="menu-trailing"]`, {
+      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+    });
+  }
+}
 
 export const item = style({
   position: 'relative',
@@ -82,8 +88,9 @@ export const item = style({
   outline: 'none',
   color: `rgb(${vars.sys.color.onSurface})`,
   ...labelLarge,
-  selectors: { ...stateLayerSelectors, ...slotSelectors },
+  selectors: { ...stateLayerSelectors },
 });
+menuSlots(item, { trailing: true });
 
 export const separator = style({
   marginBlock: '8px',
@@ -121,17 +128,9 @@ export const submenuTrigger = style({
   selectors: {
     ...stateLayerSelectors,
     '&[data-popup-open]::before': { opacity: vars.sys.state.hover },
-    '& [data-slot="menu-leading"]': {
-      display: 'inline-flex',
-      color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-    },
-    '& [data-slot="menu-leading"] > svg': { width: '24px', height: '24px' },
-    // M3 disabled: leading icon on-surface/0.38
-    '&[data-disabled] [data-slot="menu-leading"]': {
-      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
-    },
   },
 });
+menuSlots(submenuTrigger);
 
 // Leading check/dot indicator inside a checkbox/radio item.
 export const itemIndicator = style({
@@ -161,20 +160,19 @@ const selectableBase = {
 
 export const checkboxItem = style({
   ...selectableBase,
-  selectors: {
-    ...stateLayerSelectors,
-    [`&[data-checked] ${itemIndicator}`]: { visibility: 'visible' },
-    // M3 disabled: the check/dot indicator dims with its row (own text color).
-    [`&[data-disabled] ${itemIndicator}`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
-  },
+  selectors: { ...stateLayerSelectors },
 });
 
 export const radioItem = style({
   ...selectableBase,
-  selectors: {
-    ...stateLayerSelectors,
-    [`&[data-checked] ${itemIndicator}`]: { visibility: 'visible' },
-    // M3 disabled: the check/dot indicator dims with its row (own text color).
-    [`&[data-disabled] ${itemIndicator}`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
-  },
+  selectors: { ...stateLayerSelectors },
 });
+
+// Reveal the leading check/dot indicator when the row is checked; dim it with
+// the row when disabled (descendant rules → globalStyle scoped to each item).
+for (const parent of [checkboxItem, radioItem]) {
+  globalStyle(`${parent}[data-checked] ${itemIndicator}`, { visibility: 'visible' });
+  globalStyle(`${parent}[data-disabled] ${itemIndicator}`, {
+    color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+  });
+}

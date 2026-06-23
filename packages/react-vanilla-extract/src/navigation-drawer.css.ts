@@ -4,7 +4,7 @@
  * panel; full-corner destination pills whose `data-selected` drives the
  * secondary-container fill; disabled rows dim per-token.
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@m3/tokens/contract.css';
 
@@ -101,10 +101,8 @@ export const leading = style({
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
-  selectors: {
-    '& svg': { width: '24px', height: '24px' },
-  },
 });
+globalStyle(`${leading} svg`, { width: '24px', height: '24px' });
 
 export const label = style({
   flex: 1,

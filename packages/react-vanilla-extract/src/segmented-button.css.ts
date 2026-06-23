@@ -4,7 +4,7 @@
  * the selected segment's `data-pressed` drives the secondary-container fill and
  * reveals the leading checkmark (hiding any provided icon).
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@m3/tokens/contract.css';
 
 export const root = style({
@@ -86,10 +86,10 @@ export const icon = style({
   justifyContent: 'center',
   flexShrink: 0,
   selectors: {
-    '& svg': { width: '18px', height: '18px' },
     [`${item}[data-pressed] &`]: { display: 'none' },
   },
 });
+globalStyle(`${icon} svg`, { width: '18px', height: '18px' });
 
 export const label = style({
   overflow: 'hidden',

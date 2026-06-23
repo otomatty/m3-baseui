@@ -29,5 +29,10 @@ jobs:
       - name: Test
         run: bun test
 
-      - name: Build playground
+      - name: Build playground (Tailwind)
         run: bun run --filter @m3/example-playground build
+
+      # Compiles every @m3/react-vanilla-extract recipe through the real VE Vite
+      # plugin — the only place the build-time VE selectors are actually evaluated.
+      - name: Build playground (vanilla-extract)
+        run: bun run --filter @m3/example-playground-ve build

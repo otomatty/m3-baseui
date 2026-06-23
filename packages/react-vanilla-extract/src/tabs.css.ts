@@ -2,7 +2,7 @@
  * tabs.css.ts — vanilla-extract styles for the M3 Tabs.
  * Same DOM + data-* hooks as the Tailwind build.
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@m3/tokens/contract.css';
 
@@ -72,9 +72,6 @@ export const tab = recipe({
       // equal specificity, so raise specificity with a combined selector.
       '&[data-disabled][data-active]': { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
       '&[data-disabled]::before': { opacity: 0 },
-      // Icon slot (24dp), centered.
-      '& [data-slot="tab-icon"]': { display: 'inline-flex' },
-      '& [data-slot="tab-icon"] > svg': { width: '24px', height: '24px' },
     },
   },
   variants: {
@@ -123,3 +120,9 @@ export const panel = style({
   padding: '16px',
   outline: 'none',
 });
+
+// Icon slot (24dp), centered. The slot lives inside the tab; VE forbids
+// descendant selectors in a recipe, so target the (tabs-unique) data-slot
+// globally — matching the Tailwind build's `[&_[data-slot=tab-icon]]` rules.
+globalStyle('[data-slot="tab-icon"]', { display: 'inline-flex' });
+globalStyle('[data-slot="tab-icon"] > svg', { width: '24px', height: '24px' });

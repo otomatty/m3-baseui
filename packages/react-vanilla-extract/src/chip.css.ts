@@ -2,7 +2,7 @@
  * chip.css.ts — vanilla-extract recipe for the M3 Chip.
  * Same DOM + data-* hooks as the Tailwind build.
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@m3/tokens/contract.css';
 
@@ -90,8 +90,6 @@ export const chip = recipe({
             color: `rgb(${vars.sys.color.onSecondaryContainer})`,
             borderColor: 'transparent',
           },
-          // Reveal the leading checkmark when selected
-          [`&[data-pressed] ${check}`]: { width: '18px', marginLeft: 0, opacity: 1 },
           // M3 disabled + selected: faint on-surface/12 container
           '&[data-pressed][data-disabled], &[data-pressed]:disabled': {
             background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
@@ -119,6 +117,11 @@ export const chip = recipe({
   },
 });
 
+// Reveal the leading checkmark when a filter chip is selected. The check slot is
+// only rendered for filter chips, so scoping to a pressed ancestor is safe — and
+// VE can't reference the recipe class, so this is a globalStyle on the check.
+globalStyle(`[data-pressed] ${check}`, { width: '18px', marginLeft: 0, opacity: 1 });
+
 // M3 leading avatar: 24dp circle; negative margin trims the leading padding to 4dp.
 export const avatar = style({
   display: 'inline-flex',
@@ -132,10 +135,9 @@ export const avatar = style({
   overflow: 'hidden',
   background: `rgb(${vars.sys.color.primaryContainer})`,
   color: `rgb(${vars.sys.color.onPrimaryContainer})`,
-  selectors: {
-    '& > img': { width: '100%', height: '100%', objectFit: 'cover' },
-  },
 });
+
+globalStyle(`${avatar} > img`, { width: '100%', height: '100%', objectFit: 'cover' });
 
 export const remove = style({
   display: 'inline-flex',
