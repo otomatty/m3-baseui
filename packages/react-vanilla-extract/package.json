@@ -1,6 +1,6 @@
 {
   "name": "@otomatty/react-vanilla-extract",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "M3 components implemented with vanilla-extract recipes over the shared @otomatty/core factories.",
   "type": "module",
   "license": "MIT",
