@@ -197,11 +197,12 @@ export function App() {
           <Section title="Selection controls">
             <div className="flex flex-wrap items-center gap-8">
               <div className="flex items-center gap-3">
-                <Switch defaultChecked />
-                <Switch />
-                <Switch disabled defaultChecked />
+                <Switch defaultChecked aria-label="Wi-Fi" />
+                <Switch aria-label="Bluetooth" />
+                <Switch disabled defaultChecked aria-label="機内モード（無効）" />
                 <Switch
                   defaultChecked
+                  aria-label="ダークテーマ"
                   icons={{
                     checked: <Icon name="check" size={16} />,
                     unchecked: <Icon name="close" size={16} />,
@@ -257,7 +258,7 @@ export function App() {
               <Slider.Control>
                 <Slider.Track>
                   <Slider.Indicator />
-                  <Slider.Thumb />
+                  <Slider.Thumb aria-label="音量" />
                 </Slider.Track>
               </Slider.Control>
             </Slider.Root>
@@ -380,7 +381,7 @@ export function App() {
               </Menu.Root>
 
               <Select.Root defaultValue="apple">
-                <Select.Trigger>
+                <Select.Trigger aria-label="果物を選択">
                   <Select.Value />
                   <Select.Icon>
                     <Icon name="arrow_drop_down" />
@@ -672,7 +673,10 @@ export function App() {
                 >
                   受信トレイ
                 </List.Item>
-                <Divider inset="inset" />
+                {/* wrap in <li> so the role="list" only owns list items (valid ARIA) */}
+                <li>
+                  <Divider inset="inset" />
+                </li>
                 <List.Item
                   interactive
                   leading={<Icon name="send" />}
@@ -680,7 +684,10 @@ export function App() {
                 >
                   送信済み
                 </List.Item>
-                <Divider inset="inset" />
+                {/* wrap in <li> so the role="list" only owns list items (valid ARIA) */}
+                <li>
+                  <Divider inset="inset" />
+                </li>
                 <List.Item interactive disabled leading={<Icon name="delete" />}>
                   ゴミ箱（無効）
                 </List.Item>

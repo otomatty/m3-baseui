@@ -21,4 +21,19 @@ describe('Badge', () => {
     render(<Badge data-testid="b" value={120} max={99} />);
     expect(screen.getByTestId('b')).toHaveTextContent('99+');
   });
+
+  test('a labelled badge gets a role so aria-label is valid (a11y)', () => {
+    render(<Badge data-testid="b" aria-label="新着あり" />);
+    expect(screen.getByTestId('b')).toHaveAttribute('role', 'status');
+  });
+
+  test('an unlabelled badge stays roleless (decorative)', () => {
+    render(<Badge data-testid="b" value={3} />);
+    expect(screen.getByTestId('b')).not.toHaveAttribute('role');
+  });
+
+  test('an explicit role is preserved', () => {
+    render(<Badge data-testid="b" role="img" aria-label="新着あり" />);
+    expect(screen.getByTestId('b')).toHaveAttribute('role', 'img');
+  });
 });
