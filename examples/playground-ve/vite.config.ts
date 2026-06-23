@@ -16,6 +16,8 @@ import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 export default defineConfig({
   plugins: [vanillaExtractPlugin(), react(), tailwindcss()],
   resolve: {
+    // Resolve workspace packages to their TS source in dev (see playground).
+    conditions: ['@m3/source'],
     alias: {
       '@m3/react-tailwind': fileURLToPath(
         new URL('../../packages/react-vanilla-extract/src/index.ts', import.meta.url),
