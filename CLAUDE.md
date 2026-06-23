@@ -23,14 +23,23 @@ Layer 2（`--md-sys-*` CSS 変数）がエンジン非依存の境界線。
 ```bash
 bun install
 bun run gen:tokens     # トークン変更後に生成物を更新
+bun run build          # 全パッケージを dist へビルド（tsup: ESM + .d.ts）
 bun run typecheck      # 全パッケージ tsc --noEmit
-bun test               # bun 組込ランナー（happy-dom + testing-library）
+bun run test           # bun 組込ランナー（happy-dom + testing-library）。`@m3/source` 解決のため `bun run` 経由で
 bun run test:e2e       # Playwright（両エンジン: 相互作用 + axe a11y + ビジュアル回帰）
 bun run test:e2e:update # ビジュアル回帰のベースライン更新（e2e/**-snapshots/）
 bun run lint           # biome check .
 bun run format         # biome format --write .
+bun run changeset      # 変更セットを追加（公開フロー: changesets）
 bun run --filter @m3/example-playground build
 ```
+
+> **配布（issue #5）**: 各パッケージは tsup で `dist/`（ESM + `.d.ts` + sourcemap）にビルドする。
+> `package.json` の `exports` は公開時に `dist` を指し（`default`）、リポジトリ内のツールは
+> `@m3/source` 条件でソースに解決する（`tsconfig` の `customConditions` / Vite の
+> `resolve.conditions` / `bun --conditions`）。そのため**テストは `bun run test`**（素の
+> `bun test` ではなく）で実行する。`@m3/core` は配布物でも `'use client'` を保持し、VE 版は
+> recipe を静的 CSS に事前コンパイルして出力する（`sideEffects: ["**/*.css"]`）。
 
 > E2E（issue #4）は Chromium が必要。CI は `@playwright/test` でピン留めしたビルドを
 > `bunx playwright install --with-deps chromium` で取得する。ローカル初回は同コマンドを実行。

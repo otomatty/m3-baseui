@@ -9,10 +9,13 @@
     "examples/*"
   ],
   "scripts": {
-    "gen:tokens": "bun run --filter @m3/tokens build",
-    "build": "bun run --filter '*' build",
+    "gen:tokens": "bun run --filter @m3/tokens gen",
+    "build": "bun run --filter @m3/tokens build && bun run --filter @m3/core build && bun run --filter @m3/icons build && bun run --filter @m3/react-tailwind build && bun run --filter @m3/react-vanilla-extract build",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "bun run build && changeset publish",
     "typecheck": "bun run --filter '*' typecheck",
-    "test": "bun test",
+    "test": "bun --conditions=@m3/source test",
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots",
     "lint": "biome check .",
@@ -22,6 +25,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
     "@biomejs/biome": "^2.5.0",
+    "@changesets/cli": "^2.31.0",
     "@happy-dom/global-registrator": "^20.10.6",
     "@playwright/test": "1.56.0",
     "@testing-library/dom": "^10.4.1",
@@ -31,7 +35,11 @@
     "@types/node": "^22.0.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@vanilla-extract/css": "^1.20.1",
+    "@vanilla-extract/esbuild-plugin": "^2.3.22",
+    "@vanilla-extract/recipes": "^0.5.7",
     "bun-types": "^1.3.14",
+    "tsup": "^8.5.1",
     "typescript": "^5.6.3"
   },
   "engines": {

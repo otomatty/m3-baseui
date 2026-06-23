@@ -6,8 +6,9 @@
   "license": "MIT",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "@m3/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./contract.css": {
       "types": "./src/generated/contract.css.ts",
@@ -17,11 +18,13 @@
     "./theme.css": "./styles/theme.css"
   },
   "files": [
-    "src",
-    "styles"
+    "dist",
+    "styles",
+    "src"
   ],
   "scripts": {
-    "build": "bun run src/build.ts",
+    "gen": "bun run src/build.ts",
+    "build": "bun run gen && tsup",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -34,5 +37,8 @@
     "@vanilla-extract/css": {
       "optional": true
     }
-  }
+  },
+  "sideEffects": [
+    "**/*.css"
+  ]
 }

@@ -27,7 +27,12 @@ jobs:
         run: bun run typecheck
 
       - name: Test
-        run: bun test
+        run: bun run test
+
+      # Verifies the distributable build: dist + .d.ts for every package, the VE
+      # recipes compiled to static CSS, and the `'use client'` banner on @m3/core.
+      - name: Build (library dist)
+        run: bun run build
 
       - name: Build playground (Tailwind)
         run: bun run --filter @m3/example-playground build
