@@ -45,20 +45,27 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], baseURL: `http://127.0.0.1:${VE_PORT}` },
     },
   ],
+  // Bind Vite to 127.0.0.1 explicitly so the dev server and the health-check URL
+  // agree on the interface — without it Vite listens on `localhost`, which can
+  // resolve to IPv6 `::1` on CI and never satisfy the `127.0.0.1` probe.
   webServer: [
     {
-      command: `bunx vite --port ${TAILWIND_PORT} --strictPort`,
+      command: `bunx vite --port ${TAILWIND_PORT} --strictPort --host 127.0.0.1`,
       cwd: 'examples/playground',
       url: `http://127.0.0.1:${TAILWIND_PORT}`,
       reuseExistingServer: !isCI,
-      timeout: 120_000,
+      timeout: 180_000,
+      stdout: 'pipe',
+      stderr: 'pipe',
     },
     {
-      command: `bunx vite --port ${VE_PORT} --strictPort`,
+      command: `bunx vite --port ${VE_PORT} --strictPort --host 127.0.0.1`,
       cwd: 'examples/playground-ve',
       url: `http://127.0.0.1:${VE_PORT}`,
       reuseExistingServer: !isCI,
-      timeout: 120_000,
+      timeout: 180_000,
+      stdout: 'pipe',
+      stderr: 'pipe',
     },
   ],
 });
