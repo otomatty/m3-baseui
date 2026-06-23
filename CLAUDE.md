@@ -25,10 +25,15 @@ bun install
 bun run gen:tokens     # トークン変更後に生成物を更新
 bun run typecheck      # 全パッケージ tsc --noEmit
 bun test               # bun 組込ランナー（happy-dom + testing-library）
+bun run test:e2e       # Playwright（両エンジン: 相互作用 + axe a11y + ビジュアル回帰）
+bun run test:e2e:update # ビジュアル回帰のベースライン更新（e2e/**-snapshots/）
 bun run lint           # biome check .
 bun run format         # biome format --write .
 bun run --filter @m3/example-playground build
 ```
+
+> E2E（issue #4）は Chromium が必要。CI は `@playwright/test` でピン留めしたビルドを
+> `bunx playwright install --with-deps chromium` で取得する。ローカル初回は同コマンドを実行。
 
 ## 中核ルール（不変条件）
 
@@ -61,11 +66,19 @@ bun run --filter @m3/example-playground build
 - テストは原則 `@m3/react-tailwind` に対して書く（DOM は両エンジン共通のため代表とする）。
 - co-located の `*.test.tsx`（`packages/react-tailwind/src/<name>.test.tsx`）。
 - アサートは role/ARIA と `data-*` を優先。クラスは断片一致に留める。
-- ポータル/位置計算を伴う複雑系（Menu/Select/Tooltip/Dialog）の対話は E2E（将来の
-  Playwright, issue #4）に委ね、ユニットでは初期描画・単純クリックに限定する。
+- ポータル/位置計算を伴う複雑系（Menu/Select/Tooltip/Dialog）の対話は **E2E**
+  （`e2e/*.e2e.ts`、Playwright）に委ね、ユニットでは初期描画・単純クリックに限定する。
 - jest-dom マッチャの型は `packages/react-tailwind/src/jest-dom.d.ts` で `bun:test` を拡張済み。
   **テストを持つパッケージを増やす場合**は、その tsconfig の `types` に `"bun"` を足し、
   この `jest-dom.d.ts` を複製すること。
+
+### E2E 規約（`e2e/`）
+- ファイル名は `*.e2e.ts`（`*.test.ts`/`*.spec.ts` は `bun test` が拾うため避ける）。
+- 同一の共有 Playground を Tailwind / vanilla-extract の 2 プロジェクトで実行（drop-in 互換の検証）。
+- アサートは role/ARIA と `data-*` を優先。ビジュアル回帰は webフォントを遮断して決定論化し、
+  ベースラインは `e2e/**-snapshots/` にエンジン×プラットフォーム別でコミットする。
+- 動的配色は `generateScheme` のスナップショットで回帰検知
+  （`packages/react-tailwind/src/dynamic-color.test.ts`）。
 
 ## コンポーネント追加の手順（7 ステップ）
 

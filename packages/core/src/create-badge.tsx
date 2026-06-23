@@ -21,8 +21,17 @@ export function createBadge(classes: BadgeClasses) {
     const size: BadgeSize = hasValue ? 'large' : 'small';
     const content =
       hasValue && max != null && typeof value === 'number' && value > max ? `${max}+` : value;
+    // `aria-label` is prohibited on a roleless <span>; when a caller labels the
+    // badge, give it a status role (unless they set their own) so it stays valid.
+    const role = rest.role ?? (rest['aria-label'] != null ? 'status' : undefined);
     return (
-      <span {...rest} ref={ref} data-size={size} className={cx(classes.root({ size }), className)}>
+      <span
+        {...rest}
+        ref={ref}
+        role={role}
+        data-size={size}
+        className={cx(classes.root({ size }), className)}
+      >
         {hasValue ? content : null}
       </span>
     );

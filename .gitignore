@@ -7,3 +7,9 @@ bun.lockb
 packages/tokens/dist/
 coverage/
 *.log
+
+# Playwright E2E (issue #4) — committed baselines live under e2e/**-snapshots/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
