@@ -191,6 +191,119 @@ export const tokens = {
         lineHeight: '16px',
         letterSpacing: '0.5px',
       },
+
+      // ---- M3 Expressive: emphasized companions (設計書 §4.3) ----------------
+      // One per base role. Metrics (family/size/line-height) are kept identical
+      // so swapping `<role>` → `<role>Emphasized` never reflows layout; only the
+      // weight steps up (display/headline/title-large/body → 500, the
+      // title/label small + medium → 700) so the type reads as emphasized.
+      // Drives a `text-<role>-emphasized` Tailwind utility / VE accessor / CSS
+      // var automatically via the generators.
+      displayLargeEmphasized: {
+        fontFamily: BRAND,
+        fontWeight: '500',
+        fontSize: '57px',
+        lineHeight: '64px',
+        letterSpacing: '-0.25px',
+      },
+      displayMediumEmphasized: {
+        fontFamily: BRAND,
+        fontWeight: '500',
+        fontSize: '45px',
+        lineHeight: '52px',
+        letterSpacing: '0px',
+      },
+      displaySmallEmphasized: {
+        fontFamily: BRAND,
+        fontWeight: '500',
+        fontSize: '36px',
+        lineHeight: '44px',
+        letterSpacing: '0px',
+      },
+      headlineLargeEmphasized: {
+        fontFamily: BRAND,
+        fontWeight: '500',
+        fontSize: '32px',
+        lineHeight: '40px',
+        letterSpacing: '0px',
+      },
+      headlineMediumEmphasized: {
+        fontFamily: BRAND,
+        fontWeight: '500',
+        fontSize: '28px',
+        lineHeight: '36px',
+        letterSpacing: '0px',
+      },
+      headlineSmallEmphasized: {
+        fontFamily: BRAND,
+        fontWeight: '500',
+        fontSize: '24px',
+        lineHeight: '32px',
+        letterSpacing: '0px',
+      },
+      titleLargeEmphasized: {
+        fontFamily: PLAIN,
+        fontWeight: '500',
+        fontSize: '22px',
+        lineHeight: '28px',
+        letterSpacing: '0px',
+      },
+      titleMediumEmphasized: {
+        fontFamily: PLAIN,
+        fontWeight: '700',
+        fontSize: '16px',
+        lineHeight: '24px',
+        letterSpacing: '0.15px',
+      },
+      titleSmallEmphasized: {
+        fontFamily: PLAIN,
+        fontWeight: '700',
+        fontSize: '14px',
+        lineHeight: '20px',
+        letterSpacing: '0.1px',
+      },
+      bodyLargeEmphasized: {
+        fontFamily: PLAIN,
+        fontWeight: '500',
+        fontSize: '16px',
+        lineHeight: '24px',
+        letterSpacing: '0.5px',
+      },
+      bodyMediumEmphasized: {
+        fontFamily: PLAIN,
+        fontWeight: '500',
+        fontSize: '14px',
+        lineHeight: '20px',
+        letterSpacing: '0.25px',
+      },
+      bodySmallEmphasized: {
+        fontFamily: PLAIN,
+        fontWeight: '500',
+        fontSize: '12px',
+        lineHeight: '16px',
+        letterSpacing: '0.4px',
+      },
+      labelLargeEmphasized: {
+        fontFamily: PLAIN,
+        fontWeight: '700',
+        fontSize: '14px',
+        lineHeight: '20px',
+        letterSpacing: '0.1px',
+      },
+      labelMediumEmphasized: {
+        fontFamily: PLAIN,
+        fontWeight: '700',
+        fontSize: '12px',
+        lineHeight: '16px',
+        letterSpacing: '0.5px',
+      },
+      labelSmallEmphasized: {
+        fontFamily: PLAIN,
+        fontWeight: '700',
+        fontSize: '11px',
+        lineHeight: '16px',
+        letterSpacing: '0.5px',
+      },
     },
 
     /** System shape — corner scale. */
@@ -235,6 +348,20 @@ export const tokens = {
         emphasized: 'cubic-bezier(0.2, 0, 0, 1)',
         emphasizedAccelerate: 'cubic-bezier(0.3, 0, 0.8, 0.15)',
         emphasizedDecelerate: 'cubic-bezier(0.05, 0.7, 0.1, 1)',
+
+        // ---- M3 Expressive: spring-derived easings (設計書 §4.7) ----------
+        // CSS can't express a real spring, so each Expressive spring is
+        // approximated as a `cubic-bezier` paired with the duration below.
+        // Spatial springs (movement/position) are slightly under-damped, so
+        // their settle control point overshoots (y > 1) for the M3 Expressive
+        // "bounce". Effects springs (opacity/color) are critically damped — no
+        // overshoot (y ≤ 1) — to avoid flicker. Three speeds each.
+        springSpatialFast: 'cubic-bezier(0.42, 1.67, 0.21, 0.9)',
+        springSpatialDefault: 'cubic-bezier(0.38, 1.21, 0.22, 1.0)',
+        springSpatialSlow: 'cubic-bezier(0.39, 1.29, 0.35, 0.98)',
+        springEffectsFast: 'cubic-bezier(0.31, 0, 0, 1)',
+        springEffectsDefault: 'cubic-bezier(0.34, 0, 0.2, 1)',
+        springEffectsSlow: 'cubic-bezier(0.42, 0, 0.58, 1)',
       },
       duration: {
         short1: '50ms',
@@ -253,6 +380,19 @@ export const tokens = {
         extraLong2: '800ms',
         extraLong3: '900ms',
         extraLong4: '1000ms',
+
+        // ---- M3 Expressive: spring durations (設計書 §4.7) ----------------
+        // Perceived settle time per spring, paired with the easings above.
+        // Spatial springs run longer (they travel + overshoot); effects springs
+        // are quick. Use as `<easing> <duration>` together, e.g.
+        //   transition: transform var(--md-sys-motion-duration-spring-spatial-default)
+        //               var(--md-sys-motion-easing-spring-spatial-default);
+        springSpatialFast: '350ms',
+        springSpatialDefault: '500ms',
+        springSpatialSlow: '750ms',
+        springEffectsFast: '150ms',
+        springEffectsDefault: '200ms',
+        springEffectsSlow: '300ms',
       },
     },
   },

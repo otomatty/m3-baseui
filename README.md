@@ -87,6 +87,7 @@ The component API is identical across engines.
 - **Factory injection** keeps React logic in `@m3/core`; each engine only supplies a class resolver.
 - **State layer** is a `::before` overlay tinted with `currentColor`, switched by Base UI `data-*` attributes.
 - **Ripple** is a `@m3/core` primitive (Base UI ships none) and honors `prefers-reduced-motion`.
+- **M3 Expressive tokens** are additive (no breaking changes). Each typescale role gains an `…Emphasized` companion (same size/line-height, heavier weight → `text-<role>-emphasized` / `vars.sys.typescale.<role>Emphasized`), and spring-derived motion ships as `spring-spatial-*` (slight overshoot, for movement) and `spring-effects-*` (no overshoot, for opacity/color) easing+duration pairs at fast/default/slow. **Application policy:** opt components into Expressive by swapping their label role to the emphasized companion and pairing the matching spring easing+duration — e.g. an extended FAB uses `text-label-large-emphasized` with `spring-spatial-default`; keep both engines in lock-step so drop-in parity and the visual baselines hold.
 
 ## Components
 
