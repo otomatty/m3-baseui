@@ -5,7 +5,7 @@ dist/
 bun.lockb
 # Generated token artifacts
 packages/tokens/dist/
-# Token stylesheets vendored into @m3/react-tailwind at build time
+# Token stylesheets vendored into @otomatty/react-tailwind at build time
 packages/react-tailwind/styles/tokens.css
 packages/react-tailwind/styles/theme.css
 coverage/

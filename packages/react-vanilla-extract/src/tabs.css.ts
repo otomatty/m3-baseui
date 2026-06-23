@@ -4,7 +4,7 @@
  */
 import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
-import { vars } from '@m3/tokens/contract.css';
+import { vars } from '@otomatty/tokens/contract.css';
 
 export const root = style({
   display: 'flex',

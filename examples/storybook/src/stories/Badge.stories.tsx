@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useM3 } from '../engine';
-import { Icon } from '@m3/icons';
+import { Icon } from '@otomatty/icons';
 
 const meta = { title: 'Components/Badge' } satisfies Meta;
 export default meta;

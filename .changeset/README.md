@@ -1,7 +1,7 @@
 # Changesets
 
 This directory is managed by [changesets](https://github.com/changesets/changesets).
-It records intended version bumps and changelog entries for the published `@m3/*`
+It records intended version bumps and changelog entries for the published `@otomatty/*`
 packages.
 
 ## Workflow

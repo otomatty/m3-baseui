@@ -1,9 +1,21 @@
 {
-  "name": "@m3/core",
+  "name": "@otomatty/core",
   "version": "0.0.0",
   "description": "Engine-neutral M3 logic: ThemeProvider, dynamic color, Ripple, state layer, and headless component factories.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otomatty/m3-baseui.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/otomatty/m3-baseui#readme",
+  "bugs": {
+    "url": "https://github.com/otomatty/m3-baseui/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "@m3/source": "./src/index.ts",
@@ -19,7 +31,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@m3/tokens": "workspace:*",
+    "@otomatty/tokens": "workspace:*",
     "@material/material-color-utilities": "^0.3.0"
   },
   "peerDependencies": {

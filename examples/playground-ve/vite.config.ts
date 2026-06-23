@@ -6,9 +6,9 @@ import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 
 /**
  * VE playground — renders the *same* demo as examples/playground, but the M3
- * components come from @m3/react-vanilla-extract instead of @m3/react-tailwind.
+ * components come from @otomatty/react-vanilla-extract instead of @otomatty/react-tailwind.
  *
- * The shared App.tsx imports from '@m3/react-tailwind'; we alias that specifier
+ * The shared App.tsx imports from '@otomatty/react-tailwind'; we alias that specifier
  * to the VE build so the two playgrounds emit identical DOM + data-* attributes
  * (drop-in compatibility), while the VE plugin compiles the recipe styles.
  * Tailwind stays on for the demo's layout/typography utilities only.
@@ -19,7 +19,7 @@ export default defineConfig({
     // Resolve workspace packages to their TS source in dev (see playground).
     conditions: ['@m3/source'],
     alias: {
-      '@m3/react-tailwind': fileURLToPath(
+      '@otomatty/react-tailwind': fileURLToPath(
         new URL('../../packages/react-vanilla-extract/src/index.ts', import.meta.url),
       ),
     },

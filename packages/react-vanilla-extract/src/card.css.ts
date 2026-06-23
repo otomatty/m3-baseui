@@ -5,7 +5,7 @@
  * `::before` + focus ring and dim per-token when disabled.
  */
 import { recipe } from '@vanilla-extract/recipes';
-import { vars } from '@m3/tokens/contract.css';
+import { vars } from '@otomatty/tokens/contract.css';
 
 export const card = recipe({
   base: {

@@ -1,7 +1,7 @@
 /**
  * select.ts — wires the VE styles into the shared parts factory.
  */
-import { createSelect } from '@m3/core';
+import { createSelect } from '@otomatty/core';
 import {
   trigger,
   value,
