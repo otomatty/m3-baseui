@@ -1,11 +1,17 @@
 name: Release
 
-# Publishes the @otomatty/* packages to npm via Changesets.
+# Publishes the @otomatty/* packages to npm.
 #
 # On every push to main, changesets/action opens (or updates) a "Version
 # Packages" PR that bumps versions and writes changelogs from the accumulated
-# .changeset/*.md files. Merging that PR re-runs this workflow, finds no pending
-# changesets, and runs `bun run release` to build + `changeset publish`.
+# .changeset/*.md files (via `bun run version-packages`). Merging that PR
+# re-runs this workflow, finds no pending changesets, and runs `bun run release`
+# to build + publish.
+#
+# Publishing uses `bun publish` (scripts/publish.ts), not `changeset publish`:
+# Changesets shells out to `npm publish`, which leaves the internal
+# `workspace:*` ranges unresolved and produces tarballs that fail to install.
+# `bun publish` rewrites them to concrete versions.
 #
 # Setup required once in the repo settings:
 #   - Secret NPM_TOKEN: an npm automation token for the user/org that owns the
@@ -23,7 +29,6 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write
   pull-requests: write
-  id-token: write # npm provenance
 
 jobs:
   release:
@@ -41,6 +46,12 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # bun publish reads the registry token from .npmrc.
+      - name: Configure npm auth
+        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > "${HOME}/.npmrc"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Create Release PR or publish to npm
         uses: changesets/action@v1
         with:
@@ -51,4 +62,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: "true"

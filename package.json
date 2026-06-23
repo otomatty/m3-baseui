@@ -13,7 +13,7 @@
     "build": "bun run --filter @otomatty/tokens build && bun run --filter @otomatty/core build && bun run --filter @otomatty/icons build && bun run --filter @otomatty/react-tailwind build && bun run --filter @otomatty/react-vanilla-extract build",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "bun run build && changeset publish",
+    "release": "bun run build && bun run scripts/publish.ts",
     "typecheck": "bun run --filter '*' typecheck",
     "test": "bun --conditions=@m3/source test",
     "test:e2e": "playwright test",
