@@ -57,6 +57,9 @@ for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
 
   console.log(`▲ publishing ${name}@${version}`);
   execFileSync('bun', ['publish'], { cwd: dir, stdio: 'inherit' });
+  // changesets/action parses `New tag: <pkg>@<version>` from stdout to push git
+  // tags and create the GitHub releases — emit it for each published package.
+  console.log(`New tag: ${name}@${version}`);
   published++;
 }
 
