@@ -2,7 +2,7 @@
  * switch.css.ts — vanilla-extract styles for the M3 Switch.
  * Same DOM + data-* hooks as the Tailwind build.
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@m3/tokens/contract.css';
 
 export const root = style({
@@ -116,9 +116,9 @@ export const iconChecked = style({
   color: `rgb(${vars.sys.color.onPrimaryContainer})`,
   selectors: {
     [`${root}[data-checked] &`]: { display: 'inline-flex' },
-    '& > svg': { width: '16px', height: '16px' },
   },
 });
+globalStyle(`${iconChecked} > svg`, { width: '16px', height: '16px' });
 
 export const iconUnchecked = style({
   ...iconBase,
@@ -126,6 +126,6 @@ export const iconUnchecked = style({
   color: `rgb(${vars.sys.color.surfaceContainerHighest})`,
   selectors: {
     [`${root}[data-checked] &`]: { display: 'none' },
-    '& > svg': { width: '16px', height: '16px' },
   },
 });
+globalStyle(`${iconUnchecked} > svg`, { width: '16px', height: '16px' });

@@ -1,0 +1,33 @@
+/* M3 token vars + Tailwind v4 + M3 @theme preset, in the required order. */
+@import '@m3/tokens/tokens.css';
+@import 'tailwindcss';
+@import '@m3/tokens/theme.css';
+
+/*
+ * The component styling here is compiled by vanilla-extract (not Tailwind), so
+ * we only need Tailwind to generate the demo's layout/typography utilities.
+ * The demo markup lives in the shared playground App, so scan that too.
+ */
+@source "../src";
+@source "../../playground/src";
+
+/* Mirror the linear-progress indeterminate keyframes used by the components. */
+@theme {
+  --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;
+}
+
+@keyframes m3-linear-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+body {
+  margin: 0;
+  background: rgb(var(--md-sys-color-surface));
+  color: rgb(var(--md-sys-color-on-surface));
+  font-family: var(--md-ref-typeface-plain, 'Roboto', system-ui, sans-serif);
+}

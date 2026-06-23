@@ -2,8 +2,23 @@
  * icon-button.css.ts — vanilla-extract recipe for the M3 Icon Button.
  * Mirrors the Tailwind build: same DOM, same data-* state hooks.
  */
+import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@m3/tokens/contract.css';
+
+// Container height + icon size per M3 Expressive size. The icon (svg) sizing is
+// a descendant rule, which VE forbids inside a recipe variant, so each size is a
+// named style we target with globalStyle — same output as the Tailwind build.
+const sizeXs = style({ height: '32px' });
+globalStyle(`${sizeXs} > svg`, { width: '20px', height: '20px' });
+const sizeS = style({ height: '40px' });
+globalStyle(`${sizeS} > svg`, { width: '24px', height: '24px' });
+const sizeM = style({ height: '56px' });
+globalStyle(`${sizeM} > svg`, { width: '24px', height: '24px' });
+const sizeL = style({ height: '96px' });
+globalStyle(`${sizeL} > svg`, { width: '32px', height: '32px' });
+const sizeXl = style({ height: '136px' });
+globalStyle(`${sizeXl} > svg`, { width: '40px', height: '40px' });
 
 // M3 Expressive container widths per size × width.
 const WIDTHS = {
@@ -129,11 +144,11 @@ export const iconButton = recipe({
     // Container height + icon size per M3 Expressive size; width comes from the
     // (size, width) compound variants below.
     size: {
-      xs: { height: '32px', selectors: { '& > svg': { width: '20px', height: '20px' } } },
-      s: { height: '40px', selectors: { '& > svg': { width: '24px', height: '24px' } } },
-      m: { height: '56px', selectors: { '& > svg': { width: '24px', height: '24px' } } },
-      l: { height: '96px', selectors: { '& > svg': { width: '32px', height: '32px' } } },
-      xl: { height: '136px', selectors: { '& > svg': { width: '40px', height: '40px' } } },
+      xs: sizeXs,
+      s: sizeS,
+      m: sizeM,
+      l: sizeL,
+      xl: sizeXl,
     },
     width: {
       narrow: {},

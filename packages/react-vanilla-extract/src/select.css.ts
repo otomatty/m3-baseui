@@ -2,7 +2,7 @@
  * select.css.ts — vanilla-extract styles for the M3 Select.
  * Same DOM + data-* hooks as the Tailwind build.
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@m3/tokens/contract.css';
 
 export const trigger = style({
@@ -118,19 +118,21 @@ export const item = style({
       pointerEvents: 'none',
     },
     '&[data-disabled]::before': { opacity: 0 },
-    // M3 trailing supporting text sits in the last column.
-    '& [data-slot="select-trailing"]': {
-      paddingLeft: '16px',
-      color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-      fontFamily: vars.sys.typescale.labelLarge.fontFamily,
-      fontSize: vars.sys.typescale.labelLarge.fontSize,
-      lineHeight: vars.sys.typescale.labelLarge.lineHeight,
-      letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
-    },
-    '&[data-disabled] [data-slot="select-trailing"]': {
-      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
-    },
   },
+});
+
+// M3 trailing supporting text sits in the last column. Descendant rules can't
+// live in a VE `style`, so scope them to the item class with globalStyle.
+globalStyle(`${item} [data-slot="select-trailing"]`, {
+  paddingLeft: '16px',
+  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+  fontFamily: vars.sys.typescale.labelLarge.fontFamily,
+  fontSize: vars.sys.typescale.labelLarge.fontSize,
+  lineHeight: vars.sys.typescale.labelLarge.lineHeight,
+  letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+});
+globalStyle(`${item}[data-disabled] [data-slot="select-trailing"]`, {
+  color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
 });
 
 // Sticky scroll affordances at the popup edges; surface-tinted with a chevron.
@@ -144,11 +146,12 @@ const scrollArrowBase = {
   cursor: 'default',
   background: `rgb(${vars.sys.color.surfaceContainer})`,
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-  selectors: { '& > svg': { width: '20px', height: '20px' } },
 } as const;
 
 export const scrollUpArrow = style({ ...scrollArrowBase, top: 0 });
 export const scrollDownArrow = style({ ...scrollArrowBase, bottom: 0 });
+globalStyle(`${scrollUpArrow} > svg`, { width: '20px', height: '20px' });
+globalStyle(`${scrollDownArrow} > svg`, { width: '20px', height: '20px' });
 
 export const itemIndicator = style({
   display: 'inline-flex',

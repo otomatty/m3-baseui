@@ -3,7 +3,7 @@
  * Same DOM as the Tailwind build: leading slot, overline/headline/supporting
  * column and trailing slot. Inert by design — interactive surfaces wrap it.
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@m3/tokens/contract.css';
 
 export const root = style({
@@ -27,10 +27,8 @@ export const leading = style({
   justifyContent: 'center',
   flexShrink: 0,
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-  selectors: {
-    '& svg': { width: '24px', height: '24px' },
-  },
 });
+globalStyle(`${leading} svg`, { width: '24px', height: '24px' });
 
 export const content = style({
   display: 'flex',
@@ -76,7 +74,5 @@ export const trailing = style({
   fontSize: vars.sys.typescale.labelSmall.fontSize,
   lineHeight: vars.sys.typescale.labelSmall.lineHeight,
   letterSpacing: vars.sys.typescale.labelSmall.letterSpacing,
-  selectors: {
-    '& svg': { width: '24px', height: '24px' },
-  },
 });
+globalStyle(`${trailing} svg`, { width: '24px', height: '24px' });

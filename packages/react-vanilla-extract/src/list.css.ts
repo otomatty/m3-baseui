@@ -4,7 +4,7 @@
  * 56/72/88dp for one/two/three-line; interactive rows carry a currentColor
  * state-layer `::before`; disabled rows dim per-token.
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@m3/tokens/contract.css';
 
@@ -79,10 +79,10 @@ export const leading = style({
   flexShrink: 0,
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
   selectors: {
-    '& svg': { width: '24px', height: '24px' },
     [`${itemBase}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });
+globalStyle(`${leading} svg`, { width: '24px', height: '24px' });
 
 export const content = style({
   display: 'flex',
@@ -126,7 +126,7 @@ export const trailing = style({
   lineHeight: vars.sys.typescale.labelSmall.lineHeight,
   letterSpacing: vars.sys.typescale.labelSmall.letterSpacing,
   selectors: {
-    '& svg': { width: '24px', height: '24px' },
     [`${itemBase}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },
 });
+globalStyle(`${trailing} svg`, { width: '24px', height: '24px' });

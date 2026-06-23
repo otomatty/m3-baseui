@@ -5,6 +5,7 @@
  * state layer is a `::before` overlay tinted with currentColor whose opacity is
  * switched by Base UI's `data-*` state attributes.
  */
+import { globalStyle } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@m3/tokens/contract.css';
 
@@ -58,13 +59,6 @@ export const button = recipe({
       // M3 with-icon padding: the icon side trims to 16dp (label side stays 24dp).
       '&[data-with-start-icon]': { paddingLeft: '16px' },
       '&[data-with-end-icon]': { paddingRight: '16px' },
-      // Icon slot: 18dp, centered.
-      '& [data-slot="button-icon"]': {
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      '& [data-slot="button-icon"] > svg': { width: '18px', height: '18px' },
     },
   },
   variants: {
@@ -154,3 +148,13 @@ export const button = recipe({
     variant: 'filled',
   },
 });
+
+// Icon slot: 18dp, centered. The slot lives inside the button; VE forbids
+// descendant selectors in a recipe, so target the (button-unique) data-slot
+// globally — matching the Tailwind build's `[&_[data-slot=button-icon]]` rules.
+globalStyle('[data-slot="button-icon"]', {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+globalStyle('[data-slot="button-icon"] > svg', { width: '18px', height: '18px' });

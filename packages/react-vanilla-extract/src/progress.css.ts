@@ -2,7 +2,7 @@
  * progress.css.ts — vanilla-extract styles for the M3 Progress indicators.
  * Same DOM + `data-indeterminate` hooks as the Tailwind build.
  */
-import { style, keyframes } from '@vanilla-extract/css';
+import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import { vars } from '@m3/tokens/contract.css';
 
 const linearIndeterminate = keyframes({
@@ -54,10 +54,10 @@ export const circularRoot = style({
   width: '48px',
   height: '48px',
   selectors: {
-    '& svg': { display: 'block', width: '100%', height: '100%' },
     '&[data-indeterminate]': { animation: `${circularSpin} 1.4s linear infinite` },
   },
 });
+globalStyle(`${circularRoot} svg`, { display: 'block', width: '100%', height: '100%' });
 
 export const circularTrack = style({
   stroke: `rgb(${vars.sys.color.surfaceContainerHighest})`,
