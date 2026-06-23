@@ -1,6 +1,6 @@
 {
   "name": "@otomatty/react-tailwind",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "M3 components implemented with tailwind-variants over the shared @otomatty/core factories. Ships the Tailwind v4 @theme preset.",
   "type": "module",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "@otomatty/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Engine-neutral M3 logic: ThemeProvider, dynamic color, Ripple, state layer, and headless component factories.",
   "type": "module",
   "license": "MIT",
