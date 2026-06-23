@@ -17,7 +17,7 @@ const DIRECTIVE = '"use client";\n';
  * Lists the entry `.js` files in a dist directory (top-level, excluding split
  * `chunk-*.js`). Used to mark every public styling entry as a client module:
  * the wrappers call the client `create*` factories at module init, so in
- * Next/RSC they must be client modules themselves — relying on @m3/core's
+ * Next/RSC they must be client modules themselves — relying on @otomatty/core's
  * boundary is not enough.
  */
 export async function listEntryJs(distDir: string): Promise<string[]> {

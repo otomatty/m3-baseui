@@ -1,9 +1,21 @@
 {
-  "name": "@m3/react-tailwind",
+  "name": "@otomatty/react-tailwind",
   "version": "0.0.0",
-  "description": "M3 components implemented with tailwind-variants over the shared @m3/core factories. Ships the Tailwind v4 @theme preset.",
+  "description": "M3 components implemented with tailwind-variants over the shared @otomatty/core factories. Ships the Tailwind v4 @theme preset.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otomatty/m3-baseui.git",
+    "directory": "packages/react-tailwind"
+  },
+  "homepage": "https://github.com/otomatty/m3-baseui#readme",
+  "bugs": {
+    "url": "https://github.com/otomatty/m3-baseui/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "@m3/source": "./src/index.ts",
@@ -143,8 +155,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@m3/core": "workspace:*",
-    "@m3/tokens": "workspace:*",
+    "@otomatty/core": "workspace:*",
+    "@otomatty/tokens": "workspace:*",
     "tailwind-variants": "^0.3.0"
   },
   "peerDependencies": {

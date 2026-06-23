@@ -1,7 +1,7 @@
 /* M3 token vars + Tailwind v4 + M3 @theme preset, in the required order. */
-@import '@m3/tokens/tokens.css';
+@import '@otomatty/tokens/tokens.css';
 @import 'tailwindcss';
-@import '@m3/tokens/theme.css';
+@import '@otomatty/tokens/theme.css';
 
 /*
  * The component styling here is compiled by vanilla-extract (not Tailwind), so

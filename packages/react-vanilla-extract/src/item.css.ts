@@ -4,7 +4,7 @@
  * column and trailing slot. Inert by design — interactive surfaces wrap it.
  */
 import { globalStyle, style } from '@vanilla-extract/css';
-import { vars } from '@m3/tokens/contract.css';
+import { vars } from '@otomatty/tokens/contract.css';
 
 export const root = style({
   position: 'relative',

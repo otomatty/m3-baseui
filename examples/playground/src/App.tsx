@@ -28,9 +28,9 @@ import {
   useSnackbar,
   ThemeProvider,
   useTheme,
-} from '@m3/react-tailwind';
-import type { ButtonVariant } from '@m3/react-tailwind';
-import { Icon } from '@m3/icons';
+} from '@otomatty/react-tailwind';
+import type { ButtonVariant } from '@otomatty/react-tailwind';
+import { Icon } from '@otomatty/icons';
 
 const BUTTON_VARIANTS: ButtonVariant[] = ['filled', 'tonal', 'outlined', 'elevated', 'text'];
 

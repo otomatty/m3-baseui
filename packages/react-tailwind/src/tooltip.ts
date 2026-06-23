@@ -5,7 +5,7 @@
  * + small-move transition driven by Base UI's data-[starting-style] /
  * data-[ending-style] attributes.
  */
-import { createTooltip } from '@m3/core';
+import { createTooltip } from '@otomatty/core';
 import { tv } from './tv';
 
 export const tooltipTv = tv({

@@ -3,7 +3,7 @@
  * Same DOM + data-* hooks as the Tailwind build.
  */
 import { globalStyle, style } from '@vanilla-extract/css';
-import { vars } from '@m3/tokens/contract.css';
+import { vars } from '@otomatty/tokens/contract.css';
 
 export const popup = style({
   minWidth: '112px',

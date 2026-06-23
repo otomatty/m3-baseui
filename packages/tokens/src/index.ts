@@ -1,11 +1,11 @@
 /**
- * @m3/tokens — public entry.
+ * @otomatty/tokens — public entry.
  *
  * Exposes the raw token source (the single source of truth) plus its types.
  * Generated artifacts are consumed via subpath exports:
- *   '@m3/tokens/tokens.css'    runtime CSS variables
- *   '@m3/tokens/theme.css'     Tailwind v4 @theme preset
- *   '@m3/tokens/contract.css'  vanilla-extract typed contract
+ *   '@otomatty/tokens/tokens.css'    runtime CSS variables
+ *   '@otomatty/tokens/theme.css'     Tailwind v4 @theme preset
+ *   '@otomatty/tokens/contract.css'  vanilla-extract typed contract
  */
 export { tokens } from './tokens';
 export type { AppTokens } from './tokens';

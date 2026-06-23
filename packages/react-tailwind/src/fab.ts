@@ -5,7 +5,7 @@
  * currentColor state-layer `::before`. The pointer ripple is added by the
  * factory. Same DOM as the VE build.
  */
-import { createFab } from '@m3/core';
+import { createFab } from '@otomatty/core';
 import { tv } from 'tailwind-variants';
 
 export const fabTv = tv({
@@ -43,4 +43,4 @@ export const fabTv = tv({
 });
 
 export const Fab = createFab(({ size, color }) => fabTv({ size, color }));
-export type { FabProps, FabSize, FabColor } from '@m3/core';
+export type { FabProps, FabSize, FabColor } from '@otomatty/core';

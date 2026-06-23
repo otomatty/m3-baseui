@@ -1,9 +1,21 @@
 {
-  "name": "@m3/react-vanilla-extract",
+  "name": "@otomatty/react-vanilla-extract",
   "version": "0.0.0",
-  "description": "M3 components implemented with vanilla-extract recipes over the shared @m3/core factories.",
+  "description": "M3 components implemented with vanilla-extract recipes over the shared @otomatty/core factories.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otomatty/m3-baseui.git",
+    "directory": "packages/react-vanilla-extract"
+  },
+  "homepage": "https://github.com/otomatty/m3-baseui#readme",
+  "bugs": {
+    "url": "https://github.com/otomatty/m3-baseui/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "@m3/source": "./src/index.ts",
@@ -139,8 +151,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@m3/core": "workspace:*",
-    "@m3/tokens": "workspace:*"
+    "@otomatty/core": "workspace:*",
+    "@otomatty/tokens": "workspace:*"
   },
   "peerDependencies": {
     "@base-ui/react": "^1.6.0",

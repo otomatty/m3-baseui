@@ -6,7 +6,7 @@
  * on each item. State layer is the pill `::before`; the pointer ripple is added
  * by the factory. Same DOM as the VE build.
  */
-import { createNavigationBar } from '@m3/core';
+import { createNavigationBar } from '@otomatty/core';
 import { tv } from 'tailwind-variants';
 
 export const navigationBarTv = tv({

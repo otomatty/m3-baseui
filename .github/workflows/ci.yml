@@ -30,14 +30,14 @@ jobs:
         run: bun run test
 
       # Verifies the distributable build: dist + .d.ts for every package, the VE
-      # recipes compiled to static CSS, and the `'use client'` banner on @m3/core.
+      # recipes compiled to static CSS, and the `'use client'` banner on @otomatty/core.
       - name: Build (library dist)
         run: bun run build
 
       - name: Build playground (Tailwind)
         run: bun run --filter @m3/example-playground build
 
-      # Compiles every @m3/react-vanilla-extract recipe through the real VE Vite
+      # Compiles every @otomatty/react-vanilla-extract recipe through the real VE Vite
       # plugin — the only place the build-time VE selectors are actually evaluated.
       - name: Build playground (vanilla-extract)
         run: bun run --filter @m3/example-playground-ve build

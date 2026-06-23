@@ -4,7 +4,7 @@
  *
  * Every Base UI v1 part is a forwardRef component that accepts `className`
  * (a string *or* a function of its state), `render`, and the host element's
- * native props. These helpers let the headless factories in `@m3/core` attach
+ * native props. These helpers let the headless factories in `@otomatty/core` attach
  * the engine-resolved class strings to each part while preserving Base UI's
  * behavior, refs, and `data-*` state attributes. Each engine supplies different
  * class strings; the DOM and state attributes are identical, so the two builds

@@ -1,5 +1,5 @@
 import type { Decorator, Preview } from '@storybook/react-vite';
-import { ThemeProvider, type ContrastLevel, type SchemeVariant } from '@m3/react-tailwind';
+import { ThemeProvider, type ContrastLevel, type SchemeVariant } from '@otomatty/react-tailwind';
 import { EngineProvider, type EngineId } from '../src/engine';
 import './preview.css';
 

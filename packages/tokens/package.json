@@ -1,9 +1,21 @@
 {
-  "name": "@m3/tokens",
+  "name": "@otomatty/tokens",
   "version": "0.0.0",
   "description": "Single source-of-truth M3 design tokens and generators (CSS vars / vanilla-extract contract / Tailwind v4 @theme).",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otomatty/m3-baseui.git",
+    "directory": "packages/tokens"
+  },
+  "homepage": "https://github.com/otomatty/m3-baseui#readme",
+  "bugs": {
+    "url": "https://github.com/otomatty/m3-baseui/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "@m3/source": "./src/index.ts",

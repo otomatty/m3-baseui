@@ -1,7 +1,7 @@
 /**
  * menu.ts — wires the VE styles into the shared parts factory.
  */
-import { createMenu } from '@m3/core';
+import { createMenu } from '@otomatty/core';
 import {
   popup,
   item,

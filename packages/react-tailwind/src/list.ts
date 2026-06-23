@@ -8,7 +8,7 @@
  * `body-medium`/`on-surface-variant`, leading/trailing `on-surface-variant`.
  * Same DOM as the VE build.
  */
-import { createList } from '@m3/core';
+import { createList } from '@otomatty/core';
 import { tv } from './tv';
 
 export const listTv = tv({
@@ -68,4 +68,4 @@ export const List = createList({
     };
   },
 });
-export type { ListItemProps, ListItemLines } from '@m3/core';
+export type { ListItemProps, ListItemLines } from '@otomatty/core';

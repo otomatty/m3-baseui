@@ -1,8 +1,8 @@
 /**
  * list.ts — wires the VE styles into the shared List factory.
  */
-import { createList } from '@m3/core';
-import { cx } from '@m3/core';
+import { createList } from '@otomatty/core';
+import { cx } from '@otomatty/core';
 import { root, itemBase, item, leading, content, headline, supporting, trailing } from './list.css';
 
 export const List = createList({
@@ -16,4 +16,4 @@ export const List = createList({
     trailing,
   }),
 });
-export type { ListItemProps, ListItemLines } from '@m3/core';
+export type { ListItemProps, ListItemLines } from '@otomatty/core';

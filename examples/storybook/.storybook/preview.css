@@ -1,10 +1,10 @@
 /* M3 token vars + Tailwind v4 + M3 @theme preset, in the required order. */
-@import '@m3/tokens/tokens.css';
+@import '@otomatty/tokens/tokens.css';
 @import 'tailwindcss';
-@import '@m3/tokens/theme.css';
+@import '@otomatty/tokens/theme.css';
 
 /*
- * Stories render Tailwind components straight from the @m3/react-tailwind
+ * Stories render Tailwind components straight from the @otomatty/react-tailwind
  * source (outside this app's default scan root), so register it as a source so
  * Tailwind v4 generates the utilities those components reference. The story
  * files themselves use Tailwind layout/typography utilities too.
@@ -12,7 +12,7 @@
 @source "../../../packages/react-tailwind/src";
 @source "../src";
 
-/* Mirror the component keyframes from @m3/react-tailwind/preset.css (the linear
+/* Mirror the component keyframes from @otomatty/react-tailwind/preset.css (the linear
  * progress indeterminate slide) so the demo animates without importing preset. */
 @theme {
   --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;

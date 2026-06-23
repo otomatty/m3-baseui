@@ -5,7 +5,7 @@
  * press (not the persistent toggle `data-pressed`, which a filter chip uses for
  * its selected fill). Emits the same DOM + ripple as the VE build.
  */
-import { createChip } from '@m3/core';
+import { createChip } from '@otomatty/core';
 import { tv } from 'tailwind-variants';
 
 export const chipTv = tv({
@@ -76,4 +76,4 @@ export const Chip = createChip(({ variant, elevated }) => {
   const c = chipTv({ variant, elevated });
   return { root: c.root(), remove: c.remove(), check: c.check(), avatar: c.avatar() };
 });
-export type { ChipProps, ChipVariant } from '@m3/core';
+export type { ChipProps, ChipVariant } from '@otomatty/core';

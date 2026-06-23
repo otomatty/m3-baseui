@@ -5,7 +5,7 @@
  * thumb grows and slides when checked; a 40dp circular state layer (`before:`)
  * reacts to hover/focus/press on the root via the `group` utility.
  */
-import { createSwitch } from '@m3/core';
+import { createSwitch } from '@otomatty/core';
 import { tv } from 'tailwind-variants';
 
 export const switchTv = tv({

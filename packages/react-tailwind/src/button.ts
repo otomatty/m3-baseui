@@ -4,12 +4,12 @@
  * Emits the same DOM and `data-*` state as the vanilla-extract build; only the
  * class strings differ. Utilities such as `bg-primary`, `text-on-primary`,
  * `rounded-full`, `shadow-level1`, and `text-label-large` are produced by the
- * Tailwind v4 `@theme` preset shipped in `@m3/tokens/theme.css`.
+ * Tailwind v4 `@theme` preset shipped in `@otomatty/tokens/theme.css`.
  *
  * Opacity modifiers (`before:opacity-[var(--md-sys-state-hover)]`) drive the
  * state layer off the channel-triple colors.
  */
-import { createButton } from '@m3/core';
+import { createButton } from '@otomatty/core';
 import { tv } from 'tailwind-variants';
 
 export const button = tv({
@@ -78,4 +78,4 @@ export const button = tv({
 });
 
 export const Button = createButton(({ variant }) => button({ variant }));
-export type { ButtonProps, ButtonVariant } from '@m3/core';
+export type { ButtonProps, ButtonVariant } from '@otomatty/core';

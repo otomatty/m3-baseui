@@ -5,10 +5,10 @@
  * is an inverse-primary text button with a state layer + ripple. Enter/exit key
  * off Toast's `data-starting-style` / `data-ending-style`. Same DOM as VE.
  */
-import { createSnackbar } from '@m3/core';
+import { createSnackbar } from '@otomatty/core';
 import { tv } from 'tailwind-variants';
 
-export { useSnackbar } from '@m3/core';
+export { useSnackbar } from '@otomatty/core';
 
 export const snackbarTv = tv({
   slots: {

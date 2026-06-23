@@ -3,7 +3,7 @@
  *
  * The same shared playground (`examples/playground/src/App.tsx`) is served by
  * two Vite dev servers: the Tailwind build and the vanilla-extract build (whose
- * App re-export is alias-rewritten to `@m3/react-vanilla-extract`). Both emit
+ * App re-export is alias-rewritten to `@otomatty/react-vanilla-extract`). Both emit
  * the same DOM and the same `data-*` contract (drop-in compatible), so one spec
  * suite runs against both via the `tailwind` and `vanilla-extract` projects.
  *

@@ -11,11 +11,11 @@ Layer 2（`--md-sys-*` CSS 変数）がエンジン非依存の境界線。
 
 | パッケージ | 役割 |
 | --- | --- |
-| `@m3/tokens` | トークン単一ソース → `tokens.css` / VE契約 / Tailwind `@theme` を生成 |
-| `@m3/core` | `ThemeProvider`・動的配色・`Ripple`・`slot.tsx`・`create-*` ファクトリ（エンジン非依存ロジック） |
-| `@m3/react-tailwind` | tailwind-variants でクラス解決 + Tailwind v4 プリセット |
-| `@m3/react-vanilla-extract` | vanilla-extract recipe でクラス解決 |
-| `@m3/icons` | Material Symbols ラッパー（任意） |
+| `@otomatty/tokens` | トークン単一ソース → `tokens.css` / VE契約 / Tailwind `@theme` を生成 |
+| `@otomatty/core` | `ThemeProvider`・動的配色・`Ripple`・`slot.tsx`・`create-*` ファクトリ（エンジン非依存ロジック） |
+| `@otomatty/react-tailwind` | tailwind-variants でクラス解決 + Tailwind v4 プリセット |
+| `@otomatty/react-vanilla-extract` | vanilla-extract recipe でクラス解決 |
+| `@otomatty/icons` | Material Symbols ラッパー（任意） |
 | `examples/playground` | Vite + Tailwind v4 デモ |
 
 ## コマンド
@@ -40,7 +40,7 @@ bun run --filter @m3/example-playground build
 > `package.json` の `exports` は公開時に `dist` を指し（`default`）、リポジトリ内のツールは
 > `@m3/source` 条件でソースに解決する（`tsconfig` の `customConditions` / Vite の
 > `resolve.conditions` / `bun --conditions`）。そのため**テストは `bun run test`**（素の
-> `bun test` ではなく）で実行する。`@m3/core` は配布物でも `'use client'` を保持し、VE 版は
+> `bun test` ではなく）で実行する。`@otomatty/core` は配布物でも `'use client'` を保持し、VE 版は
 > recipe を静的 CSS に事前コンパイルして出力する（`sideEffects: ["**/*.css"]`）。
 
 > E2E（issue #4）は Chromium が必要。CI は `@playwright/test` でピン留めしたビルドを
@@ -61,7 +61,7 @@ bun run --filter @m3/example-playground build
 2. **スタイルは Base UI の `data-*` 属性をフックに CSS 側へ寄せる**
    （`data-checked` / `data-disabled` / `data-highlighted` / `data-pressed` / `data-popup-open`
    / `data-starting-style` 等）。色は**チャンネル三値**で保持し `rgb(${...})` で包む。
-3. **React ロジックは `@m3/core` に一元化**する。単一要素系は `create-<name>.tsx`
+3. **React ロジックは `@otomatty/core` に一元化**する。単一要素系は `create-<name>.tsx`
    ファクトリ、複合系は Base UI part を `slot.tsx` の `createSlot` / `mergeClassName` で
    ラップした名前空間を返す。**エンジン側はクラス解決器だけを差し替える。**
 4. **VE 版と Tailwind 版は同一 DOM・同一 `data-*` を出力（drop-in 互換）。** 既存の
@@ -81,7 +81,7 @@ bun run --filter @m3/example-playground build
 5. drop-in 互換と `data-*` 契約を壊さない範囲で整理（リファクタ）。
 
 ### テスト規約
-- テストは原則 `@m3/react-tailwind` に対して書く（DOM は両エンジン共通のため代表とする）。
+- テストは原則 `@otomatty/react-tailwind` に対して書く（DOM は両エンジン共通のため代表とする）。
 - co-located の `*.test.tsx`（`packages/react-tailwind/src/<name>.test.tsx`）。
 - アサートは role/ARIA と `data-*` を優先。クラスは断片一致に留める。
 - ポータル/位置計算を伴う複雑系（Menu/Select/Tooltip/Dialog）の対話は **E2E**

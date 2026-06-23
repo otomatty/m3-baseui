@@ -7,7 +7,7 @@
  * ripple is added by the factory), a focus ring and per-token disabled dimming.
  * Same DOM + `data-*` as the VE build.
  */
-import { createCard } from '@m3/core';
+import { createCard } from '@otomatty/core';
 import { tv } from './tv';
 
 export const cardTv = tv({
@@ -50,4 +50,4 @@ export const cardTv = tv({
 export const Card = createCard({
   root: ({ variant, interactive }) => cardTv({ variant, interactive }),
 });
-export type { CardProps, CardVariant } from '@m3/core';
+export type { CardProps, CardVariant } from '@otomatty/core';
