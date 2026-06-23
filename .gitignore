@@ -16,3 +16,6 @@ test-results/
 playwright-report/
 blob-report/
 .playwright/
+
+# Storybook (issue #6)
+storybook-static/

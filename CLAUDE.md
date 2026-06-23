@@ -31,6 +31,8 @@ bun run test:e2e:update # ビジュアル回帰のベースライン更新（e2e
 bun run lint           # biome check .
 bun run format         # biome format --write .
 bun run changeset      # 変更セットを追加（公開フロー: changesets）
+bun run storybook      # Storybook 開発サーバ（両エンジン切替 + a11y）
+bun run build-storybook # Storybook を storybook-static/ へ静的ビルド
 bun run --filter @m3/example-playground build
 ```
 
@@ -43,6 +45,13 @@ bun run --filter @m3/example-playground build
 
 > E2E（issue #4）は Chromium が必要。CI は `@playwright/test` でピン留めしたビルドを
 > `bunx playwright install --with-deps chromium` で取得する。ローカル初回は同コマンドを実行。
+
+> **ドキュメント（issue #6）**: `examples/storybook` に単一の Storybook（Vite ビルダー）。
+> Tailwind / vanilla-extract の両プラグインを `viteFinal` で有効化し、両エンジンを同時に
+> import する。ストーリーはコンポーネントを直接 import せず `src/engine.tsx` の `useM3()`
+> から取得し、ツールバーの **Engine** グローバルで実エンジンを切替える（drop-in 互換の生確認）。
+> シード/スキーム/コントラスト/モードは preview のグローバル args として **Controls** に露出し、
+> デコレータが `ThemeProvider` へ配線する。a11y（axe）は `@storybook/addon-a11y` で有効。
 
 ## 中核ルール（不変条件）
 
