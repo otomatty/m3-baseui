@@ -1,18 +1,23 @@
 /**
- * publish.ts — publishes the public `@otomatty/*` packages to npm with bun.
+ * publish.ts — publishes the public `@otomatty/*` packages to npm.
  *
- * Why not `changeset publish`? Changesets shells out to `npm publish`, which
- * does NOT resolve the `workspace:*` protocol — it would upload tarballs whose
- * deps read `"@otomatty/x": "workspace:*"`, and `npm install` of those fails
- * with EUNSUPPORTEDPROTOCOL. `bun publish` rewrites `workspace:*` to the
- * concrete version while packing, so consumers get an installable range.
+ * Two-tool split, on purpose:
+ *   1. `bun pm pack` builds each tarball. Bun resolves the `workspace:*`
+ *      protocol to the concrete version while packing, so consumers get an
+ *      installable range. (`changeset publish` / `npm publish` from the package
+ *      dir would leave `workspace:*` in place → EUNSUPPORTEDPROTOCOL on install.)
+ *   2. `npm publish <tarball>` uploads it. `bun publish` has unreliable .npmrc
+ *      auth in CI (it ignores ~/.npmrc and errors with "missing authentication"
+ *      — oven-sh/bun#24124), whereas npm reads the token from ~/.npmrc reliably.
+ *      The tarball's manifest is already resolved, so npm never sees a
+ *      workspace: range.
  *
  * `changeset version` still drives the version bumps + changelogs (the Version
  * PR); this script only replaces the publish step. It is idempotent: versions
  * already on the registry are skipped, so a re-run after a partial failure
  * publishes only what is missing. Registry auth comes from ~/.npmrc (written
  * from NPM_TOKEN in the Release workflow); access level comes from each
- * package's `publishConfig.access`.
+ * package's `publishConfig.access` (forced with --access public for safety).
  */
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
@@ -51,16 +56,19 @@ for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
     continue;
   }
 
-  // Guard against the exact bug this script exists to prevent: never upload a
-  // tarball whose manifest still carries an unresolved workspace: range.
-  assertNoWorkspaceRanges(dir, name);
-
-  console.log(`▲ publishing ${name}@${version}`);
-  execFileSync('bun', ['publish'], { cwd: dir, stdio: 'inherit' });
-  // changesets/action parses `New tag: <pkg>@<version>` from stdout to push git
-  // tags and create the GitHub releases — emit it for each published package.
-  console.log(`New tag: ${name}@${version}`);
-  published++;
+  // Pack with bun (resolves workspace:* → concrete versions), verify the packed
+  // manifest carries no leftover workspace: range, then upload with npm.
+  const { tarball, cleanup } = packResolved(dir, name);
+  try {
+    console.log(`▲ publishing ${name}@${version}`);
+    execFileSync('npm', ['publish', tarball, '--access', 'public'], { stdio: 'inherit' });
+    // changesets/action parses `New tag: <pkg>@<version>` from stdout to push
+    // git tags and create the GitHub releases — emit it for each published one.
+    console.log(`New tag: ${name}@${version}`);
+    published++;
+  } finally {
+    cleanup();
+  }
 }
 
 console.log(`\nDone. Published ${published}, skipped ${skipped}.`);
@@ -76,9 +84,14 @@ async function isPublished(name: string, version: string): Promise<boolean> {
   return Boolean(data.versions && version in data.versions);
 }
 
-/** Packs the package and fails if the packed manifest still has a workspace: range. */
-function assertNoWorkspaceRanges(dir: string, name: string): void {
+/**
+ * Packs the package with bun and returns the tarball path plus a cleanup fn.
+ * Throws if no tarball is produced or if its manifest still has a workspace:
+ * range (the exact bug this script exists to prevent).
+ */
+function packResolved(dir: string, name: string): { tarball: string; cleanup: () => void } {
   const out = mkdtempSync(join(tmpdir(), 'm3-pack-'));
+  const cleanup = () => rmSync(out, { recursive: true, force: true });
   try {
     execFileSync('bun', ['pm', 'pack', '--quiet', '--destination', out], {
       cwd: dir,
@@ -86,15 +99,18 @@ function assertNoWorkspaceRanges(dir: string, name: string): void {
     });
     const tgz = readdirSync(out).find((f) => f.endsWith('.tgz'));
     if (!tgz) {
-      throw new Error(`${name}: bun pm pack produced no .tgz artifact to verify`);
+      throw new Error(`${name}: bun pm pack produced no .tgz artifact`);
     }
-    const manifest = execFileSync('tar', ['-xzOf', join(out, tgz), 'package/package.json'], {
+    const tarball = join(out, tgz);
+    const manifest = execFileSync('tar', ['-xzOf', tarball, 'package/package.json'], {
       encoding: 'utf8',
     });
     if (manifest.includes('workspace:')) {
       throw new Error(`${name}: packed manifest still contains a "workspace:" range`);
     }
-  } finally {
-    rmSync(out, { recursive: true, force: true });
+    return { tarball, cleanup };
+  } catch (err) {
+    cleanup();
+    throw err;
   }
 }
