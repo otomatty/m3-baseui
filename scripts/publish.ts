@@ -15,9 +15,12 @@
  * `changeset version` still drives the version bumps + changelogs (the Version
  * PR); this script only replaces the publish step. It is idempotent: versions
  * already on the registry are skipped, so a re-run after a partial failure
- * publishes only what is missing. Registry auth comes from ~/.npmrc (written
- * from NPM_TOKEN in the Release workflow); access level comes from each
- * package's `publishConfig.access` (forced with --access public for safety).
+ * publishes only what is missing. Registry auth in CI: npm trusted publishing
+ * (OIDC) when ~/.npmrc has no token; otherwise the Release workflow's optional
+ * NPM_TOKEN bootstrap path (first publish before Trusted Publisher can be
+ * configured). npm attaches provenance by default with OIDC. Access level comes
+ * from each package's publishConfig.access (forced with --access public for
+ * safety).
  */
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
@@ -50,8 +53,11 @@ for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
   const { name, version } = manifest;
   if (manifest.private || !name?.startsWith('@otomatty/') || !version) continue;
 
+  const tag = `${name}@${version}`;
+
   if (await isPublished(name, version)) {
-    console.log(`• ${name}@${version} already on npm — skipping`);
+    console.log(`• ${name}@${version} already on npm — skipping publish`);
+    await createGithubTag(tag);
     skipped++;
     continue;
   }
@@ -62,9 +68,9 @@ for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
   try {
     console.log(`▲ publishing ${name}@${version}`);
     execFileSync('npm', ['publish', tarball, '--access', 'public'], { stdio: 'inherit' });
-    // changesets/action parses `New tag: <pkg>@<version>` from stdout to push
-    // git tags and create the GitHub releases — emit it for each published one.
-    console.log(`New tag: ${name}@${version}`);
+    await createGithubTag(tag);
+    // Kept for log readability; release tags are created via the GitHub API above.
+    console.log(`New tag: ${tag}`);
     published++;
   } finally {
     cleanup();
@@ -72,6 +78,43 @@ for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
 }
 
 console.log(`\nDone. Published ${published}, skipped ${skipped}.`);
+
+/**
+ * Creates a git tag on GitHub via the REST API when running in Actions.
+ * Uses the GitHub API instead of `git push origin <tag>` because checkout
+ * with `persist-credentials: false` and changesets/action's default
+ * `commitMode: git-cli` only run `git push` without creating a local tag first.
+ */
+async function createGithubTag(tag: string): Promise<void> {
+  const token = process.env.GITHUB_TOKEN;
+  const repository = process.env.GITHUB_REPOSITORY;
+  const sha = process.env.GITHUB_SHA;
+  if (!token || !repository || !sha) return;
+
+  const res = await fetch(`https://api.github.com/repos/${repository}/git/refs`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ref: `refs/tags/${tag}`, sha }),
+  });
+
+  if (res.status === 422) {
+    const body = await res.text();
+    if (body.includes('Reference already exists')) {
+      console.log(`• git tag ${tag} already exists — skipping`);
+      return;
+    }
+    throw new Error(`git tag ${tag} failed: ${res.status} ${body}`);
+  }
+  if (!res.ok) {
+    throw new Error(`git tag ${tag} failed: ${res.status} ${await res.text()}`);
+  }
+  console.log(`▲ created git tag ${tag}`);
+}
 
 /** Returns true when the exact name@version already exists on the registry. */
 async function isPublished(name: string, version: string): Promise<boolean> {

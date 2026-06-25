@@ -1,21 +1,34 @@
 name: Release
 
-# Publishes the @otomatty/* packages to npm.
+# Publishes the @otomatty/* packages to npm using npm trusted publishing (OIDC).
 #
 # On every push to main, changesets/action opens (or updates) a "Version
 # Packages" PR that bumps versions and writes changelogs from the accumulated
 # .changeset/*.md files (via `bun run version-packages`). Merging that PR
-# re-runs this workflow, finds no pending changesets, and runs `bun run release`
-# to build + publish.
+# removes the changeset files, so the next run finds no pending changesets and
+# the publish job below runs `bun run release` to build + publish.
 #
-# Publishing uses `bun publish` (scripts/publish.ts), not `changeset publish`:
-# Changesets shells out to `npm publish`, which leaves the internal
-# `workspace:*` ranges unresolved and produces tarballs that fail to install.
-# `bun publish` rewrites them to concrete versions.
+# Auth uses npm trusted publishing (OIDC) by default — no long-lived NPM_TOKEN.
+# The npm CLI (>= 11.5.1) exchanges the GitHub-issued OIDC token for a
+# short-lived publish credential. Optionally keep an NPM_TOKEN secret for
+# bootstrapping packages that do not yet exist on npm (Trusted Publisher can
+# only be configured after the first publish). When NPM_TOKEN is set, ~/.npmrc
+# is written in the publish job only; when unset, npm uses OIDC automatically.
 #
-# Setup required once in the repo settings:
-#   - Secret NPM_TOKEN: an npm automation token for the user/org that owns the
-#     @otomatty scope (npmjs.com → Access Tokens → Automation).
+# IMPORTANT: changesets/action is used ONLY for the Version PR here. We do NOT
+# pass its `publish` input: when given a publish command it writes ~/.npmrc with
+# an auth token line, which disables npm's OIDC auto-detection. Publishing runs
+# in the dedicated OIDC job below instead.
+#
+# One-time setup required in the repo / npm settings:
+#   - On npmjs.com, configure a Trusted Publisher for EACH @otomatty/* package
+#     (Settings → Trusted Publisher → GitHub Actions):
+#       Organization or user: otomatty
+#       Repository:           m3-baseui
+#       Workflow filename:    release.yml
+#       Environment:          (leave blank)
+#     A package must already exist on npm before its trusted publisher can be
+#     configured, so the very first publish must be done with a token.
 #   - Settings → Actions → General → Workflow permissions: allow GitHub Actions
 #     to create and approve pull requests (so the Version PR can be opened).
 
@@ -26,13 +39,14 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
-  release:
+  version:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -46,19 +60,69 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      # bun publish reads the registry token from .npmrc.
-      - name: Configure npm auth
-        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > "${HOME}/.npmrc"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create Release PR or publish to npm
+      - name: Create Release PR
+        id: changesets
         uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           version: bun run version-packages
-          publish: bun run release
           commit: "chore: version packages"
           title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    needs: version
+    if: needs.version.outputs.hasChangesets == 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # createGithubTag via GITHUB_TOKEN
+      id-token: write # npm trusted publishing (OIDC)
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.11
+
+      # npm performs the actual upload (scripts/publish.ts), and trusted
+      # publishing requires npm >= 11.5.1. Node 24 ships a recent npm; the
+      # explicit upgrade below guarantees the minimum regardless of runner image.
+      # NOTE: deliberately no `registry-url` — it writes an .npmrc with an
+      # _authToken placeholder that disables npm's OIDC handshake.
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+
+      - name: Ensure npm supports trusted publishing
+        run: npm install -g npm@11.5.1
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # Optional: write ~/.npmrc only when NPM_TOKEN is configured. Omitting
+      # this step (no secret) lets npm use OIDC; setting it enables bootstrap
+      # publishes for packages not yet on npm (Trusted Publisher requires an
+      # existing package). Do not set registry-url on setup-node — that also
+      # writes an _authToken placeholder and disables OIDC.
+      - name: Configure npm auth (optional bootstrap)
+        run: |
+          if [ -n "${NPM_TOKEN}" ]; then
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > "${HOME}/.npmrc"
+            echo "NPM_TOKEN set — using token auth (bootstrap / fallback)"
+          else
+            echo "No NPM_TOKEN — using OIDC trusted publishing"
+          fi
+        env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # No pending changesets means the Version PR was merged → publish. npm
+      # uses OIDC when ~/.npmrc has no token, otherwise NPM_TOKEN. publish.ts
+      # is idempotent, so this safely no-ops when every version is already on npm.
+      - name: Publish to npm
+        run: bun run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
