@@ -10,8 +10,8 @@ import {
   TextField,
   ThemeProvider,
   useTheme,
-} from '@otomatty/react-tailwind';
-import { Icon } from '@otomatty/icons';
+} from '@m3-baseui/react-tailwind';
+import { Icon } from '@m3-baseui/icons';
 
 const SEEDS = ['#6750A4', '#386A20', '#B3261E', '#00639B', '#7D5260'];
 

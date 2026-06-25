@@ -1,6 +1,6 @@
 import * as React from 'react';
-import * as tailwind from '@otomatty/react-tailwind';
-import * as vanillaExtract from '@otomatty/react-vanilla-extract';
+import * as tailwind from '@m3-baseui/react-tailwind';
+import * as vanillaExtract from '@m3-baseui/react-vanilla-extract';
 
 /**
  * Dual-engine plumbing for the stories.

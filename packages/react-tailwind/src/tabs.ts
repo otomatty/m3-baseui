@@ -5,7 +5,7 @@
  * the indicator. The `variant` recolors the active tab (primary → primary,
  * secondary → on-surface). Tabs carry a `before:` state layer + ripple.
  */
-import { createTabs } from '@otomatty/core';
+import { createTabs } from '@m3-baseui/core';
 import { tv } from './tv';
 
 export const tabsTv = tv({
@@ -68,4 +68,4 @@ export const Tabs = createTabs((variant) => {
     panel: s.panel(),
   };
 });
-export type { TabsVariant } from '@otomatty/core';
+export type { TabsVariant } from '@m3-baseui/core';

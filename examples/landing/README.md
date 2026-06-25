@@ -1,7 +1,7 @@
 # @m3/example-landing
 
 `m3-baseui` を紹介する Astro 製ランディングページ。本文・特徴・導入手順は
-静的 HTML として生成し（SEO 向け）、ライブデモのみ `@otomatty/react-tailwind`
+静的 HTML として生成し（SEO 向け）、ライブデモのみ `@m3-baseui/react-tailwind`
 を React アイランド（`client:visible`）として部分ハイドレートする。
 
 ## 開発

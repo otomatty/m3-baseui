@@ -1,10 +1,10 @@
 /**
  * snackbar.ts — wires the VE styles into the shared Snackbar factory.
  */
-import { createSnackbar } from '@otomatty/core';
+import { createSnackbar } from '@m3-baseui/core';
 import * as s from './snackbar.css';
 
-export { useSnackbar } from '@otomatty/core';
+export { useSnackbar } from '@m3-baseui/core';
 
 export const Snackbar = createSnackbar({
   viewport: s.viewport,

@@ -1,7 +1,7 @@
 /**
  * item.ts — wires the VE styles into the shared Item factory.
  */
-import { createItem } from '@otomatty/core';
+import { createItem } from '@m3-baseui/core';
 import { root, leading, content, overline, headline, supporting, trailing } from './item.css';
 
 export const Item = createItem({
@@ -13,4 +13,4 @@ export const Item = createItem({
   supporting,
   trailing,
 });
-export type { ItemProps } from '@otomatty/core';
+export type { ItemProps } from '@m3-baseui/core';

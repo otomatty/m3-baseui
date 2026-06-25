@@ -5,7 +5,7 @@
  * with primary; the indeterminate dash is an `::after` on the indicator and the
  * check SVG is hidden in that state via a group reference.
  */
-import { createCheckbox } from '@otomatty/core';
+import { createCheckbox } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
 
 export const checkboxTv = tv({

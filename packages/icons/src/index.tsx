@@ -1,6 +1,6 @@
 'use client';
 /**
- * @otomatty/icons — thin wrapper over Material Symbols (variable font).
+ * @m3-baseui/icons — thin wrapper over Material Symbols (variable font).
  *
  * Load the font in your app (e.g. via Google Fonts):
  *   <link rel="stylesheet"

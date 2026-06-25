@@ -1,7 +1,7 @@
 /**
  * navigation-drawer.ts — wires the VE styles into the shared NavigationDrawer factory.
  */
-import { createNavigationDrawer } from '@otomatty/core';
+import { createNavigationDrawer } from '@m3-baseui/core';
 import { root, headline, item, leading, label, trailing } from './navigation-drawer.css';
 
 export const NavigationDrawer = createNavigationDrawer({
@@ -12,4 +12,4 @@ export const NavigationDrawer = createNavigationDrawer({
   label,
   trailing,
 });
-export type { NavigationDrawerVariant } from '@otomatty/core';
+export type { NavigationDrawerVariant } from '@m3-baseui/core';

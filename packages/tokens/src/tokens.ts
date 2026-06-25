@@ -10,7 +10,7 @@
  * re-deriving values per engine.
  *
  * Baseline values follow the Material Design 3 reference scheme (seed #6750A4).
- * At runtime the `ThemeProvider` in `@otomatty/core` can overwrite the `--md-sys-color-*`
+ * At runtime the `ThemeProvider` in `@m3-baseui/core` can overwrite the `--md-sys-color-*`
  * variables with a dynamically generated scheme.
  */
 import type { Tokens } from './types';

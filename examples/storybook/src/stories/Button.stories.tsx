@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ButtonVariant } from '@otomatty/react-tailwind';
+import type { ButtonVariant } from '@m3-baseui/react-tailwind';
 import { useM3 } from '../engine';
-import { Icon } from '@otomatty/icons';
+import { Icon } from '@m3-baseui/icons';
 
 const meta = { title: 'Components/Button' } satisfies Meta;
 export default meta;

@@ -2,14 +2,14 @@
  * preset.css — one-line setup for Tailwind v4 consumers.
  *
  * In your app's main CSS:
- *   @import '@otomatty/react-tailwind/preset.css';
+ *   @import '@m3-baseui/react-tailwind/preset.css';
  *
  * Order matters: tokens (runtime --md-sys-* vars) must load before Tailwind so
  * the @theme preset can reference them.
  */
-@import '@otomatty/tokens/tokens.css';
+@import '@m3-baseui/tokens/tokens.css';
 @import 'tailwindcss';
-@import '@otomatty/tokens/theme.css';
+@import '@m3-baseui/tokens/theme.css';
 
 /*
  * Component keyframes that can't be expressed as utilities. The linear progress

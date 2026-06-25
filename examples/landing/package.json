@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
-    "@otomatty/icons": "workspace:*",
-    "@otomatty/react-tailwind": "workspace:*",
-    "@otomatty/tokens": "workspace:*",
+    "@m3-baseui/icons": "workspace:*",
+    "@m3-baseui/react-tailwind": "workspace:*",
+    "@m3-baseui/tokens": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

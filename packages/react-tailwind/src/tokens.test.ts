@@ -2,7 +2,7 @@
  * Token contract — M3 Expressive tokens (issue #7, 設計書 §4.3 / §4.7 / §2.21).
  *
  * Pins the two additive groups introduced for M3 Expressive against the single
- * source of truth (`@otomatty/tokens`):
+ * source of truth (`@m3-baseui/tokens`):
  *
  *  - **Emphasized typescale** — a heavier-weight companion for each of the 15
  *    base roles (`<role>Emphasized`). Same metrics, heavier weight, so the
@@ -15,7 +15,7 @@
  */
 import { describe, expect, test } from 'bun:test';
 
-import { tokens } from '@otomatty/tokens';
+import { tokens } from '@m3-baseui/tokens';
 
 const BASE_TYPESCALE = [
   'displayLarge',

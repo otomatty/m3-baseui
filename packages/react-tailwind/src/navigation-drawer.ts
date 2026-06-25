@@ -7,7 +7,7 @@
  * layer is the item `::before` (ripple added by the factory); disabled rows dim
  * per-token. Same DOM + `data-*` as the VE build.
  */
-import { createNavigationDrawer } from '@otomatty/core';
+import { createNavigationDrawer } from '@m3-baseui/core';
 import { tv } from './tv';
 
 export const navigationDrawerTv = tv({
@@ -51,4 +51,4 @@ export const NavigationDrawer = createNavigationDrawer({
   label: s.label(),
   trailing: s.trailing(),
 });
-export type { NavigationDrawerVariant } from '@otomatty/core';
+export type { NavigationDrawerVariant } from '@m3-baseui/core';

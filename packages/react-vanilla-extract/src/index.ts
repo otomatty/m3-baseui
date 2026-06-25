@@ -1,7 +1,7 @@
 /**
- * @otomatty/react-vanilla-extract — M3 components, vanilla-extract build.
+ * @m3-baseui/react-vanilla-extract — M3 components, vanilla-extract build.
  *
- * Re-exports the shared theme primitives from @otomatty/core so consumers import
+ * Re-exports the shared theme primitives from @m3-baseui/core so consumers import
  * everything from one package.
  */
 export { Button } from './button';
@@ -58,4 +58,4 @@ export {
   type ThemeProviderProps,
   type SchemeVariant,
   type ContrastLevel,
-} from '@otomatty/core';
+} from '@m3-baseui/core';

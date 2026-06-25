@@ -5,7 +5,7 @@
  * toggle icon buttons; when `selected` is undefined the variant's default
  * (filled/active) look is used. Emits the same DOM + ripple as the VE build.
  */
-import { createIconButton } from '@otomatty/core';
+import { createIconButton } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
 
 // M3 Expressive container widths (px) per size × width. Tailwind v4's dynamic
@@ -120,4 +120,4 @@ export const iconButton = tv({
 export const IconButton = createIconButton(({ variant, selected, size, width }) =>
   iconButton({ variant, selected, size, width }),
 );
-export type { IconButtonProps, IconButtonVariant } from '@otomatty/core';
+export type { IconButtonProps, IconButtonVariant } from '@m3-baseui/core';

@@ -4,11 +4,11 @@ import { addUseClient, listEntryJs } from '../../scripts/add-use-client';
 import { linkVeCss } from '../../scripts/link-ve-css';
 
 /**
- * Multi-entry build so every subpath (`@otomatty/react-vanilla-extract/button`, …)
+ * Multi-entry build so every subpath (`@m3-baseui/react-vanilla-extract/button`, …)
  * maps to its own dist file. The `.css.ts` recipes are evaluated at build time
  * by the vanilla-extract esbuild plugin, which emits static `.css` files and
  * rewrites each module to import them — so consumers need no VE plugin of their
- * own. The `@otomatty/tokens/contract.css` contract (createGlobalThemeContract) emits
+ * own. The `@m3-baseui/tokens/contract.css` contract (createGlobalThemeContract) emits
  * no CSS; it only binds to the runtime `--md-sys-*` variables.
  *
  * The emitted CSS imports are real side effects, hence `sideEffects: ["*.css"]`

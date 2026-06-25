@@ -6,7 +6,7 @@
  * Filled = surface-container-highest with a bottom indicator; outlined = a
  * border that thickens to 2dp primary on focus. Same DOM as the VE build.
  */
-import { createTextField } from '@otomatty/core';
+import { createTextField } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
 
 export const textFieldTv = tv({
@@ -85,4 +85,4 @@ export const TextField = createTextField(({ variant }) => {
   };
 });
 
-export type { TextFieldProps, TextFieldVariant } from '@otomatty/core';
+export type { TextFieldProps, TextFieldVariant } from '@m3-baseui/core';

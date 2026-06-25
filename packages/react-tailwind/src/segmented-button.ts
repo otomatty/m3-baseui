@@ -7,7 +7,7 @@
  * provided icon) via the `group`. State layer is the item `::before`; the
  * pointer ripple is added by the factory. Same DOM as the VE build.
  */
-import { createSegmentedButton } from '@otomatty/core';
+import { createSegmentedButton } from '@m3-baseui/core';
 import { tv } from './tv';
 
 export const segmentedButtonTv = tv({

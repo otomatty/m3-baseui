@@ -20,7 +20,7 @@ import {
   type DynamicScheme,
 } from '@material/material-color-utilities';
 
-import { tokens } from '@otomatty/tokens';
+import { tokens } from '@m3-baseui/tokens';
 
 export type SchemeVariant =
   | 'tonalSpot'

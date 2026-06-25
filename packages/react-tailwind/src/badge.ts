@@ -5,7 +5,7 @@
  * `small` is a 6dp dot; `large` is a 16dp pill carrying a `label-small` number.
  * Same DOM + `data-size` as the VE build.
  */
-import { createBadge } from '@otomatty/core';
+import { createBadge } from '@m3-baseui/core';
 import { tv } from './tv';
 
 export const badgeTv = tv({
@@ -22,4 +22,4 @@ export const badgeTv = tv({
 export const Badge = createBadge({
   root: ({ size }) => badgeTv({ size }),
 });
-export type { BadgeProps, BadgeSize } from '@otomatty/core';
+export type { BadgeProps, BadgeSize } from '@m3-baseui/core';

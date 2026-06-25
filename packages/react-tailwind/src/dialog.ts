@@ -5,7 +5,7 @@
  * elevation 3) with an emphasized fade/scale transition off Base UI's
  * data-[starting-style] / data-[ending-style] attributes.
  */
-import { createDialog } from '@otomatty/core';
+import { createDialog } from '@m3-baseui/core';
 import { tv } from './tv';
 
 export const dialogTv = tv({

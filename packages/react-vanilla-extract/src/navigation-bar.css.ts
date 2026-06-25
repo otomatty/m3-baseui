@@ -4,7 +4,7 @@
  * `data-pressed` drives the pill, icon and label colors.
  */
 import { style } from '@vanilla-extract/css';
-import { vars } from '@otomatty/tokens/contract.css';
+import { vars } from '@m3-baseui/tokens/contract.css';
 
 export const root = style({
   display: 'flex',

@@ -4,7 +4,7 @@
  */
 import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
-import { vars } from '@otomatty/tokens/contract.css';
+import { vars } from '@m3-baseui/tokens/contract.css';
 
 /**
  * Leading checkmark for filter chips. Kept mounted but collapsed (width 0,

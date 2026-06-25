@@ -9,7 +9,7 @@
  * Disabled follows the M3 outlined-field per-token opacities (not a blanket
  * fade): outline on-surface/0.12, label/value + icon on-surface/0.38.
  */
-import { createSelect } from '@otomatty/core';
+import { createSelect } from '@m3-baseui/core';
 import { tv } from './tv';
 
 export const selectTv = tv({

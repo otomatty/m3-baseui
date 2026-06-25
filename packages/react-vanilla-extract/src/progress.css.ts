@@ -3,7 +3,7 @@
  * Same DOM + `data-indeterminate` hooks as the Tailwind build.
  */
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import { vars } from '@otomatty/tokens/contract.css';
+import { vars } from '@m3-baseui/tokens/contract.css';
 
 const linearIndeterminate = keyframes({
   '0%': { transform: 'translateX(-100%)' },

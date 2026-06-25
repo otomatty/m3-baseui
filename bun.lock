@@ -30,9 +30,9 @@
       "version": "0.0.0",
       "dependencies": {
         "@base-ui/react": "^1.6.0",
-        "@otomatty/icons": "workspace:*",
-        "@otomatty/react-tailwind": "workspace:*",
-        "@otomatty/tokens": "workspace:*",
+        "@m3-baseui/icons": "workspace:*",
+        "@m3-baseui/react-tailwind": "workspace:*",
+        "@m3-baseui/tokens": "workspace:*",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
       },
@@ -51,9 +51,9 @@
       "version": "0.0.0",
       "dependencies": {
         "@base-ui/react": "^1.6.0",
-        "@otomatty/icons": "workspace:*",
-        "@otomatty/react-tailwind": "workspace:*",
-        "@otomatty/tokens": "workspace:*",
+        "@m3-baseui/icons": "workspace:*",
+        "@m3-baseui/react-tailwind": "workspace:*",
+        "@m3-baseui/tokens": "workspace:*",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
       },
@@ -69,9 +69,9 @@
       "version": "0.0.0",
       "dependencies": {
         "@base-ui/react": "^1.6.0",
-        "@otomatty/icons": "workspace:*",
-        "@otomatty/react-vanilla-extract": "workspace:*",
-        "@otomatty/tokens": "workspace:*",
+        "@m3-baseui/icons": "workspace:*",
+        "@m3-baseui/react-vanilla-extract": "workspace:*",
+        "@m3-baseui/tokens": "workspace:*",
         "@vanilla-extract/css": "^1.15.0",
         "@vanilla-extract/recipes": "^0.5.0",
         "react": "^18.3.1",
@@ -90,10 +90,10 @@
       "version": "0.0.0",
       "dependencies": {
         "@base-ui/react": "^1.6.0",
-        "@otomatty/icons": "workspace:*",
-        "@otomatty/react-tailwind": "workspace:*",
-        "@otomatty/react-vanilla-extract": "workspace:*",
-        "@otomatty/tokens": "workspace:*",
+        "@m3-baseui/icons": "workspace:*",
+        "@m3-baseui/react-tailwind": "workspace:*",
+        "@m3-baseui/react-vanilla-extract": "workspace:*",
+        "@m3-baseui/tokens": "workspace:*",
         "@vanilla-extract/css": "^1.15.0",
         "@vanilla-extract/recipes": "^0.5.0",
         "react": "^18.3.1",
@@ -112,11 +112,11 @@
       },
     },
     "packages/core": {
-      "name": "@otomatty/core",
+      "name": "@m3-baseui/core",
       "version": "0.1.0",
       "dependencies": {
+        "@m3-baseui/tokens": "workspace:*",
         "@material/material-color-utilities": "^0.3.0",
-        "@otomatty/tokens": "workspace:*",
       },
       "peerDependencies": {
         "@base-ui/react": "^1.6.0",
@@ -125,18 +125,18 @@
       },
     },
     "packages/icons": {
-      "name": "@otomatty/icons",
+      "name": "@m3-baseui/icons",
       "version": "0.1.0",
       "peerDependencies": {
         "react": "^18.0.0 || ^19.0.0",
       },
     },
     "packages/react-tailwind": {
-      "name": "@otomatty/react-tailwind",
+      "name": "@m3-baseui/react-tailwind",
       "version": "0.1.0",
       "dependencies": {
-        "@otomatty/core": "workspace:*",
-        "@otomatty/tokens": "workspace:*",
+        "@m3-baseui/core": "workspace:*",
+        "@m3-baseui/tokens": "workspace:*",
         "tailwind-variants": "^0.3.0",
       },
       "peerDependencies": {
@@ -147,11 +147,11 @@
       },
     },
     "packages/react-vanilla-extract": {
-      "name": "@otomatty/react-vanilla-extract",
+      "name": "@m3-baseui/react-vanilla-extract",
       "version": "0.1.0",
       "dependencies": {
-        "@otomatty/core": "workspace:*",
-        "@otomatty/tokens": "workspace:*",
+        "@m3-baseui/core": "workspace:*",
+        "@m3-baseui/tokens": "workspace:*",
       },
       "peerDependencies": {
         "@base-ui/react": "^1.6.0",
@@ -162,7 +162,7 @@
       },
     },
     "packages/tokens": {
-      "name": "@otomatty/tokens",
+      "name": "@m3-baseui/tokens",
       "version": "0.1.0",
       "dependencies": {
         "@material/material-color-utilities": "^0.3.0",
@@ -448,6 +448,16 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
+    "@m3-baseui/core": ["@m3-baseui/core@workspace:packages/core"],
+
+    "@m3-baseui/icons": ["@m3-baseui/icons@workspace:packages/icons"],
+
+    "@m3-baseui/react-tailwind": ["@m3-baseui/react-tailwind@workspace:packages/react-tailwind"],
+
+    "@m3-baseui/react-vanilla-extract": ["@m3-baseui/react-vanilla-extract@workspace:packages/react-vanilla-extract"],
+
+    "@m3-baseui/tokens": ["@m3-baseui/tokens@workspace:packages/tokens"],
+
     "@m3/example-landing": ["@m3/example-landing@workspace:examples/landing"],
 
     "@m3/example-playground": ["@m3/example-playground@workspace:examples/playground"],
@@ -473,16 +483,6 @@
     "@nodelib/fs.walk": ["@nodelib/fs.walk@1.2.8", "", { "dependencies": { "@nodelib/fs.scandir": "2.1.5", "fastq": "^1.6.0" } }, "sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg=="],
 
     "@oslojs/encoding": ["@oslojs/encoding@1.1.0", "", {}, "sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ=="],
-
-    "@otomatty/core": ["@otomatty/core@workspace:packages/core"],
-
-    "@otomatty/icons": ["@otomatty/icons@workspace:packages/icons"],
-
-    "@otomatty/react-tailwind": ["@otomatty/react-tailwind@workspace:packages/react-tailwind"],
-
-    "@otomatty/react-vanilla-extract": ["@otomatty/react-vanilla-extract@workspace:packages/react-vanilla-extract"],
-
-    "@otomatty/tokens": ["@otomatty/tokens@workspace:packages/tokens"],
 
     "@oxc-parser/binding-android-arm-eabi": ["@oxc-parser/binding-android-arm-eabi@0.127.0", "", { "os": "android", "cpu": "arm" }, "sha512-0LC7ye4hvqbIKxAzThzvswgHLFu2AURKzYLeSVvLdu2TBOYWQDmHnTqPLeA597BcUCxiLqLsS4CJ5uoI5WYWCQ=="],
 

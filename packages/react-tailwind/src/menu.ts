@@ -5,7 +5,7 @@
  * `before:` state layer keyed to hover + Base UI's data-[highlighted]. Same DOM
  * + ripple as the VE build.
  */
-import { createMenu } from '@otomatty/core';
+import { createMenu } from '@m3-baseui/core';
 import { tv } from './tv';
 
 export const menuTv = tv({
