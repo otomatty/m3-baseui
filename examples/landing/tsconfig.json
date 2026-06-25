@@ -1,0 +1,12 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    // Resolve @otomatty/* workspace packages to their TS source (matches the
+    // Vite `@m3/source` condition) instead of the unbuilt `dist` `.d.ts`.
+    "customConditions": ["@m3/source"]
+  }
+}
