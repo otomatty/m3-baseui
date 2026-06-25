@@ -9,7 +9,8 @@
       "!**/dist",
       "!packages/tokens/src/generated",
       "!packages/tokens/styles",
-      "!**/*.css"
+      "!**/*.css",
+      "!**/*.astro"
     ]
   },
   "formatter": {
