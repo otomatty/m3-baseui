@@ -8,10 +8,12 @@ name: Release
 # removes the changeset files, so the next run finds no pending changesets and
 # the publish job below runs `bun run release` to build + publish.
 #
-# Auth uses OIDC trusted publishing — no long-lived NPM_TOKEN. The npm CLI
-# (>= 11.5.1) exchanges the GitHub-issued OIDC token for a short-lived publish
-# credential. See scripts/publish.ts for why publishing uses `bun pm pack` +
-# `npm publish <tarball>` rather than `changeset publish`.
+# Auth uses npm trusted publishing (OIDC) by default — no long-lived NPM_TOKEN.
+# The npm CLI (>= 11.5.1) exchanges the GitHub-issued OIDC token for a
+# short-lived publish credential. Optionally keep an NPM_TOKEN secret for
+# bootstrapping packages that do not yet exist on npm (Trusted Publisher can
+# only be configured after the first publish). When NPM_TOKEN is set, ~/.npmrc
+# is written in the publish job only; when unset, npm uses OIDC automatically.
 #
 # IMPORTANT: changesets/action is used ONLY for the Version PR here. We do NOT
 # pass its `publish` input: when given a publish command it writes ~/.npmrc with
@@ -101,10 +103,26 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # Optional: write ~/.npmrc only when NPM_TOKEN is configured. Omitting
+      # this step (no secret) lets npm use OIDC; setting it enables bootstrap
+      # publishes for packages not yet on npm (Trusted Publisher requires an
+      # existing package). Do not set registry-url on setup-node — that also
+      # writes an _authToken placeholder and disables OIDC.
+      - name: Configure npm auth (optional bootstrap)
+        run: |
+          if [ -n "${NPM_TOKEN}" ]; then
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > "${HOME}/.npmrc"
+            echo "NPM_TOKEN set — using token auth (bootstrap / fallback)"
+          else
+            echo "No NPM_TOKEN — using OIDC trusted publishing"
+          fi
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       # No pending changesets means the Version PR was merged → publish. npm
-      # exchanges the OIDC token automatically (no NPM_TOKEN). publish.ts is
-      # idempotent, so this safely no-ops when every version is already on npm.
-      - name: Publish to npm (OIDC trusted publishing)
+      # uses OIDC when ~/.npmrc has no token, otherwise NPM_TOKEN. publish.ts
+      # is idempotent, so this safely no-ops when every version is already on npm.
+      - name: Publish to npm
         run: bun run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

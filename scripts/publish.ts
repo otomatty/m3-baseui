@@ -15,14 +15,12 @@
  * `changeset version` still drives the version bumps + changelogs (the Version
  * PR); this script only replaces the publish step. It is idempotent: versions
  * already on the registry are skipped, so a re-run after a partial failure
- * publishes only what is missing. Registry auth comes from npm trusted
- * publishing (OIDC): in CI npm exchanges the GitHub OIDC token for a
- * short-lived credential automatically — no token in the environment. npm also
- * attaches a provenance attestation by default in that case. Access level comes
- * from each package's `publishConfig.access` (forced with --access public for
- * safety). For the one-time bootstrap publish (before a package exists on npm,
- * when no trusted publisher can be configured yet), run this with a classic/
- * granular npm token in ~/.npmrc instead.
+ * publishes only what is missing. Registry auth in CI: npm trusted publishing
+ * (OIDC) when ~/.npmrc has no token; otherwise the Release workflow's optional
+ * NPM_TOKEN bootstrap path (first publish before Trusted Publisher can be
+ * configured). npm attaches provenance by default with OIDC. Access level comes
+ * from each package's publishConfig.access (forced with --access public for
+ * safety).
  */
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
