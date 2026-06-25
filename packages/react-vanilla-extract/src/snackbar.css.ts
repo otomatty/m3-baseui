@@ -3,7 +3,7 @@
  * Same DOM + data-* hooks as the Tailwind build.
  */
 import { style } from '@vanilla-extract/css';
-import { vars } from '@otomatty/tokens/contract.css';
+import { vars } from '@m3-baseui/tokens/contract.css';
 
 export const viewport = style({
   position: 'fixed',

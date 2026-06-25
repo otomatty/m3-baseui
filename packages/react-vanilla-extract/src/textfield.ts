@@ -1,7 +1,7 @@
 /**
  * textfield.ts — wires the VE styles into the shared TextField factory.
  */
-import { createTextField, cx } from '@otomatty/core';
+import { createTextField, cx } from '@m3-baseui/core';
 import * as s from './textfield.css';
 
 export const TextField = createTextField(({ variant }) => ({
@@ -17,4 +17,4 @@ export const TextField = createTextField(({ variant }) => ({
   counter: s.counter,
 }));
 
-export type { TextFieldProps, TextFieldVariant } from '@otomatty/core';
+export type { TextFieldProps, TextFieldVariant } from '@m3-baseui/core';

@@ -1,5 +1,5 @@
 /**
- * publish.ts — publishes the public `@otomatty/*` packages to npm.
+ * publish.ts — publishes the public `@m3-baseui/*` packages to npm.
  *
  * Two-tool split, on purpose:
  *   1. `bun pm pack` builds each tarball. Bun resolves the `workspace:*`
@@ -51,7 +51,7 @@ for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
   }
 
   const { name, version } = manifest;
-  if (manifest.private || !name?.startsWith('@otomatty/') || !version) continue;
+  if (manifest.private || !name?.startsWith('@m3-baseui/') || !version) continue;
 
   const tag = `${name}@${version}`;
 

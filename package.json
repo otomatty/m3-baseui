@@ -9,8 +9,8 @@
     "examples/*"
   ],
   "scripts": {
-    "gen:tokens": "bun run --filter @otomatty/tokens gen",
-    "build": "bun run --filter @otomatty/tokens build && bun run --filter @otomatty/core build && bun run --filter @otomatty/icons build && bun run --filter @otomatty/react-tailwind build && bun run --filter @otomatty/react-vanilla-extract build",
+    "gen:tokens": "bun run --filter @m3-baseui/tokens gen",
+    "build": "bun run --filter @m3-baseui/tokens build && bun run --filter @m3-baseui/core build && bun run --filter @m3-baseui/icons build && bun run --filter @m3-baseui/react-tailwind build && bun run --filter @m3-baseui/react-vanilla-extract build",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "bun run build && bun run scripts/publish.ts",

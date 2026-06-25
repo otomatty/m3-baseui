@@ -1,5 +1,5 @@
 /**
- * @otomatty/core — engine-neutral logic shared by every styling-engine package.
+ * @m3-baseui/core — engine-neutral logic shared by every styling-engine package.
  */
 
 // Component factories

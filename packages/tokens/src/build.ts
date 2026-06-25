@@ -26,7 +26,7 @@ function emit(relPath: string, contents: string): void {
   console.log(`  ✓ ${relPath} (${contents.length} bytes)`);
 }
 
-console.log('@otomatty/tokens — generating artifacts from src/tokens.ts');
+console.log('@m3-baseui/tokens — generating artifacts from src/tokens.ts');
 emit('styles/tokens.css', generateTokensCss(tokens));
 emit('styles/theme.css', generateTailwindTheme(tokens));
 emit('src/generated/contract.css.ts', generateVeContract(tokens));

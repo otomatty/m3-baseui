@@ -1,5 +1,5 @@
 {
-  "name": "@otomatty/icons",
+  "name": "@m3-baseui/icons",
   "version": "0.1.0",
   "description": "Material Symbols (variable font) wrapper — optional.",
   "type": "module",

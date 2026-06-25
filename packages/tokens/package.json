@@ -1,5 +1,5 @@
 {
-  "name": "@otomatty/tokens",
+  "name": "@m3-baseui/tokens",
   "version": "0.1.0",
   "description": "Single source-of-truth M3 design tokens and generators (CSS vars / vanilla-extract contract / Tailwind v4 @theme).",
   "type": "module",

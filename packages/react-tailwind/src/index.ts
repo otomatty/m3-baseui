@@ -1,5 +1,5 @@
 /**
- * @otomatty/react-tailwind — M3 components, Tailwind v4 build.
+ * @m3-baseui/react-tailwind — M3 components, Tailwind v4 build.
  */
 export { Button, button } from './button';
 export type { ButtonProps, ButtonVariant } from './button';
@@ -55,4 +55,4 @@ export {
   type ThemeProviderProps,
   type SchemeVariant,
   type ContrastLevel,
-} from '@otomatty/core';
+} from '@m3-baseui/core';

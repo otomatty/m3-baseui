@@ -8,7 +8,7 @@
  * on-surface/0.12, active track + handle on-surface/0.38. The root carries a
  * `group` so the descendant parts can react to Base UI's data-disabled on Root.
  */
-import { createSlider } from '@otomatty/core';
+import { createSlider } from '@m3-baseui/core';
 import { tv } from './tv';
 
 export const sliderTv = tv({

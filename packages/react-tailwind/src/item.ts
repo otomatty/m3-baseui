@@ -6,7 +6,7 @@
  * supporting `body-medium`, leading/trailing `on-surface-variant`. Inert by
  * design — interactive surfaces wrap it. Same DOM as the VE build.
  */
-import { createItem } from '@otomatty/core';
+import { createItem } from '@m3-baseui/core';
 import { tv } from './tv';
 
 export const itemTv = tv({
@@ -34,4 +34,4 @@ export const Item = createItem({
   supporting: s.supporting(),
   trailing: s.trailing(),
 });
-export type { ItemProps } from '@otomatty/core';
+export type { ItemProps } from '@m3-baseui/core';

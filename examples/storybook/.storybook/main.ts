@@ -6,8 +6,8 @@ import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 /**
  * Single Storybook that documents BOTH styling engines.
  *
- * The same stories render through @otomatty/react-tailwind or
- * @otomatty/react-vanilla-extract depending on the "Engine" toolbar global (see
+ * The same stories render through @m3-baseui/react-tailwind or
+ * @m3-baseui/react-vanilla-extract depending on the "Engine" toolbar global (see
  * .storybook/preview.tsx). Both Vite plugins are enabled so each engine's
  * styles are produced: Tailwind generates the utility classes the tailwind
  * components reference, while the vanilla-extract plugin compiles the VE

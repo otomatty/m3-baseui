@@ -1,7 +1,7 @@
 /**
  * chip.ts — wires the VE recipe into the shared factory.
  */
-import { createChip } from '@otomatty/core';
+import { createChip } from '@m3-baseui/core';
 import { chip, check, remove, avatar } from './chip.css';
 
 export const Chip = createChip(({ variant, elevated }) => ({
@@ -10,4 +10,4 @@ export const Chip = createChip(({ variant, elevated }) => ({
   check,
   avatar,
 }));
-export type { ChipProps, ChipVariant } from '@otomatty/core';
+export type { ChipProps, ChipVariant } from '@m3-baseui/core';

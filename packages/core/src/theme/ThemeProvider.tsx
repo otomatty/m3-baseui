@@ -10,7 +10,7 @@
  *
  * If `seed` is provided, a scheme is generated at runtime via material-color-
  * utilities and applied to the wrapper element. Without a seed, the baseline
- * variables from `@otomatty/tokens/tokens.css` remain in effect.
+ * variables from `@m3-baseui/tokens/tokens.css` remain in effect.
  */
 import * as React from 'react';
 

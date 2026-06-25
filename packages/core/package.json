@@ -1,5 +1,5 @@
 {
-  "name": "@otomatty/core",
+  "name": "@m3-baseui/core",
   "version": "0.1.0",
   "description": "Engine-neutral M3 logic: ThemeProvider, dynamic color, Ripple, state layer, and headless component factories.",
   "type": "module",
@@ -31,7 +31,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@otomatty/tokens": "workspace:*",
+    "@m3-baseui/tokens": "workspace:*",
     "@material/material-color-utilities": "^0.3.0"
   },
   "peerDependencies": {

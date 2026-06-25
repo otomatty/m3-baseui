@@ -6,7 +6,7 @@
  * `data-invalid` / `data-disabled`, read off the Root (the `root` class here).
  */
 import { style, styleVariants } from '@vanilla-extract/css';
-import { vars } from '@otomatty/tokens/contract.css';
+import { vars } from '@m3-baseui/tokens/contract.css';
 
 type Typescale = {
   fontFamily: string;

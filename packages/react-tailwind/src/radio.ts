@@ -4,7 +4,7 @@
  * 20dp circle with a 40dp circular state layer; checked shows a 10dp primary dot
  * (the indicator) and recolors the ring. RadioGroup lays radios out in a column.
  */
-import { createRadio, createRadioGroup } from '@otomatty/core';
+import { createRadio, createRadioGroup } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
 
 export const radioTv = tv({

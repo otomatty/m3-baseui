@@ -7,7 +7,7 @@
  * preset.css). Circular: a 48dp / 4dp `primary` ring whose arc is drawn by the
  * factory; `data-indeterminate` rotates the whole ring. Same DOM as the VE build.
  */
-import { createProgress } from '@otomatty/core';
+import { createProgress } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
 
 export const linearTv = tv({
@@ -47,4 +47,4 @@ export const Progress = createProgress({
 export type {
   LinearProgressProps,
   CircularProgressProps,
-} from '@otomatty/core';
+} from '@m3-baseui/core';

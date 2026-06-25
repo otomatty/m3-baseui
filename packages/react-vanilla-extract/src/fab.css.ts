@@ -4,7 +4,7 @@
  */
 import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
-import { vars } from '@otomatty/tokens/contract.css';
+import { vars } from '@m3-baseui/tokens/contract.css';
 
 // Per-size containers. The icon (svg) sizing is a descendant rule, which VE
 // forbids inside a recipe variant, so each size is a named style we can target

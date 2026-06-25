@@ -7,9 +7,9 @@ This repository implements the architecture in [`m3-baseui-design.md`](./m3-base
 ## Layers
 
 ```
-Layer 4  Theme / Dynamic Color   ThemeProvider, seed → scheme, light/dark/contrast   (@otomatty/core)
-Layer 3  Styling (engine)        VE recipes / Tailwind variants                      (@otomatty/react-*)
-Layer 2  Token (engine-neutral)  --md-ref-* / --md-sys-* CSS variables               (@otomatty/tokens)
+Layer 4  Theme / Dynamic Color   ThemeProvider, seed → scheme, light/dark/contrast   (@m3-baseui/core)
+Layer 3  Styling (engine)        VE recipes / Tailwind variants                      (@m3-baseui/react-*)
+Layer 2  Token (engine-neutral)  --md-ref-* / --md-sys-* CSS variables               (@m3-baseui/tokens)
 Layer 1  Behavior (Base UI)      a11y / focus / keyboard / data-* state              (@base-ui-components/react)
 ```
 
@@ -19,11 +19,11 @@ Layer 2 (CSS variables) is the engine-neutral boundary. Everything above it is e
 
 | Package | Role |
 | --- | --- |
-| `@otomatty/tokens` | Single TS token source → generates `tokens.css`, the VE contract, and the Tailwind v4 `@theme` preset |
-| `@otomatty/core` | `ThemeProvider`, dynamic color, `Ripple`, state-layer model, and the headless component factories |
-| `@otomatty/react-vanilla-extract` | Components implemented with vanilla-extract recipes |
-| `@otomatty/react-tailwind` | Components implemented with tailwind-variants + the Tailwind v4 preset |
-| `@otomatty/icons` | Material Symbols wrapper (optional) |
+| `@m3-baseui/tokens` | Single TS token source → generates `tokens.css`, the VE contract, and the Tailwind v4 `@theme` preset |
+| `@m3-baseui/core` | `ThemeProvider`, dynamic color, `Ripple`, state-layer model, and the headless component factories |
+| `@m3-baseui/react-vanilla-extract` | Components implemented with vanilla-extract recipes |
+| `@m3-baseui/react-tailwind` | Components implemented with tailwind-variants + the Tailwind v4 preset |
+| `@m3-baseui/icons` | Material Symbols wrapper (optional) |
 | `@m3/example-playground` | Runnable Vite + Tailwind v4 demo |
 | `@m3/example-playground-ve` | Same demo rendered with the vanilla-extract build (validates the VE compile) |
 
@@ -31,19 +31,19 @@ Pick **one** engine package — both emit identical DOM and `data-*` state, so t
 
 ## Install
 
-Published to npm under the `@otomatty` scope. Install the engine package plus the peer dependencies (`@otomatty/core` comes in as a dependency of the engine package):
+Published to npm under the `@m3-baseui` scope. Install the engine package plus the peer dependencies (`@m3-baseui/core` comes in as a dependency of the engine package):
 
 ```bash
 # Tailwind v4 engine
-npm i @otomatty/react-tailwind @base-ui/react react react-dom
+npm i @m3-baseui/react-tailwind @base-ui/react react react-dom
 #   …plus tailwindcss@^4 in your app
 
 # vanilla-extract engine
-npm i @otomatty/react-vanilla-extract @base-ui/react react react-dom
+npm i @m3-baseui/react-vanilla-extract @base-ui/react react react-dom
 #   …plus @vanilla-extract/css and @vanilla-extract/vite-plugin in your build
 ```
 
-`@otomatty/icons` is optional (Material Symbols wrapper). See **Usage** below for the CSS wiring.
+`@m3-baseui/icons` is optional (Material Symbols wrapper). See **Usage** below for the CSS wiring.
 
 ## Requirements
 
@@ -60,7 +60,7 @@ bun run --filter @m3/example-playground-ve dev   # vanilla-extract build (same d
 ```
 
 The two playgrounds share a single `App.tsx`; the VE playground aliases the
-`@otomatty/react-tailwind` imports to `@otomatty/react-vanilla-extract` via Vite, so both
+`@m3-baseui/react-tailwind` imports to `@m3-baseui/react-vanilla-extract` via Vite, so both
 render identical markup and `data-*` state — a live drop-in compatibility check.
 
 ## Usage (Tailwind v4)
@@ -68,13 +68,13 @@ render identical markup and `data-*` state — a live drop-in compatibility chec
 In your app's CSS, in this order:
 
 ```css
-@import '@otomatty/tokens/tokens.css';   /* runtime --md-sys-* variables */
+@import '@m3-baseui/tokens/tokens.css';   /* runtime --md-sys-* variables */
 @import 'tailwindcss';
-@import '@otomatty/tokens/theme.css';    /* maps tokens onto Tailwind's @theme */
+@import '@m3-baseui/tokens/theme.css';    /* maps tokens onto Tailwind's @theme */
 ```
 
 ```tsx
-import { Button, ThemeProvider } from '@otomatty/react-tailwind';
+import { Button, ThemeProvider } from '@m3-baseui/react-tailwind';
 
 export default function App() {
   return (
@@ -88,10 +88,10 @@ export default function App() {
 
 ## Usage (vanilla-extract)
 
-Add `@vanilla-extract/vite-plugin` to your build, import `'@otomatty/tokens/tokens.css'` once, then:
+Add `@vanilla-extract/vite-plugin` to your build, import `'@m3-baseui/tokens/tokens.css'` once, then:
 
 ```tsx
-import { Button, ThemeProvider } from '@otomatty/react-vanilla-extract';
+import { Button, ThemeProvider } from '@m3-baseui/react-vanilla-extract';
 ```
 
 The component API is identical across engines.
@@ -100,9 +100,9 @@ The component API is identical across engines.
 
 - **Channel-triple colors** (`103 80 164`) so opacity modifiers (`bg-primary/12`), `color-mix`, and state layers compose cleanly.
 - **Single token source** in `packages/tokens/src/tokens.ts`; never hand-edit generated files — change the source and re-run `bun run gen:tokens`.
-- **Factory injection** keeps React logic in `@otomatty/core`; each engine only supplies a class resolver.
+- **Factory injection** keeps React logic in `@m3-baseui/core`; each engine only supplies a class resolver.
 - **State layer** is a `::before` overlay tinted with `currentColor`, switched by Base UI `data-*` attributes.
-- **Ripple** is a `@otomatty/core` primitive (Base UI ships none) and honors `prefers-reduced-motion`.
+- **Ripple** is a `@m3-baseui/core` primitive (Base UI ships none) and honors `prefers-reduced-motion`.
 - **M3 Expressive tokens** are additive (no breaking changes). Each typescale role gains an `…Emphasized` companion (same size/line-height, heavier weight → `text-<role>-emphasized` / `vars.sys.typescale.<role>Emphasized`), and spring-derived motion ships as `spring-spatial-*` (slight overshoot, for movement) and `spring-effects-*` (no overshoot, for opacity/color) easing+duration pairs at fast/default/slow. **Application policy:** opt components into Expressive by swapping their label role to the emphasized companion and pairing the matching spring easing+duration — e.g. an extended FAB uses `text-label-large-emphasized` with `spring-spatial-default`; keep both engines in lock-step so drop-in parity and the visual baselines hold.
 
 ## Components

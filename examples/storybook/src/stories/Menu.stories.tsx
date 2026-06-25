@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useM3 } from '../engine';
-import { Icon } from '@otomatty/icons';
+import { Icon } from '@m3-baseui/icons';
 
 const meta = { title: 'Components/Menu' } satisfies Meta;
 export default meta;

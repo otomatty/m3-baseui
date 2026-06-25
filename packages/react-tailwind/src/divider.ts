@@ -6,7 +6,7 @@
  * 16dp leading (`inset`) or both-ends (`middle`) margin along the main axis.
  * Same DOM + `role="separator"` as the VE build.
  */
-import { createDivider } from '@otomatty/core';
+import { createDivider } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
 
 export const dividerTv = tv({
@@ -35,4 +35,4 @@ export const dividerTv = tv({
 });
 
 export const Divider = createDivider(({ inset, orientation }) => dividerTv({ inset, orientation }));
-export type { DividerProps, DividerInset, DividerOrientation } from '@otomatty/core';
+export type { DividerProps, DividerInset, DividerOrientation } from '@m3-baseui/core';

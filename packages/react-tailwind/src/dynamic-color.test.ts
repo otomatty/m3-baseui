@@ -1,13 +1,13 @@
 /**
  * Token snapshot — guards the dynamic-color pipeline (issue #4, 設計書 §9).
  *
- * `@otomatty/core`'s `generateScheme` wraps `@material/material-color-utilities` to
+ * `@m3-baseui/core`'s `generateScheme` wraps `@material/material-color-utilities` to
  * produce the 47+ `--md-sys-color-*` roles at runtime. These tests pin that
  * output so an accidental change to the wrapper, the role list, or a
  * material-color-utilities version bump surfaces as an intentional snapshot
  * review instead of a silent dynamic-color regression.
  *
- * Note: the static baseline in `@otomatty/tokens` follows the published M3 reference
+ * Note: the static baseline in `@m3-baseui/tokens` follows the published M3 reference
  * scheme, which intentionally diverges from the current MCU algorithm output
  * for some on-container roles — so we snapshot the MCU output rather than
  * asserting strict equality with the baseline. The structural checks below tie
@@ -15,8 +15,8 @@
  */
 import { describe, expect, test } from 'bun:test';
 
-import { generateScheme } from '@otomatty/core';
-import { tokens } from '@otomatty/tokens';
+import { generateScheme } from '@m3-baseui/core';
+import { tokens } from '@m3-baseui/tokens';
 
 /** The seed the published M3 baseline (and the playground default) is built on. */
 const BASELINE_SEED = '#6750A4';
