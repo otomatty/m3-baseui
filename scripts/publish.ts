@@ -55,8 +55,11 @@ for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
   const { name, version } = manifest;
   if (manifest.private || !name?.startsWith('@otomatty/') || !version) continue;
 
+  const tag = `${name}@${version}`;
+
   if (await isPublished(name, version)) {
-    console.log(`• ${name}@${version} already on npm — skipping`);
+    console.log(`• ${name}@${version} already on npm — skipping publish`);
+    await createGithubTag(tag);
     skipped++;
     continue;
   }
@@ -67,7 +70,6 @@ for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
   try {
     console.log(`▲ publishing ${name}@${version}`);
     execFileSync('npm', ['publish', tarball, '--access', 'public'], { stdio: 'inherit' });
-    const tag = `${name}@${version}`;
     await createGithubTag(tag);
     // Kept for log readability; release tags are created via the GitHub API above.
     console.log(`New tag: ${tag}`);
@@ -103,8 +105,12 @@ async function createGithubTag(tag: string): Promise<void> {
   });
 
   if (res.status === 422) {
-    console.log(`• git tag ${tag} already exists — skipping`);
-    return;
+    const body = await res.text();
+    if (body.includes('Reference already exists')) {
+      console.log(`• git tag ${tag} already exists — skipping`);
+      return;
+    }
+    throw new Error(`git tag ${tag} failed: ${res.status} ${body}`);
   }
   if (!res.ok) {
     throw new Error(`git tag ${tag} failed: ${res.status} ${await res.text()}`);
