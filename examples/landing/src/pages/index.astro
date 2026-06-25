@@ -29,11 +29,14 @@ const features = [
   },
 ];
 
-const installCode = `# Tailwind CSS v4 版
-bun add @otomatty/react-tailwind @otomatty/tokens
+const installCode = `# Tailwind CSS v4 版（peer deps を含む）
+bun add @otomatty/react-tailwind @otomatty/tokens \\
+  react react-dom @base-ui/react tailwindcss
 
-# vanilla-extract 版
-bun add @otomatty/react-vanilla-extract @otomatty/tokens`;
+# vanilla-extract 版（peer deps を含む）
+bun add @otomatty/react-vanilla-extract @otomatty/tokens \\
+  react react-dom @base-ui/react \\
+  @vanilla-extract/css @vanilla-extract/recipes`;
 
 const usageCode = `import { ThemeProvider, Button } from '@otomatty/react-tailwind';
 
