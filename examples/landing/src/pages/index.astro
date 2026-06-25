@@ -1,0 +1,141 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { LiveDemo } from '../components/LiveDemo';
+
+const title = 'm3-baseui — Base UI 上の Material Design 3 コンポーネント';
+const description =
+  'Base UI をベースに Material Design 3 を実装した React コンポーネントライブラリ。vanilla-extract と Tailwind CSS v4 の両エンジンに drop-in 互換で対応し、動的配色・アクセシビリティに対応します。';
+
+const features = [
+  {
+    icon: 'palette',
+    title: 'Material Design 3 準拠',
+    body: '動的配色（HCT）・ステートレイヤー・タイポスケールまで M3 の仕様に沿って実装。シード色からテーマを自動生成します。',
+  },
+  {
+    icon: 'accessibility_new',
+    title: 'Base UI でアクセシブル',
+    body: 'キーボード操作・ARIA・フォーカス管理は Base UI が担保。axe による a11y テストを CI で常時実行しています。',
+  },
+  {
+    icon: 'swap_horiz',
+    title: '2 つのスタイリングエンジン',
+    body: 'vanilla-extract と Tailwind CSS v4 のどちらでも、同一 DOM・同一 data-* 属性を出力する drop-in 互換。',
+  },
+  {
+    icon: 'bolt',
+    title: 'トークン単一ソース',
+    body: '--md-sys-* CSS 変数がエンジン非依存の境界。トークンを 1 箇所で定義し、全エンジンの生成物へ反映します。',
+  },
+];
+
+const installCode = `# Tailwind CSS v4 版（peer deps を含む）
+bun add @m3-baseui/react-tailwind @m3-baseui/tokens \\
+  react react-dom @base-ui/react tailwindcss
+
+# vanilla-extract 版（peer deps を含む）
+bun add @m3-baseui/react-vanilla-extract @m3-baseui/tokens \\
+  react react-dom @base-ui/react \\
+  @vanilla-extract/css @vanilla-extract/recipes`;
+
+const usageCode = `import { ThemeProvider, Button } from '@m3-baseui/react-tailwind';
+
+export function App() {
+  return (
+    <ThemeProvider seed="#6750A4" scheme="tonalSpot" mode="system">
+      <Button variant="filled">はじめる</Button>
+    </ThemeProvider>
+  );
+}`;
+---
+
+<Layout title={title} description={description}>
+  <!-- Hero -->
+  <header class="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 pt-24 pb-16 text-center">
+    <span
+      class="rounded-full border border-outline-variant px-4 py-1 text-label-large text-on-surface-variant"
+    >
+      Material Design 3 · Base UI · React
+    </span>
+    <h1 class="max-w-3xl text-display-medium font-medium text-on-surface">
+      Base UI 上の<br />Material Design 3
+    </h1>
+    <p class="max-w-2xl text-body-large text-on-surface-variant">
+      {description}
+    </p>
+    <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="#install"
+        class="rounded-full bg-primary px-6 py-3 text-label-large text-on-primary transition-opacity hover:opacity-90"
+      >
+        はじめる
+      </a>
+      <a
+        href="https://github.com/otomatty/m3-baseui"
+        class="rounded-full border border-outline px-6 py-3 text-label-large text-primary transition-colors hover:bg-primary/8"
+      >
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <!-- Live demo (React island) -->
+  <section class="mx-auto max-w-5xl px-6 py-12" aria-labelledby="demo-heading">
+    <h2 id="demo-heading" class="mb-6 text-headline-small text-on-surface">ライブデモ</h2>
+    <p class="mb-6 text-body-medium text-on-surface-variant">
+      実際に動くコンポーネントです。シード色やモードを切り替えると、動的配色がリアルタイムに反映されます。
+    </p>
+    <div class="rounded-3xl border border-outline-variant bg-surface-container-low p-6 sm:p-10">
+      <LiveDemo client:visible />
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="mx-auto max-w-5xl px-6 py-12" aria-labelledby="features-heading">
+    <h2 id="features-heading" class="mb-8 text-headline-small text-on-surface">特徴</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {
+        features.map((f) => (
+          <article class="flex flex-col gap-3 rounded-2xl bg-surface-container p-6">
+            <span
+              class="material-symbols-outlined text-primary"
+              style="font-size:32px"
+              aria-hidden="true"
+            >
+              {f.icon}
+            </span>
+            <h3 class="text-title-large text-on-surface">{f.title}</h3>
+            <p class="text-body-medium text-on-surface-variant">{f.body}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Install + usage -->
+  <section id="install" class="mx-auto max-w-5xl px-6 py-12" aria-labelledby="install-heading">
+    <h2 id="install-heading" class="mb-8 text-headline-small text-on-surface">導入</h2>
+    <div class="grid gap-6 lg:grid-cols-2">
+      <div class="flex flex-col gap-3">
+        <h3 class="text-title-medium text-on-surface-variant">インストール</h3>
+        <pre
+          class="overflow-x-auto rounded-2xl bg-surface-container-highest p-5 text-body-medium text-on-surface"><code>{installCode}</code></pre>
+      </div>
+      <div class="flex flex-col gap-3">
+        <h3 class="text-title-medium text-on-surface-variant">使い方</h3>
+        <pre
+          class="overflow-x-auto rounded-2xl bg-surface-container-highest p-5 text-body-medium text-on-surface"><code>{usageCode}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mx-auto max-w-5xl px-6 py-16 text-center text-body-small text-on-surface-variant">
+    <p>
+      MIT License ·
+      <a class="text-primary underline" href="https://github.com/otomatty/m3-baseui"
+        >github.com/otomatty/m3-baseui</a
+      >
+    </p>
+  </footer>
+</Layout>

@@ -7,5 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@m3/example-playground", "@m3/example-playground-ve", "@m3/example-storybook"]
+  "ignore": ["@m3/example-playground", "@m3/example-playground-ve", "@m3/example-storybook", "@m3/example-landing"]
 }
