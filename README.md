@@ -29,6 +29,22 @@ Layer 2 (CSS variables) is the engine-neutral boundary. Everything above it is e
 
 Pick **one** engine package — both emit identical DOM and `data-*` state, so they are drop-in compatible.
 
+## Agent Skill
+
+Use the bundled skill to guide Cursor, Claude Code, or other agents through integration in a consumer repo:
+
+```bash
+npx skills add otomatty/m3-baseui --skill setup-m3-baseui -g -y
+```
+
+Then in your app project:
+
+```
+@setup-m3-baseui Tailwind v4 で m3-baseui を導入して
+```
+
+The skill covers package install, CSS wiring (`@source`), `ThemeProvider`, framework notes (Vite / Next.js / Astro), migration from `@otomatty/*`, and a verification script. Source: [`skills/setup-m3-baseui/`](./skills/setup-m3-baseui/).
+
 ## Install
 
 Published to npm under the `@m3-baseui` scope. Install the engine package plus the peer dependencies (`@m3-baseui/core` comes in as a dependency of the engine package):
