@@ -56,9 +56,14 @@ export const item = style({
       background: `rgb(${vars.sys.color.secondaryContainer})`,
       color: `rgb(${vars.sys.color.onSecondaryContainer})`,
     },
+    '&:focus-visible': {
+      outline: `3px solid rgb(${vars.sys.color.secondary})`,
+      outlineOffset: '2px',
+    },
     '&:disabled, &[data-disabled]': {
       pointerEvents: 'none',
       color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+      borderLeftColor: `rgb(${vars.sys.color.onSurface} / 0.12)`,
     },
     '&:disabled::before, &[data-disabled]::before': { opacity: 0 },
   },

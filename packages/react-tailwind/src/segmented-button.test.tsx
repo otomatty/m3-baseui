@@ -37,4 +37,30 @@ describe('SegmentedButton', () => {
     expect(screen.getByRole('button', { name: /太字/ })).toHaveAttribute('data-pressed');
     expect(screen.getByRole('button', { name: /斜体/ })).toHaveAttribute('data-pressed');
   });
+
+  test('disabled segment uses M3 label and divider tokens (material-web)', () => {
+    render(
+      <SegmentedButton.Root defaultValue={['day']}>
+        <SegmentedButton.Item value="day">日</SegmentedButton.Item>
+        <SegmentedButton.Item value="week" disabled>
+          週
+        </SegmentedButton.Item>
+      </SegmentedButton.Root>,
+    );
+    const week = screen.getByRole('button', { name: /週/ });
+    expect(week.className).toContain('disabled:text-on-surface/38');
+    expect(week.className).toContain('disabled:border-on-surface/12');
+    expect(week.className).not.toContain('disabled:opacity-[0.38]');
+  });
+
+  test('segment item exposes the M3 3px focus ring', () => {
+    render(
+      <SegmentedButton.Root defaultValue={['day']}>
+        <SegmentedButton.Item value="day">日</SegmentedButton.Item>
+      </SegmentedButton.Root>,
+    );
+    expect(screen.getByRole('button', { name: /日/ }).className).toContain(
+      'focus-visible:outline-[3px]',
+    );
+  });
 });

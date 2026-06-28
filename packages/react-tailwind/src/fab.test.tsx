@@ -22,4 +22,28 @@ describe('Fab', () => {
     );
     expect(screen.getByRole('button', { name: /作成/ })).toBeInTheDocument();
   });
+
+  test('uses M3 elevation level3 at rest and level4 on hover', () => {
+    render(
+      <Fab aria-label="Add">
+        <svg viewBox="0 0 24 24" />
+      </Fab>,
+    );
+    const fab = screen.getByRole('button', { name: 'Add' });
+    expect(fab.className).toContain('shadow-level3');
+    expect(fab.className).toContain('hover:shadow-level4');
+  });
+
+  test('disabled uses M3 container/label tokens, not a blanket opacity', () => {
+    render(
+      <Fab disabled aria-label="Off">
+        <svg viewBox="0 0 24 24" />
+      </Fab>,
+    );
+    const fab = screen.getByRole('button', { name: 'Off' });
+    // M3 discourages disabled FABs; when native disabled is used, match button tokens.
+    expect(fab.className).toContain('disabled:bg-on-surface/12');
+    expect(fab.className).toContain('disabled:text-on-surface/38');
+    expect(fab.className).not.toContain('disabled:opacity-[0.38]');
+  });
 });

@@ -23,8 +23,12 @@ export const segmentedButtonTv = tv({
       'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
       'data-[pressed]:bg-secondary-container data-[pressed]:text-on-secondary-container',
-      'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0 data-[disabled]:text-on-surface/38',
-      'disabled:pointer-events-none disabled:before:opacity-0 disabled:text-on-surface/38',
+      // M3 disabled: label on-surface/38, divider outline on-surface/12 (material-web).
+      'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
+      'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0',
+      'data-[disabled]:text-on-surface/38 data-[disabled]:border-on-surface/12',
+      'disabled:pointer-events-none disabled:before:opacity-0',
+      'disabled:text-on-surface/38 disabled:border-on-surface/12',
     ],
     check: [
       'inline-flex items-center justify-center shrink-0 h-[18px] w-0 opacity-0 overflow-hidden pointer-events-none',
