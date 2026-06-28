@@ -1,0 +1,95 @@
+name: Deploy landing (Cloudflare Pages)
+
+# Builds examples/landing (Astro static site) and uploads the dist/ folder to
+# Cloudflare Pages via Wrangler Direct Upload.
+#
+# One-time setup (repo Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN — API token with "Cloudflare Pages — Edit" permission
+#                          for the target account (Account → API Tokens).
+#   CLOUDFLARE_ACCOUNT_ID — Account ID from the Cloudflare dashboard sidebar.
+#
+# The Pages project `m3-baseui` is created on first run if missing (see the
+# ensure-project step). Production branch: main (https://m3-baseui.pages.dev).
+# Pull requests from this repo get preview deployments; fork PRs skip deploy.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/deploy-landing.yml'
+      - 'examples/landing/**'
+      - 'packages/core/**'
+      - 'packages/icons/**'
+      - 'packages/react-tailwind/**'
+      - 'packages/tokens/**'
+      - 'bun.lock'
+      - 'package.json'
+  pull_request:
+    paths:
+      - '.github/workflows/deploy-landing.yml'
+      - 'examples/landing/**'
+      - 'packages/core/**'
+      - 'packages/icons/**'
+      - 'packages/react-tailwind/**'
+      - 'packages/tokens/**'
+      - 'bun.lock'
+      - 'package.json'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-landing-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    # Do not run preview deploys for fork PRs (secrets are unavailable anyway).
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.11
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build landing page
+        run: bun run --filter @m3/example-landing build
+        env:
+          # Production builds bake canonical / OGP / sitemap URLs. Preview builds
+          # omit absolute site metadata (see astro.config.mjs PREVIEW_BUILD).
+          SITE_URL: ${{ github.event_name != 'pull_request' && 'https://m3-baseui.pages.dev' || '' }}
+          PREVIEW_BUILD: ${{ github.event_name == 'pull_request' && 'true' || '' }}
+
+      - name: Ensure Cloudflare Pages project exists
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4'
+          command: pages project create m3-baseui --production-branch=main
+        continue-on-error: true
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4'
+          command: >-
+            pages deploy examples/landing/dist
+            --project-name=m3-baseui
+            --branch=${{ github.event.pull_request.head.ref || github.ref_name }}
+            --commit-dirty=true
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
