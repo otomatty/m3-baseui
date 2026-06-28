@@ -68,7 +68,8 @@ export const thumb = style({
     },
     '&:hover::before': { opacity: vars.sys.state.hover },
     '&:focus-visible::before': { opacity: vars.sys.state.focus },
-    '&[data-dragging]::before': { opacity: vars.sys.state.pressed },
+    // M3: the dragged state layer (0.16) is distinct from pressed (0.10).
+    '&[data-dragging]::before': { opacity: vars.sys.state.dragged },
     // M3 disabled: handle on-surface @ 0.38
     [`${root}[data-disabled] &`]: { background: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },

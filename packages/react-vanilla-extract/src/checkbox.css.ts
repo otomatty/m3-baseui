@@ -21,7 +21,9 @@ export const root = style({
   // unselected, primary when selected (material-web).
   color: `rgb(${vars.sys.color.onSurface})`,
   cursor: 'pointer',
-  transition: `background-color 150ms ${vars.sys.motion.easing.standard}, border-color 150ms ${vars.sys.motion.easing.standard}`,
+  // Transition `color` too so the state-layer (currentColor) pressed inversion
+  // animates — matching the Tailwind build's `transition-colors` (drop-in parity).
+  transition: `background-color 150ms ${vars.sys.motion.easing.standard}, border-color 150ms ${vars.sys.motion.easing.standard}, color 150ms ${vars.sys.motion.easing.standard}`,
   selectors: {
     '&[data-checked], &[data-indeterminate]': {
       background: `rgb(${vars.sys.color.primary})`,
