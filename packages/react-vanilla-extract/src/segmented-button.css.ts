@@ -13,7 +13,6 @@ export const root = style({
   height: '40px',
   borderRadius: vars.sys.shape.full,
   border: `1px solid rgb(${vars.sys.color.outline})`,
-  overflow: 'hidden',
 });
 
 export const item = style({
@@ -25,6 +24,7 @@ export const item = style({
   gap: '8px',
   paddingInline: '12px',
   minWidth: '48px',
+  overflow: 'hidden',
   background: 'transparent',
   border: 'none',
   borderLeft: `1px solid rgb(${vars.sys.color.outline})`,
@@ -39,7 +39,15 @@ export const item = style({
   letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
   transition: `background-color 150ms ${vars.sys.motion.easing.standard}, color 150ms ${vars.sys.motion.easing.standard}`,
   selectors: {
-    '&:first-child': { borderLeft: 'none' },
+    '&:first-child': {
+      borderLeft: 'none',
+      borderTopLeftRadius: vars.sys.shape.full,
+      borderBottomLeftRadius: vars.sys.shape.full,
+    },
+    '&:last-child': {
+      borderTopRightRadius: vars.sys.shape.full,
+      borderBottomRightRadius: vars.sys.shape.full,
+    },
     '&::before': {
       content: '""',
       position: 'absolute',

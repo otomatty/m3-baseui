@@ -48,9 +48,20 @@ describe('SegmentedButton', () => {
       </SegmentedButton.Root>,
     );
     const week = screen.getByRole('button', { name: /週/ });
+    expect(week).toBeDisabled();
     expect(week.className).toContain('disabled:text-on-surface/38');
     expect(week.className).toContain('disabled:border-on-surface/12');
+    expect(week.className).toContain('disabled:before:opacity-0');
+    expect(week.className).toContain('data-[disabled]:text-on-surface/38');
+    expect(week.className).toContain('data-[disabled]:border-on-surface/12');
+    expect(week.className).toContain('data-[disabled]:before:opacity-0');
     expect(week.className).not.toContain('disabled:opacity-[0.38]');
+  });
+
+  test('root omits overflow-hidden so segment focus rings are not clipped', () => {
+    render(<Single />);
+    const root = screen.getByRole('button', { name: /日/ }).parentElement;
+    expect(root?.className ?? '').not.toContain('overflow-hidden');
   });
 
   test('segment item exposes the M3 3px focus ring', () => {

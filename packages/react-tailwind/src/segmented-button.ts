@@ -12,9 +12,10 @@ import { tv } from './tv';
 
 export const segmentedButtonTv = tv({
   slots: {
-    root: 'inline-flex items-stretch h-10 rounded-full border border-outline overflow-hidden',
+    root: 'inline-flex items-stretch h-10 rounded-full border border-outline',
     item: [
-      'group relative inline-flex flex-1 items-center justify-center gap-2 px-3 min-w-12',
+      'group relative inline-flex flex-1 items-center justify-center gap-2 px-3 min-w-12 overflow-hidden',
+      'first:rounded-s-full last:rounded-e-full',
       'bg-transparent border-0 border-l border-outline first:border-l-0 cursor-pointer select-none outline-none',
       'text-label-large text-on-surface',
       'transition-colors duration-150 ease-standard',
