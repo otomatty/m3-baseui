@@ -43,7 +43,9 @@ Reference: `examples/playground-ve/`.
 **vite.config.ts**
 
 ```ts
+import { defineConfig } from 'vite';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [vanillaExtractPlugin(), react()],
@@ -87,14 +89,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-4. **app/globals.css**
+4. **app/globals.css** (no `src/` directory)
 
 ```css
 @import '@m3-baseui/react-tailwind/preset.css';
-@source "../../node_modules/@m3-baseui/react-tailwind/dist";
-@source "../app";
+@source "../node_modules/@m3-baseui/react-tailwind/dist";
+@source "./";
 @source "../components";
 ```
+
+For **`src/app/globals.css`**, use `../../node_modules` and adjust sibling paths accordingly.
 
 Adjust `@source` paths relative to `globals.css` location.
 
@@ -135,6 +139,7 @@ Reference: `examples/landing/`.
 **astro.config.mjs**
 
 ```js
+import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 

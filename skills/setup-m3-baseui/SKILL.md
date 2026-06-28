@@ -76,14 +76,16 @@ npm i -D tailwindcss@^4 @tailwindcss/vite
 
 For Next.js use `@tailwindcss/postcss` instead of `@tailwindcss/vite`. See [frameworks.md](frameworks.md).
 
-`@m3-baseui/core` and `@m3-baseui/tokens` are pulled in automatically.
+`@m3-baseui/core` and `@m3-baseui/tokens` are pulled in automatically for the Tailwind engine. For vanilla-extract, add `@m3-baseui/tokens` directly (see above).
 
 ### vanilla-extract engine
 
 ```bash
-npm i @m3-baseui/react-vanilla-extract @base-ui/react react react-dom
+npm i @m3-baseui/react-vanilla-extract @m3-baseui/tokens @base-ui/react react react-dom
 npm i -D @vanilla-extract/css @vanilla-extract/recipes @vanilla-extract/vite-plugin
 ```
+
+Install `@m3-baseui/tokens` directly — the app CSS imports `@m3-baseui/tokens/tokens.css`, and strict package managers (pnpm) do not expose transitive dependencies to the app.
 
 ### Optional icons
 
@@ -111,6 +113,8 @@ Add Material Symbols font in HTML `<head>`:
 **Vite** — add Tailwind plugin:
 
 ```ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({

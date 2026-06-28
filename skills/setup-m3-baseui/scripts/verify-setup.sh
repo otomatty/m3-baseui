@@ -37,12 +37,20 @@ has_dep() {
 engine=""
 if has_dep '@m3-baseui/react-tailwind'; then
   engine="tailwind"
-  ok "Found @m3-baseui/react-tailwind"
-elif has_dep '@m3-baseui/react-vanilla-extract'; then
+fi
+if has_dep '@m3-baseui/react-vanilla-extract'; then
+  if [[ -n "$engine" ]]; then
+    fail "Both @m3-baseui/react-tailwind and @m3-baseui/react-vanilla-extract are installed — pick one engine"
+  fi
   engine="ve"
-  ok "Found @m3-baseui/react-vanilla-extract"
-else
+fi
+
+if [[ -z "$engine" ]]; then
   fail "No @m3-baseui engine package in package.json"
+elif [[ "$engine" == "tailwind" ]]; then
+  ok "Found @m3-baseui/react-tailwind"
+else
+  ok "Found @m3-baseui/react-vanilla-extract"
 fi
 
 if has_dep '@base-ui/react'; then
@@ -68,13 +76,13 @@ has_preset=false
 
 while IFS= read -r f; do
   [[ -z "$f" ]] && continue
-  if grep -q '@m3-baseui/tokens/tokens.css\|@m3-baseui/react-tailwind/preset.css' "$f" 2>/dev/null; then
+  if grep -Eq '^[[:space:]]*@import.*@m3-baseui/(tokens/tokens\.css|react-tailwind/preset\.css)' "$f" 2>/dev/null; then
     has_tokens_import=true
   fi
-  if grep -q '@m3-baseui/react-tailwind/preset.css' "$f" 2>/dev/null; then
+  if grep -Eq '^[[:space:]]*@import.*@m3-baseui/react-tailwind/preset\.css' "$f" 2>/dev/null; then
     has_preset=true
   fi
-  if grep -q '@source.*@m3-baseui/react-tailwind\|@source.*react-tailwind' "$f" 2>/dev/null; then
+  if grep -Eq '^[[:space:]]*@source.*(@m3-baseui/react-tailwind|react-tailwind)' "$f" 2>/dev/null; then
     has_source=true
   fi
 done <<< "$css_files"
@@ -107,7 +115,7 @@ tsx_files=$(find . \( -name '*.tsx' -o -name '*.jsx' \) \
 has_theme_provider=false
 while IFS= read -r f; do
   [[ -z "$f" ]] && continue
-  if grep -q 'ThemeProvider' "$f" 2>/dev/null; then
+  if grep -Eq '<ThemeProvider|ThemeProvider[[:space:]]*>' "$f" 2>/dev/null; then
     has_theme_provider=true
     break
   fi
