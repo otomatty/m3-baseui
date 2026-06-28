@@ -5,8 +5,11 @@
  * onto Tailwind's `--color-*`, `--radius-*`, `--shadow-*`, `--ease-*`,
  * `--text-*` namespaces, sourcing values from the runtime `--md-sys-*` vars.
  *
- * Colors use `rgb(var(--md-sys-color-x) / <alpha-value>)` so opacity modifiers
- * (`bg-primary/12`) compose correctly off the channel-triple values.
+ * Colors are emitted as bare `rgb(var(--md-sys-color-x))` (channel triple →
+ * opaque rgb). Tailwind v4 does NOT substitute the v3 `<alpha-value>` placeholder
+ * inside an `@theme` block, so embedding it would leave every `--color-*` as an
+ * invalid color (breaking `bg-primary`, `text-on-primary`, …). v4 instead derives
+ * opacity modifiers (`bg-primary/12`) via `color-mix()` off this bare value.
  */
 import type { Tokens } from '../types';
 import { kebab } from './shared';
@@ -14,7 +17,7 @@ import { kebab } from './shared';
 export function generateTailwindTheme(tokens: Tokens): string {
   const colors = Object.keys(tokens.sys.color).map((role) => {
     const k = kebab(role);
-    return `  --color-${k}: rgb(var(--md-sys-color-${k}) / <alpha-value>);`;
+    return `  --color-${k}: rgb(var(--md-sys-color-${k}));`;
   });
 
   const radius = Object.keys(tokens.sys.shape).map((role) => {
@@ -54,7 +57,7 @@ export function generateTailwindTheme(tokens: Tokens): string {
  *   @import '@m3-baseui/tokens/theme.css';
  */
 @theme {
-  /* ---- Color (channel-triple → rgb with alpha) ---- */
+  /* ---- Color (channel-triple → rgb; opacity via color-mix in v4) ---- */
 ${colors.join('\n')}
 
   /* ---- Shape / radius ---- */
