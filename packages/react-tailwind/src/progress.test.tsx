@@ -58,6 +58,9 @@ describe('Progress.Circular', () => {
     expect(bar).toHaveAttribute('data-indeterminate');
     expect(bar).not.toHaveAttribute('aria-valuenow');
     expect(container.querySelectorAll('circle')).toHaveLength(1);
+    // Spin keyframe must match the VE build's 1.4s period (drop-in parity),
+    // not Tailwind's built-in 1s `animate-spin`.
+    expect(bar.className).toContain('animate-m3-circular-indeterminate');
   });
 
   test('clamps the value and survives a non-positive max (no NaN arc)', () => {

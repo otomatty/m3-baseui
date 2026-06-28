@@ -26,7 +26,7 @@ export const snackbarTv = tv({
     ],
     content: 'flex flex-col flex-1 min-w-0 gap-0.5',
     title: 'text-body-medium',
-    description: 'text-body-small opacity-90',
+    description: 'text-body-medium',
     action: [
       'relative inline-flex items-center justify-center shrink-0 h-9 px-3 overflow-hidden',
       'rounded-extra-small bg-transparent border-0 cursor-pointer outline-none',

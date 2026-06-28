@@ -19,6 +19,8 @@ describe('Card', () => {
     const button = screen.getByRole('button', { name: /押せるカード/ });
     fireEvent.click(button);
     expect(clicked).toBe(true);
+    // Elevation lift/settle must animate (matches the VE box-shadow transition).
+    expect(button.className).toContain('transition-shadow');
   });
 
   test('disabled interactive card exposes data-disabled and blocks clicks', () => {

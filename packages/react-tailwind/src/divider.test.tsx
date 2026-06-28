@@ -25,4 +25,10 @@ describe('Divider', () => {
     rerender(<Divider inset="middle" />);
     expect(screen.getByRole('separator').className).toContain('mx-4');
   });
+
+  test('vertical inset uses a logical block-start margin (engine parity)', () => {
+    render(<Divider orientation="vertical" inset="inset" />);
+    // Logical margin matches the VE recipe's `marginBlockStart` (not physical mt-4).
+    expect(screen.getByRole('separator').className).toContain('margin-block-start:1rem');
+  });
 });

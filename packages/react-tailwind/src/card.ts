@@ -21,6 +21,8 @@ export const cardTv = tv({
     interactive: {
       true: [
         'group overflow-hidden cursor-pointer select-none text-left w-full outline-none',
+        // Animate the elevation lift/settle to match the VE box-shadow transition.
+        'transition-shadow duration-150 ease-standard',
         'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
         'hover:before:opacity-[var(--md-sys-state-hover)]',
         'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
