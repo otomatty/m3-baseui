@@ -51,7 +51,11 @@ export const fieldVariant = styleVariants({
     background: `rgb(${vars.sys.color.surfaceContainerHighest})`,
     borderBottom: `2px solid rgb(${vars.sys.color.outline})`,
     selectors: {
-      [`${root}[data-focused] &`]: { borderBottomColor: `rgb(${vars.sys.color.primary})` },
+      // M3 filled focus-active-indicator-height is 3dp (resting/error stay 2dp).
+      [`${root}[data-focused] &`]: {
+        borderBottomWidth: '3px',
+        borderBottomColor: `rgb(${vars.sys.color.primary})`,
+      },
       [`${root}[data-invalid] &`]: { borderBottomColor: `rgb(${vars.sys.color.error})` },
     },
   },
@@ -59,9 +63,11 @@ export const fieldVariant = styleVariants({
     borderRadius: vars.sys.shape.extraSmall,
     border: `1px solid rgb(${vars.sys.color.outline})`,
     selectors: {
+      // M3 outlined focus-outline-width is 3dp (matches Select's trigger);
+      // padding drops 2px so content stays steady as the 1dp border grows.
       [`${root}[data-focused] &`]: {
-        border: `2px solid rgb(${vars.sys.color.primary})`,
-        paddingInline: '15px',
+        border: `3px solid rgb(${vars.sys.color.primary})`,
+        paddingInline: '14px',
       },
       [`${root}[data-invalid] &`]: { borderColor: `rgb(${vars.sys.color.error})` },
     },

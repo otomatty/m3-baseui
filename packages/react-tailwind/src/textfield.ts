@@ -4,7 +4,8 @@
  * 56dp tall. The floating label and focus/filled border key off Field's
  * `data-focused` / `data-filled` / `data-invalid` via the `group` on Root.
  * Filled = surface-container-highest with a bottom indicator; outlined = a
- * border that thickens to 2dp primary on focus. Same DOM as the VE build.
+ * border that thickens to 3dp primary on focus (M3 focus-outline-width). Same
+ * DOM as the VE build.
  */
 import { createTextField } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
@@ -43,7 +44,8 @@ export const textFieldTv = tv({
         field: [
           'rounded-t-extra-small bg-surface-container-highest',
           'border-b-2 border-outline',
-          'group-data-[focused]:border-primary group-data-[invalid]:border-error',
+          // M3 filled focus-active-indicator-height is 3dp (resting/error stay 2dp).
+          'group-data-[focused]:border-b-[3px] group-data-[focused]:border-primary group-data-[invalid]:border-error',
         ],
         input: 'pt-3',
         label: [
@@ -54,7 +56,9 @@ export const textFieldTv = tv({
       outlined: {
         field: [
           'rounded-extra-small border border-outline',
-          'group-data-[focused]:border-2 group-data-[focused]:border-primary group-data-[focused]:px-[15px]',
+          // M3 outlined focus-outline-width is 3dp (matches Select's trigger);
+          // padding drops 2px so content stays steady as the 1dp border grows.
+          'group-data-[focused]:border-[3px] group-data-[focused]:border-primary group-data-[focused]:px-[14px]',
           'group-data-[invalid]:border-error',
         ],
         label: [
