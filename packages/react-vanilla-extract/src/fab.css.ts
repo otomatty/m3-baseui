@@ -73,8 +73,15 @@ export const fab = recipe({
       '&:focus-visible::before': { opacity: vars.sys.state.focus },
       '&:active::before': { opacity: vars.sys.state.pressed },
       '&[data-pressed]::before': { opacity: vars.sys.state.pressed },
-      '&:disabled': { opacity: 0.38, pointerEvents: 'none', boxShadow: 'none' },
-      '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none', boxShadow: 'none' },
+      // M3 discourages disabled FABs (material-web removed the state). When native
+      // disabled is used, apply the same container/label tokens as filled buttons.
+      '&:disabled, &[data-disabled]': {
+        pointerEvents: 'none',
+        boxShadow: 'none',
+        background: `rgb(${vars.sys.color.onSurface} / 0.12)`,
+        color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+      },
+      '&:disabled::before, &[data-disabled]::before': { opacity: 0 },
     },
   },
   variants: {

@@ -19,8 +19,12 @@ export const fabTv = tv({
     'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
     'active:before:opacity-[var(--md-sys-state-pressed)]',
     'data-[pressed]:before:opacity-[var(--md-sys-state-pressed)]',
-    'disabled:opacity-[0.38] disabled:pointer-events-none disabled:shadow-none',
-    'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none data-[disabled]:shadow-none',
+    // M3 discourages disabled FABs (material-web removed the state). When native
+    // disabled is used, apply the same container/label tokens as filled buttons.
+    'disabled:pointer-events-none disabled:shadow-none disabled:before:opacity-0',
+    'disabled:bg-on-surface/12 disabled:text-on-surface/38',
+    'data-[disabled]:pointer-events-none data-[disabled]:shadow-none data-[disabled]:before:opacity-0',
+    'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38',
   ],
   variants: {
     size: {
