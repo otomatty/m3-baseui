@@ -29,7 +29,7 @@ export const sliderTv = tv({
       'before:size-10 before:rounded-full before:bg-primary before:opacity-0 before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
-      'data-[dragging]:before:opacity-[var(--md-sys-state-pressed)]',
+      'data-[dragging]:before:opacity-[var(--md-sys-state-dragged)]',
       'group-data-[disabled]:bg-on-surface/[0.38]',
     ],
     value: 'text-label-large text-on-surface-variant tabular-nums',

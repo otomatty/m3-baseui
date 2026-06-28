@@ -75,7 +75,7 @@ export const indicator = style({
   background: `rgb(${vars.sys.color.primary})`,
   pointerEvents: 'none',
   opacity: 0,
-  transition: `width 150ms ${vars.sys.motion.easing.standard}, height 150ms ${vars.sys.motion.easing.standard}, opacity 150ms`,
+  transition: `width 150ms ${vars.sys.motion.easing.standard}, height 150ms ${vars.sys.motion.easing.standard}, opacity 150ms ${vars.sys.motion.easing.standard}`,
   selectors: {
     '&[data-checked]': { width: '10px', height: '10px', opacity: 1 },
     [`${root}[data-error] &`]: { background: `rgb(${vars.sys.color.error})` },
