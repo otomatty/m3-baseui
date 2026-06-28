@@ -8,8 +8,8 @@ name: Deploy landing (Cloudflare Pages)
 #                          for the target account (Account → API Tokens).
 #   CLOUDFLARE_ACCOUNT_ID — Account ID from the Cloudflare dashboard sidebar.
 #
-# The Pages project `m3-baseui` is created automatically on the first deploy if
-# it does not exist yet. Production branch: main (https://m3-baseui.pages.dev).
+# The Pages project `m3-baseui` is created on first run if missing (see the
+# ensure-project step). Production branch: main (https://m3-baseui.pages.dev).
 # Pull requests from this repo get preview deployments; fork PRs skip deploy.
 
 on:
@@ -67,12 +67,29 @@ jobs:
       - name: Build landing page
         run: bun run --filter @m3/example-landing build
         env:
-          SITE_URL: https://m3-baseui.pages.dev
+          # Production builds bake canonical / OGP / sitemap URLs. Preview builds
+          # omit absolute site metadata (see astro.config.mjs PREVIEW_BUILD).
+          SITE_URL: ${{ github.event_name == 'pull_request' && '' || 'https://m3-baseui.pages.dev' }}
+          PREVIEW_BUILD: ${{ github.event_name == 'pull_request' && 'true' || '' }}
+
+      - name: Ensure Cloudflare Pages project exists
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4'
+          command: pages project create m3-baseui --production-branch=main
+        continue-on-error: true
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy examples/landing/dist --project-name=m3-baseui
+          wranglerVersion: '4'
+          command: >-
+            pages deploy examples/landing/dist
+            --project-name=m3-baseui
+            --branch=${{ github.event.pull_request.head.ref || github.ref_name }}
+            --commit-dirty=true
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

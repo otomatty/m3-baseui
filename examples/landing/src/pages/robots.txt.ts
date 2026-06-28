@@ -8,7 +8,14 @@ Allow: /
 Sitemap: ${sitemap.href}
 `;
 
-export const GET: APIRoute = ({ site }) =>
-  new Response(body(new URL('sitemap-index.xml', site)), {
+export const GET: APIRoute = ({ site }) => {
+  if (!site) {
+    return new Response('User-agent: *\nAllow: /\n', {
+      headers: { 'Content-Type': 'text/plain' },
+    });
+  }
+
+  return new Response(body(new URL('sitemap-index.xml', site)), {
     headers: { 'Content-Type': 'text/plain' },
   });
+};
