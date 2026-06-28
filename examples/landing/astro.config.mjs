@@ -8,9 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
 // project's environment variables to override without touching code.
 // PR preview builds set PREVIEW_BUILD=true so absolute SEO metadata is omitted.
 const isPreviewBuild = process.env.PREVIEW_BUILD === 'true';
-const site = isPreviewBuild
-  ? undefined
-  : (process.env.SITE_URL || 'https://m3-baseui.pages.dev');
+const site = isPreviewBuild ? undefined : process.env.SITE_URL || 'https://m3-baseui.pages.dev';
 
 // https://astro.build/config
 export default defineConfig({
