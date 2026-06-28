@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { TextField } from './textfield';
+import { TextField, textFieldTv } from './textfield';
 
 describe('TextField', () => {
   test('associates the floating label with the input', () => {
@@ -37,5 +37,25 @@ describe('TextField', () => {
       <TextField label="バイオ" showCounter maxLength={10} value="abcde" onChange={() => {}} />,
     );
     expect(screen.getByText('5/10')).toBeInTheDocument();
+  });
+});
+
+describe('TextField tokens', () => {
+  test('filled active indicator grows to the M3 3dp focus height', () => {
+    const field = textFieldTv({ variant: 'filled' }).field();
+    // Resting indicator stays on the bottom border; focus = primary at 3dp
+    // (M3 filled-text-field focus-active-indicator-height: 3px).
+    expect(field).toContain('group-data-[focused]:border-b-[3px]');
+    expect(field).toContain('group-data-[focused]:border-primary');
+  });
+
+  test('outlined focus outline is the M3 3dp width, not 2dp', () => {
+    const field = textFieldTv({ variant: 'outlined' }).field();
+    // M3 outlined-text-field focus-outline-width: 3px (matches Select's trigger);
+    // padding compensates the extra 2px so content stays steady.
+    expect(field).toContain('group-data-[focused]:border-[3px]');
+    expect(field).toContain('group-data-[focused]:px-[14px]');
+    expect(field).not.toContain('group-data-[focused]:border-2');
+    expect(field).not.toContain('group-data-[focused]:px-[15px]');
   });
 });
