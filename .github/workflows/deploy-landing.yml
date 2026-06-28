@@ -69,7 +69,7 @@ jobs:
         env:
           # Production builds bake canonical / OGP / sitemap URLs. Preview builds
           # omit absolute site metadata (see astro.config.mjs PREVIEW_BUILD).
-          SITE_URL: ${{ github.event_name == 'pull_request' && '' || 'https://m3-baseui.pages.dev' }}
+          SITE_URL: ${{ github.event_name != 'pull_request' && 'https://m3-baseui.pages.dev' || '' }}
           PREVIEW_BUILD: ${{ github.event_name == 'pull_request' && 'true' || '' }}
 
       - name: Ensure Cloudflare Pages project exists
