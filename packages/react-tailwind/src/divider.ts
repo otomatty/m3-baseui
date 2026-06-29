@@ -25,7 +25,8 @@ export const dividerTv = tv({
   compoundVariants: [
     { orientation: 'horizontal', inset: 'inset', class: 'ms-4' },
     { orientation: 'horizontal', inset: 'middle', class: 'mx-4' },
-    { orientation: 'vertical', inset: 'inset', class: 'mt-4' },
+    // Logical block-start margin mirrors the VE recipe's `marginBlockStart`.
+    { orientation: 'vertical', inset: 'inset', class: '[margin-block-start:1rem]' },
     { orientation: 'vertical', inset: 'middle', class: 'my-4' },
   ],
   defaultVariants: {

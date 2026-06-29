@@ -58,6 +58,9 @@ describe('Progress.Circular', () => {
     expect(bar).toHaveAttribute('data-indeterminate');
     expect(bar).not.toHaveAttribute('aria-valuenow');
     expect(container.querySelectorAll('circle')).toHaveLength(1);
+    // Built-in `animate-spin` (1s) works in every setup; the VE build matches
+    // that period for drop-in parity.
+    expect(bar.className).toContain('animate-spin');
   });
 
   test('clamps the value and survives a non-positive max (no NaN arc)', () => {

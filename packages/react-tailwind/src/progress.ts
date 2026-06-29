@@ -5,7 +5,8 @@
  * indicator; the indeterminate slide animation keys off the Root's
  * `data-indeterminate` (see the `m3-linear-indeterminate` keyframe in
  * preset.css). Circular: a 48dp / 4dp `primary` ring whose arc is drawn by the
- * factory; `data-indeterminate` rotates the whole ring. Same DOM as the VE build.
+ * factory; `data-indeterminate` rotates the whole ring via Tailwind's built-in
+ * `animate-spin` (1s) — the VE build matches that period. Same DOM as the VE build.
  */
 import { createProgress } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';

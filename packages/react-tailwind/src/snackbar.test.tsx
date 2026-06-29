@@ -49,6 +49,48 @@ describe('Snackbar', () => {
     expect(screen.getByText('保存しました')).toBeInTheDocument();
   });
 
+  test('supporting text (Description) uses body-medium at full opacity', () => {
+    function DescOpener() {
+      const { add } = useSnackbar();
+      return (
+        <button
+          type="button"
+          onClick={() => add({ title: 'タイトル', description: '詳細メッセージ' })}
+        >
+          開く
+        </button>
+      );
+    }
+    function DescList() {
+      const { toasts } = useSnackbar();
+      return (
+        <>
+          {toasts.map((toast) => (
+            <Snackbar.Root key={toast.id} toast={toast}>
+              <Snackbar.Content>
+                <Snackbar.Title />
+                <Snackbar.Description />
+              </Snackbar.Content>
+            </Snackbar.Root>
+          ))}
+        </>
+      );
+    }
+    render(
+      <Snackbar.Provider>
+        <DescOpener />
+        <Snackbar.Viewport>
+          <DescList />
+        </Snackbar.Viewport>
+      </Snackbar.Provider>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '開く' }));
+    const description = screen.getByText('詳細メッセージ');
+    // M3 snackbar supporting text = body-medium, on-inverse-surface at full opacity.
+    expect(description.className).toContain('text-body-medium');
+    expect(description.className).not.toContain('opacity-90');
+  });
+
   test('childless Action falls back to toast.actionProps.children', () => {
     function ActionOpener() {
       const { add } = useSnackbar();

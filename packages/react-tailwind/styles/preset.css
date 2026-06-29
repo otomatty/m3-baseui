@@ -14,7 +14,8 @@
 /*
  * Component keyframes that can't be expressed as utilities. The linear progress
  * indeterminate bar slides a 40%-wide indicator across the track; the circular
- * indeterminate spinner reuses Tailwind's built-in `animate-spin`.
+ * indeterminate spinner reuses Tailwind's built-in `animate-spin` (1s), which the
+ * VE build matches.
  */
 @theme {
   --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;

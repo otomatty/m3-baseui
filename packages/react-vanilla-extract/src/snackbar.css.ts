@@ -60,12 +60,11 @@ export const title = style({
 });
 
 export const description = style({
-  opacity: 0.9,
-  fontFamily: vars.sys.typescale.bodySmall.fontFamily,
-  fontWeight: vars.sys.typescale.bodySmall.fontWeight,
-  fontSize: vars.sys.typescale.bodySmall.fontSize,
-  lineHeight: vars.sys.typescale.bodySmall.lineHeight,
-  letterSpacing: vars.sys.typescale.bodySmall.letterSpacing,
+  fontFamily: vars.sys.typescale.bodyMedium.fontFamily,
+  fontWeight: vars.sys.typescale.bodyMedium.fontWeight,
+  fontSize: vars.sys.typescale.bodyMedium.fontSize,
+  lineHeight: vars.sys.typescale.bodyMedium.lineHeight,
+  letterSpacing: vars.sys.typescale.bodyMedium.letterSpacing,
 });
 
 export const action = style({
