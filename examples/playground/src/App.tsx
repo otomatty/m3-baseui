@@ -300,10 +300,10 @@ export function App() {
                   <Slider.Track>
                     <Slider.Indicator />
                     <Slider.Thumb index={0} aria-label="最低価格">
-                      <Slider.ValueLabel index={0} />
+                      <Slider.ValueLabel />
                     </Slider.Thumb>
                     <Slider.Thumb index={1} aria-label="最高価格">
-                      <Slider.ValueLabel index={1} />
+                      <Slider.ValueLabel />
                     </Slider.Thumb>
                   </Slider.Track>
                 </Slider.Control>

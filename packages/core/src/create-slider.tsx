@@ -17,6 +17,7 @@ import { mergeClassName } from './slot';
 import { cx } from './utils';
 
 const ThumbPressContext = React.createContext(false);
+const ThumbIndexContext = React.createContext(0);
 
 interface M3SliderContextValue {
   state: SliderRoot.State;
@@ -45,9 +46,13 @@ function getDecimalPrecision(value: number): number {
   if (!Number.isFinite(value)) {
     return 0;
   }
-  const str = value.toString();
-  const decimalIndex = str.indexOf('.');
-  return decimalIndex >= 0 ? str.length - decimalIndex - 1 : 0;
+  let factor = 1;
+  let precision = 0;
+  while (Math.round(value * factor) / factor !== value) {
+    factor *= 10;
+    precision++;
+  }
+  return precision;
 }
 
 function getDiscreteTickValues(min: number, max: number, step: number): number[] {
@@ -229,10 +234,12 @@ export function createSlider(classes: SliderClasses) {
   TickList.displayName = 'M3Slider.TickList';
 
   const ValueLabel = React.forwardRef<HTMLSpanElement, SliderValueLabelProps>(function ValueLabel(
-    { className, index = 0, ...props },
+    { className, index: indexProp, ...props },
     ref,
   ) {
     const pressed = React.useContext(ThumbPressContext);
+    const inheritedIndex = React.useContext(ThumbIndexContext);
+    const index = indexProp ?? inheritedIndex;
     const {
       format,
       locale,
@@ -263,7 +270,7 @@ export function createSlider(classes: SliderClasses) {
     HTMLDivElement,
     React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb>
   >(function Thumb(
-    { className, children, onPointerCancel, onPointerDown, onPointerUp, ...props },
+    { className, children, index, onPointerCancel, onPointerDown, onPointerUp, ...props },
     ref,
   ) {
     const [pressed, setPressed] = React.useState(false);
@@ -282,27 +289,30 @@ export function createSlider(classes: SliderClasses) {
     }, [pressed]);
 
     return (
-      <ThumbPressContext.Provider value={pressed}>
-        <SliderPrimitive.Thumb
-          ref={ref}
-          className={mergeClassName(classes.thumb, className)}
-          onPointerCancel={(event) => {
-            setPressed(false);
-            onPointerCancel?.(event);
-          }}
-          onPointerDown={(event) => {
-            setPressed(true);
-            onPointerDown?.(event);
-          }}
-          onPointerUp={(event) => {
-            setPressed(false);
-            onPointerUp?.(event);
-          }}
-          {...props}
-        >
-          {children}
-        </SliderPrimitive.Thumb>
-      </ThumbPressContext.Provider>
+      <ThumbIndexContext.Provider value={index ?? 0}>
+        <ThumbPressContext.Provider value={pressed}>
+          <SliderPrimitive.Thumb
+            ref={ref}
+            {...(index !== undefined ? { index } : {})}
+            className={mergeClassName(classes.thumb, className)}
+            onPointerCancel={(event) => {
+              setPressed(false);
+              onPointerCancel?.(event);
+            }}
+            onPointerDown={(event) => {
+              setPressed(true);
+              onPointerDown?.(event);
+            }}
+            onPointerUp={(event) => {
+              setPressed(false);
+              onPointerUp?.(event);
+            }}
+            {...props}
+          >
+            {children}
+          </SliderPrimitive.Thumb>
+        </ThumbPressContext.Provider>
+      </ThumbIndexContext.Provider>
     );
   });
   Thumb.displayName = 'M3Slider.Thumb';

@@ -103,6 +103,22 @@ describe('Slider', () => {
     expect(screen.getByText('40')).toBeInTheDocument();
   });
 
+  test('value label inherits the parent thumb index in range sliders', () => {
+    render(
+      <Slider.Root defaultValue={[25, 75]} min={0} max={100}>
+        <Slider.Control>
+          <Slider.Track>
+            <Slider.Indicator />
+            <Slider.Thumb index={1} aria-label="最高価格">
+              <Slider.ValueLabel />
+            </Slider.Thumb>
+          </Slider.Track>
+        </Slider.Control>
+      </Slider.Root>,
+    );
+    expect(screen.getByText('75')).toBeInTheDocument();
+  });
+
   test('value label is hidden until the thumb is pressed', () => {
     render(<ValueLabelExample />);
     const label = screen.getByText('40');
