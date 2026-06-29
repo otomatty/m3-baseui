@@ -23,7 +23,7 @@ export const bottomSheetTv = tv({
       'box-border w-full max-w-[640px] max-h-[calc(100dvh-56px)]',
       'overflow-y-auto overscroll-contain touch-auto outline-none',
       'pb-6 bg-surface-container-low text-on-surface rounded-t-extra-large shadow-level1',
-      '[transform:translateY(var(--drawer-swipe-movement-y))]',
+      '[transform:translateY(calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))]',
       'transition-transform duration-300 ease-emphasized',
       'data-[swiping]:select-none',
       'data-[starting-style]:[transform:translateY(100%)] data-[ending-style]:[transform:translateY(100%)]',

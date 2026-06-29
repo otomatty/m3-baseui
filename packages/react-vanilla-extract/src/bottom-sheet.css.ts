@@ -44,7 +44,7 @@ export const popup = style({
   borderTopLeftRadius: vars.sys.shape.extraLarge,
   borderTopRightRadius: vars.sys.shape.extraLarge,
   boxShadow: vars.sys.elevation.level1,
-  transform: 'translateY(var(--drawer-swipe-movement-y))',
+  transform: 'translateY(calc(var(--drawer-snap-point-offset) + var(--drawer-swipe-movement-y)))',
   transition: `transform 300ms ${vars.sys.motion.easing.emphasized}`,
   selectors: {
     '&[data-swiping]': { userSelect: 'none' },
