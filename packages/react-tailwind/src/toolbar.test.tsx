@@ -46,4 +46,10 @@ describe('Toolbar tokens', () => {
       'bg-primary-container',
     );
   });
+
+  test('vibrant forces interactive children to inherit the on-primary-container color', () => {
+    expect(toolbarTv({ variant: 'vibrant', orientation: 'horizontal' })).toContain(
+      '[&_button]:text-on-primary-container',
+    );
+  });
 });
