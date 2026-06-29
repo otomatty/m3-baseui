@@ -22,6 +22,8 @@ import {
   BottomAppBar,
   NavigationRail,
   SegmentedButton,
+  ButtonGroup,
+  SplitButton,
   Card,
   Badge,
   Item,
@@ -669,6 +671,48 @@ export function App() {
                   下線
                 </SegmentedButton.Item>
               </SegmentedButton.Root>
+            </div>
+          </Section>
+
+          <Section title="ButtonGroup">
+            <div className="flex flex-col gap-4">
+              <ButtonGroup aria-label="標準のボタングループ">
+                <Button variant="tonal">前へ</Button>
+                <Button variant="tonal">次へ</Button>
+              </ButtonGroup>
+              <ButtonGroup variant="connected" aria-label="連結したボタングループ">
+                <Button variant="tonal" startIcon={<Icon name="format_align_left" />}>
+                  左
+                </Button>
+                <Button variant="tonal" startIcon={<Icon name="format_align_center" />}>
+                  中央
+                </Button>
+                <Button variant="tonal" startIcon={<Icon name="format_align_right" />}>
+                  右
+                </Button>
+              </ButtonGroup>
+            </div>
+          </Section>
+
+          <Section title="SplitButton">
+            <div className="flex flex-wrap gap-4">
+              {(['filled', 'tonal', 'outlined', 'elevated'] as const).map((variant) => (
+                <SplitButton.Root key={variant}>
+                  <SplitButton.Group variant={variant} aria-label={`${variant} 保存`}>
+                    <SplitButton.Leading>保存</SplitButton.Leading>
+                    <SplitButton.Trailing aria-label="その他の保存オプション" />
+                  </SplitButton.Group>
+                  <SplitButton.Portal>
+                    <SplitButton.Positioner sideOffset={4} align="end">
+                      <SplitButton.Popup>
+                        <SplitButton.Item>下書き保存</SplitButton.Item>
+                        <SplitButton.Item>名前を付けて保存</SplitButton.Item>
+                        <SplitButton.Item>コピーを保存</SplitButton.Item>
+                      </SplitButton.Popup>
+                    </SplitButton.Positioner>
+                  </SplitButton.Portal>
+                </SplitButton.Root>
+              ))}
             </div>
           </Section>
 

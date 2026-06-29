@@ -138,6 +138,21 @@ test('SegmentedButton moves single selection (data-pressed / aria-pressed)', asy
   await expect(week).toHaveAttribute('aria-pressed', 'false');
 });
 
+test('SplitButton trailing trigger opens its menu (data-popup-open)', async ({ page }) => {
+  // The demo renders one split button per variant; drive the first trailing trigger.
+  const trigger = page.getByRole('button', { name: 'その他の保存オプション' }).first();
+  await trigger.click();
+
+  await expect(trigger).toHaveAttribute('data-popup-open', '');
+  const menu = page.getByRole('menu').first();
+  await expect(menu).toBeVisible();
+  await expect(menu.getByRole('menuitem', { name: /下書き保存/ })).toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeHidden();
+  await expect(trigger).not.toHaveAttribute('data-popup-open', '');
+});
+
 test('BottomSheet opens (data-swipe-direction=down), closes on Escape', async ({ page }) => {
   await page.getByRole('button', { name: 'ボトムシート' }).click();
 
