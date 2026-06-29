@@ -16,6 +16,9 @@ import {
   TextField,
   NavigationBar,
   NavigationDrawer,
+  TopAppBar,
+  BottomAppBar,
+  NavigationRail,
   SegmentedButton,
   Card,
   Badge,
@@ -111,6 +114,7 @@ export function App() {
   const [view, setView] = useState<string[]>(['week']);
   const [textStyles, setTextStyles] = useState<string[]>(['bold']);
   const [drawer, setDrawer] = useState('inbox');
+  const [rail, setRail] = useState<string[]>(['home']);
 
   return (
     <ThemeProvider seed={seed} scheme="tonalSpot" mode="system">
@@ -633,6 +637,91 @@ export function App() {
                   下書き（無効）
                 </NavigationDrawer.Item>
               </NavigationDrawer.Root>
+            </div>
+          </Section>
+
+          <Section title="TopAppBar">
+            <div className="flex max-w-md flex-col gap-4">
+              {(['small', 'center', 'medium', 'large'] as const).map((variant) => (
+                <div
+                  key={variant}
+                  className="overflow-hidden rounded-large border border-outline-variant"
+                >
+                  <TopAppBar
+                    variant={variant}
+                    leading={
+                      <IconButton aria-label="メニュー">
+                        <Icon name="menu" />
+                      </IconButton>
+                    }
+                    trailing={
+                      <>
+                        <IconButton aria-label="検索">
+                          <Icon name="search" />
+                        </IconButton>
+                        <IconButton aria-label="その他">
+                          <Icon name="more_vert" />
+                        </IconButton>
+                      </>
+                    }
+                  >
+                    {variant}
+                  </TopAppBar>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section title="BottomAppBar">
+            <div className="max-w-md overflow-hidden rounded-large border border-outline-variant">
+              <BottomAppBar
+                aria-label="アクション"
+                fab={
+                  <Fab color="primary" aria-label="追加">
+                    <Icon name="add" />
+                  </Fab>
+                }
+              >
+                <IconButton aria-label="チェック">
+                  <Icon name="check_box" />
+                </IconButton>
+                <IconButton aria-label="編集">
+                  <Icon name="edit" />
+                </IconButton>
+                <IconButton aria-label="ブックマーク">
+                  <Icon name="bookmark" />
+                </IconButton>
+                <IconButton aria-label="その他">
+                  <Icon name="more_vert" />
+                </IconButton>
+              </BottomAppBar>
+            </div>
+          </Section>
+
+          <Section title="NavigationRail">
+            <div className="h-80 w-fit overflow-hidden rounded-large border border-outline-variant">
+              <NavigationRail.Root
+                value={rail}
+                onValueChange={setRail}
+                header={
+                  <Fab color="primary" aria-label="作成">
+                    <Icon name="add" />
+                  </Fab>
+                }
+              >
+                <NavigationRail.Item value="home" icon={<Icon name="home" />}>
+                  ホーム
+                </NavigationRail.Item>
+                <NavigationRail.Item value="search" icon={<Icon name="search" />}>
+                  検索
+                </NavigationRail.Item>
+                <NavigationRail.Item value="favorites" icon={<Icon name="favorite" />}>
+                  お気に入り
+                </NavigationRail.Item>
+                <NavigationRail.Item value="profile" icon={<Icon name="person" />} disabled>
+                  プロフィール
+                </NavigationRail.Item>
+              </NavigationRail.Root>
             </div>
           </Section>
 
