@@ -24,7 +24,7 @@ export const sliderTv = tv({
       'group-data-[disabled]:bg-on-surface/[0.38]',
     ],
     thumb: [
-      'relative size-5 rounded-full bg-primary outline-none',
+      'group/thumb relative size-5 rounded-full bg-primary outline-none',
       'before:content-[""] before:absolute before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2',
       'before:size-10 before:rounded-full before:bg-primary before:opacity-0 before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
@@ -33,6 +33,16 @@ export const sliderTv = tv({
       'group-data-[disabled]:bg-on-surface/[0.38]',
     ],
     value: 'text-label-large text-on-surface-variant tabular-nums',
+    tickList: 'pointer-events-none absolute inset-0',
+    tick: [
+      'absolute size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-on-surface-variant',
+      'data-[active]:bg-on-primary/[0.38]',
+    ],
+    valueLabel: [
+      'pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded px-2 py-0.5',
+      'bg-primary text-label-large text-on-primary tabular-nums opacity-0',
+      'data-[visible]:opacity-100',
+    ],
   },
 });
 
@@ -44,4 +54,7 @@ export const Slider = createSlider({
   indicator: s.indicator(),
   thumb: s.thumb(),
   value: s.value(),
+  tickList: s.tickList(),
+  tick: s.tick(),
+  valueLabel: s.valueLabel(),
 });

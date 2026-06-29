@@ -273,14 +273,42 @@ export function App() {
           </Section>
 
           <Section title="Slider">
-            <Slider.Root defaultValue={40} className="max-w-sm">
-              <Slider.Control>
-                <Slider.Track>
-                  <Slider.Indicator />
-                  <Slider.Thumb aria-label="音量" />
-                </Slider.Track>
-              </Slider.Control>
-            </Slider.Root>
+            <div className="flex max-w-sm flex-col gap-6">
+              <Slider.Root defaultValue={40}>
+                <Slider.Control>
+                  <Slider.Track>
+                    <Slider.Indicator />
+                    <Slider.Thumb aria-label="音量">
+                      <Slider.ValueLabel />
+                    </Slider.Thumb>
+                  </Slider.Track>
+                </Slider.Control>
+              </Slider.Root>
+
+              <Slider.Root defaultValue={50} min={0} max={100} step={25}>
+                <Slider.Control>
+                  <Slider.Track>
+                    <Slider.TickList />
+                    <Slider.Indicator />
+                    <Slider.Thumb aria-label="離散スライダー" />
+                  </Slider.Track>
+                </Slider.Control>
+              </Slider.Root>
+
+              <Slider.Root defaultValue={[25, 75]} min={0} max={100} step={5}>
+                <Slider.Control>
+                  <Slider.Track>
+                    <Slider.Indicator />
+                    <Slider.Thumb index={0} aria-label="最低価格">
+                      <Slider.ValueLabel />
+                    </Slider.Thumb>
+                    <Slider.Thumb index={1} aria-label="最高価格">
+                      <Slider.ValueLabel />
+                    </Slider.Thumb>
+                  </Slider.Track>
+                </Slider.Control>
+              </Slider.Root>
+            </div>
           </Section>
 
           <Section title="Tabs">

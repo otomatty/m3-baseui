@@ -84,3 +84,45 @@ export const value = style({
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
   fontVariantNumeric: 'tabular-nums',
 });
+
+export const tickList = style({
+  pointerEvents: 'none',
+  position: 'absolute',
+  inset: 0,
+});
+
+export const tick = style({
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  borderRadius: vars.sys.shape.full,
+  background: `rgb(${vars.sys.color.onSurfaceVariant})`,
+  transform: 'translate(-50%, -50%)',
+  selectors: {
+    '&[data-active]': { background: `rgb(${vars.sys.color.onPrimary} / 0.38)` },
+  },
+});
+
+export const valueLabel = style({
+  pointerEvents: 'none',
+  position: 'absolute',
+  bottom: '100%',
+  left: '50%',
+  marginBottom: '8px',
+  transform: 'translateX(-50%)',
+  borderRadius: vars.sys.shape.extraSmall,
+  padding: '2px 8px',
+  background: `rgb(${vars.sys.color.primary})`,
+  color: `rgb(${vars.sys.color.onPrimary})`,
+  fontFamily: vars.sys.typescale.labelLarge.fontFamily,
+  fontWeight: vars.sys.typescale.labelLarge.fontWeight,
+  fontSize: vars.sys.typescale.labelLarge.fontSize,
+  lineHeight: vars.sys.typescale.labelLarge.lineHeight,
+  letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+  fontVariantNumeric: 'tabular-nums',
+  whiteSpace: 'nowrap',
+  opacity: 0,
+  selectors: {
+    '&[data-visible]': { opacity: 1 },
+  },
+});

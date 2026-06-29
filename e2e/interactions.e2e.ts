@@ -196,3 +196,30 @@ test('SideSheet opens (data-swipe-direction=right), closes via close button', as
   await sheet.getByRole('button', { name: '閉じる' }).click();
   await expect(sheet).toBeHidden();
 });
+
+test('Slider range exposes two thumbs and moves via keyboard', async ({ page }) => {
+  const minThumb = page.getByRole('slider', { name: '最低価格' });
+  const maxThumb = page.getByRole('slider', { name: '最高価格' });
+
+  await expect(minThumb).toHaveAttribute('aria-valuenow', '25');
+  await expect(maxThumb).toHaveAttribute('aria-valuenow', '75');
+
+  await minThumb.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(minThumb).toHaveAttribute('aria-valuenow', '30');
+
+  await maxThumb.focus();
+  await page.keyboard.press('ArrowLeft');
+  await expect(maxThumb).toHaveAttribute('aria-valuenow', '70');
+});
+
+test('Slider value label appears while the thumb is pressed', async ({ page }) => {
+  const thumb = page.getByRole('slider', { name: '音量' });
+  const label = page.locator('[data-visible]').filter({ hasText: '40' });
+
+  await expect(label).toHaveCount(0);
+  await thumb.dispatchEvent('pointerdown');
+  await expect(label).toHaveCount(1);
+  await thumb.dispatchEvent('pointerup');
+  await expect(label).toHaveCount(0);
+});

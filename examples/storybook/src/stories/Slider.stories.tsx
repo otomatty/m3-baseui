@@ -13,7 +13,9 @@ export const Basic: Story = {
         <Slider.Control>
           <Slider.Track>
             <Slider.Indicator />
-            <Slider.Thumb aria-label="音量" />
+            <Slider.Thumb aria-label="音量">
+              <Slider.ValueLabel />
+            </Slider.Thumb>
           </Slider.Track>
         </Slider.Control>
       </Slider.Root>
@@ -30,6 +32,44 @@ export const Disabled: Story = {
           <Slider.Track>
             <Slider.Indicator />
             <Slider.Thumb aria-label="音量（無効）" />
+          </Slider.Track>
+        </Slider.Control>
+      </Slider.Root>
+    );
+  },
+};
+
+export const Discrete: Story = {
+  render: () => {
+    const { Slider } = useM3();
+    return (
+      <Slider.Root defaultValue={50} min={0} max={100} step={25} className="max-w-sm">
+        <Slider.Control>
+          <Slider.Track>
+            <Slider.TickList />
+            <Slider.Indicator />
+            <Slider.Thumb aria-label="離散スライダー" />
+          </Slider.Track>
+        </Slider.Control>
+      </Slider.Root>
+    );
+  },
+};
+
+export const Range: Story = {
+  render: () => {
+    const { Slider } = useM3();
+    return (
+      <Slider.Root defaultValue={[25, 75]} min={0} max={100} step={5} className="max-w-sm">
+        <Slider.Control>
+          <Slider.Track>
+            <Slider.Indicator />
+            <Slider.Thumb index={0} aria-label="最低価格">
+              <Slider.ValueLabel />
+            </Slider.Thumb>
+            <Slider.Thumb index={1} aria-label="最高価格">
+              <Slider.ValueLabel />
+            </Slider.Thumb>
           </Slider.Track>
         </Slider.Control>
       </Slider.Root>
