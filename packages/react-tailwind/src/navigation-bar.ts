@@ -15,7 +15,8 @@ export const navigationBarTv = tv({
     item: [
       'group relative flex flex-1 flex-col items-center justify-center gap-1 px-1 pt-3 pb-4',
       'bg-transparent border-0 cursor-pointer select-none outline-none',
-      'data-[disabled]:opacity-[0.38] data-[disabled]:pointer-events-none',
+      // M3 disabled is per-token (icon + label dimmed below), not a blanket fade.
+      'data-[disabled]:pointer-events-none',
     ],
     iconWrap: 'relative flex items-center justify-center w-16 h-8',
     indicator: [
@@ -26,16 +27,31 @@ export const navigationBarTv = tv({
       'group-hover:before:opacity-[var(--md-sys-state-hover)]',
       'group-focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       'group-active:before:opacity-[var(--md-sys-state-pressed)]',
+      // No state layer on a disabled destination.
+      'group-data-[disabled]:before:opacity-0',
     ],
     icon: [
       'relative flex items-center justify-center text-on-surface-variant',
       'transition-colors duration-150 ease-standard',
+      // Raw <svg> icons render at 24dp (Material Symbols set their own size).
+      '[&_svg]:size-6',
       'group-data-[pressed]:text-on-secondary-container',
+      // M3 disabled: icon dims to on-surface/0.38. The item is the only `.group`,
+      // so the disabled+active override must test both attributes on that single
+      // element (`.group[data-disabled][data-pressed] &`) to outrank the equal-
+      // specificity data-[pressed] color — a stacked `group-data-*:group-data-*`
+      // would expect two nested groups and never match.
+      'group-data-[disabled]:text-on-surface/[0.38]',
+      'group-[&[data-disabled][data-pressed]]:text-on-surface/[0.38]',
     ],
     label: [
       'text-label-medium text-on-surface-variant',
       'transition-colors duration-150 ease-standard',
       'group-data-[pressed]:text-on-surface group-data-[pressed]:font-bold',
+      // M3 disabled: label dims to on-surface/0.38. Same-element override (see the
+      // icon slot) keeps a disabled+active label dimmed.
+      'group-data-[disabled]:text-on-surface/[0.38]',
+      'group-[&[data-disabled][data-pressed]]:text-on-surface/[0.38]',
     ],
   },
 });
