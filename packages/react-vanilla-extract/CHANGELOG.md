@@ -1,5 +1,104 @@
 # @m3-baseui/react-vanilla-extract
 
+## 1.2.0
+
+### Minor Changes
+
+- caad12d: feat(display/motion): Carousel / Loading indicator / Toolbars を新規実装
+
+  表示・モーション系の 3 コンポーネントを両エンジン drop-in 互換で追加。ロジックは core の
+  `createCarousel` / `createLoadingIndicator` / `createToolbar` ファクトリに一元化し、両エンジンで
+  同一 DOM・同一 `data-*` を出力する。
+
+  - **Carousel**: CSS scroll-snap のスクローラー。`Carousel.Root`（`role="group"` +
+    `aria-roledescription="carousel"`）が `variant` を解決して context で `Carousel.Item` に配り、
+    `data-variant` を出力する。`multi-browse`（大中小アイテム）/ `hero`（ピーク付きの大アイテム、
+    center-snap）/ `full-screen`（縦スクロールで 1 画面 1 アイテム）の 3 レイアウト。アイテムは
+    `large` 角丸の snap セル。スクロールバーは非表示。
+  - **LoadingIndicator**: M3 Expressive のローディングインジケーター（Progress とは別物）。
+    `role="progressbar"` の不確定インジケーターで、7 ローブのソフト形状（中点スムージングで
+    生成、両エンジン同一ジオメトリ）が回転＋モーフ（rotate + scale）し続ける。`contained` で
+    `secondary-container` のピル状コンテナに載せる。
+  - **Toolbar**: M3 Expressive の浮遊ツールバー。`role="toolbar"` の full 角丸・elevation level3 の
+    ピルで、`standard`（surface-container）/ `vibrant`（primary-container）の 2 配色と
+    `horizontal` / `vertical` の 2 方向。`variant` / `orientation` を `data-*` に反映し、縦方向では
+    `aria-orientation="vertical"` を付与。
+
+  色はチャンネル三値 + `rgb()` で `--md-sys-*` 経由、形状・elevation・モーションはトークン経由。
+  ユニットは初期描画とトークン契約をカバー（co-located `*.test.tsx`）。
+
+- 7aa1f7b: feat(actions): Expressive ボタン（Button groups / Split button）を新規実装
+
+  M3 Expressive のボタン 2 コンポーネントを両エンジン drop-in 互換で追加。ロジックは core の
+  `createButtonGroup` / `createSplitButton` ファクトリに一元化し、両エンジンで同一 DOM・同一
+  `data-*` を出力する。
+
+  - **ButtonGroup**: 関連ボタンを横並びにする `role="group"` コンテナ。`standard` は 8dp の
+    ギャップで配置、`connected` は 2dp に詰めて子の内側（シーム）コーナーを `small`（8dp）へ
+    落とし、外側コーナーは full のまま 1 つの連結ユニットに見せる。子コーナーの上書きは
+    Tailwind は子セレクタ、VE は `globalStyle`（連結クラスにスコープ）で実装。`render` で
+    ホスト要素を差し替え可能。
+  - **SplitButton**: 主アクションボタンとメニューを開くトレーリングボタンを 2dp のシームで
+    連結。トレーリングは Base UI `Menu.Trigger` で、`data-popup-open` でシェブロンが 180°
+    回転し、ドロップダウンは M3 メニューサーフェスを再利用する。両パートは `ButtonVariant`
+    （filled / tonal / outlined / elevated / text）でコンテナ色を共有し、向かい合うコーナーを
+    互いに落として連結を表現。`Root`（`Menu.Root`）/ `Group` / `Leading` / `Trailing` /
+    `Portal` / `Positioner` / `Popup` / `Item` の名前空間で公開。
+
+  色はチャンネル三値 + `rgb()` で `--md-sys-*` 経由、ステートレイヤーは `::before`
+  オーバーレイ、disabled はブランケット不透明度ではなくトークン別 dim。ユニットは初期描画と
+  トークン契約、ポータル/対話とビジュアル回帰は E2E（interactions / visual / a11y）でカバー。
+
+- bc19357: feat(pickers): Search / Date pickers / Time pickers を新規実装
+
+  M3 の検索・日時系 3 コンポーネントを両エンジン drop-in 互換で追加。ロジックは core の
+  `create-*` ファクトリに一元化し、エンジンはクラス解決器のみ差し替える。
+
+  - **Search**（search bar + docked view）: Base UI Combobox を土台に、resting の検索バー
+    （surface-container-high のピル）と docked のサジェスト一覧（elevation 3）を提供。
+    サジェスト行は hover / `data-highlighted` / `data-selected` に連動する `::before`
+    ステートレイヤーを持つ。
+  - **Date pickers**（calendar + docked + modal）: Base UI に暦プリミティブが無いため、
+    月グリッドの headless `Calendar`（状態は `data-selected` / `data-today` / `data-disabled`）
+    を `<table>` セマンティクスで実装。docked は Popover、modal は Dialog のサーフェスに載せる。
+    年選択ビュー・min/max・ロケール対応を含む。
+  - **Time pickers**（dial + input）: 12 時間ダイアル（クロックフェイス + ハンド）と
+    入力式の 2 レイアウト。AM/PM トグルを共有し、アクティブなフィールドは primary-container、
+    選択中のダイアル数字は primary でフィル。
+
+  色はチャンネル三値 + `rgb()` ラップで `--md-sys-*` 経由、ステートレイヤーは `::before`、
+  両エンジンで同一 DOM・同一 `data-*` を出力する。ユニットは初期描画と単純クリックを検証し、
+  ポータル/位置計算/ダイアルのドラッグは E2E に委ねる。
+
+- 40a6b39: feat(a11y): 48dp 最小タッチ領域を Checkbox / Radio / Switch / Chip / IconButton へ付与 (#51)
+
+  M3 が a11y 要件として規定する **48dp の最小タッチ領域**を、視覚に影響を与えずヒット領域のみ
+  拡張する形で、小型インタラクティブコンポーネント（Checkbox / Radio / Switch / Chip /
+  IconButton）へ付与した。material-web の touch-target パターン（絶対配置の透明オーバーレイ）に
+  倣い、`@m3-baseui/core` の `TouchTarget`（`Ripple` と同様にジオメトリを core に一元化）として
+  実装し、各ファクトリが描画する。両エンジンで同一 DOM・同一 `data-*`（drop-in 互換）。
+
+  - **TouchTarget**: `position: absolute` で中央寄せの透明 `span[data-touch-target]`（`aria-hidden`）。
+    `width/height: 100%` + `min-width/min-height: 48px`（＝ `max(48px, 100%)` 相当）で、48dp 未満の
+    コントロールは 48dp まで拡張し、すでに 48dp 以上なら縮めない。`pointer-events` は指定せず、
+    有効時は親から `auto` を、`disabled` 時は `none` を継承するため、拡張領域も適切に不活性化する。
+  - 適用: **Checkbox**（18dp）/ **Radio**（20dp）/ **Switch**（52×32dp）/ **Chip**（32dp の
+    assist・suggestion・filter）/ **IconButton**（小型サイズ）。
+  - **Chip / IconButton** はルートの `overflow: hidden` がオーバーレイを切り落とすため、ステート
+    レイヤー（`::before`）を `border-radius: inherit` で丸めてコーナークリップを担わせ、ルートの
+    `overflow: hidden` を撤去した（ripple は自前でクリップ）。視覚出力は不変。
+
+  透明・レイアウト非破壊のためビジュアル回帰スナップショットは変化なし。ユニットでオーバーレイの
+  存在と寸法を、E2E（interactions）で実ブラウザ上の 48dp ジオメトリ（両エンジン）を検証。
+
+### Patch Changes
+
+- Updated dependencies [caad12d]
+- Updated dependencies [7aa1f7b]
+- Updated dependencies [bc19357]
+- Updated dependencies [40a6b39]
+  - @m3-baseui/core@1.2.0
+
 ## 1.1.0
 
 ### Minor Changes
