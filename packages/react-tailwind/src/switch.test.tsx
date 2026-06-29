@@ -79,6 +79,16 @@ describe('Switch', () => {
     expect(s.thumb()).toContain('group-data-[disabled]:data-[checked]:bg-surface');
   });
 
+  test('handle uses M3 emphasized spatial motion (token duration), not the flat house style', () => {
+    const thumb = switchTv().thumb();
+    // emphasized spatial easing over 300ms (medium2), token-backed
+    expect(thumb).toContain('ease-emphasized');
+    expect(thumb).toContain('duration-[var(--md-sys-motion-duration-medium2)]');
+    // no longer the flat house style (duration-200 ease-standard) on the handle
+    expect(thumb).not.toContain('ease-standard');
+    expect(thumb).not.toContain('duration-200');
+  });
+
   test('exposes a transparent 48dp touch target (M3 a11y)', () => {
     render(<Switch />);
     const tt = screen.getByRole('switch').querySelector('[data-touch-target]');

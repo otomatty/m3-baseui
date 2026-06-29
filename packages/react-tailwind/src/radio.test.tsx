@@ -60,6 +60,23 @@ describe('Radio', () => {
     expect(r.indicator()).toContain('group-data-[error]:bg-error');
   });
 
+  test('inner dot grows via transform scale + emphasized-decelerate (M3 inner-circle-grow)', () => {
+    const ind = radioTv().indicator();
+    // dot keeps its 10dp size and scales from center (not width/height from 0)
+    expect(ind).toContain('size-2.5');
+    expect(ind).toContain('scale-0');
+    expect(ind).toContain('data-[checked]:scale-100');
+    expect(ind).not.toContain('size-0');
+    // Tailwind v4's scale-* sets the standalone `scale` property, so the
+    // transition must name `scale` (not `transform`) or the dot would jump.
+    expect(ind).toContain('transition-[scale,opacity]');
+    expect(ind).not.toContain('transition-[transform,opacity]');
+    // M3 inner-circle-grow: emphasized-decelerate over 300ms (medium2)
+    expect(ind).toContain('ease-emphasized-decelerate');
+    expect(ind).toContain('duration-[var(--md-sys-motion-duration-medium2)]');
+    expect(ind).not.toContain('ease-standard');
+  });
+
   test('exposes a transparent 48dp touch target (M3 a11y)', () => {
     render(
       <RadioGroup defaultValue="a">

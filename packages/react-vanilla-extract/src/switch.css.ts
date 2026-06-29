@@ -54,7 +54,10 @@ export const thumb = style({
   background: `rgb(${vars.sys.color.outline})`,
   color: `rgb(${vars.sys.color.onSurface})`,
   pointerEvents: 'none',
-  transition: `all 200ms ${vars.sys.motion.easing.standard}`,
+  // M3 spatial motion: the handle slides/grows with emphasized easing over 300ms
+  // (token-backed). emphasized is overshoot-free, so it stays safe for the
+  // handle's color transitions too (no spring flicker on background-color).
+  transition: `all ${vars.sys.motion.duration.medium2} ${vars.sys.motion.easing.emphasized}`,
   selectors: {
     // M3 with-icon: the unchecked handle grows to 24dp to fit its icon
     '&[data-with-icon][data-unchecked]': { left: '4px', width: '24px', height: '24px' },

@@ -26,7 +26,10 @@ export const switchTv = tv({
       'absolute top-1/2 -translate-y-1/2 left-[6px] size-4 rounded-full pointer-events-none',
       'flex items-center justify-center',
       'bg-outline text-on-surface',
-      'transition-all duration-200 ease-standard',
+      // M3 spatial motion: the handle slides/grows with emphasized easing over
+      // 300ms (token-backed). emphasized is overshoot-free, so it stays safe for
+      // the handle's color transitions too (no spring flicker on background-color).
+      'transition-all ease-emphasized duration-[var(--md-sys-motion-duration-medium2)]',
       'data-[checked]:left-[22px] data-[checked]:size-6 data-[checked]:bg-on-primary data-[checked]:text-primary',
       // M3 with-icon: the unchecked handle grows to 24dp to fit its icon
       'data-[with-icon]:data-[unchecked]:left-1 data-[with-icon]:data-[unchecked]:size-6',
