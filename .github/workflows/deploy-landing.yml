@@ -10,7 +10,8 @@ name: Deploy landing (Cloudflare Pages)
 #
 # The Pages project `m3-baseui` is created on first run if missing (see the
 # ensure-project step). Production branch: main (https://m3-baseui.pages.dev).
-# Pull requests from this repo get preview deployments; fork PRs skip deploy.
+# Pull requests from this repo get preview deployments. Fork PRs and Dependabot
+# PRs skip deploy (Actions secrets are unavailable to Dependabot-triggered runs).
 
 on:
   push:
@@ -47,10 +48,11 @@ jobs:
     permissions:
       contents: read
       deployments: write
-    # Do not run preview deploys for fork PRs (secrets are unavailable anyway).
+    # Skip fork PRs and Dependabot PRs (Actions secrets are unavailable).
     if: >-
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name == github.repository
+      github.actor != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -73,7 +75,7 @@ jobs:
           PREVIEW_BUILD: ${{ github.event_name == 'pull_request' && 'true' || '' }}
 
       - name: Ensure Cloudflare Pages project exists
-        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -82,7 +84,7 @@ jobs:
         continue-on-error: true
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
