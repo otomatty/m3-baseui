@@ -89,15 +89,18 @@ export function createChip(resolve: ChipClassResolver) {
       // is actually removable and not disabled. `role="group"` (not `button`)
       // keeps the trailing remove `<button>` from nesting inside an interactive
       // control (which axe flags), while still giving the chip a keyboard stop.
+      const restProps = rest as React.HTMLAttributes<HTMLSpanElement>;
       const disabled = (rest as { disabled?: boolean }).disabled === true;
       const deletable = onRemove != null && !disabled;
-      const restKeyDown = (rest as React.HTMLAttributes<HTMLSpanElement>).onKeyDown;
+      const restKeyDown = restProps.onKeyDown;
       // Applied together so `role` is always present alongside the key handler
-      // (keeps the span a legitimate, focusable interactive target).
+      // (keeps the span a legitimate, focusable interactive target). Defaults are
+      // fallbacks only — a roving-tabindex chip set can still pass tabIndex={-1}
+      // (or its own role) and have it preserved.
       const interactiveProps = deletable
         ? {
-            role: 'group' as const,
-            tabIndex: 0,
+            role: restProps.role ?? 'group',
+            tabIndex: restProps.tabIndex ?? 0,
             onKeyDown: (event: React.KeyboardEvent<HTMLSpanElement>) => {
               restKeyDown?.(event);
               if (event.defaultPrevented) return;

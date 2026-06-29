@@ -216,6 +216,19 @@ describe('Chip', () => {
     expect(btn).not.toHaveAttribute('tabindex', '-1');
   });
 
+  test('caller-supplied tabIndex on a deletable input chip is preserved (roving tabindex)', () => {
+    // A chip set that manages focus passes tabIndex={-1} to inactive chips; the
+    // default must not force them back into the tab order.
+    render(
+      <Chip variant="input" tabIndex={-1} onRemove={() => {}}>
+        Tag
+      </Chip>,
+    );
+    const chip = screen.getByRole('group');
+    expect(chip).toHaveAttribute('tabindex', '-1');
+    // Removal still works regardless of the roving tabindex value.
+  });
+
   test('non-deletable input chip body is not focusable (no remove → nothing to delete)', () => {
     render(<Chip variant="input">Tag</Chip>);
     expect(screen.queryByRole('group')).toBeNull();
