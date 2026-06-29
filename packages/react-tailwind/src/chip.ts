@@ -16,6 +16,8 @@ export const chipTv = tv({
       // layer is rounded to match instead (before:rounded-[inherit]); the ripple
       // self-clips.
       'h-8 px-4 rounded-[8px] select-none border bg-transparent text-label-large',
+      // M3 with-icon padding: the icon side trims to 8dp (label side stays 16dp).
+      'data-[with-leading-icon]:pl-2',
       'transition-colors duration-150 ease-standard',
       'before:absolute before:inset-0 before:rounded-[inherit] before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
@@ -43,12 +45,27 @@ export const chipTv = tv({
       'bg-primary-container text-on-primary-container',
       '[&>img]:size-full [&>img]:object-cover',
     ],
+    // M3 leading icon: 18dp; negative margin trims the leading padding to 8dp.
+    icon: [
+      'inline-flex items-center justify-center shrink-0 size-[18px] -ml-2',
+      '[&>svg]:size-full',
+      'group-disabled:text-on-surface/38 group-data-[disabled]:text-on-surface/38',
+    ],
   },
   variants: {
     variant: {
-      assist: { root: 'border-outline text-on-surface cursor-pointer' },
-      suggestion: { root: 'border-outline text-on-surface-variant cursor-pointer' },
-      input: { root: 'border-outline text-on-surface-variant cursor-default pr-2' },
+      assist: {
+        root: 'border-outline text-on-surface cursor-pointer',
+        icon: 'text-primary',
+      },
+      suggestion: {
+        root: 'border-outline text-on-surface-variant cursor-pointer',
+        icon: 'text-on-surface-variant',
+      },
+      input: {
+        root: 'border-outline text-on-surface-variant cursor-default pr-2',
+        icon: 'text-on-surface-variant',
+      },
       filter: {
         root: [
           'border-outline text-on-surface-variant cursor-pointer',
@@ -56,6 +73,7 @@ export const chipTv = tv({
           // M3 disabled + selected: faint on-surface/12 container
           'data-[pressed]:data-[disabled]:bg-on-surface/12 data-[pressed]:disabled:bg-on-surface/12',
         ],
+        icon: 'text-on-surface-variant group-data-[pressed]:hidden',
       },
     },
     // M3 elevated: filled surface-container-low + elevation level1→level2 on hover,
@@ -77,6 +95,12 @@ export const chipTv = tv({
 
 export const Chip = createChip(({ variant, elevated }) => {
   const c = chipTv({ variant, elevated });
-  return { root: c.root(), remove: c.remove(), check: c.check(), avatar: c.avatar() };
+  return {
+    root: c.root(),
+    remove: c.remove(),
+    check: c.check(),
+    avatar: c.avatar(),
+    icon: c.icon(),
+  };
 });
 export type { ChipProps, ChipVariant } from '@m3-baseui/core';

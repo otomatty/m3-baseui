@@ -13,18 +13,25 @@ export const Variants: Story = {
     const [filterOn, setFilterOn] = useState(true);
     return (
       <div className="flex flex-wrap items-center gap-3">
-        <Chip variant="assist">
-          <Icon name="event" size={18} /> Assist
+        <Chip variant="assist" icon={<Icon name="event" size={18} />}>
+          Assist
         </Chip>
-        <Chip variant="filter" selected={filterOn} onSelectedChange={setFilterOn}>
-          {filterOn ? <Icon name="check" size={18} /> : null} Filter
+        <Chip
+          variant="filter"
+          selected={filterOn}
+          onSelectedChange={setFilterOn}
+          icon={<Icon name="filter_list" size={18} />}
+        >
+          Filter
         </Chip>
-        <Chip variant="suggestion">Suggestion</Chip>
+        <Chip variant="suggestion" icon={<Icon name="local_offer" size={18} />}>
+          Suggestion
+        </Chip>
         <Chip variant="input" onRemove={() => {}}>
           Input
         </Chip>
-        <Chip variant="assist" elevated>
-          <Icon name="bolt" size={18} /> Elevated
+        <Chip variant="assist" elevated icon={<Icon name="bolt" size={18} />}>
+          Elevated
         </Chip>
         <Chip variant="input" avatar={<Icon name="person" size={18} />} onRemove={() => {}}>
           Avatar

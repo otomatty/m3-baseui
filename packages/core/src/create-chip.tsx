@@ -22,12 +22,13 @@ import { TouchTarget } from './touch-target';
  * @returns A `forwardRef` Chip covering the assist/filter/input/suggestion types.
  */
 export function createChip(resolve: ChipClassResolver) {
-  /** Renders the chip body per `variant`, plus optional avatar/remove/check slots. */
+  /** Renders the chip body per `variant`, plus optional icon/avatar/remove/check slots. */
   function Chip(
     {
       variant = 'assist',
       elevated,
       avatar,
+      icon,
       selected,
       onSelectedChange,
       onRemove,
@@ -40,14 +41,22 @@ export function createChip(resolve: ChipClassResolver) {
     forwardedRef: React.Ref<HTMLElement>,
   ): React.JSX.Element {
     const classes = resolve({ variant, elevated });
+    const leadingIcon = icon != null;
+    const leadingAvatar = avatar != null && !leadingIcon;
+    const leadingMarkers: { [key: `data-${string}`]: string } = {};
+    if (leadingIcon) leadingMarkers['data-with-leading-icon'] = '';
     const cls = cx(classes.root, className);
     const rippleNode = ripple ? <Ripple /> : null;
-    const avatarNode =
-      avatar != null ? (
-        <span className={classes.avatar} data-slot="avatar" aria-hidden="true">
-          {avatar}
-        </span>
-      ) : null;
+    const iconNode = leadingIcon ? (
+      <span className={classes.icon} data-slot="icon" aria-hidden="true">
+        {icon}
+      </span>
+    ) : null;
+    const avatarNode = leadingAvatar ? (
+      <span className={classes.avatar} data-slot="avatar" aria-hidden="true">
+        {avatar}
+      </span>
+    ) : null;
 
     if (variant === 'filter') {
       return (
@@ -56,8 +65,10 @@ export function createChip(resolve: ChipClassResolver) {
           pressed={selected}
           onPressedChange={onSelectedChange ? (p) => onSelectedChange(p) : undefined}
           className={cls}
+          {...leadingMarkers}
           {...rest}
         >
+          {iconNode}
           {avatarNode}
           {/* M3 leading checkmark: kept mounted, revealed via data-pressed in CSS */}
           <span className={classes.check} data-slot="check" aria-hidden="true">
@@ -74,7 +85,13 @@ export function createChip(resolve: ChipClassResolver) {
 
     if (variant === 'input') {
       return (
-        <span ref={forwardedRef as React.Ref<HTMLSpanElement>} className={cls} {...rest}>
+        <span
+          ref={forwardedRef as React.Ref<HTMLSpanElement>}
+          className={cls}
+          {...leadingMarkers}
+          {...rest}
+        >
+          {iconNode}
           {avatarNode}
           {children}
           {onRemove ? (
@@ -102,8 +119,10 @@ export function createChip(resolve: ChipClassResolver) {
         ref={forwardedRef as React.Ref<HTMLButtonElement>}
         type="button"
         className={cls}
+        {...leadingMarkers}
         {...rest}
       >
+        {iconNode}
         {avatarNode}
         {children}
         {rippleNode}
