@@ -30,6 +30,8 @@ export type { TextFieldProps, TextFieldVariant } from './textfield';
 export { NavigationBar } from './navigation-bar';
 export { Fab } from './fab';
 export type { FabProps, FabSize, FabColor } from './fab';
+export { FabMenu } from './fab-menu';
+export type { FabMenuTriggerProps, FabMenuItemProps } from './fab-menu';
 export { Divider } from './divider';
 export type { DividerProps, DividerInset, DividerOrientation } from './divider';
 export { Progress } from './progress';

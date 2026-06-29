@@ -97,6 +97,11 @@
       "types": "./dist/fab.d.ts",
       "default": "./dist/fab.js"
     },
+    "./fab-menu": {
+      "@m3/source": "./src/fab-menu.ts",
+      "types": "./dist/fab-menu.d.ts",
+      "default": "./dist/fab-menu.js"
+    },
     "./divider": {
       "@m3/source": "./src/divider.ts",
       "types": "./dist/divider.d.ts",

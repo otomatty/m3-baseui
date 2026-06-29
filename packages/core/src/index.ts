@@ -18,6 +18,8 @@ export { createSelect } from './create-select';
 export { createTextField } from './create-textfield';
 export { createNavigationBar } from './create-navigation-bar';
 export { createFab } from './create-fab';
+export { createFabMenu } from './create-fab-menu';
+export type { FabMenuTriggerProps, FabMenuItemProps } from './create-fab-menu';
 export { createDivider } from './create-divider';
 export { createProgress } from './create-progress';
 export { createList } from './create-list';
@@ -97,6 +99,7 @@ export {
   type FabResolverArgs,
   type FabClassResolver,
 } from './fab.contract';
+export type { FabMenuClasses } from './fab-menu.contract';
 export type { SnackbarClasses } from './snackbar.contract';
 export {
   DIVIDER_INSETS,

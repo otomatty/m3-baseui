@@ -53,6 +53,26 @@ test('Menu opens (data-popup-open) and highlights items via keyboard', async ({ 
   await expect(trigger).not.toHaveAttribute('data-popup-open', '');
 });
 
+test('FAB menu opens (data-popup-open) and navigates actions via keyboard', async ({ page }) => {
+  const trigger = page.getByRole('button', { name: 'FAB メニュー' });
+  await trigger.click();
+
+  await expect(trigger).toHaveAttribute('data-popup-open', '');
+  const menu = page.getByRole('menu').first();
+  await expect(menu).toBeVisible();
+
+  // ArrowDown highlights the first action (Base UI data-highlighted).
+  await page.keyboard.press('ArrowDown');
+  await expect(menu.getByRole('menuitem', { name: /ドキュメント/ })).toHaveAttribute(
+    'data-highlighted',
+    '',
+  );
+
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeHidden();
+  await expect(trigger).not.toHaveAttribute('data-popup-open', '');
+});
+
 test('Select opens and commits a chosen option', async ({ page }) => {
   const trigger = page.getByRole('combobox').first();
   await expect(trigger).toHaveText(/apple/);
