@@ -48,12 +48,14 @@ describe('NavigationBar tokens', () => {
     // icon + label dim to on-surface/0.38
     expect(s.icon()).toContain('group-data-[disabled]:text-on-surface/[0.38]');
     expect(s.label()).toContain('group-data-[disabled]:text-on-surface/[0.38]');
-    // a disabled destination that is also active stays dimmed (combined selector
-    // outranks the data-[pressed] active color)
-    expect(s.icon()).toContain('group-data-[disabled]:group-data-[pressed]:text-on-surface/[0.38]');
-    expect(s.label()).toContain(
-      'group-data-[disabled]:group-data-[pressed]:text-on-surface/[0.38]',
-    );
+    // a disabled destination that is also active stays dimmed. The override must
+    // test both attributes on the SAME group element (the item is the only
+    // `.group`); stacked `group-data-*:group-data-*` would wrongly require two
+    // nested groups and never match.
+    expect(s.icon()).toContain('group-[&[data-disabled][data-pressed]]:text-on-surface/[0.38]');
+    expect(s.label()).toContain('group-[&[data-disabled][data-pressed]]:text-on-surface/[0.38]');
+    expect(s.icon()).not.toContain('group-data-[disabled]:group-data-[pressed]:');
+    expect(s.label()).not.toContain('group-data-[disabled]:group-data-[pressed]:');
     // the active-indicator state layer is suppressed when disabled
     expect(s.indicator()).toContain('group-data-[disabled]:before:opacity-0');
   });

@@ -36,19 +36,22 @@ export const navigationBarTv = tv({
       // Raw <svg> icons render at 24dp (Material Symbols set their own size).
       '[&_svg]:size-6',
       'group-data-[pressed]:text-on-secondary-container',
-      // M3 disabled: icon dims to on-surface/0.38; the combined selector keeps a
-      // disabled+active destination dimmed (outranks the data-[pressed] color).
+      // M3 disabled: icon dims to on-surface/0.38. The item is the only `.group`,
+      // so the disabled+active override must test both attributes on that single
+      // element (`.group[data-disabled][data-pressed] &`) to outrank the equal-
+      // specificity data-[pressed] color — a stacked `group-data-*:group-data-*`
+      // would expect two nested groups and never match.
       'group-data-[disabled]:text-on-surface/[0.38]',
-      'group-data-[disabled]:group-data-[pressed]:text-on-surface/[0.38]',
+      'group-[&[data-disabled][data-pressed]]:text-on-surface/[0.38]',
     ],
     label: [
       'text-label-medium text-on-surface-variant',
       'transition-colors duration-150 ease-standard',
       'group-data-[pressed]:text-on-surface group-data-[pressed]:font-bold',
-      // M3 disabled: label dims to on-surface/0.38 (combined selector keeps a
-      // disabled+active label dimmed too).
+      // M3 disabled: label dims to on-surface/0.38. Same-element override (see the
+      // icon slot) keeps a disabled+active label dimmed.
       'group-data-[disabled]:text-on-surface/[0.38]',
-      'group-data-[disabled]:group-data-[pressed]:text-on-surface/[0.38]',
+      'group-[&[data-disabled][data-pressed]]:text-on-surface/[0.38]',
     ],
   },
 });
