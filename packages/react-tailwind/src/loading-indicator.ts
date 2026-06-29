@@ -12,7 +12,9 @@ import { tv } from './tv';
 
 export const loadingIndicatorTv = tv({
   slots: {
-    root: 'inline-flex items-center justify-center size-12 [&_svg]:block [&_svg]:size-full',
+    // The SVG is a fixed 38dp active indicator. Uncontained: the box shrinks to
+    // the shape. Contained: a 48dp pill wraps it (5dp inset on each side).
+    root: 'inline-flex items-center justify-center [&_svg]:block [&_svg]:size-[38px]',
     indicator: [
       'fill-primary',
       // Morph + rotate about the shape's own centre (transform-box: fill-box).
@@ -21,7 +23,7 @@ export const loadingIndicatorTv = tv({
   },
   variants: {
     contained: {
-      true: { root: 'rounded-full bg-secondary-container' },
+      true: { root: 'size-12 rounded-full bg-secondary-container' },
       false: {},
     },
   },

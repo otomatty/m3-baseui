@@ -19,15 +19,18 @@ export function createToolbar(resolve: ToolbarClassResolver) {
     { variant = 'standard', orientation = 'horizontal', className, ...rest },
     ref,
   ) {
+    // `rest` is spread first so the shared DOM / `data-*` contract (role,
+    // aria-orientation, data-variant, data-orientation) stays authoritative and
+    // a caller cannot desync it from `variant` / `orientation`.
     return (
       <div
+        {...rest}
         ref={ref}
         role="toolbar"
         aria-orientation={orientation === 'vertical' ? 'vertical' : undefined}
         data-variant={variant}
         data-orientation={orientation}
         className={cx(resolve({ variant, orientation }), className)}
-        {...rest}
       />
     );
   });

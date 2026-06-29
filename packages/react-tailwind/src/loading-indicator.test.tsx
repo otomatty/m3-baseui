@@ -28,15 +28,17 @@ describe('LoadingIndicator', () => {
 });
 
 describe('LoadingIndicator tokens', () => {
-  test('48dp box with a primary active indicator that animates', () => {
+  test('38dp active indicator (primary) that animates', () => {
     const s = loadingIndicatorTv();
-    expect(s.root()).toContain('size-12');
+    expect(s.root()).toContain('[&_svg]:size-[38px]');
     expect(s.indicator()).toContain('fill-primary');
     expect(s.indicator()).toContain('animate-m3-loading');
   });
 
-  test('contained adds a secondary-container container', () => {
+  test('contained adds a 48dp secondary-container pill', () => {
     const s = loadingIndicatorTv({ contained: true });
+    expect(s.root()).toContain('size-12');
+    expect(s.root()).toContain('rounded-full');
     expect(s.root()).toContain('bg-secondary-container');
   });
 });

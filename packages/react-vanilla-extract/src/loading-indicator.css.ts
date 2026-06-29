@@ -16,13 +16,14 @@ export const root = style({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
+});
+// The SVG is a fixed 38dp active indicator (uncontained: the box shrinks to it).
+globalStyle(`${root} svg`, { display: 'block', width: '38px', height: '38px' });
+
+// M3 "contained" config: a 48dp pill container with the 38dp shape inset 5dp.
+export const contained = style({
   width: '48px',
   height: '48px',
-});
-globalStyle(`${root} svg`, { display: 'block', width: '100%', height: '100%' });
-
-// M3 "contained" config: the shape sits on a filled, pill-shaped container.
-export const contained = style({
   borderRadius: vars.sys.shape.full,
   background: `rgb(${vars.sys.color.secondaryContainer})`,
 });

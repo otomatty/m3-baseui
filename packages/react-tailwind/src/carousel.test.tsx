@@ -12,6 +12,8 @@ describe('Carousel', () => {
     );
     const group = screen.getByRole('group', { name: 'gallery' });
     expect(group).toHaveAttribute('aria-roledescription', 'carousel');
+    // Scrollable region must be keyboard-accessible (focusable).
+    expect(group).toHaveAttribute('tabindex', '0');
     expect(group).toHaveAttribute('data-variant', 'multi-browse');
     expect(screen.getByText('one')).toBeInTheDocument();
     expect(screen.getByText('two')).toBeInTheDocument();

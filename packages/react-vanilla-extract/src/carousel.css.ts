@@ -20,6 +20,8 @@ export const root = recipe({
       'multi-browse': {},
       hero: {},
       'full-screen': {
+        // gap 0: full-screen slides fill the viewport with no inter-slide gap.
+        gap: '0',
         flexDirection: 'column',
         overflowX: 'hidden',
         overflowY: 'auto',

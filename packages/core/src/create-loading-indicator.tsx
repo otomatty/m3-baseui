@@ -55,20 +55,27 @@ function flowerPath(): string {
 }
 
 const SHAPE = flowerPath();
+// Tight viewBox around the shape's outer radius so the SVG bounds the 38dp
+// active indicator exactly (no transparent padding). This lets the `contained`
+// config render as a real 48dp container with the shape inset, while the
+// uncontained config is just the 38dp shape.
+const VIEWBOX = `${CENTER - OUTER} ${CENTER - OUTER} ${2 * OUTER} ${2 * OUTER}`;
 
 export function createLoadingIndicator(resolve: LoadingIndicatorClassResolver) {
   const LoadingIndicator = React.forwardRef<HTMLSpanElement, LoadingIndicatorProps>(
     function LoadingIndicator({ contained = false, className, ...props }, ref) {
       const classes = resolve({ contained });
+      // `props` are spread first so the shared DOM/`data-*` contract (role,
+      // data-contained) stays authoritative and cannot be desynced by a caller.
       return (
         <span
+          {...props}
           ref={ref}
           role="progressbar"
           data-contained={contained ? '' : undefined}
           className={cx(classes.root, className)}
-          {...props}
         >
-          <svg viewBox="0 0 48 48" aria-hidden="true">
+          <svg viewBox={VIEWBOX} aria-hidden="true">
             <path className={classes.indicator} d={SHAPE} />
           </svg>
         </span>

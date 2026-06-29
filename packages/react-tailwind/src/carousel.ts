@@ -22,7 +22,8 @@ export const carouselTv = tv({
       'multi-browse': { item: 'w-40 h-56' },
       hero: { item: 'w-72 h-56 snap-center' },
       'full-screen': {
-        root: 'flex-col overflow-x-hidden overflow-y-auto snap-y h-full',
+        // gap-0: full-screen slides fill the viewport with no inter-slide gap.
+        root: 'flex-col gap-0 overflow-x-hidden overflow-y-auto snap-y h-full',
         item: 'w-full h-full snap-center',
       },
     },
