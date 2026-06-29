@@ -14,12 +14,11 @@
 /*
  * Component keyframes that can't be expressed as utilities. The linear progress
  * indeterminate bar slides a 40%-wide indicator across the track; the circular
- * indeterminate spinner rotates the whole ring. Both periods mirror the VE build
- * (2s linear bar / 1.4s circular spin) so the two engines stay drop-in identical.
+ * indeterminate spinner reuses Tailwind's built-in `animate-spin` (1s), which the
+ * VE build matches.
  */
 @theme {
   --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;
-  --animate-m3-circular-indeterminate: m3-circular-indeterminate 1.4s linear infinite;
 }
 
 @keyframes m3-linear-indeterminate {
@@ -28,11 +27,5 @@
   }
   100% {
     transform: translateX(400%);
-  }
-}
-
-@keyframes m3-circular-indeterminate {
-  to {
-    transform: rotate(360deg);
   }
 }

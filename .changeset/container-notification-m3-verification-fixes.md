@@ -6,9 +6,9 @@
 Align container / notification components with the M3 spec and restore drop-in
 parity between the Tailwind and vanilla-extract engines:
 
-- **Progress (circular, indeterminate):** the Tailwind build span now rotates via
-  a dedicated `m3-circular-indeterminate` keyframe at 1.4s instead of Tailwind's
-  built-in `animate-spin` (1s), matching the VE recipe's spin period.
+- **Progress (circular, indeterminate):** the VE recipe's spin period is now 1s
+  to match the Tailwind build's built-in `animate-spin` (was 1.4s), restoring
+  drop-in parity without relying on a preset-only keyframe.
 - **Card (interactive):** the Tailwind build adds `transition-shadow` so the
   elevated card's elevation lift/settle animates, matching the VE box-shadow
   transition (previously the elevation change snapped instantly).

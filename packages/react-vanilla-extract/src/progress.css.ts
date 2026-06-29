@@ -54,7 +54,8 @@ export const circularRoot = style({
   width: '48px',
   height: '48px',
   selectors: {
-    '&[data-indeterminate]': { animation: `${circularSpin} 1.4s linear infinite` },
+    // 1s matches Tailwind's built-in `animate-spin` period (drop-in parity).
+    '&[data-indeterminate]': { animation: `${circularSpin} 1s linear infinite` },
   },
 });
 globalStyle(`${circularRoot} svg`, { display: 'block', width: '100%', height: '100%' });
