@@ -1,5 +1,50 @@
 # @m3-baseui/react-tailwind
 
+## 1.0.4
+
+### Patch Changes
+
+- 2935c46: Align container / notification components with the M3 spec and restore drop-in
+  parity between the Tailwind and vanilla-extract engines:
+
+  - **Progress (circular, indeterminate):** the VE recipe's spin period is now 1s
+    to match the Tailwind build's built-in `animate-spin` (was 1.4s), restoring
+    drop-in parity without relying on a preset-only keyframe.
+  - **Card (interactive):** the Tailwind build adds `transition-shadow` so the
+    elevated card's elevation lift/settle animates, matching the VE box-shadow
+    transition (previously the elevation change snapped instantly).
+  - **Snackbar (supporting text):** the `Description` slot now uses `body-medium`
+    at full opacity in both engines (was `body-small` at 90% opacity), per the M3
+    snackbar supporting-text spec.
+  - **Divider (vertical inset):** the Tailwind build uses a logical
+    `margin-block-start` for the vertical `inset` variant, matching the VE recipe's
+    `marginBlockStart` (was a physical `mt-4`).
+
+  All four keep identical DOM and `data-*` across engines (drop-in parity).
+
+- 7fbb54c: Align TextField focus indicators with M3 / material-web. The focused active
+  indicator now grows to the M3 3dp width in both variants (filled
+  `focus-active-indicator-height: 3px`, outlined `focus-outline-width: 3px`)
+  instead of 2dp, matching the existing Select trigger. The outlined focus padding
+  compensates the extra 2px so content stays steady. Both engines keep identical
+  DOM and `data-*` (drop-in parity).
+- 35d30c1: Align the NavigationBar disabled state with the M3 spec and the per-token
+  disabled convention already used by Tabs and NavigationDrawer, keeping drop-in
+  parity between the Tailwind and vanilla-extract engines:
+
+  - **NavigationBar (disabled):** a disabled destination no longer fades the whole
+    item with a blanket `opacity: 0.38`. Instead the icon and label dim to
+    `on-surface` at 38% (per-token), the active-indicator state layer is
+    suppressed, and the destination keeps `pointer-events: none`. A destination
+    that is disabled _and_ active stays dimmed (a combined `data-disabled` +
+    `data-pressed` selector outranks the active color), matching how Tabs already
+    handles disabled-active tabs.
+  - **NavigationBar (icon size):** the icon slot now constrains a raw `<svg>` to
+    24dp, matching the NavigationDrawer and Tabs icon slots so drop-in `<svg>`
+    icons render at the M3 size.
+
+  Both engines keep identical DOM and `data-*` (drop-in parity).
+
 ## 1.0.3
 
 ### Patch Changes
