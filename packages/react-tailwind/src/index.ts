@@ -43,6 +43,11 @@ export type { CardProps, CardVariant } from './card';
 export { SegmentedButton, segmentedButtonTv } from './segmented-button';
 export { NavigationDrawer, navigationDrawerTv } from './navigation-drawer';
 export type { NavigationDrawerVariant } from './navigation-drawer';
+export { TopAppBar, topAppBarTv } from './top-app-bar';
+export type { TopAppBarProps, TopAppBarVariant } from './top-app-bar';
+export { BottomAppBar, bottomAppBarTv } from './bottom-app-bar';
+export type { BottomAppBarProps } from './bottom-app-bar';
+export { NavigationRail, navigationRailTv } from './navigation-rail';
 
 export {
   ThemeProvider,

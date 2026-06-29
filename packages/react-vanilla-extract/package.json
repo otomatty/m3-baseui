@@ -141,6 +141,21 @@
       "@m3/source": "./src/navigation-drawer.ts",
       "types": "./dist/navigation-drawer.d.ts",
       "default": "./dist/navigation-drawer.js"
+    },
+    "./top-app-bar": {
+      "@m3/source": "./src/top-app-bar.ts",
+      "types": "./dist/top-app-bar.d.ts",
+      "default": "./dist/top-app-bar.js"
+    },
+    "./bottom-app-bar": {
+      "@m3/source": "./src/bottom-app-bar.ts",
+      "types": "./dist/bottom-app-bar.d.ts",
+      "default": "./dist/bottom-app-bar.js"
+    },
+    "./navigation-rail": {
+      "@m3/source": "./src/navigation-rail.ts",
+      "types": "./dist/navigation-rail.d.ts",
+      "default": "./dist/navigation-rail.js"
     }
   },
   "files": [

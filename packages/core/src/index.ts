@@ -27,6 +27,9 @@ export { createBadge } from './create-badge';
 export { createCard } from './create-card';
 export { createSegmentedButton } from './create-segmented-button';
 export { createNavigationDrawer } from './create-navigation-drawer';
+export { createTopAppBar } from './create-top-app-bar';
+export { createBottomAppBar } from './create-bottom-app-bar';
+export { createNavigationRail } from './create-navigation-rail';
 
 // Contracts (variant sets + prop types, defined once)
 export {
@@ -149,6 +152,21 @@ export {
   type NavigationDrawerOwnProps,
   type NavigationDrawerItemOwnProps,
 } from './navigation-drawer.contract';
+export {
+  TOP_APP_BAR_VARIANTS,
+  type TopAppBarVariant,
+  type TopAppBarSlots,
+  type TopAppBarResolverArgs,
+  type TopAppBarClassResolver,
+  type TopAppBarOwnProps,
+  type TopAppBarProps,
+} from './top-app-bar.contract';
+export type {
+  BottomAppBarClasses,
+  BottomAppBarOwnProps,
+  BottomAppBarProps,
+} from './bottom-app-bar.contract';
+export type { NavigationRailClasses } from './navigation-rail.contract';
 
 // Slot helpers (for engine packages composing Base UI parts)
 export { createSlot, mergeClassName, type ClassValue, type SlotOptions } from './slot';
