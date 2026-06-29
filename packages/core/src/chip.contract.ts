@@ -26,6 +26,8 @@ export interface ChipSlotClasses {
   check: string;
   /** The leading avatar (24dp circle). */
   avatar: string;
+  /** The leading icon (18dp). Color is variant-specific (assist → primary). */
+  icon: string;
 }
 
 export type ChipClassResolver = (args: ChipResolverArgs) => ChipSlotClasses;
@@ -35,8 +37,10 @@ export interface ChipOwnProps {
   variant?: ChipVariant;
   /** Elevated style: filled surface with elevation instead of an outline. */
   elevated?: boolean;
-  /** Leading avatar (24dp circle), e.g. an `<img>`. */
+  /** Leading avatar (24dp circle), e.g. an `<img>`. Mutually exclusive with `icon`. */
   avatar?: React.ReactNode;
+  /** Leading icon (18dp). Mutually exclusive with `avatar`; takes precedence when both are set. */
+  icon?: React.ReactNode;
   /** Selected state for `filter` chips. */
   selected?: boolean;
   /** Selection change handler for `filter` chips. */

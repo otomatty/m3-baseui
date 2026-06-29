@@ -48,6 +48,8 @@ export const chip = recipe({
     letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
     transition: `background-color 150ms ${vars.sys.motion.easing.standard}, border-color 150ms ${vars.sys.motion.easing.standard}`,
     selectors: {
+      // M3 with-icon padding: the icon side trims to 8dp (label side stays 16dp).
+      '&[data-with-leading-icon]': { paddingLeft: '8px' },
       '&::before': {
         content: '""',
         position: 'absolute',
@@ -140,6 +142,39 @@ export const avatar = style({
 });
 
 globalStyle(`${avatar} > img`, { width: '100%', height: '100%', objectFit: 'cover' });
+
+/** M3 leading icon: 18dp; root `data-with-leading-icon` trims leading padding to 8dp. */
+export const icon = recipe({
+  base: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    width: '18px',
+    height: '18px',
+    selectors: {
+      'button:disabled &, [data-disabled] &': {
+        color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+      },
+    },
+  },
+  variants: {
+    variant: {
+      assist: { color: `rgb(${vars.sys.color.primary})` },
+      suggestion: { color: `rgb(${vars.sys.color.onSurfaceVariant})` },
+      input: { color: `rgb(${vars.sys.color.onSurfaceVariant})` },
+      filter: { color: `rgb(${vars.sys.color.onSurfaceVariant})` },
+    },
+  },
+  defaultVariants: {
+    variant: 'assist',
+  },
+});
+
+globalStyle(`${icon.classNames.base} > svg`, { width: '18px', height: '18px' });
+
+// Filter chips hide the leading icon when selected (checkmark replaces it).
+globalStyle(`[data-pressed] ${icon.classNames.base}`, { display: 'none' });
 
 export const remove = style({
   display: 'inline-flex',
