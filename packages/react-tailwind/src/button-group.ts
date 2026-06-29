@@ -18,8 +18,10 @@ export const buttonGroup = tv({
       connected: [
         'gap-0.5',
         '[&>*:not(:first-child):not(:last-child)]:rounded-small',
-        '[&>*:first-child]:rounded-e-small',
-        '[&>*:last-child]:rounded-s-small',
+        // Guard against a lone child (it is both first *and* last) — only morph
+        // the inner-facing corner when there is actually a sibling to face.
+        '[&>*:first-child:not(:last-child)]:rounded-e-small',
+        '[&>*:last-child:not(:first-child)]:rounded-s-small',
       ],
     },
   },

@@ -23,9 +23,10 @@ describe('ButtonGroup', () => {
   test('connected variant tightens the gap and morphs the children inner corners', () => {
     const cls = buttonGroup({ variant: 'connected' });
     expect(cls).toContain('gap-0.5');
-    // outer corners stay full; only the inner-facing corners are reduced
-    expect(cls).toContain('[&>*:first-child]:rounded-e-small');
-    expect(cls).toContain('[&>*:last-child]:rounded-s-small');
+    // outer corners stay full; only the inner-facing corners are reduced. The
+    // first/last rules are guarded so a lone child keeps all corners full.
+    expect(cls).toContain('[&>*:first-child:not(:last-child)]:rounded-e-small');
+    expect(cls).toContain('[&>*:last-child:not(:first-child)]:rounded-s-small');
     expect(cls).toContain('[&>*:not(:first-child):not(:last-child)]:rounded-small');
   });
 

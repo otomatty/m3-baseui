@@ -8,9 +8,9 @@ import { SplitButton, splitButtonTv } from './split-button';
 function Basic(props: { variant?: 'filled' | 'tonal' | 'outlined' | 'elevated' } = {}) {
   return (
     <SplitButton.Root>
-      <SplitButton.Group aria-label="保存">
-        <SplitButton.Leading variant={props.variant}>保存</SplitButton.Leading>
-        <SplitButton.Trailing variant={props.variant} aria-label="その他の保存オプション" />
+      <SplitButton.Group variant={props.variant} aria-label="保存">
+        <SplitButton.Leading>保存</SplitButton.Leading>
+        <SplitButton.Trailing aria-label="その他の保存オプション" />
       </SplitButton.Group>
       <SplitButton.Portal>
         <SplitButton.Positioner>

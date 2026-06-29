@@ -23,13 +23,15 @@ export const connected = style({ gap: '2px' });
 globalStyle(`${connected} > *:not(:first-child):not(:last-child)`, {
   borderRadius: vars.sys.shape.small,
 });
-// first child: outer (start) corners stay full, inner (end) reduced.
-globalStyle(`${connected} > *:first-child`, {
+// first child: outer (start) corners stay full, inner (end) reduced. The
+// `:not(:last-child)` guard leaves a lone child (both first and last) fully
+// rounded — only morph the inner corner when there is a sibling to face.
+globalStyle(`${connected} > *:first-child:not(:last-child)`, {
   borderStartEndRadius: vars.sys.shape.small,
   borderEndEndRadius: vars.sys.shape.small,
 });
 // last child: inner (start) reduced, outer (end) corners stay full.
-globalStyle(`${connected} > *:last-child`, {
+globalStyle(`${connected} > *:last-child:not(:first-child)`, {
   borderStartStartRadius: vars.sys.shape.small,
   borderEndStartRadius: vars.sys.shape.small,
 });

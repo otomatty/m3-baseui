@@ -698,9 +698,9 @@ export function App() {
             <div className="flex flex-wrap gap-4">
               {(['filled', 'tonal', 'outlined', 'elevated'] as const).map((variant) => (
                 <SplitButton.Root key={variant}>
-                  <SplitButton.Group aria-label={`${variant} 保存`}>
-                    <SplitButton.Leading variant={variant}>保存</SplitButton.Leading>
-                    <SplitButton.Trailing variant={variant} aria-label="その他の保存オプション" />
+                  <SplitButton.Group variant={variant} aria-label={`${variant} 保存`}>
+                    <SplitButton.Leading>保存</SplitButton.Leading>
+                    <SplitButton.Trailing aria-label="その他の保存オプション" />
                   </SplitButton.Group>
                   <SplitButton.Portal>
                     <SplitButton.Positioner sideOffset={4} align="end">

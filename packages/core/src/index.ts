@@ -31,6 +31,7 @@ export { createSegmentedButton } from './create-segmented-button';
 export { createButtonGroup } from './create-button-group';
 export {
   createSplitButton,
+  type SplitButtonGroupProps,
   type SplitButtonLeadingProps,
   type SplitButtonTrailingProps,
 } from './create-split-button';
@@ -165,6 +166,7 @@ export {
 } from './button-group.contract';
 export type {
   SplitButtonClasses,
+  SplitButtonGroupOwnProps,
   SplitButtonLeadingOwnProps,
   SplitButtonTrailingOwnProps,
 } from './split-button.contract';

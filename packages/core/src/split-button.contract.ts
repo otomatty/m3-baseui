@@ -25,16 +25,20 @@ export interface SplitButtonClasses {
   item: string;
 }
 
-export interface SplitButtonLeadingOwnProps {
-  /** Container color, shared with the trailing part. @default 'filled' */
+export interface SplitButtonGroupOwnProps {
+  /**
+   * Container color, shared by both halves (handed to the leading + trailing
+   * parts via context so they can never render mismatched). @default 'filled'
+   */
   variant?: ButtonVariant;
+}
+
+export interface SplitButtonLeadingOwnProps {
   /** Show the pointer-origin ripple on press. @default true */
   ripple?: boolean;
 }
 
 export interface SplitButtonTrailingOwnProps {
-  /** Container color, shared with the leading part. @default 'filled' */
-  variant?: ButtonVariant;
   /** Show the pointer-origin ripple on press. @default true */
   ripple?: boolean;
 }
