@@ -22,6 +22,7 @@ export { createFabMenu } from './create-fab-menu';
 export type { FabMenuTriggerProps, FabMenuItemProps } from './create-fab-menu';
 export { createDivider } from './create-divider';
 export { createProgress } from './create-progress';
+export { createLoadingIndicator } from './create-loading-indicator';
 export { createList } from './create-list';
 export { createSnackbar, useSnackbar } from './create-snackbar';
 export { createItem } from './create-item';
@@ -44,6 +45,8 @@ export { createSideSheet } from './create-side-sheet';
 export { createSearch } from './create-search';
 export { createDatePicker, type CalendarProps } from './create-date-picker';
 export { createTimePicker } from './create-time-picker';
+export { createToolbar } from './create-toolbar';
+export { createCarousel } from './create-carousel';
 
 // Contracts (variant sets + prop types, defined once)
 export type { SearchClasses } from './search.contract';
@@ -140,6 +143,13 @@ export type {
   CircularProgressOwnProps,
   CircularProgressProps,
 } from './progress.contract';
+export type {
+  LoadingIndicatorSlotClasses,
+  LoadingIndicatorResolverArgs,
+  LoadingIndicatorClassResolver,
+  LoadingIndicatorOwnProps,
+  LoadingIndicatorProps,
+} from './loading-indicator.contract';
 export {
   LIST_ITEM_LINES,
   type ListItemLines,
@@ -222,6 +232,22 @@ export {
   type SideSheetClasses,
   type SideSheetOwnProps,
 } from './side-sheet.contract';
+export {
+  TOOLBAR_VARIANTS,
+  TOOLBAR_ORIENTATIONS,
+  type ToolbarVariant,
+  type ToolbarOrientation,
+  type ToolbarResolverArgs,
+  type ToolbarClassResolver,
+  type ToolbarOwnProps,
+  type ToolbarProps,
+} from './toolbar.contract';
+export {
+  CAROUSEL_VARIANTS,
+  type CarouselVariant,
+  type CarouselSlotClasses,
+  type CarouselClassResolver,
+} from './carousel.contract';
 
 // Slot helpers (for engine packages composing Base UI parts)
 export { createSlot, mergeClassName, type ClassValue, type SlotOptions } from './slot';

@@ -36,6 +36,8 @@ export { Divider } from './divider';
 export type { DividerProps, DividerInset, DividerOrientation } from './divider';
 export { Progress } from './progress';
 export type { LinearProgressProps, CircularProgressProps } from './progress';
+export { LoadingIndicator } from './loading-indicator';
+export type { LoadingIndicatorProps } from './loading-indicator';
 export { List } from './list';
 export type { ListItemProps, ListItemLines } from './list';
 export { Snackbar, useSnackbar } from './snackbar';
@@ -64,6 +66,10 @@ export { Search } from './search';
 export { DatePicker } from './date-picker';
 export { TimePicker } from './time-picker';
 export type { TimePickerVariant, TimeValue } from '@m3-baseui/core';
+export { Toolbar } from './toolbar';
+export type { ToolbarProps, ToolbarVariant, ToolbarOrientation } from './toolbar';
+export { Carousel } from './carousel';
+export type { CarouselVariant } from './carousel';
 
 export {
   ThemeProvider,
