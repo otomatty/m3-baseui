@@ -13,6 +13,7 @@ import { Toggle } from '@base-ui/react/toggle';
 import type { ChipClassResolver, ChipProps } from './chip.contract';
 import { cx } from './utils';
 import { Ripple } from './ripple/Ripple';
+import { TouchTarget } from './touch-target';
 
 /**
  * Build the M3 Chip bound to one engine's class resolver.
@@ -66,6 +67,7 @@ export function createChip(resolve: ChipClassResolver) {
           </span>
           {children}
           {rippleNode}
+          <TouchTarget />
         </Toggle>
       );
     }
@@ -105,6 +107,7 @@ export function createChip(resolve: ChipClassResolver) {
         {avatarNode}
         {children}
         {rippleNode}
+        <TouchTarget />
       </button>
     );
   }

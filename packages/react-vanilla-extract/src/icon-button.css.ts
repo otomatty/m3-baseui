@@ -49,7 +49,8 @@ export const iconButton = recipe({
     border: 'none',
     background: 'transparent',
     borderRadius: vars.sys.shape.full,
-    overflow: 'hidden',
+    // No `overflow: hidden`: it would clip the 48dp touch target on small sizes.
+    // The state layer is already rounded (border-radius: inherit); ripple self-clips.
     cursor: 'pointer',
     userSelect: 'none',
     color: `rgb(${vars.sys.color.onSurfaceVariant})`,

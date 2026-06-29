@@ -12,9 +12,12 @@ export const chipTv = tv({
   slots: {
     root: [
       'group relative inline-flex items-center justify-center gap-2 box-border',
-      'h-8 px-4 rounded-[8px] overflow-hidden select-none border bg-transparent text-label-large',
+      // No `overflow-hidden`: it would clip the 48dp touch target. The state
+      // layer is rounded to match instead (before:rounded-[inherit]); the ripple
+      // self-clips.
+      'h-8 px-4 rounded-[8px] select-none border bg-transparent text-label-large',
       'transition-colors duration-150 ease-standard',
-      'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
+      'before:absolute before:inset-0 before:rounded-[inherit] before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',

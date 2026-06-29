@@ -109,17 +109,24 @@ describe('IconButton', () => {
   });
 
   test('mounts a ripple host by default and omits it when disabled', () => {
+    // The touch target is also an aria-hidden span, so scope the query to the
+    // ripple host (which carries no data-touch-target).
+    const rippleHost = 'span[aria-hidden="true"]:not([data-touch-target])';
     const { rerender } = render(<IconButton aria-label="R">●</IconButton>);
-    expect(
-      screen.getByRole('button', { name: 'R' }).querySelector('span[aria-hidden="true"]'),
-    ).not.toBeNull();
+    expect(screen.getByRole('button', { name: 'R' }).querySelector(rippleHost)).not.toBeNull();
     rerender(
       <IconButton aria-label="R" ripple={false}>
         ●
       </IconButton>,
     );
-    expect(
-      screen.getByRole('button', { name: 'R' }).querySelector('span[aria-hidden="true"]'),
-    ).toBeNull();
+    expect(screen.getByRole('button', { name: 'R' }).querySelector(rippleHost)).toBeNull();
+  });
+
+  test('exposes a transparent 48dp touch target (M3 a11y)', () => {
+    render(<IconButton aria-label="T">●</IconButton>);
+    const tt = screen.getByRole('button', { name: 'T' }).querySelector('[data-touch-target]');
+    expect(tt).not.toBeNull();
+    expect((tt as HTMLElement).style.position).toBe('absolute');
+    expect((tt as HTMLElement).getAttribute('style')).toContain('48px');
   });
 });

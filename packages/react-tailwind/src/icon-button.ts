@@ -29,7 +29,10 @@ const widthCompounds = Object.entries(WIDTHS).flatMap(([size, w]) =>
 export const iconButton = tv({
   base: [
     'relative inline-flex items-center justify-center shrink-0',
-    'rounded-full overflow-hidden cursor-pointer select-none border-0 bg-transparent',
+    // No `overflow-hidden`: it would clip the 48dp touch target on small sizes.
+    // The state layer is already rounded (before:rounded-[inherit]); the ripple
+    // self-clips.
+    'rounded-full cursor-pointer select-none border-0 bg-transparent',
     'transition-[box-shadow,background-color,color] duration-200 ease-standard',
     // State layer overlay
     'before:absolute before:inset-0 before:rounded-[inherit] before:bg-current before:opacity-0 before:pointer-events-none',

@@ -273,6 +273,7 @@ export {
 
 // Primitives
 export { Ripple, type RippleProps } from './ripple/Ripple';
+export { TouchTarget } from './touch-target';
 
 // Utils
 export { cx, mergeRefs } from './utils';

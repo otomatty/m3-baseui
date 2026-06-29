@@ -13,6 +13,7 @@ import { useRender } from '@base-ui/react/use-render';
 import type { IconButtonClassResolver, IconButtonProps } from './icon-button.contract';
 import { cx } from './utils';
 import { Ripple } from './ripple/Ripple';
+import { TouchTarget } from './touch-target';
 
 /**
  * Build the M3 Icon Button bound to one engine's class resolver.
@@ -51,6 +52,7 @@ export function createIconButton(resolve: IconButtonClassResolver) {
           <>
             {children}
             {ripple ? <Ripple /> : null}
+            <TouchTarget />
           </>
         ),
       },

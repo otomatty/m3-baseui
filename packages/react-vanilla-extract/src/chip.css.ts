@@ -36,7 +36,8 @@ export const chip = recipe({
     height: '32px',
     paddingInline: '16px',
     borderRadius: '8px',
-    overflow: 'hidden',
+    // No `overflow: hidden`: it would clip the 48dp touch target. The state layer
+    // is rounded to match instead (border-radius: inherit); the ripple self-clips.
     userSelect: 'none',
     border: `1px solid rgb(${vars.sys.color.outline})`,
     background: 'transparent',
@@ -51,6 +52,7 @@ export const chip = recipe({
         content: '""',
         position: 'absolute',
         inset: 0,
+        borderRadius: 'inherit',
         background: 'currentColor',
         opacity: 0,
         pointerEvents: 'none',

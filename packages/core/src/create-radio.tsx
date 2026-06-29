@@ -12,6 +12,7 @@ import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 
 import type { RadioClasses } from './radio.contract';
 import { mergeClassName } from './slot';
+import { TouchTarget } from './touch-target';
 
 type RadioRootProps = React.ComponentPropsWithoutRef<typeof RadioPrimitive.Root>;
 type RadioProps = RadioRootProps & {
@@ -41,6 +42,7 @@ export function createRadio(classes: RadioClasses) {
           {...props}
         >
           <RadioPrimitive.Indicator className={classes.indicator} keepMounted />
+          <TouchTarget />
         </RadioPrimitive.Root>
       );
     },

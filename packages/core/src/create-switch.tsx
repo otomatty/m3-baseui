@@ -13,6 +13,7 @@ import { Switch as SwitchPrimitive } from '@base-ui/react/switch';
 
 import type { SwitchClasses, SwitchIcons } from './switch.contract';
 import { mergeClassName } from './slot';
+import { TouchTarget } from './touch-target';
 
 type RootProps = React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>;
 type SwitchProps = RootProps & {
@@ -55,6 +56,7 @@ export function createSwitch(classes: SwitchClasses) {
               </span>
             ) : null}
           </SwitchPrimitive.Thumb>
+          <TouchTarget />
         </SwitchPrimitive.Root>
       );
     },
