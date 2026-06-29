@@ -126,6 +126,26 @@ test('Switch toggles data-checked on click', async ({ page }) => {
   await expect(sw).toHaveAttribute('aria-checked', 'true');
 });
 
+test('Checkbox exposes a ≥48dp touch target centered on the 18dp box (M3 a11y)', async ({
+  page,
+}) => {
+  // happy-dom has no layout engine, so the unit tests can only assert the inline
+  // style; here we verify the real rendered geometry in a browser (both engines).
+  const checkbox = page.getByRole('checkbox').first();
+  const box = await checkbox.boundingBox();
+  const touch = await checkbox.locator('[data-touch-target]').boundingBox();
+  if (!box || !touch) throw new Error('missing bounding boxes');
+
+  // The hit area is at least 48dp in both dimensions…
+  expect(touch.width).toBeGreaterThanOrEqual(48);
+  expect(touch.height).toBeGreaterThanOrEqual(48);
+  // …and stays centered on the visual box (so it overflows symmetrically).
+  const boxCenter = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+  const touchCenter = { x: touch.x + touch.width / 2, y: touch.y + touch.height / 2 };
+  expect(Math.abs(touchCenter.x - boxCenter.x)).toBeLessThanOrEqual(1);
+  expect(Math.abs(touchCenter.y - boxCenter.y)).toBeLessThanOrEqual(1);
+});
+
 test('SegmentedButton moves single selection (data-pressed / aria-pressed)', async ({ page }) => {
   // The first group (日/週/月) defaults to 週.
   const day = page.getByRole('button', { name: '日' });

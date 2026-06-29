@@ -50,6 +50,17 @@ describe('Checkbox', () => {
     expect(tokens).toContain('data-[indeterminate]:active:text-on-surface');
   });
 
+  test('exposes a transparent 48dp touch target (M3 a11y)', () => {
+    render(<Checkbox />);
+    const tt = screen.getByRole('checkbox').querySelector('[data-touch-target]');
+    expect(tt).not.toBeNull();
+    expect(tt).toHaveAttribute('aria-hidden', 'true');
+    expect((tt as HTMLElement).style.position).toBe('absolute');
+    // Assert each dimension so a regression in only one is still caught.
+    expect((tt as HTMLElement).style.minWidth).toBe('48px');
+    expect((tt as HTMLElement).style.minHeight).toBe('48px');
+  });
+
   test('error prop sets data-error and tints with error tokens (M3)', () => {
     render(<Checkbox error />);
     const el = screen.getByRole('checkbox');

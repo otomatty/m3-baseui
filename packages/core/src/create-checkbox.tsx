@@ -12,6 +12,7 @@ import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 
 import type { CheckboxClasses } from './checkbox.contract';
 import { mergeClassName } from './slot';
+import { TouchTarget } from './touch-target';
 
 type RootProps = React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>;
 type CheckboxProps = RootProps & {
@@ -44,6 +45,7 @@ export function createCheckbox(classes: CheckboxClasses) {
               <path fill="currentColor" d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
             </svg>
           </CheckboxPrimitive.Indicator>
+          <TouchTarget />
         </CheckboxPrimitive.Root>
       );
     },

@@ -84,4 +84,18 @@ describe('Chip', () => {
     expect(avatar).not.toBeNull();
     expect(avatar?.querySelector('img')).not.toBeNull();
   });
+
+  test('interactive chips expose a transparent 48dp touch target (M3 a11y)', () => {
+    render(<Chip variant="assist">Assist</Chip>);
+    const chip = screen.getByRole('button', { name: 'Assist' });
+    const tt = chip.querySelector('[data-touch-target]');
+    expect(tt).not.toBeNull();
+    expect(tt).toHaveAttribute('aria-hidden', 'true');
+    expect((tt as HTMLElement).style.position).toBe('absolute');
+    // Assert each dimension so a regression in only one is still caught.
+    expect((tt as HTMLElement).style.minWidth).toBe('48px');
+    expect((tt as HTMLElement).style.minHeight).toBe('48px');
+    // The root must not clip overflow, or the 48dp extension is cut off.
+    expect(chip.className).not.toContain('overflow-hidden');
+  });
 });
