@@ -28,6 +28,12 @@ export { createItem } from './create-item';
 export { createBadge } from './create-badge';
 export { createCard } from './create-card';
 export { createSegmentedButton } from './create-segmented-button';
+export { createButtonGroup } from './create-button-group';
+export {
+  createSplitButton,
+  type SplitButtonLeadingProps,
+  type SplitButtonTrailingProps,
+} from './create-split-button';
 export { createNavigationDrawer } from './create-navigation-drawer';
 export { createTopAppBar } from './create-top-app-bar';
 export { createBottomAppBar } from './create-bottom-app-bar';
@@ -149,6 +155,19 @@ export type {
   SegmentedButtonClasses,
   SegmentedButtonItemOwnProps,
 } from './segmented-button.contract';
+export {
+  BUTTON_GROUP_VARIANTS,
+  type ButtonGroupVariant,
+  type ButtonGroupResolverArgs,
+  type ButtonGroupClassResolver,
+  type ButtonGroupOwnProps,
+  type ButtonGroupProps,
+} from './button-group.contract';
+export type {
+  SplitButtonClasses,
+  SplitButtonLeadingOwnProps,
+  SplitButtonTrailingOwnProps,
+} from './split-button.contract';
 export {
   NAV_DRAWER_VARIANTS,
   type NavigationDrawerVariant,
