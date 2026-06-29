@@ -93,6 +93,11 @@ export function createChip(resolve: ChipClassResolver) {
       const disabled = (rest as { disabled?: boolean }).disabled === true;
       const deletable = onRemove != null && !disabled;
       const restKeyDown = restProps.onKeyDown;
+      // A `role="group"` is not named by its text content, so a focusable chip
+      // would otherwise be an unnamed tab stop. Name it from string children
+      // unless the caller already supplied a label.
+      const labelled = restProps['aria-label'] != null || restProps['aria-labelledby'] != null;
+      const autoLabel = !labelled && typeof children === 'string' ? children : undefined;
       // Applied together so `role` is always present alongside the key handler
       // (keeps the span a legitimate, focusable interactive target). Defaults are
       // fallbacks only — a roving-tabindex chip set can still pass tabIndex={-1}
@@ -101,6 +106,7 @@ export function createChip(resolve: ChipClassResolver) {
         ? {
             role: restProps.role ?? 'group',
             tabIndex: restProps.tabIndex ?? 0,
+            ...(autoLabel != null ? { 'aria-label': autoLabel } : null),
             onKeyDown: (event: React.KeyboardEvent<HTMLSpanElement>) => {
               restKeyDown?.(event);
               if (event.defaultPrevented) return;

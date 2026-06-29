@@ -216,6 +216,25 @@ describe('Chip', () => {
     expect(btn).not.toHaveAttribute('tabindex', '-1');
   });
 
+  test('focusable input chip body is named from its string children (role=group needs a name)', () => {
+    render(
+      <Chip variant="input" onRemove={() => {}}>
+        Tag
+      </Chip>,
+    );
+    // A group is not named by its contents, so the body carries an aria-label.
+    expect(screen.getByRole('group', { name: 'Tag' })).toBeInTheDocument();
+  });
+
+  test('caller-supplied aria-label on a deletable input chip is preserved', () => {
+    render(
+      <Chip variant="input" aria-label="Remove tag Foo" onRemove={() => {}}>
+        Foo
+      </Chip>,
+    );
+    expect(screen.getByRole('group', { name: 'Remove tag Foo' })).toBeInTheDocument();
+  });
+
   test('caller-supplied tabIndex on a deletable input chip is preserved (roving tabindex)', () => {
     // A chip set that manages focus passes tabIndex={-1} to inactive chips; the
     // default must not force them back into the tab order.
