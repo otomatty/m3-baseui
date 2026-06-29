@@ -45,9 +45,9 @@ export const chipTv = tv({
       'bg-primary-container text-on-primary-container',
       '[&>img]:size-full [&>img]:object-cover',
     ],
-    // M3 leading icon: 18dp; negative margin trims the leading padding to 8dp.
+    // M3 leading icon: 18dp; root `data-with-leading-icon` trims leading padding to 8dp.
     icon: [
-      'inline-flex items-center justify-center shrink-0 size-[18px] -ml-2',
+      'inline-flex items-center justify-center shrink-0 size-[18px]',
       '[&>svg]:size-full',
       'group-disabled:text-on-surface/38 group-data-[disabled]:text-on-surface/38',
     ],

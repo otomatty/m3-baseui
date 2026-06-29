@@ -143,7 +143,7 @@ export const avatar = style({
 
 globalStyle(`${avatar} > img`, { width: '100%', height: '100%', objectFit: 'cover' });
 
-/** M3 leading icon: 18dp; negative margin trims the leading padding to 8dp. */
+/** M3 leading icon: 18dp; root `data-with-leading-icon` trims leading padding to 8dp. */
 export const icon = recipe({
   base: {
     display: 'inline-flex',
@@ -152,7 +152,6 @@ export const icon = recipe({
     flexShrink: 0,
     width: '18px',
     height: '18px',
-    marginLeft: '-8px',
     selectors: {
       'button:disabled &, [data-disabled] &': {
         color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
