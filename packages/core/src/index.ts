@@ -101,7 +101,11 @@ export {
   type TabsSlotClasses,
   type TabsClassResolver,
 } from './tabs.contract';
-export type { SliderClasses } from './slider.contract';
+export type {
+  SliderClasses,
+  SliderTickListProps,
+  SliderValueLabelProps,
+} from './slider.contract';
 export type { SelectClasses } from './select.contract';
 export {
   TEXT_FIELD_VARIANTS,
