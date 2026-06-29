@@ -84,12 +84,38 @@ export function createChip(resolve: ChipClassResolver) {
     }
 
     if (variant === 'input') {
+      // WAI-ARIA APG (grid/chip): a deletable input chip is focusable and can be
+      // removed with Delete/Backspace. We only make the body interactive when it
+      // is actually removable and not disabled. `role="group"` (not `button`)
+      // keeps the trailing remove `<button>` from nesting inside an interactive
+      // control (which axe flags), while still giving the chip a keyboard stop.
+      const disabled = (rest as { disabled?: boolean }).disabled === true;
+      const deletable = onRemove != null && !disabled;
+      const restKeyDown = (rest as React.HTMLAttributes<HTMLSpanElement>).onKeyDown;
+      // Applied together so `role` is always present alongside the key handler
+      // (keeps the span a legitimate, focusable interactive target).
+      const interactiveProps = deletable
+        ? {
+            role: 'group' as const,
+            tabIndex: 0,
+            onKeyDown: (event: React.KeyboardEvent<HTMLSpanElement>) => {
+              restKeyDown?.(event);
+              if (event.defaultPrevented) return;
+              if (event.key === 'Delete' || event.key === 'Backspace') {
+                event.preventDefault();
+                onRemove?.();
+              }
+            },
+          }
+        : undefined;
+
       return (
         <span
           ref={forwardedRef as React.Ref<HTMLSpanElement>}
           className={cls}
           {...leadingMarkers}
           {...rest}
+          {...interactiveProps}
         >
           {iconNode}
           {avatarNode}
@@ -99,6 +125,7 @@ export function createChip(resolve: ChipClassResolver) {
               type="button"
               aria-label={removeLabel}
               onClick={onRemove}
+              disabled={disabled}
               className={classes.remove}
             >
               <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">

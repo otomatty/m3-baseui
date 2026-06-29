@@ -160,6 +160,86 @@ describe('Chip', () => {
     expect(icon.className.split(' ')).toContain('group-data-[pressed]:hidden');
   });
 
+  test('deletable input chip body is focusable (APG: role=group, tabindex=0)', () => {
+    render(
+      <Chip variant="input" onRemove={() => {}}>
+        Tag
+      </Chip>,
+    );
+    const chip = screen.getByRole('group');
+    expect(chip).toHaveTextContent('Tag');
+    expect(chip).toHaveAttribute('tabindex', '0');
+  });
+
+  test('Delete and Backspace on the input chip body call onRemove (APG)', () => {
+    let removed = 0;
+    render(
+      <Chip
+        variant="input"
+        onRemove={() => {
+          removed += 1;
+        }}
+      >
+        Tag
+      </Chip>,
+    );
+    const chip = screen.getByRole('group');
+    fireEvent.keyDown(chip, { key: 'Delete' });
+    fireEvent.keyDown(chip, { key: 'Backspace' });
+    expect(removed).toBe(2);
+  });
+
+  test('non-removal keys on the input chip body do not call onRemove', () => {
+    let removed = 0;
+    render(
+      <Chip
+        variant="input"
+        onRemove={() => {
+          removed += 1;
+        }}
+      >
+        Tag
+      </Chip>,
+    );
+    fireEvent.keyDown(screen.getByRole('group'), { key: 'Enter' });
+    expect(removed).toBe(0);
+  });
+
+  test('input chip remove button stays keyboard-reachable (real, enabled button)', () => {
+    render(
+      <Chip variant="input" onRemove={() => {}}>
+        Tag
+      </Chip>,
+    );
+    const btn = screen.getByRole('button', { name: 'Remove' });
+    expect(btn).toBeEnabled();
+    expect(btn).not.toHaveAttribute('tabindex', '-1');
+  });
+
+  test('non-deletable input chip body is not focusable (no remove → nothing to delete)', () => {
+    render(<Chip variant="input">Tag</Chip>);
+    expect(screen.queryByRole('group')).toBeNull();
+  });
+
+  test('disabled input chip is not removable by keyboard and its remove button is disabled', () => {
+    let removed = 0;
+    render(
+      <Chip
+        variant="input"
+        disabled
+        onRemove={() => {
+          removed += 1;
+        }}
+      >
+        Tag
+      </Chip>,
+    );
+    // The body is not focusable when disabled.
+    expect(screen.queryByRole('group')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Remove' })).toBeDisabled();
+    expect(removed).toBe(0);
+  });
+
   test('interactive chips expose a transparent 48dp touch target (M3 a11y)', () => {
     render(<Chip variant="assist">Assist</Chip>);
     const chip = screen.getByRole('button', { name: 'Assist' });
