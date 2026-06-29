@@ -650,13 +650,13 @@ export function App() {
                   <TopAppBar
                     variant={variant}
                     leading={
-                      <IconButton aria-label="メニュー">
+                      <IconButton aria-label="ナビゲーション">
                         <Icon name="menu" />
                       </IconButton>
                     }
                     trailing={
                       <>
-                        <IconButton aria-label="検索">
+                        <IconButton aria-label="バー内検索">
                           <Icon name="search" />
                         </IconButton>
                         <IconButton aria-label="その他">
