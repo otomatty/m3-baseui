@@ -112,6 +112,11 @@
       "types": "./dist/progress.d.ts",
       "default": "./dist/progress.js"
     },
+    "./loading-indicator": {
+      "@m3/source": "./src/loading-indicator.ts",
+      "types": "./dist/loading-indicator.d.ts",
+      "default": "./dist/loading-indicator.js"
+    },
     "./list": {
       "@m3/source": "./src/list.ts",
       "types": "./dist/list.d.ts",
@@ -196,6 +201,16 @@
       "@m3/source": "./src/time-picker.ts",
       "types": "./dist/time-picker.d.ts",
       "default": "./dist/time-picker.js"
+    },
+    "./toolbar": {
+      "@m3/source": "./src/toolbar.ts",
+      "types": "./dist/toolbar.d.ts",
+      "default": "./dist/toolbar.js"
+    },
+    "./carousel": {
+      "@m3/source": "./src/carousel.ts",
+      "types": "./dist/carousel.d.ts",
+      "default": "./dist/carousel.js"
     },
     "./preset.css": "./styles/preset.css",
     "./tokens.css": "./styles/tokens.css",

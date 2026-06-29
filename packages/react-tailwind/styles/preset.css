@@ -19,6 +19,9 @@
  */
 @theme {
   --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;
+  /* M3 Expressive loading indicator: the active shape rotates while it morphs
+   * (approximated as a rotate + scale pulse). The VE build matches this period. */
+  --animate-m3-loading: m3-loading 1.2s ease-in-out infinite;
 }
 
 @keyframes m3-linear-indeterminate {
@@ -27,5 +30,17 @@
   }
   100% {
     transform: translateX(400%);
+  }
+}
+
+@keyframes m3-loading {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(0.85);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
   }
 }

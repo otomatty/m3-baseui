@@ -31,6 +31,9 @@ import {
   FabMenu,
   Divider,
   Progress,
+  LoadingIndicator,
+  Toolbar,
+  Carousel,
   List,
   Snackbar,
   useSnackbar,
@@ -865,6 +868,60 @@ export function App() {
                 <Progress.Circular aria-label="処理中" />
               </div>
             </div>
+          </Section>
+
+          <Section title="LoadingIndicator">
+            <div className="flex items-center gap-6">
+              <LoadingIndicator aria-label="読み込み中" />
+              <LoadingIndicator aria-label="読み込み中（contained）" contained />
+            </div>
+          </Section>
+
+          <Section title="Toolbar">
+            <div className="flex flex-col items-start gap-6">
+              <Toolbar aria-label="標準ツールバー">
+                <IconButton aria-label="戻る">
+                  <Icon name="undo" />
+                </IconButton>
+                <IconButton aria-label="進む">
+                  <Icon name="redo" />
+                </IconButton>
+                <IconButton aria-label="追加">
+                  <Icon name="add" />
+                </IconButton>
+              </Toolbar>
+              <Toolbar aria-label="ビビッドなツールバー" variant="vibrant">
+                <IconButton aria-label="太字">
+                  <Icon name="format_bold" />
+                </IconButton>
+                <IconButton aria-label="斜体">
+                  <Icon name="format_italic" />
+                </IconButton>
+                <IconButton aria-label="下線">
+                  <Icon name="format_underlined" />
+                </IconButton>
+              </Toolbar>
+            </div>
+          </Section>
+
+          <Section title="Carousel">
+            <Carousel.Root aria-label="ギャラリー" className="max-w-md">
+              {[
+                'bg-primary-container text-on-primary-container',
+                'bg-secondary-container text-on-secondary-container',
+                'bg-tertiary-container text-on-tertiary-container',
+                'bg-error-container text-on-error-container',
+                'bg-surface-container-highest text-on-surface',
+              ].map((swatch, i) => (
+                <Carousel.Item
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static demo list
+                  key={i}
+                  className={`${swatch} flex items-end p-3 text-label-large`}
+                >
+                  画像 {i + 1}
+                </Carousel.Item>
+              ))}
+            </Carousel.Root>
           </Section>
 
           <Section title="List">
