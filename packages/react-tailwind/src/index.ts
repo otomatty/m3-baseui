@@ -27,6 +27,8 @@ export type { TextFieldProps, TextFieldVariant } from './textfield';
 export { NavigationBar, navigationBarTv } from './navigation-bar';
 export { Fab, fabTv } from './fab';
 export type { FabProps, FabSize, FabColor } from './fab';
+export { FabMenu, fabMenuTv } from './fab-menu';
+export type { FabMenuTriggerProps, FabMenuItemProps } from './fab-menu';
 export { Divider, dividerTv } from './divider';
 export type { DividerProps, DividerInset, DividerOrientation } from './divider';
 export { Progress, linearTv, circularTv } from './progress';

@@ -26,6 +26,7 @@ import {
   Badge,
   Item,
   Fab,
+  FabMenu,
   Divider,
   Progress,
   List,
@@ -553,20 +554,22 @@ export function App() {
               <Fab size="extended" color="tertiary">
                 <Icon name="add" /> 作成
               </Fab>
-              <Menu.Root>
-                <Menu.Trigger render={<Fab color="primary" aria-label="FAB メニュー" />}>
+              <FabMenu.Root>
+                <FabMenu.Trigger color="primary" aria-label="FAB メニュー">
                   <Icon name="add" />
-                </Menu.Trigger>
-                <Menu.Portal>
-                  <Menu.Positioner sideOffset={8}>
-                    <Menu.Popup>
-                      <Menu.Item>ドキュメント</Menu.Item>
-                      <Menu.Item>スプレッドシート</Menu.Item>
-                      <Menu.Item>スライド</Menu.Item>
-                    </Menu.Popup>
-                  </Menu.Positioner>
-                </Menu.Portal>
-              </Menu.Root>
+                </FabMenu.Trigger>
+                <FabMenu.Portal>
+                  <FabMenu.Positioner sideOffset={12} align="end" side="top">
+                    <FabMenu.Popup>
+                      <FabMenu.Item icon={<Icon name="description" />}>ドキュメント</FabMenu.Item>
+                      <FabMenu.Item icon={<Icon name="table_chart" />}>
+                        スプレッドシート
+                      </FabMenu.Item>
+                      <FabMenu.Item icon={<Icon name="slideshow" />}>スライド</FabMenu.Item>
+                    </FabMenu.Popup>
+                  </FabMenu.Positioner>
+                </FabMenu.Portal>
+              </FabMenu.Root>
             </div>
           </Section>
 
