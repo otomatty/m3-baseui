@@ -181,6 +181,21 @@
       "@m3/source": "./src/side-sheet.ts",
       "types": "./dist/side-sheet.d.ts",
       "default": "./dist/side-sheet.js"
+    },
+    "./search": {
+      "@m3/source": "./src/search.ts",
+      "types": "./dist/search.d.ts",
+      "default": "./dist/search.js"
+    },
+    "./date-picker": {
+      "@m3/source": "./src/date-picker.ts",
+      "types": "./dist/date-picker.d.ts",
+      "default": "./dist/date-picker.js"
+    },
+    "./time-picker": {
+      "@m3/source": "./src/time-picker.ts",
+      "types": "./dist/time-picker.d.ts",
+      "default": "./dist/time-picker.js"
     }
   },
   "files": [

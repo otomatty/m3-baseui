@@ -34,6 +34,9 @@ import {
   List,
   Snackbar,
   useSnackbar,
+  Search,
+  DatePicker,
+  TimePicker,
   ThemeProvider,
   useTheme,
 } from '@m3-baseui/react-tailwind';
@@ -41,6 +44,10 @@ import type { ButtonVariant } from '@m3-baseui/react-tailwind';
 import { Icon } from '@m3-baseui/icons';
 
 const BUTTON_VARIANTS: ButtonVariant[] = ['filled', 'tonal', 'outlined', 'elevated', 'text'];
+
+// Fixed reference date so the date-picker demos stay deterministic for visual
+// regression (a live `new Date()` would shift the month/today every CI run).
+const DEMO_DATE = new Date(2026, 5, 15);
 
 function ModeToggle() {
   const { resolvedMode, setMode } = useTheme();
@@ -905,6 +912,99 @@ export function App() {
                   style={{ background: c }}
                 />
               ))}
+            </div>
+          </Section>
+
+          <Section title="Search（search bar + docked view）">
+            <Search.Root items={['りんご', 'みかん', 'ぶどう', 'もも', 'なし', 'いちご']}>
+              <Search.Bar>
+                <Search.Icon>
+                  <Search.SearchGlyph />
+                </Search.Icon>
+                <Search.Input placeholder="果物を検索" aria-label="果物を検索" />
+                <Search.Clear>
+                  <Icon name="close" size={24} />
+                </Search.Clear>
+              </Search.Bar>
+              <Search.Portal>
+                <Search.Positioner sideOffset={4}>
+                  <Search.Popup>
+                    <Search.Empty>該当なし</Search.Empty>
+                    <Search.List>
+                      {(item: string) => (
+                        <Search.Item key={item} value={item}>
+                          <span data-slot="search-leading">
+                            <Icon name="history" size={24} />
+                          </span>
+                          {item}
+                          <Search.ItemIndicator>
+                            <Search.Check />
+                          </Search.ItemIndicator>
+                        </Search.Item>
+                      )}
+                    </Search.List>
+                  </Search.Popup>
+                </Search.Positioner>
+              </Search.Portal>
+            </Search.Root>
+          </Section>
+
+          <Section title="Date pickers（calendar + docked + modal）">
+            <div className="flex flex-wrap items-start gap-6">
+              <div className="rounded-large bg-surface-container-high">
+                <DatePicker.Calendar defaultMonth={DEMO_DATE} today={DEMO_DATE} />
+              </div>
+
+              <DatePicker.Root>
+                <DatePicker.Field>
+                  <DatePicker.Input placeholder="YYYY/MM/DD" aria-label="日付" />
+                  <DatePicker.FieldIcon aria-label="カレンダーを開く">
+                    <Icon name="calendar_today" size={24} />
+                  </DatePicker.FieldIcon>
+                </DatePicker.Field>
+                <DatePicker.Portal>
+                  <DatePicker.Positioner sideOffset={4} align="start">
+                    <DatePicker.Popup>
+                      <DatePicker.Calendar defaultMonth={DEMO_DATE} today={DEMO_DATE} />
+                    </DatePicker.Popup>
+                  </DatePicker.Positioner>
+                </DatePicker.Portal>
+              </DatePicker.Root>
+
+              <DatePicker.Modal>
+                <DatePicker.ModalTrigger render={<Button variant="tonal" />}>
+                  カレンダー（モーダル）
+                </DatePicker.ModalTrigger>
+                <DatePicker.ModalPortal>
+                  <DatePicker.ModalBackdrop />
+                  <DatePicker.ModalPopup>
+                    <DatePicker.ModalHeader>日付を選択</DatePicker.ModalHeader>
+                    <DatePicker.ModalHeadline>
+                      {new Intl.DateTimeFormat('ja-JP', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      }).format(DEMO_DATE)}
+                    </DatePicker.ModalHeadline>
+                    <DatePicker.Calendar defaultMonth={DEMO_DATE} today={DEMO_DATE} />
+                    <DatePicker.ModalActions>
+                      <DatePicker.ModalClose render={<Button variant="text" />}>
+                        キャンセル
+                      </DatePicker.ModalClose>
+                      <DatePicker.ModalClose render={<Button variant="text" />}>
+                        OK
+                      </DatePicker.ModalClose>
+                    </DatePicker.ModalActions>
+                  </DatePicker.ModalPopup>
+                </DatePicker.ModalPortal>
+              </DatePicker.Modal>
+            </div>
+          </Section>
+
+          <Section title="Time pickers（dial + input）">
+            <div className="flex flex-wrap items-start gap-8">
+              <TimePicker variant="dial" defaultValue={{ hour: 10, minute: 30 }} />
+              <TimePicker variant="input" defaultValue={{ hour: 14, minute: 45 }} />
             </div>
           </Section>
         </main>

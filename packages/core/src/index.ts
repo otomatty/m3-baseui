@@ -41,8 +41,22 @@ export { createBottomAppBar } from './create-bottom-app-bar';
 export { createNavigationRail } from './create-navigation-rail';
 export { createBottomSheet } from './create-bottom-sheet';
 export { createSideSheet } from './create-side-sheet';
+export { createSearch } from './create-search';
+export { createDatePicker, type CalendarProps } from './create-date-picker';
+export { createTimePicker } from './create-time-picker';
 
 // Contracts (variant sets + prop types, defined once)
+export type { SearchClasses } from './search.contract';
+export type { DatePickerClasses } from './date-picker.contract';
+export {
+  TIME_PICKER_VARIANTS,
+  type TimePickerVariant,
+  type TimeValue,
+  type TimePickerOwnProps,
+  type TimePickerClasses,
+  type TimePickerResolverArgs,
+  type TimePickerClassResolver,
+} from './time-picker.contract';
 export {
   BUTTON_VARIANTS,
   type ButtonVariant,
