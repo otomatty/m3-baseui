@@ -84,12 +84,47 @@ export function createChip(resolve: ChipClassResolver) {
     }
 
     if (variant === 'input') {
+      // WAI-ARIA APG (grid/chip): a deletable input chip is focusable and can be
+      // removed with Delete/Backspace. We only make the body interactive when it
+      // is actually removable and not disabled. `role="group"` (not `button`)
+      // keeps the trailing remove `<button>` from nesting inside an interactive
+      // control (which axe flags), while still giving the chip a keyboard stop.
+      const restProps = rest as React.HTMLAttributes<HTMLSpanElement>;
+      const disabled = (rest as { disabled?: boolean }).disabled === true;
+      const deletable = onRemove != null && !disabled;
+      const restKeyDown = restProps.onKeyDown;
+      // A `role="group"` is not named by its text content, so a focusable chip
+      // would otherwise be an unnamed tab stop. Name it from string children
+      // unless the caller already supplied a label.
+      const labelled = restProps['aria-label'] != null || restProps['aria-labelledby'] != null;
+      const autoLabel = !labelled && typeof children === 'string' ? children : undefined;
+      // Applied together so `role` is always present alongside the key handler
+      // (keeps the span a legitimate, focusable interactive target). Defaults are
+      // fallbacks only — a roving-tabindex chip set can still pass tabIndex={-1}
+      // (or its own role) and have it preserved.
+      const interactiveProps = deletable
+        ? {
+            role: restProps.role ?? 'group',
+            tabIndex: restProps.tabIndex ?? 0,
+            ...(autoLabel != null ? { 'aria-label': autoLabel } : null),
+            onKeyDown: (event: React.KeyboardEvent<HTMLSpanElement>) => {
+              restKeyDown?.(event);
+              if (event.defaultPrevented) return;
+              if (event.key === 'Delete' || event.key === 'Backspace') {
+                event.preventDefault();
+                onRemove?.();
+              }
+            },
+          }
+        : undefined;
+
       return (
         <span
           ref={forwardedRef as React.Ref<HTMLSpanElement>}
           className={cls}
           {...leadingMarkers}
           {...rest}
+          {...interactiveProps}
         >
           {iconNode}
           {avatarNode}
@@ -99,6 +134,7 @@ export function createChip(resolve: ChipClassResolver) {
               type="button"
               aria-label={removeLabel}
               onClick={onRemove}
+              disabled={disabled}
               className={classes.remove}
             >
               <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">

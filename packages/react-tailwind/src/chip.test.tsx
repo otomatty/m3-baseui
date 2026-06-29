@@ -160,6 +160,118 @@ describe('Chip', () => {
     expect(icon.className.split(' ')).toContain('group-data-[pressed]:hidden');
   });
 
+  test('deletable input chip body is focusable (APG: role=group, tabindex=0)', () => {
+    render(
+      <Chip variant="input" onRemove={() => {}}>
+        Tag
+      </Chip>,
+    );
+    const chip = screen.getByRole('group');
+    expect(chip).toHaveTextContent('Tag');
+    expect(chip).toHaveAttribute('tabindex', '0');
+  });
+
+  test('Delete and Backspace on the input chip body call onRemove (APG)', () => {
+    let removed = 0;
+    render(
+      <Chip
+        variant="input"
+        onRemove={() => {
+          removed += 1;
+        }}
+      >
+        Tag
+      </Chip>,
+    );
+    const chip = screen.getByRole('group');
+    fireEvent.keyDown(chip, { key: 'Delete' });
+    fireEvent.keyDown(chip, { key: 'Backspace' });
+    expect(removed).toBe(2);
+  });
+
+  test('non-removal keys on the input chip body do not call onRemove', () => {
+    let removed = 0;
+    render(
+      <Chip
+        variant="input"
+        onRemove={() => {
+          removed += 1;
+        }}
+      >
+        Tag
+      </Chip>,
+    );
+    fireEvent.keyDown(screen.getByRole('group'), { key: 'Enter' });
+    expect(removed).toBe(0);
+  });
+
+  test('input chip remove button stays keyboard-reachable (real, enabled button)', () => {
+    render(
+      <Chip variant="input" onRemove={() => {}}>
+        Tag
+      </Chip>,
+    );
+    const btn = screen.getByRole('button', { name: 'Remove' });
+    expect(btn).toBeEnabled();
+    expect(btn).not.toHaveAttribute('tabindex', '-1');
+  });
+
+  test('focusable input chip body is named from its string children (role=group needs a name)', () => {
+    render(
+      <Chip variant="input" onRemove={() => {}}>
+        Tag
+      </Chip>,
+    );
+    // A group is not named by its contents, so the body carries an aria-label.
+    expect(screen.getByRole('group', { name: 'Tag' })).toBeInTheDocument();
+  });
+
+  test('caller-supplied aria-label on a deletable input chip is preserved', () => {
+    render(
+      <Chip variant="input" aria-label="Remove tag Foo" onRemove={() => {}}>
+        Foo
+      </Chip>,
+    );
+    expect(screen.getByRole('group', { name: 'Remove tag Foo' })).toBeInTheDocument();
+  });
+
+  test('caller-supplied tabIndex on a deletable input chip is preserved (roving tabindex)', () => {
+    // A chip set that manages focus passes tabIndex={-1} to inactive chips; the
+    // default must not force them back into the tab order.
+    render(
+      <Chip variant="input" tabIndex={-1} onRemove={() => {}}>
+        Tag
+      </Chip>,
+    );
+    const chip = screen.getByRole('group');
+    expect(chip).toHaveAttribute('tabindex', '-1');
+    // Removal still works regardless of the roving tabindex value.
+  });
+
+  test('non-deletable input chip body is not focusable (no remove → nothing to delete)', () => {
+    render(<Chip variant="input">Tag</Chip>);
+    expect(screen.queryByRole('group')).toBeNull();
+  });
+
+  test('disabled input chip is not removable by keyboard and its remove button is disabled', () => {
+    let removed = 0;
+    render(
+      <Chip
+        variant="input"
+        disabled
+        onRemove={() => {
+          removed += 1;
+        }}
+      >
+        Tag
+      </Chip>,
+    );
+    // The body is not focusable when disabled.
+    expect(screen.queryByRole('group')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Remove' })).toBeDisabled();
+    expect(removed).toBe(0);
+  });
+
   test('interactive chips expose a transparent 48dp touch target (M3 a11y)', () => {
     render(<Chip variant="assist">Assist</Chip>);
     const chip = screen.getByRole('button', { name: 'Assist' });
