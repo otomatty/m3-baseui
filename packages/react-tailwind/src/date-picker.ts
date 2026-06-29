@@ -28,6 +28,7 @@ export const datePickerTv = tv({
       'text-label-large text-on-surface-variant cursor-pointer outline-none',
       'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
+      'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       '[&>svg]:transition-transform data-[view=years]:[&>svg]:rotate-180',
     ],
     grid: ['mt-2 border-collapse', '[&_td]:p-0 [&_td]:text-center'],
@@ -53,6 +54,7 @@ export const datePickerTv = tv({
       'text-label-large text-on-surface-variant cursor-pointer outline-none',
       'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
+      'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       'data-[selected]:bg-primary data-[selected]:text-on-primary',
     ],
 
@@ -70,6 +72,7 @@ export const datePickerTv = tv({
       'text-on-surface-variant cursor-pointer outline-none [&>svg]:size-6',
       'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
+      'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
     ],
     popup: [

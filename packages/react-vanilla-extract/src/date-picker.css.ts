@@ -90,6 +90,7 @@ export const monthLabel = style({
   selectors: {
     '&::before': stateBefore,
     '&:hover::before': { opacity: vars.sys.state.hover },
+    '&:focus-visible::before': { opacity: vars.sys.state.focus },
   },
 });
 globalStyle(`${monthLabel} > svg`, { transition: 'transform 150ms' });
@@ -166,6 +167,7 @@ export const yearButton = style({
   selectors: {
     '&::before': stateBefore,
     '&:hover::before': { opacity: vars.sys.state.hover },
+    '&:focus-visible::before': { opacity: vars.sys.state.focus },
     '&[data-selected]': {
       background: `rgb(${vars.sys.color.primary})`,
       color: `rgb(${vars.sys.color.onPrimary})`,
@@ -217,6 +219,7 @@ export const fieldIcon = style({
   selectors: {
     '&::before': stateBefore,
     '&:hover::before': { opacity: vars.sys.state.hover },
+    '&:focus-visible::before': { opacity: vars.sys.state.focus },
     '&:active::before': { opacity: vars.sys.state.pressed },
   },
 });

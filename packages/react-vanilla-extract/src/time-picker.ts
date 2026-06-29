@@ -2,6 +2,8 @@
  * time-picker.ts — wires the VE styles into the shared component factory.
  */
 import { createTimePicker } from '@m3-baseui/core';
+
+export type { TimePickerVariant, TimeValue } from '@m3-baseui/core';
 import {
   root,
   header,

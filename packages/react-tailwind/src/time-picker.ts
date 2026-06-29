@@ -29,6 +29,7 @@ export const timePickerTv = tv({
     ],
     period: [
       'flex-1 inline-flex items-center justify-center px-3 min-h-[38px] w-14',
+      'border-0 bg-transparent',
       'text-title-medium text-on-surface-variant cursor-pointer outline-none',
       'data-[selected]:bg-secondary-container data-[selected]:text-on-secondary-container',
       '[&+&]:border-t [&+&]:border-outline',
@@ -38,6 +39,7 @@ export const timePickerTv = tv({
     ],
     dialNumber: [
       'absolute -translate-x-1/2 -translate-y-1/2 inline-grid place-items-center size-12 rounded-full',
+      'border-0 bg-transparent',
       'text-body-large text-on-surface cursor-pointer outline-none select-none',
       'data-[selected]:bg-primary data-[selected]:text-on-primary',
     ],

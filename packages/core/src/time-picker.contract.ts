@@ -16,7 +16,11 @@ export interface TimeValue {
 
 export interface TimePickerOwnProps {
   variant?: TimePickerVariant;
-  /** `12h` shows an AM/PM toggle; `24h` hides it. */
+  /**
+   * Hour format. Governs the `input` variant (0–23 vs 1–12 + AM/PM). The `dial`
+   * variant is a 12-hour clock face, so it always shows the AM/PM toggle
+   * regardless of this value.
+   */
   format?: '12h' | '24h';
   value?: TimeValue;
   defaultValue?: TimeValue;

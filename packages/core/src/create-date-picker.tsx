@@ -50,8 +50,6 @@ function daysInMonth(year: number, month: number): number {
   return new Date(year, month + 1, 0).getDate();
 }
 
-const DEFAULT_WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-
 export interface CalendarProps {
   /** Selected date (controlled). */
   value?: Date | null;
@@ -73,10 +71,12 @@ export interface CalendarProps {
   today?: Date;
   /** BCP-47 locale for month/weekday formatting. */
   locale?: string;
-  /** Weekday header labels, Sunday-first. */
+  /** Weekday header labels, Sunday-first. Defaults to locale-derived narrow names. */
   weekdayLabels?: string[];
   previousMonthLabel?: string;
   nextMonthLabel?: string;
+  /** Accessible name for the year-selection list. */
+  yearLabel?: string;
   className?: string;
 }
 
@@ -93,9 +93,10 @@ function makeCalendar(classes: DatePickerClasses) {
     max,
     today,
     locale = 'en-US',
-    weekdayLabels = DEFAULT_WEEKDAYS,
+    weekdayLabels,
     previousMonthLabel = 'Previous month',
     nextMonthLabel = 'Next month',
+    yearLabel = 'Year',
     className,
   }: CalendarProps): React.JSX.Element {
     const isControlled = value !== undefined;
@@ -164,11 +165,16 @@ function makeCalendar(classes: DatePickerClasses) {
       new Intl.DateTimeFormat(locale, { dateStyle: 'full' }).format(d);
 
     // Stable, unique keys + accessible names for the weekday columns (2024-01-07
-    // is a Sunday, so this enumerates Sun→Sat in the active locale).
+    // is a Sunday, so this enumerates Sun→Sat in the active locale). The visible
+    // labels default to locale-derived narrow names unless overridden.
     const weekdayFmt = new Intl.DateTimeFormat(locale, { weekday: 'long' });
+    const narrowFmt = new Intl.DateTimeFormat(locale, { weekday: 'narrow' });
     const weekdayKeys = Array.from({ length: 7 }, (_, i) =>
       weekdayFmt.format(new Date(2024, 0, 7 + i)),
     );
+    const displayWeekdays =
+      weekdayLabels ??
+      Array.from({ length: 7 }, (_, i) => narrowFmt.format(new Date(2024, 0, 7 + i)));
 
     return (
       <div className={cx(classes.calendar, className)}>
@@ -219,7 +225,7 @@ function makeCalendar(classes: DatePickerClasses) {
           <table className={classes.grid} aria-label={monthYearLabel}>
             <thead>
               <tr className={classes.weekdays}>
-                {weekdayLabels.map((w, i) => (
+                {displayWeekdays.map((w, i) => (
                   <th
                     key={weekdayKeys[i]}
                     scope="col"
@@ -263,7 +269,7 @@ function makeCalendar(classes: DatePickerClasses) {
             </tbody>
           </table>
         ) : (
-          <div className={classes.yearGrid} role="listbox" aria-label="Year">
+          <div className={classes.yearGrid} role="listbox" aria-label={yearLabel}>
             {years.map((y) => (
               <button
                 key={`y-${y}`}
@@ -314,8 +320,10 @@ export function createDatePicker(classes: DatePickerClasses) {
     ModalPortal: DialogPrimitive.Portal,
     ModalBackdrop: createSlot(DialogPrimitive.Backdrop, classes.modalBackdrop),
     ModalPopup: createSlot(DialogPrimitive.Popup, classes.modalPopup),
-    ModalHeader: hostSlot('p', classes.modalHeader),
-    ModalHeadline: hostSlot('h2', classes.modalHeadline),
+    // Title/Description wire the dialog's accessible name + description (rendered
+    // as the same <p>/<h2> DOM as before, so both engines stay drop-in compatible).
+    ModalHeader: createSlot(DialogPrimitive.Description, classes.modalHeader),
+    ModalHeadline: createSlot(DialogPrimitive.Title, classes.modalHeadline),
     ModalActions: hostSlot('div', classes.modalActions),
     ModalClose: DialogPrimitive.Close,
   };

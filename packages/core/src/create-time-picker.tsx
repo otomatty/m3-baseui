@@ -36,7 +36,9 @@ export function createTimePicker(resolve: TimePickerClassResolver) {
     className,
   }: TimePickerOwnProps): React.JSX.Element {
     const c = resolve({ variant });
-    const is12 = format === '12h';
+    // The dial is a 12-hour clock face, so it always uses 12h semantics (AM/PM
+    // toggle shown). `format` only governs the `input` variant's hour range.
+    const is12 = format === '12h' || variant === 'dial';
 
     const isControlled = value !== undefined;
     const [internal, setInternal] = React.useState<TimeValue>(defaultValue ?? DEFAULT_VALUE);

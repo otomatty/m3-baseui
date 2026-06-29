@@ -45,6 +45,10 @@ import { Icon } from '@m3-baseui/icons';
 
 const BUTTON_VARIANTS: ButtonVariant[] = ['filled', 'tonal', 'outlined', 'elevated', 'text'];
 
+// Fixed reference date so the date-picker demos stay deterministic for visual
+// regression (a live `new Date()` would shift the month/today every CI run).
+const DEMO_DATE = new Date(2026, 5, 15);
+
 function ModeToggle() {
   const { resolvedMode, setMode } = useTheme();
   return (
@@ -948,7 +952,7 @@ export function App() {
           <Section title="Date pickers（calendar + docked + modal）">
             <div className="flex flex-wrap items-start gap-6">
               <div className="rounded-large bg-surface-container-high">
-                <DatePicker.Calendar defaultMonth={new Date()} />
+                <DatePicker.Calendar defaultMonth={DEMO_DATE} today={DEMO_DATE} />
               </div>
 
               <DatePicker.Root>
@@ -961,7 +965,7 @@ export function App() {
                 <DatePicker.Portal>
                   <DatePicker.Positioner sideOffset={4} align="start">
                     <DatePicker.Popup>
-                      <DatePicker.Calendar defaultMonth={new Date()} />
+                      <DatePicker.Calendar defaultMonth={DEMO_DATE} today={DEMO_DATE} />
                     </DatePicker.Popup>
                   </DatePicker.Positioner>
                 </DatePicker.Portal>
@@ -969,14 +973,20 @@ export function App() {
 
               <DatePicker.Modal>
                 <DatePicker.ModalTrigger render={<Button variant="tonal" />}>
-                  日付を選択（モーダル）
+                  カレンダー（モーダル）
                 </DatePicker.ModalTrigger>
                 <DatePicker.ModalPortal>
                   <DatePicker.ModalBackdrop />
                   <DatePicker.ModalPopup>
                     <DatePicker.ModalHeader>日付を選択</DatePicker.ModalHeader>
-                    <DatePicker.ModalHeadline>2026年6月29日</DatePicker.ModalHeadline>
-                    <DatePicker.Calendar defaultMonth={new Date()} />
+                    <DatePicker.ModalHeadline>
+                      {new Intl.DateTimeFormat('ja-JP', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      }).format(DEMO_DATE)}
+                    </DatePicker.ModalHeadline>
+                    <DatePicker.Calendar defaultMonth={DEMO_DATE} today={DEMO_DATE} />
                     <DatePicker.ModalActions>
                       <DatePicker.ModalClose render={<Button variant="text" />}>
                         キャンセル
