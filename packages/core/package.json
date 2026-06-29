@@ -1,6 +1,6 @@
 {
   "name": "@m3-baseui/core",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Engine-neutral M3 logic: ThemeProvider, dynamic color, Ripple, state layer, and headless component factories.",
   "type": "module",
   "license": "MIT",
