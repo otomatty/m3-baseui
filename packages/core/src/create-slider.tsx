@@ -91,6 +91,22 @@ function formatSliderValue(
   return new Intl.NumberFormat(locale, format).format(value);
 }
 
+type SliderRootRender = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>['render'];
+
+function renderSliderRoot(
+  rootProps: React.ComponentPropsWithoutRef<'div'> & { ref?: React.Ref<HTMLElement> },
+  state: SliderRoot.State,
+  render: SliderRootRender,
+): React.ReactElement {
+  if (typeof render === 'function') {
+    return render(rootProps, state);
+  }
+  if (render != null) {
+    return React.cloneElement(render, rootProps);
+  }
+  return React.createElement('div', rootProps);
+}
+
 export function createSlider(classes: SliderClasses) {
   const Root = React.forwardRef<
     HTMLDivElement,
@@ -104,10 +120,7 @@ export function createSlider(classes: SliderClasses) {
         {...props}
         className={mergeClassName(classes.root, className)}
         render={(rootProps, state) => {
-          const element =
-            typeof render === 'function'
-              ? render(rootProps, state)
-              : React.createElement('div', rootProps);
+          const element = renderSliderRoot(rootProps, state, render);
           return (
             <M3SliderContext.Provider value={{ state, locale, format }}>
               {element}
@@ -254,6 +267,19 @@ export function createSlider(classes: SliderClasses) {
     ref,
   ) {
     const [pressed, setPressed] = React.useState(false);
+
+    React.useEffect(() => {
+      if (!pressed) {
+        return undefined;
+      }
+      const clear = () => setPressed(false);
+      document.addEventListener('pointerup', clear);
+      document.addEventListener('pointercancel', clear);
+      return () => {
+        document.removeEventListener('pointerup', clear);
+        document.removeEventListener('pointercancel', clear);
+      };
+    }, [pressed]);
 
     return (
       <ThumbPressContext.Provider value={pressed}>

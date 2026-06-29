@@ -110,6 +110,8 @@ describe('Slider', () => {
 
     fireEvent.pointerDown(screen.getByRole('slider'));
     expect(label.hasAttribute('data-visible')).toBe(true);
+    fireEvent.pointerUp(document);
+    expect(label.hasAttribute('data-visible')).toBe(false);
   });
 });
 
