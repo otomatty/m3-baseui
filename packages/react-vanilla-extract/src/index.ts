@@ -60,6 +60,10 @@ export { BottomSheet } from './bottom-sheet';
 export type { BottomSheetVariant } from './bottom-sheet';
 export { SideSheet } from './side-sheet';
 export type { SideSheetVariant, SideSheetSide } from './side-sheet';
+export { Search } from './search';
+export { DatePicker } from './date-picker';
+export { TimePicker } from './time-picker';
+export type { TimePickerVariant, TimeValue } from '@m3-baseui/core';
 
 export {
   ThemeProvider,
