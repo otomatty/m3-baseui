@@ -69,15 +69,19 @@ export const root = style({
 
 export const indicator = style({
   display: 'block',
-  width: 0,
-  height: 0,
+  width: '10px',
+  height: '10px',
   borderRadius: vars.sys.shape.full,
   background: `rgb(${vars.sys.color.primary})`,
   pointerEvents: 'none',
+  transformOrigin: 'center',
+  // M3 inner-circle-grow: the 10dp dot scales from center with
+  // emphasized-decelerate over 300ms (token-backed), not width/height from 0.
+  transform: 'scale(0)',
   opacity: 0,
-  transition: `width 150ms ${vars.sys.motion.easing.standard}, height 150ms ${vars.sys.motion.easing.standard}, opacity 150ms ${vars.sys.motion.easing.standard}`,
+  transition: `transform ${vars.sys.motion.duration.medium2} ${vars.sys.motion.easing.emphasizedDecelerate}, opacity ${vars.sys.motion.duration.medium2} ${vars.sys.motion.easing.emphasizedDecelerate}`,
   selectors: {
-    '&[data-checked]': { width: '10px', height: '10px', opacity: 1 },
+    '&[data-checked]': { transform: 'scale(1)', opacity: 1 },
     [`${root}[data-error] &`]: { background: `rgb(${vars.sys.color.error})` },
     [`${root}[data-disabled] &`]: { background: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },

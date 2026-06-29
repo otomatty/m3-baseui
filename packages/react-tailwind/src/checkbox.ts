@@ -46,7 +46,12 @@ export const checkboxTv = tv({
       'group-data-[error]:text-on-error',
       // M3 disabled: the check / dash turn the surface color on the faint box
       'group-data-[disabled]:text-surface',
+      // M3 asymmetric motion: unselected-exit accelerates out (150ms), the
+      // selected/indeterminate-enter decelerates in (350ms). Token-backed.
       'opacity-0 data-[checked]:opacity-100 data-[indeterminate]:opacity-100',
+      'transition-opacity ease-emphasized-accelerate duration-[var(--md-sys-motion-duration-short3)]',
+      'data-[checked]:ease-emphasized-decelerate data-[checked]:duration-[var(--md-sys-motion-duration-medium3)]',
+      'data-[indeterminate]:ease-emphasized-decelerate data-[indeterminate]:duration-[var(--md-sys-motion-duration-medium3)]',
       'data-[indeterminate]:after:content-[""] data-[indeterminate]:after:absolute',
       'data-[indeterminate]:after:w-[10px] data-[indeterminate]:after:h-[2px] data-[indeterminate]:after:rounded-full data-[indeterminate]:after:bg-current',
     ],

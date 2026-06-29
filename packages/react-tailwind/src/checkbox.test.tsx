@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { render, screen } from '@testing-library/react';
-import { Checkbox } from './checkbox';
+import { Checkbox, checkboxTv } from './checkbox';
 
 describe('Checkbox', () => {
   test('exposes the checkbox role', () => {
@@ -59,6 +59,20 @@ describe('Checkbox', () => {
     // Assert each dimension so a regression in only one is still caught.
     expect((tt as HTMLElement).style.minWidth).toBe('48px');
     expect((tt as HTMLElement).style.minHeight).toBe('48px');
+  });
+
+  test('selection indicator uses M3 asymmetric motion (enter decelerate / exit accelerate)', () => {
+    const ind = checkboxTv().indicator();
+    // unselected-exit: emphasized-accelerate over 150ms (short3)
+    expect(ind).toContain('ease-emphasized-accelerate');
+    expect(ind).toContain('duration-[var(--md-sys-motion-duration-short3)]');
+    // selected-enter: emphasized-decelerate over 350ms (medium3), for both states
+    expect(ind).toContain('data-[checked]:ease-emphasized-decelerate');
+    expect(ind).toContain('data-[checked]:duration-[var(--md-sys-motion-duration-medium3)]');
+    expect(ind).toContain('data-[indeterminate]:ease-emphasized-decelerate');
+    expect(ind).toContain('data-[indeterminate]:duration-[var(--md-sys-motion-duration-medium3)]');
+    // no longer the flat house-style (duration-150 ease-standard) on the indicator
+    expect(ind).not.toContain('ease-standard');
   });
 
   test('error prop sets data-error and tints with error tokens (M3)', () => {

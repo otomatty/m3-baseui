@@ -34,9 +34,12 @@ export const radioTv = tv({
       'active:before:opacity-[var(--md-sys-state-pressed)]',
     ],
     indicator: [
-      'block rounded-full bg-primary pointer-events-none',
-      'size-0 opacity-0 transition-all duration-150 ease-standard',
-      'data-[checked]:size-2.5 data-[checked]:opacity-100',
+      'block rounded-full bg-primary pointer-events-none origin-center',
+      // M3 inner-circle-grow: the 10dp dot scales from center with
+      // emphasized-decelerate over 300ms (token-backed), not width/height from 0.
+      'size-2.5 scale-0 opacity-0',
+      'transition-[transform,opacity] ease-emphasized-decelerate duration-[var(--md-sys-motion-duration-medium2)]',
+      'data-[checked]:scale-100 data-[checked]:opacity-100',
       'group-data-[error]:bg-error',
       'group-data-[disabled]:bg-on-surface/38',
     ],

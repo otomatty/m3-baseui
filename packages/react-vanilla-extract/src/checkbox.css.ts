@@ -93,8 +93,15 @@ export const indicator = style({
   pointerEvents: 'none',
   color: `rgb(${vars.sys.color.onPrimary})`,
   opacity: 0,
+  // M3 asymmetric motion: the unselected-exit accelerates out (150ms). The
+  // selected/indeterminate-enter overrides with decelerate-in (350ms) below.
+  transition: `opacity ${vars.sys.motion.duration.short3} ${vars.sys.motion.easing.emphasizedAccelerate}`,
   selectors: {
-    '&[data-checked], &[data-indeterminate]': { opacity: 1 },
+    '&[data-checked], &[data-indeterminate]': {
+      opacity: 1,
+      transitionDuration: vars.sys.motion.duration.medium3,
+      transitionTimingFunction: vars.sys.motion.easing.emphasizedDecelerate,
+    },
     // M3 error: the check / dash turn on-error on the error-filled box
     [`${root}[data-error] &`]: { color: `rgb(${vars.sys.color.onError})` },
     // M3 disabled: the check / dash turn the surface color on the faint box
