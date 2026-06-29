@@ -3,7 +3,7 @@
  * Same DOM + data-* hooks as the Tailwind build: the selected item's
  * `data-pressed` drives the pill, icon and label colors.
  */
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@m3-baseui/tokens/contract.css';
 
 export const root = style({
@@ -32,7 +32,8 @@ export const item = style({
   userSelect: 'none',
   outline: 'none',
   selectors: {
-    '&[data-disabled]': { opacity: 0.38, pointerEvents: 'none' },
+    // M3 disabled is per-token (icon + label dimmed below), not a blanket fade.
+    '&[data-disabled]': { pointerEvents: 'none' },
   },
 });
 
@@ -66,6 +67,8 @@ export const indicator = style({
     [`${item}:hover &::before`]: { opacity: vars.sys.state.hover },
     [`${item}:focus-visible &::before`]: { opacity: vars.sys.state.focus },
     [`${item}:active &::before`]: { opacity: vars.sys.state.pressed },
+    // No state layer on a disabled destination.
+    [`${item}[data-disabled] &::before`]: { opacity: 0 },
   },
 });
 
@@ -78,8 +81,16 @@ export const icon = style({
   transition: `color 150ms ${vars.sys.motion.easing.standard}`,
   selectors: {
     [`${item}[data-pressed] &`]: { color: `rgb(${vars.sys.color.onSecondaryContainer})` },
+    // M3 disabled: icon dims to on-surface/0.38. The combined selector keeps a
+    // disabled+active destination dimmed (outranks the [data-pressed] color).
+    [`${item}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+    [`${item}[data-disabled][data-pressed] &`]: {
+      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
+    },
   },
 });
+// Raw <svg> icons render at 24dp (Material Symbols set their own size).
+globalStyle(`${icon} svg`, { width: '24px', height: '24px' });
 
 export const label = style({
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
@@ -93,6 +104,12 @@ export const label = style({
     [`${item}[data-pressed] &`]: {
       color: `rgb(${vars.sys.color.onSurface})`,
       fontWeight: '700',
+    },
+    // M3 disabled: label dims to on-surface/0.38 (combined selector keeps a
+    // disabled+active label dimmed too).
+    [`${item}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+    [`${item}[data-disabled][data-pressed] &`]: {
+      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
     },
   },
 });

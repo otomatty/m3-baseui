@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { NavigationBar } from './navigation-bar';
+import { NavigationBar, navigationBarTv } from './navigation-bar';
 
 function Example() {
   return (
@@ -36,5 +36,30 @@ describe('NavigationBar', () => {
     // A navigation bar always keeps a destination active: re-tapping must not clear it.
     fireEvent.click(home);
     expect(home).toHaveAttribute('aria-pressed', 'true');
+  });
+});
+
+describe('NavigationBar tokens', () => {
+  test('disabled is per-token (no blanket opacity): icon + label on-surface/0.38, no state layer', () => {
+    const s = navigationBarTv();
+    // the old blanket element fade is gone (M3 dims the content colors per-token)
+    expect(s.item()).not.toContain('opacity-[0.38]');
+    expect(s.item()).toContain('data-[disabled]:pointer-events-none');
+    // icon + label dim to on-surface/0.38
+    expect(s.icon()).toContain('group-data-[disabled]:text-on-surface/[0.38]');
+    expect(s.label()).toContain('group-data-[disabled]:text-on-surface/[0.38]');
+    // a disabled destination that is also active stays dimmed (combined selector
+    // outranks the data-[pressed] active color)
+    expect(s.icon()).toContain('group-data-[disabled]:group-data-[pressed]:text-on-surface/[0.38]');
+    expect(s.label()).toContain(
+      'group-data-[disabled]:group-data-[pressed]:text-on-surface/[0.38]',
+    );
+    // the active-indicator state layer is suppressed when disabled
+    expect(s.indicator()).toContain('group-data-[disabled]:before:opacity-0');
+  });
+
+  test('icon slot constrains a raw svg to 24dp (matches drawer/tabs)', () => {
+    const s = navigationBarTv();
+    expect(s.icon()).toContain('[&_svg]:size-6');
   });
 });
