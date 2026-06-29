@@ -29,3 +29,35 @@ describe('Tooltip tokens', () => {
     expect(t.arrow()).toContain('text-inverse-surface');
   });
 });
+
+// Rich tooltip (M3 second type): surface-container container, level2 elevation,
+// medium (12dp) corner, 320dp max-width; optional title-small subhead, body-medium
+// supporting text on on-surface-variant, and a row of text-button actions.
+describe('Rich tooltip tokens', () => {
+  const t = tooltipTv();
+
+  test('rich popup uses surface-container, level2 elevation and medium (12dp) corner', () => {
+    expect(t.richPopup()).toContain('bg-surface-container');
+    expect(t.richPopup()).toContain('text-on-surface');
+    expect(t.richPopup()).toContain('shadow-level2');
+    expect(t.richPopup()).toContain('rounded-medium');
+  });
+
+  test('rich popup caps at a 320dp max-width', () => {
+    expect(t.richPopup()).toContain('max-w-[320px]');
+  });
+
+  test('subhead uses title-small on on-surface', () => {
+    expect(t.subhead()).toContain('text-title-small');
+    expect(t.subhead()).toContain('text-on-surface');
+  });
+
+  test('supporting text uses body-medium on on-surface-variant', () => {
+    expect(t.supportingText()).toContain('text-body-medium');
+    expect(t.supportingText()).toContain('text-on-surface-variant');
+  });
+
+  test('actions lay out in a trailing row', () => {
+    expect(t.actions()).toContain('flex');
+  });
+});

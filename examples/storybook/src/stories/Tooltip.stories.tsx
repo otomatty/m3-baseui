@@ -25,3 +25,29 @@ export const Basic: Story = {
     );
   },
 };
+
+export const Rich: Story = {
+  render: () => {
+    const { Tooltip, Button } = useM3();
+    return (
+      <Tooltip.Provider>
+        <Tooltip.Root>
+          <Tooltip.Trigger render={<Button variant="text" />}>リッチ</Tooltip.Trigger>
+          <Tooltip.Portal>
+            <Tooltip.Positioner sideOffset={6}>
+              <Tooltip.RichPopup>
+                <Tooltip.Subhead>リッチツールチップ</Tooltip.Subhead>
+                <Tooltip.SupportingText>
+                  補足説明を含む、操作可能なツールチップです。
+                </Tooltip.SupportingText>
+                <Tooltip.Actions>
+                  <Button variant="text">詳細</Button>
+                </Tooltip.Actions>
+              </Tooltip.RichPopup>
+            </Tooltip.Positioner>
+          </Tooltip.Portal>
+        </Tooltip.Root>
+      </Tooltip.Provider>
+    );
+  },
+};

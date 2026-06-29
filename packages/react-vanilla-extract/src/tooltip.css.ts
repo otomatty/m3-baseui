@@ -31,3 +31,51 @@ export const popup = style({
 export const arrow = style({
   color: `rgb(${vars.sys.color.inverseSurface})`,
 });
+
+export const richPopup = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px',
+  background: `rgb(${vars.sys.color.surfaceContainer})`,
+  color: `rgb(${vars.sys.color.onSurface})`,
+  boxShadow: vars.sys.elevation.level2,
+  borderRadius: vars.sys.shape.medium,
+  paddingInline: '16px',
+  paddingBlock: '12px',
+  maxWidth: '320px',
+  transformOrigin: 'var(--transform-origin)',
+  transition: `opacity 150ms ${vars.sys.motion.easing.standard}, transform 150ms ${vars.sys.motion.easing.standard}`,
+  selectors: {
+    '&[data-starting-style], &[data-ending-style]': {
+      opacity: 0,
+      transform: 'scale(0.95)',
+    },
+  },
+});
+
+export const subhead = style({
+  fontFamily: vars.sys.typescale.titleSmall.fontFamily,
+  fontWeight: vars.sys.typescale.titleSmall.fontWeight,
+  fontSize: vars.sys.typescale.titleSmall.fontSize,
+  lineHeight: vars.sys.typescale.titleSmall.lineHeight,
+  letterSpacing: vars.sys.typescale.titleSmall.letterSpacing,
+  color: `rgb(${vars.sys.color.onSurface})`,
+});
+
+export const supportingText = style({
+  fontFamily: vars.sys.typescale.bodyMedium.fontFamily,
+  fontWeight: vars.sys.typescale.bodyMedium.fontWeight,
+  fontSize: vars.sys.typescale.bodyMedium.fontSize,
+  lineHeight: vars.sys.typescale.bodyMedium.lineHeight,
+  letterSpacing: vars.sys.typescale.bodyMedium.letterSpacing,
+  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+});
+
+export const actions = style({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  gap: '8px',
+  marginTop: '4px',
+  marginLeft: '-8px',
+});
