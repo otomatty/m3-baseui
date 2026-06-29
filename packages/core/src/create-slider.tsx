@@ -12,11 +12,7 @@ import * as React from 'react';
 import { Slider as SliderPrimitive } from '@base-ui/react/slider';
 import type { SliderRoot } from '@base-ui/react/slider';
 
-import type {
-  SliderClasses,
-  SliderTickListProps,
-  SliderValueLabelProps,
-} from './slider.contract';
+import type { SliderClasses, SliderTickListProps, SliderValueLabelProps } from './slider.contract';
 import { mergeClassName } from './slot';
 import { cx } from './utils';
 
