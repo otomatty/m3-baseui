@@ -4,10 +4,11 @@
 '@m3-baseui/core': minor
 ---
 
-feat(a11y): 48dp 最小タッチ領域を全インタラクティブコンポーネントへ付与 (#51)
+feat(a11y): 48dp 最小タッチ領域を Checkbox / Radio / Switch / Chip / IconButton へ付与 (#51)
 
 M3 が a11y 要件として規定する **48dp の最小タッチ領域**を、視覚に影響を与えずヒット領域のみ
-拡張する形で付与した。material-web の touch-target パターン（絶対配置の透明オーバーレイ）に
+拡張する形で、小型インタラクティブコンポーネント（Checkbox / Radio / Switch / Chip /
+IconButton）へ付与した。material-web の touch-target パターン（絶対配置の透明オーバーレイ）に
 倣い、`@m3-baseui/core` の `TouchTarget`（`Ripple` と同様にジオメトリを core に一元化）として
 実装し、各ファクトリが描画する。両エンジンで同一 DOM・同一 `data-*`（drop-in 互換）。
 

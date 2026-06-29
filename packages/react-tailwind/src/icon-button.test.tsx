@@ -127,6 +127,8 @@ describe('IconButton', () => {
     const tt = screen.getByRole('button', { name: 'T' }).querySelector('[data-touch-target]');
     expect(tt).not.toBeNull();
     expect((tt as HTMLElement).style.position).toBe('absolute');
-    expect((tt as HTMLElement).getAttribute('style')).toContain('48px');
+    // Assert each dimension so a regression in only one is still caught.
+    expect((tt as HTMLElement).style.minWidth).toBe('48px');
+    expect((tt as HTMLElement).style.minHeight).toBe('48px');
   });
 });

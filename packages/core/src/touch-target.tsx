@@ -19,6 +19,7 @@
  */
 import type * as React from 'react';
 
+/** Renders the transparent ≥48dp overlay; see the module header for placement rules. */
 export function TouchTarget(): React.JSX.Element {
   return (
     <span

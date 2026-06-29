@@ -56,7 +56,9 @@ describe('Checkbox', () => {
     expect(tt).not.toBeNull();
     expect(tt).toHaveAttribute('aria-hidden', 'true');
     expect((tt as HTMLElement).style.position).toBe('absolute');
-    expect((tt as HTMLElement).getAttribute('style')).toContain('48px');
+    // Assert each dimension so a regression in only one is still caught.
+    expect((tt as HTMLElement).style.minWidth).toBe('48px');
+    expect((tt as HTMLElement).style.minHeight).toBe('48px');
   });
 
   test('error prop sets data-error and tints with error tokens (M3)', () => {
