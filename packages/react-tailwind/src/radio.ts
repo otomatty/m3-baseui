@@ -37,8 +37,10 @@ export const radioTv = tv({
       'block rounded-full bg-primary pointer-events-none origin-center',
       // M3 inner-circle-grow: the 10dp dot scales from center with
       // emphasized-decelerate over 300ms (token-backed), not width/height from 0.
+      // Tailwind v4's `scale-*` sets the standalone `scale` property (not
+      // `transform`), so the transition must name `scale` to animate the grow.
       'size-2.5 scale-0 opacity-0',
-      'transition-[transform,opacity] ease-emphasized-decelerate duration-[var(--md-sys-motion-duration-medium2)]',
+      'transition-[scale,opacity] ease-emphasized-decelerate duration-[var(--md-sys-motion-duration-medium2)]',
       'data-[checked]:scale-100 data-[checked]:opacity-100',
       'group-data-[error]:bg-error',
       'group-data-[disabled]:bg-on-surface/38',
