@@ -22,8 +22,10 @@ export function createTopAppBar(resolve: TopAppBarClassResolver) {
     // medium/large move the headline to its own line below the action row.
     const twoLine = variant === 'medium' || variant === 'large';
     const headline = <div className={s.headline}>{children}</div>;
+    // data-variant drives both engines' styling, so it stays after the prop
+    // spread where a caller-supplied data-variant can't desync it from `variant`.
     return (
-      <header ref={ref} className={cx(s.root, className)} data-variant={variant} {...rest}>
+      <header ref={ref} className={cx(s.root, className)} {...rest} data-variant={variant}>
         <div className={s.row}>
           {leading != null ? <div className={s.leading}>{leading}</div> : null}
           {!twoLine ? headline : null}
