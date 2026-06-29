@@ -117,3 +117,27 @@ test('SegmentedButton moves single selection (data-pressed / aria-pressed)', asy
   await expect(day).toHaveAttribute('aria-pressed', 'true');
   await expect(week).toHaveAttribute('aria-pressed', 'false');
 });
+
+test('BottomSheet opens (data-swipe-direction=down), closes on Escape', async ({ page }) => {
+  await page.getByRole('button', { name: 'ボトムシート' }).click();
+
+  const sheet = page.getByRole('dialog');
+  await expect(sheet).toBeVisible();
+  await expect(sheet).toHaveAttribute('data-swipe-direction', 'down');
+  await expect(sheet.getByText('共有先を選択')).toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await expect(sheet).toBeHidden();
+});
+
+test('SideSheet opens (data-swipe-direction=right), closes via close button', async ({ page }) => {
+  await page.getByRole('button', { name: 'サイドシート' }).click();
+
+  const sheet = page.getByRole('dialog');
+  await expect(sheet).toBeVisible();
+  await expect(sheet).toHaveAttribute('data-swipe-direction', 'right');
+  await expect(sheet.getByText('フィルター')).toBeVisible();
+
+  await sheet.getByRole('button', { name: '閉じる' }).click();
+  await expect(sheet).toBeHidden();
+});

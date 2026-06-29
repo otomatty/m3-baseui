@@ -16,6 +16,8 @@ import {
   TextField,
   NavigationBar,
   NavigationDrawer,
+  BottomSheet,
+  SideSheet,
   TopAppBar,
   BottomAppBar,
   NavigationRail,
@@ -450,6 +452,66 @@ export function App() {
                   </Dialog.Popup>
                 </Dialog.Portal>
               </Dialog.Root>
+            </div>
+          </Section>
+
+          <Section title="Bottom sheet / Side sheet">
+            <div className="flex flex-wrap gap-2">
+              <BottomSheet.Root>
+                <BottomSheet.Trigger render={<Button variant="tonal" />}>
+                  ボトムシート
+                </BottomSheet.Trigger>
+                <BottomSheet.Portal>
+                  <BottomSheet.Backdrop />
+                  <BottomSheet.Viewport>
+                    <BottomSheet.Popup>
+                      <BottomSheet.Handle />
+                      <BottomSheet.Title>共有先を選択</BottomSheet.Title>
+                      <BottomSheet.Description>
+                        スワイプまたは背景タップで閉じます。
+                      </BottomSheet.Description>
+                      <div className="p-2">
+                        <List.Root>
+                          <List.Item interactive leading={<Icon name="link" />}>
+                            リンクをコピー
+                          </List.Item>
+                          <List.Item interactive leading={<Icon name="mail" />}>
+                            メールで送信
+                          </List.Item>
+                          <List.Item interactive leading={<Icon name="download" />}>
+                            ダウンロード
+                          </List.Item>
+                        </List.Root>
+                      </div>
+                    </BottomSheet.Popup>
+                  </BottomSheet.Viewport>
+                </BottomSheet.Portal>
+              </BottomSheet.Root>
+
+              <SideSheet.Root>
+                <SideSheet.Trigger render={<Button variant="tonal" />}>
+                  サイドシート
+                </SideSheet.Trigger>
+                <SideSheet.Portal>
+                  <SideSheet.Backdrop />
+                  <SideSheet.Viewport>
+                    <SideSheet.Popup>
+                      <SideSheet.Header>
+                        <SideSheet.Title>フィルター</SideSheet.Title>
+                        <SideSheet.Close
+                          render={<IconButton variant="standard" aria-label="閉じる" />}
+                        >
+                          <Icon name="close" />
+                        </SideSheet.Close>
+                      </SideSheet.Header>
+                      <Divider />
+                      <SideSheet.Description>
+                        補足コンテンツを画面端に表示します。
+                      </SideSheet.Description>
+                    </SideSheet.Popup>
+                  </SideSheet.Viewport>
+                </SideSheet.Portal>
+              </SideSheet.Root>
             </div>
           </Section>
 

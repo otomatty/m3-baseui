@@ -156,6 +156,16 @@
       "@m3/source": "./src/navigation-rail.ts",
       "types": "./dist/navigation-rail.d.ts",
       "default": "./dist/navigation-rail.js"
+    },
+    "./bottom-sheet": {
+      "@m3/source": "./src/bottom-sheet.ts",
+      "types": "./dist/bottom-sheet.d.ts",
+      "default": "./dist/bottom-sheet.js"
+    },
+    "./side-sheet": {
+      "@m3/source": "./src/side-sheet.ts",
+      "types": "./dist/side-sheet.d.ts",
+      "default": "./dist/side-sheet.js"
     }
   },
   "files": [

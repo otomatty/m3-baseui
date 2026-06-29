@@ -51,6 +51,10 @@ export type { TopAppBarProps, TopAppBarVariant } from './top-app-bar';
 export { BottomAppBar } from './bottom-app-bar';
 export type { BottomAppBarProps } from './bottom-app-bar';
 export { NavigationRail } from './navigation-rail';
+export { BottomSheet } from './bottom-sheet';
+export type { BottomSheetVariant } from './bottom-sheet';
+export { SideSheet } from './side-sheet';
+export type { SideSheetVariant, SideSheetSide } from './side-sheet';
 
 export {
   ThemeProvider,

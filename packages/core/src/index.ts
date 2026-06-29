@@ -30,6 +30,8 @@ export { createNavigationDrawer } from './create-navigation-drawer';
 export { createTopAppBar } from './create-top-app-bar';
 export { createBottomAppBar } from './create-bottom-app-bar';
 export { createNavigationRail } from './create-navigation-rail';
+export { createBottomSheet } from './create-bottom-sheet';
+export { createSideSheet } from './create-side-sheet';
 
 // Contracts (variant sets + prop types, defined once)
 export {
@@ -167,6 +169,21 @@ export type {
   BottomAppBarProps,
 } from './bottom-app-bar.contract';
 export type { NavigationRailClasses } from './navigation-rail.contract';
+export {
+  BOTTOM_SHEET_VARIANTS,
+  type BottomSheetVariant,
+  type BottomSheetClasses,
+  type BottomSheetOwnProps,
+} from './bottom-sheet.contract';
+export {
+  SIDE_SHEET_VARIANTS,
+  SIDE_SHEET_SIDES,
+  type SideSheetVariant,
+  type SideSheetSide,
+  type SideSheetResolverArgs,
+  type SideSheetClasses,
+  type SideSheetOwnProps,
+} from './side-sheet.contract';
 
 // Slot helpers (for engine packages composing Base UI parts)
 export { createSlot, mergeClassName, type ClassValue, type SlotOptions } from './slot';

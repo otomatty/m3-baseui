@@ -45,3 +45,14 @@ test('open Menu has no serious/critical a11y violations', async ({ page }) => {
   );
   expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
 });
+
+test('open BottomSheet has no serious/critical a11y violations', async ({ page }) => {
+  await page.getByRole('button', { name: 'ボトムシート' }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+
+  const results = await new AxeBuilder({ page }).withTags(WCAG).analyze();
+  const blocking = results.violations.filter(
+    (v) => v.impact === 'serious' || v.impact === 'critical',
+  );
+  expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
+});
