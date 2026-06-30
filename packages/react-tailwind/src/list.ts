@@ -75,4 +75,5 @@ export const List = createList({
     };
   },
 });
+export { LIST_LEADING_VARIANTS } from '@m3-baseui/core';
 export type { ListItemProps, ListItemLines, ListLeadingVariant } from '@m3-baseui/core';

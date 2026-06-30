@@ -41,4 +41,5 @@ export const Item = createItem({
   supporting: s.supporting(),
   trailing: s.trailing(),
 });
+export { ITEM_LEADING_VARIANTS } from '@m3-baseui/core';
 export type { ItemProps, ItemLeadingVariant } from '@m3-baseui/core';
