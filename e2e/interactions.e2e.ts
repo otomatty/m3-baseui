@@ -97,6 +97,46 @@ test('Tooltip shows on hover/focus', async ({ page }) => {
   await expect(page.getByText('説明的なツールチップ')).toBeVisible({ timeout: 10_000 });
 });
 
+test('Rich tooltip opens on click with reachable, keyboard-operable actions', async ({ page }) => {
+  // The rich tooltip is Popover-based (not a visual-only tooltip): it opens on
+  // click/keyboard so its action buttons are reachable for keyboard and touch.
+  const trigger = page.getByRole('button', { name: 'リッチ' });
+  await trigger.click();
+  await expect(trigger).toHaveAttribute('data-popup-open', '');
+
+  // Subhead + supporting text render inside the popup.
+  await expect(page.getByText('リッチツールチップ')).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('補足説明を含む、操作可能なツールチップです。')).toBeVisible();
+
+  // The action is in the accessibility tree and operable by keyboard; activating
+  // it (a Popover.Close) dismisses the popup — proof the controls are reachable.
+  const action = page.getByRole('button', { name: '詳細' });
+  await expect(action).toBeVisible();
+  await action.press('Enter');
+  await expect(trigger).not.toHaveAttribute('data-popup-open', '');
+});
+
+test('Rich tooltip opens and closes by keyboard alone', async ({ page }) => {
+  // The primary reason for the Popover base: keyboard users must be able to open
+  // the rich tooltip and reach its content without a pointer. Focus the trigger
+  // and drive it with the keyboard only.
+  const trigger = page.getByRole('button', { name: 'リッチ' });
+  await trigger.focus();
+
+  // Enter opens the popover…
+  await trigger.press('Enter');
+  await expect(trigger).toHaveAttribute('data-popup-open', '');
+  await expect(page.getByText('リッチツールチップ')).toBeVisible({ timeout: 10_000 });
+
+  // …Escape closes it and returns to the closed state.
+  await page.keyboard.press('Escape');
+  await expect(trigger).not.toHaveAttribute('data-popup-open', '');
+
+  // Space reopens it (the trigger is a real button), confirming both keys work.
+  await trigger.press(' ');
+  await expect(trigger).toHaveAttribute('data-popup-open', '');
+});
+
 test('Tabs move the active tab via click and keyboard (data-active)', async ({ page }) => {
   const tablist = page.getByRole('tablist').first();
   const overview = tablist.getByRole('tab', { name: '概要' });

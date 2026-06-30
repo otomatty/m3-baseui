@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { tooltipTv } from './tooltip';
+import { tooltipTv, richTooltipTv } from './tooltip';
 
 // Tooltip is a portal/positioned component; per CLAUDE.md its interaction is
 // covered by E2E. Here we assert the M3 plain-tooltip token contract on the
@@ -27,5 +27,50 @@ describe('Tooltip tokens', () => {
 
   test('arrow matches the inverse-surface container', () => {
     expect(t.arrow()).toContain('text-inverse-surface');
+  });
+});
+
+// Rich tooltip (M3 second type, Popover-based): surface-container container,
+// level2 elevation, medium (12dp) corner, 320dp max-width; optional title-small
+// subhead, body-medium supporting text on on-surface-variant, and a row of
+// text-button actions.
+describe('Rich tooltip tokens', () => {
+  const t = richTooltipTv();
+
+  test('popup uses surface-container, level2 elevation and medium (12dp) corner', () => {
+    expect(t.popup()).toContain('bg-surface-container');
+    expect(t.popup()).toContain('text-on-surface');
+    expect(t.popup()).toContain('shadow-level2');
+    expect(t.popup()).toContain('rounded-medium');
+  });
+
+  test('popup caps at a 320dp max-width', () => {
+    expect(t.popup()).toContain('max-w-[320px]');
+  });
+
+  test('arrow matches the surface-container container', () => {
+    expect(t.arrow()).toContain('text-surface-container');
+  });
+
+  test('subhead uses title-small on on-surface', () => {
+    expect(t.subhead()).toContain('text-title-small');
+    expect(t.subhead()).toContain('text-on-surface');
+  });
+
+  test('supporting text uses body-medium on on-surface-variant', () => {
+    expect(t.supportingText()).toContain('text-body-medium');
+    expect(t.supportingText()).toContain('text-on-surface-variant');
+  });
+
+  test('actions lay out in a leading-aligned wrapping row (M3 places them bottom-left)', () => {
+    // Assert the row contract, not just `flex` (which `flex-col` would also pass):
+    // a horizontal wrapping row, vertically centered, optically left-aligned via
+    // the -ml-2 pull so the text button's label meets the content's left edge.
+    const a = t.actions();
+    expect(a).toContain('flex');
+    expect(a).not.toContain('flex-col');
+    expect(a).toContain('flex-wrap');
+    expect(a).toContain('items-center');
+    expect(a).toContain('-ml-2');
   });
 });

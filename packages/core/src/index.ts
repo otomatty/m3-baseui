@@ -10,6 +10,7 @@ export { createCheckbox } from './create-checkbox';
 export { createRadio, createRadioGroup } from './create-radio';
 export { createChip } from './create-chip';
 export { createTooltip } from './create-tooltip';
+export { createRichTooltip } from './create-rich-tooltip';
 export { createDialog } from './create-dialog';
 export { createMenu } from './create-menu';
 export { createTabs } from './create-tabs';
@@ -92,7 +93,7 @@ export {
   type ChipSlotClasses,
   type ChipClassResolver,
 } from './chip.contract';
-export type { TooltipClasses } from './tooltip.contract';
+export type { TooltipClasses, RichTooltipClasses } from './tooltip.contract';
 export type { DialogClasses } from './dialog.contract';
 export type { MenuClasses } from './menu.contract';
 export {

@@ -17,7 +17,7 @@ export { Radio, RadioGroup } from './radio';
 export { Chip } from './chip';
 export type { ChipProps, ChipVariant } from './chip';
 
-export { Tooltip } from './tooltip';
+export { Tooltip, RichTooltip } from './tooltip';
 export { Dialog } from './dialog';
 export { Menu } from './menu';
 export { Tabs } from './tabs';
