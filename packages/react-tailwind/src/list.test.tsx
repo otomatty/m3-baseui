@@ -17,6 +17,16 @@ describe('List', () => {
     expect(screen.getByText('受信トレイ')).toBeInTheDocument();
   });
 
+  test('a bare row is one-line (56dp)', () => {
+    render(
+      <List.Root>
+        <List.Item>受信トレイ</List.Item>
+      </List.Root>,
+    );
+    const row = screen.getByText('受信トレイ').closest('div');
+    expect(row?.className).toContain('min-h-14');
+  });
+
   test('supportingText promotes the row to two-line', () => {
     render(
       <List.Root>
@@ -26,6 +36,75 @@ describe('List', () => {
     const row = screen.getByText('受信トレイ').closest('div');
     expect(row?.className).toContain('min-h-[72px]');
     expect(screen.getByText('2 件の未読')).toBeInTheDocument();
+  });
+
+  test('three-line row is 88dp and top-aligns its slots', () => {
+    render(
+      <List.Root>
+        <List.Item lines={3} supportingText="長い補助テキスト">
+          受信トレイ
+        </List.Item>
+      </List.Root>,
+    );
+    const row = screen.getByText('受信トレイ').closest('div');
+    expect(row?.className).toContain('min-h-[88px]');
+    // Tall rows top-align leading/trailing rather than centering them.
+    expect(row?.className).toContain('items-start');
+  });
+
+  test('leading icon is decorative: aria-hidden + data-leading=icon (default)', () => {
+    render(
+      <List.Root>
+        <List.Item leading={<svg data-testid="ic" />}>受信トレイ</List.Item>
+      </List.Root>,
+    );
+    const slot = screen.getByTestId('ic').closest('[data-leading]');
+    expect(slot).toHaveAttribute('data-leading', 'icon');
+    expect(slot).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  test('leading avatar stays in the a11y tree and sizes to 40dp', () => {
+    render(
+      <List.Root>
+        <List.Item leadingVariant="avatar" leading={<img alt="田中 太郎" src="a.png" />}>
+          田中 太郎
+        </List.Item>
+      </List.Root>,
+    );
+    // Informative avatar is reachable (not aria-hidden), so the img role resolves.
+    const slot = screen.getByRole('img', { name: '田中 太郎' }).closest('[data-leading]');
+    expect(slot).toHaveAttribute('data-leading', 'avatar');
+    expect(slot).not.toHaveAttribute('aria-hidden');
+    expect(slot?.className).toContain('size-10');
+  });
+
+  test('leading image sizes to 56dp and is not hidden', () => {
+    render(
+      <List.Root>
+        <List.Item leadingVariant="image" leading={<img alt="サムネ" src="b.png" />}>
+          写真
+        </List.Item>
+      </List.Root>,
+    );
+    const slot = screen.getByRole('img', { name: 'サムネ' }).closest('[data-leading]');
+    expect(slot).toHaveAttribute('data-leading', 'image');
+    expect(slot).not.toHaveAttribute('aria-hidden');
+    expect(slot?.className).toContain('size-14');
+  });
+
+  test('leading video thumbnail sizes to 100×56dp and is not hidden', () => {
+    render(
+      <List.Root>
+        <List.Item leadingVariant="video" leading={<img alt="動画" src="c.png" />}>
+          クリップ
+        </List.Item>
+      </List.Root>,
+    );
+    const slot = screen.getByRole('img', { name: '動画' }).closest('[data-leading]');
+    expect(slot).toHaveAttribute('data-leading', 'video');
+    expect(slot).not.toHaveAttribute('aria-hidden');
+    expect(slot?.className).toContain('w-25');
+    expect(slot?.className).toContain('h-14');
   });
 
   test('headline keeps both the typescale and the color utility (M3 tv merge)', () => {

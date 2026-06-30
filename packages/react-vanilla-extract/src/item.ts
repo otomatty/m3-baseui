@@ -13,4 +13,5 @@ export const Item = createItem({
   supporting,
   trailing,
 });
-export type { ItemProps } from '@m3-baseui/core';
+export { ITEM_LEADING_VARIANTS } from '@m3-baseui/core';
+export type { ItemProps, ItemLeadingVariant } from '@m3-baseui/core';

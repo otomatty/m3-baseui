@@ -18,7 +18,14 @@ export const listTv = tv({
       'group relative flex w-full items-center gap-4 box-border px-4 text-left',
       'bg-transparent border-0 text-on-surface no-underline',
     ],
-    leading: 'flex items-center justify-center shrink-0 text-on-surface-variant [&_svg]:size-6',
+    leading: [
+      'flex items-center justify-center shrink-0 overflow-hidden text-on-surface-variant',
+      '[&_svg]:size-6 [&_img]:size-full [&_img]:object-cover',
+      // M3 leading column widths, keyed on the factory's data-leading attribute.
+      'data-[leading=avatar]:size-10 data-[leading=avatar]:rounded-full',
+      'data-[leading=image]:size-14',
+      'data-[leading=video]:w-25 data-[leading=video]:h-14',
+    ],
     content: 'flex flex-col min-w-0 flex-1',
     headline: 'text-body-large text-on-surface group-data-[disabled]:text-on-surface/38',
     supporting: 'text-body-medium text-on-surface-variant group-data-[disabled]:text-on-surface/38',
@@ -68,4 +75,5 @@ export const List = createList({
     };
   },
 });
-export type { ListItemProps, ListItemLines } from '@m3-baseui/core';
+export { LIST_LEADING_VARIANTS } from '@m3-baseui/core';
+export type { ListItemProps, ListItemLines, ListLeadingVariant } from '@m3-baseui/core';

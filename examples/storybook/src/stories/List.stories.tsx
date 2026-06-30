@@ -42,3 +42,60 @@ export const Basic: Story = {
     );
   },
 };
+
+export const LeadingVariants: Story = {
+  render: () => {
+    const { List } = useM3();
+    return (
+      <div className="max-w-md overflow-hidden rounded-large border border-outline-variant bg-surface-container-low">
+        <List.Root>
+          {/* avatar: 40dp circle — informative, so it stays in the a11y tree. */}
+          <List.Item
+            leadingVariant="avatar"
+            leading={
+              <span
+                role="img"
+                aria-label="田中 太郎"
+                className="grid size-full place-items-center bg-primary-container text-on-primary-container text-label-large"
+              >
+                田
+              </span>
+            }
+            supportingText="オンライン"
+          >
+            田中 太郎
+          </List.Item>
+          {/* image: 56dp square. */}
+          <List.Item
+            leadingVariant="image"
+            leading={
+              <span
+                role="img"
+                aria-label="サムネイル"
+                className="block size-full bg-secondary-container"
+              />
+            }
+            supportingText="画像 56dp"
+          >
+            写真
+          </List.Item>
+          {/* video thumbnail: 100×56dp; pairs naturally with a taller 3-line row. */}
+          <List.Item
+            lines={3}
+            leadingVariant="video"
+            leading={
+              <span
+                role="img"
+                aria-label="動画サムネイル"
+                className="block size-full bg-tertiary-container"
+              />
+            }
+            supportingText="動画サムネイル 100×56dp — 3 行レイアウトで top 揃え"
+          >
+            動画クリップ
+          </List.Item>
+        </List.Root>
+      </div>
+    );
+  },
+};

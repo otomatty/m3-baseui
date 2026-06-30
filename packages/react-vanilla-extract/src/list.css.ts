@@ -77,12 +77,18 @@ export const leading = style({
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
+  overflow: 'hidden',
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
   selectors: {
     [`${itemBase}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+    // M3 leading column widths, keyed on the factory's data-leading attribute.
+    '&[data-leading="avatar"]': { width: '40px', height: '40px', borderRadius: '9999px' },
+    '&[data-leading="image"]': { width: '56px', height: '56px' },
+    '&[data-leading="video"]': { width: '100px', height: '56px' },
   },
 });
 globalStyle(`${leading} svg`, { width: '24px', height: '24px' });
+globalStyle(`${leading} img`, { width: '100%', height: '100%', objectFit: 'cover' });
 
 export const content = style({
   display: 'flex',
