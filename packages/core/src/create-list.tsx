@@ -34,6 +34,7 @@ export function createList(classes: ListClasses) {
   const Item = React.forwardRef<HTMLLIElement, ListItemProps>(function Item(
     {
       leading,
+      leadingVariant = 'icon',
       trailing,
       supportingText,
       lines,
@@ -53,7 +54,13 @@ export function createList(classes: ListClasses) {
     const inner = (
       <>
         {leading != null ? (
-          <span className={slots.leading} aria-hidden="true">
+          // Only the decorative `icon` variant is hidden; avatar/image/video carry
+          // information and the caller supplies their accessible name.
+          <span
+            className={slots.leading}
+            data-leading={leadingVariant}
+            aria-hidden={leadingVariant === 'icon' ? true : undefined}
+          >
             {leading}
           </span>
         ) : null}

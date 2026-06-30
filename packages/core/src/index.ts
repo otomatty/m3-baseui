@@ -162,13 +162,21 @@ export type {
 export {
   LIST_ITEM_LINES,
   type ListItemLines,
+  LIST_LEADING_VARIANTS,
+  type ListLeadingVariant,
   type ListItemResolverArgs,
   type ListItemSlotClasses,
   type ListClasses,
   type ListItemOwnProps,
   type ListItemProps,
 } from './list.contract';
-export type { ItemClasses, ItemOwnProps, ItemProps } from './item.contract';
+export {
+  ITEM_LEADING_VARIANTS,
+  type ItemLeadingVariant,
+  type ItemClasses,
+  type ItemOwnProps,
+  type ItemProps,
+} from './item.contract';
 export {
   BADGE_SIZES,
   type BadgeSize,

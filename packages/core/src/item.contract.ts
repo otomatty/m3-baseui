@@ -9,6 +9,14 @@
  */
 import type * as React from 'react';
 
+/**
+ * Leading element shapes (M3): a 24dp `icon`, a 40dp circular `avatar`, a 56dp
+ * `image`, or a 100×56dp `video` thumbnail. Surfaced as `data-leading` on the
+ * leading slot so both engines size the column from one shared DOM contract.
+ */
+export const ITEM_LEADING_VARIANTS = ['icon', 'avatar', 'image', 'video'] as const;
+export type ItemLeadingVariant = (typeof ITEM_LEADING_VARIANTS)[number];
+
 export interface ItemClasses {
   /** The row container. */
   root: string;
@@ -27,8 +35,13 @@ export interface ItemClasses {
 }
 
 export interface ItemOwnProps {
-  /** Leading icon (24dp) or avatar slot. */
+  /** Leading element: 24dp icon, 40dp avatar, 56dp image or 100×56dp video thumbnail. */
   leading?: React.ReactNode;
+  /**
+   * Shape/size of the leading slot (`icon` by default). `icon` is decorative and
+   * gets `aria-hidden`; `avatar`/`image`/`video` stay in the a11y tree.
+   */
+  leadingVariant?: ItemLeadingVariant;
   /** Trailing icon or supporting text slot. */
   trailing?: React.ReactNode;
   /** Small label rendered above the headline. */

@@ -16,4 +16,4 @@ export const List = createList({
     trailing,
   }),
 });
-export type { ListItemProps, ListItemLines } from '@m3-baseui/core';
+export type { ListItemProps, ListItemLines, ListLeadingVariant } from '@m3-baseui/core';

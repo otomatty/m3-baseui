@@ -15,7 +15,14 @@ export const itemTv = tv({
       'relative flex w-full items-center gap-4 box-border px-4 py-3 min-h-14 text-left',
       'bg-transparent text-on-surface',
     ],
-    leading: 'flex items-center justify-center shrink-0 text-on-surface-variant [&_svg]:size-6',
+    leading: [
+      'flex items-center justify-center shrink-0 overflow-hidden text-on-surface-variant',
+      '[&_svg]:size-6 [&_img]:size-full [&_img]:object-cover',
+      // M3 leading column widths, keyed on the factory's data-leading attribute.
+      'data-[leading=avatar]:size-10 data-[leading=avatar]:rounded-full',
+      'data-[leading=image]:size-14',
+      'data-[leading=video]:w-25 data-[leading=video]:h-14',
+    ],
     content: 'flex flex-col min-w-0 flex-1',
     overline: 'text-label-small text-on-surface-variant',
     headline: 'text-body-large text-on-surface',
@@ -34,4 +41,4 @@ export const Item = createItem({
   supporting: s.supporting(),
   trailing: s.trailing(),
 });
-export type { ItemProps } from '@m3-baseui/core';
+export type { ItemProps, ItemLeadingVariant } from '@m3-baseui/core';

@@ -32,4 +32,23 @@ describe('Item', () => {
     render(<Item>見出しのみ</Item>);
     expect(screen.queryByText('OVERLINE')).not.toBeInTheDocument();
   });
+
+  test('default leading is a decorative icon (aria-hidden + data-leading=icon)', () => {
+    render(<Item leading={<svg data-testid="ic" />}>見出し</Item>);
+    const slot = screen.getByTestId('ic').closest('[data-leading]');
+    expect(slot).toHaveAttribute('data-leading', 'icon');
+    expect(slot).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  test('avatar leading stays in the a11y tree and sizes to 40dp', () => {
+    render(
+      <Item leadingVariant="avatar" leading={<img alt="田中" src="a.png" />}>
+        田中
+      </Item>,
+    );
+    const slot = screen.getByRole('img', { name: '田中' }).closest('[data-leading]');
+    expect(slot).toHaveAttribute('data-leading', 'avatar');
+    expect(slot).not.toHaveAttribute('aria-hidden');
+    expect(slot?.className).toContain('size-10');
+  });
 });

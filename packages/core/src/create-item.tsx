@@ -14,13 +14,28 @@ import { cx } from './utils';
 
 export function createItem(classes: ItemClasses) {
   const Item = React.forwardRef<HTMLDivElement, ItemProps>(function Item(
-    { leading, trailing, overline, supporting, className, children, ...rest },
+    {
+      leading,
+      leadingVariant = 'icon',
+      trailing,
+      overline,
+      supporting,
+      className,
+      children,
+      ...rest
+    },
     ref,
   ) {
     return (
       <div ref={ref} className={cx(classes.root, className)} {...rest}>
         {leading != null ? (
-          <span className={classes.leading} aria-hidden="true">
+          // Only the decorative `icon` variant is hidden; avatar/image/video carry
+          // information and the caller supplies their accessible name.
+          <span
+            className={classes.leading}
+            data-leading={leadingVariant}
+            aria-hidden={leadingVariant === 'icon' ? true : undefined}
+          >
             {leading}
           </span>
         ) : null}
