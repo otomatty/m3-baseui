@@ -28,26 +28,26 @@ export const Basic: Story = {
 
 export const Rich: Story = {
   render: () => {
-    const { Tooltip, Button } = useM3();
+    const { RichTooltip, Button } = useM3();
+    // Rich tooltip is Popover-based: it opens on click so its actions are
+    // reachable by keyboard and touch (a plain tooltip is visual-only).
     return (
-      <Tooltip.Provider>
-        <Tooltip.Root>
-          <Tooltip.Trigger render={<Button variant="text" />}>リッチ</Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Positioner sideOffset={6}>
-              <Tooltip.RichPopup>
-                <Tooltip.Subhead>リッチツールチップ</Tooltip.Subhead>
-                <Tooltip.SupportingText>
-                  補足説明を含む、操作可能なツールチップです。
-                </Tooltip.SupportingText>
-                <Tooltip.Actions>
-                  <Button variant="text">詳細</Button>
-                </Tooltip.Actions>
-              </Tooltip.RichPopup>
-            </Tooltip.Positioner>
-          </Tooltip.Portal>
-        </Tooltip.Root>
-      </Tooltip.Provider>
+      <RichTooltip.Root>
+        <RichTooltip.Trigger render={<Button variant="text" />}>リッチ</RichTooltip.Trigger>
+        <RichTooltip.Portal>
+          <RichTooltip.Positioner sideOffset={6}>
+            <RichTooltip.Popup>
+              <RichTooltip.Subhead>リッチツールチップ</RichTooltip.Subhead>
+              <RichTooltip.SupportingText>
+                補足説明を含む、操作可能なツールチップです。
+              </RichTooltip.SupportingText>
+              <RichTooltip.Actions>
+                <RichTooltip.Close render={<Button variant="text" />}>詳細</RichTooltip.Close>
+              </RichTooltip.Actions>
+            </RichTooltip.Popup>
+          </RichTooltip.Positioner>
+        </RichTooltip.Portal>
+      </RichTooltip.Root>
     );
   },
 };

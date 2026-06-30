@@ -1,9 +1,17 @@
 /**
- * tooltip.css.ts — vanilla-extract styles for the M3 plain Tooltip.
+ * tooltip.css.ts — vanilla-extract styles for the M3 Tooltip (plain + rich).
  * Same DOM + data-* hooks as the Tailwind build.
  */
 import { style } from '@vanilla-extract/css';
 import { vars } from '@m3-baseui/tokens/contract.css';
+
+const transition = `opacity 150ms ${vars.sys.motion.easing.standard}, transform 150ms ${vars.sys.motion.easing.standard}`;
+const startEnd = {
+  '&[data-starting-style], &[data-ending-style]': {
+    opacity: 0,
+    transform: 'scale(0.95)',
+  },
+} as const;
 
 export const popup = style({
   background: `rgb(${vars.sys.color.inverseSurface})`,
@@ -19,13 +27,8 @@ export const popup = style({
   maxWidth: '224px',
   userSelect: 'none',
   transformOrigin: 'var(--transform-origin)',
-  transition: `opacity 150ms ${vars.sys.motion.easing.standard}, transform 150ms ${vars.sys.motion.easing.standard}`,
-  selectors: {
-    '&[data-starting-style], &[data-ending-style]': {
-      opacity: 0,
-      transform: 'scale(0.95)',
-    },
-  },
+  transition,
+  selectors: { ...startEnd },
 });
 
 export const arrow = style({
@@ -43,17 +46,18 @@ export const richPopup = style({
   paddingInline: '16px',
   paddingBlock: '12px',
   maxWidth: '320px',
+  outline: 'none',
   transformOrigin: 'var(--transform-origin)',
-  transition: `opacity 150ms ${vars.sys.motion.easing.standard}, transform 150ms ${vars.sys.motion.easing.standard}`,
-  selectors: {
-    '&[data-starting-style], &[data-ending-style]': {
-      opacity: 0,
-      transform: 'scale(0.95)',
-    },
-  },
+  transition,
+  selectors: { ...startEnd },
+});
+
+export const richArrow = style({
+  color: `rgb(${vars.sys.color.surfaceContainer})`,
 });
 
 export const subhead = style({
+  margin: 0,
   fontFamily: vars.sys.typescale.titleSmall.fontFamily,
   fontWeight: vars.sys.typescale.titleSmall.fontWeight,
   fontSize: vars.sys.typescale.titleSmall.fontSize,
@@ -63,6 +67,7 @@ export const subhead = style({
 });
 
 export const supportingText = style({
+  margin: 0,
   fontFamily: vars.sys.typescale.bodyMedium.fontFamily,
   fontWeight: vars.sys.typescale.bodyMedium.fontWeight,
   fontSize: vars.sys.typescale.bodyMedium.fontSize,

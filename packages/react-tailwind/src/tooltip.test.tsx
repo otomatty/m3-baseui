@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { tooltipTv } from './tooltip';
+import { tooltipTv, richTooltipTv } from './tooltip';
 
 // Tooltip is a portal/positioned component; per CLAUDE.md its interaction is
 // covered by E2E. Here we assert the M3 plain-tooltip token contract on the
@@ -30,21 +30,26 @@ describe('Tooltip tokens', () => {
   });
 });
 
-// Rich tooltip (M3 second type): surface-container container, level2 elevation,
-// medium (12dp) corner, 320dp max-width; optional title-small subhead, body-medium
-// supporting text on on-surface-variant, and a row of text-button actions.
+// Rich tooltip (M3 second type, Popover-based): surface-container container,
+// level2 elevation, medium (12dp) corner, 320dp max-width; optional title-small
+// subhead, body-medium supporting text on on-surface-variant, and a row of
+// text-button actions.
 describe('Rich tooltip tokens', () => {
-  const t = tooltipTv();
+  const t = richTooltipTv();
 
-  test('rich popup uses surface-container, level2 elevation and medium (12dp) corner', () => {
-    expect(t.richPopup()).toContain('bg-surface-container');
-    expect(t.richPopup()).toContain('text-on-surface');
-    expect(t.richPopup()).toContain('shadow-level2');
-    expect(t.richPopup()).toContain('rounded-medium');
+  test('popup uses surface-container, level2 elevation and medium (12dp) corner', () => {
+    expect(t.popup()).toContain('bg-surface-container');
+    expect(t.popup()).toContain('text-on-surface');
+    expect(t.popup()).toContain('shadow-level2');
+    expect(t.popup()).toContain('rounded-medium');
   });
 
-  test('rich popup caps at a 320dp max-width', () => {
-    expect(t.richPopup()).toContain('max-w-[320px]');
+  test('popup caps at a 320dp max-width', () => {
+    expect(t.popup()).toContain('max-w-[320px]');
+  });
+
+  test('arrow matches the surface-container container', () => {
+    expect(t.arrow()).toContain('text-surface-container');
   });
 
   test('subhead uses title-small on on-surface', () => {

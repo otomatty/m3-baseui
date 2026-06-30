@@ -97,19 +97,23 @@ test('Tooltip shows on hover/focus', async ({ page }) => {
   await expect(page.getByText('説明的なツールチップ')).toBeVisible({ timeout: 10_000 });
 });
 
-test('Rich tooltip shows subhead, supporting text and an action', async ({ page }) => {
+test('Rich tooltip opens on click with reachable, keyboard-operable actions', async ({ page }) => {
+  // The rich tooltip is Popover-based (not a visual-only tooltip): it opens on
+  // click/keyboard so its action buttons are reachable for keyboard and touch.
   const trigger = page.getByRole('button', { name: 'リッチ' });
-  // Hover covers the pointer path; focus is the deterministic trigger (a single
-  // teleporting hover() is unreliable in headless CI). Base UI opens on either.
-  await trigger.hover();
-  await trigger.focus();
+  await trigger.click();
+  await expect(trigger).toHaveAttribute('data-popup-open', '');
 
-  // The rich popup renders its subhead, supporting text and action button. We
-  // assert on rendered content (not popup-hover stability, a Base UI default
-  // that is racy to drive in headless): this is what the drop-in contract needs.
+  // Subhead + supporting text render inside the popup.
   await expect(page.getByText('リッチツールチップ')).toBeVisible({ timeout: 10_000 });
   await expect(page.getByText('補足説明を含む、操作可能なツールチップです。')).toBeVisible();
-  await expect(page.getByRole('button', { name: '詳細' })).toBeVisible();
+
+  // The action is in the accessibility tree and operable by keyboard; activating
+  // it (a Popover.Close) dismisses the popup — proof the controls are reachable.
+  const action = page.getByRole('button', { name: '詳細' });
+  await expect(action).toBeVisible();
+  await action.press('Enter');
+  await expect(trigger).not.toHaveAttribute('data-popup-open', '');
 });
 
 test('Tabs move the active tab via click and keyboard (data-active)', async ({ page }) => {
