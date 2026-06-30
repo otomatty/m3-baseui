@@ -40,6 +40,34 @@ describe('Progress.Linear', () => {
     expect(bar).toHaveAttribute('data-indeterminate');
     expect(bar).not.toHaveAttribute('aria-valuenow');
   });
+
+  // The M3 gap (between the active indicator tip and the inactive track) and the
+  // track-stop dot are CSS pseudo-elements positioned from the fill fraction, so
+  // the factory publishes that fraction as the `--m3-progress` custom property.
+  test('determinate publishes the fill fraction as the --m3-progress variable', () => {
+    render(<Progress.Linear value={40} max={100} aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar.style.getPropertyValue('--m3-progress')).toBe('40%');
+  });
+
+  test('the fill fraction tracks a custom max', () => {
+    render(<Progress.Linear value={1} max={4} aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar.style.getPropertyValue('--m3-progress')).toBe('25%');
+  });
+
+  test('indeterminate omits the --m3-progress variable (track stays full)', () => {
+    render(<Progress.Linear aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar.style.getPropertyValue('--m3-progress')).toBe('');
+  });
+
+  test('keeps a caller-provided style alongside the fraction variable', () => {
+    render(<Progress.Linear value={50} style={{ opacity: 0.5 }} aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar.style.getPropertyValue('--m3-progress')).toBe('50%');
+    expect(bar.style.opacity).toBe('0.5');
+  });
 });
 
 describe('Progress.Circular', () => {
