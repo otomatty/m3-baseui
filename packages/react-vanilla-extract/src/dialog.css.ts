@@ -18,6 +18,9 @@ export const backdrop = style({
 
 const popupBase = style({
   position: 'fixed',
+  // Keep min/max-width inclusive of padding so the 280–560dp contract holds
+  // without relying on a consumer global reset (Tailwind preflight does this).
+  boxSizing: 'border-box',
   zIndex: 50,
   overflow: 'auto',
   display: 'flex',
@@ -79,8 +82,15 @@ export const header = style({
   flexShrink: 0,
 });
 
-// Title (2nd child) grows so the trailing action sits at the end.
-globalStyle(`${header} > *:nth-child(2)`, { flexGrow: 1 });
+// Title (2nd child) grows so the trailing action sits at the end; min-width:0 +
+// ellipsis lets a long title shrink instead of pushing the action off-screen.
+globalStyle(`${header} > *:nth-child(2)`, {
+  flexGrow: 1,
+  minWidth: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+});
 
 export const icon = style({
   display: 'inline-flex',

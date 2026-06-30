@@ -25,11 +25,13 @@ export function createDialog(classes: DialogClasses) {
     ref,
   ) {
     return (
+      // Spread caller props first so `fullscreen` stays the single source of
+      // truth for both the class resolver and the `data-fullscreen` hook.
       <DialogPrimitive.Popup
         ref={ref}
+        {...props}
         data-fullscreen={fullscreen ? '' : undefined}
         className={mergeClassName(classes.popup({ fullscreen }), className as ClassValue)}
-        {...props}
       />
     );
   });

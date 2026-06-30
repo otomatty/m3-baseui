@@ -19,13 +19,17 @@ export const dialogTv = tv({
       'data-[starting-style]:opacity-0 data-[ending-style]:opacity-0',
     ],
     popup: [
-      'fixed z-50 overflow-auto flex flex-col text-on-surface focus:outline-none',
+      'fixed z-50 box-border overflow-auto flex flex-col text-on-surface focus:outline-none',
       'origin-[var(--transform-origin)] transition-[opacity,transform] duration-200 ease-emphasized',
       // Icon present → center the headline + supporting text (M3 hero icon).
       'has-[[data-slot=dialog-icon]]:text-center',
     ],
-    // Fullscreen header row: leading close icon + title (grows) + trailing action.
-    header: ['flex items-center gap-2 px-2 h-14 shrink-0', '[&>*:nth-child(2)]:grow'],
+    // Fullscreen header row: leading close icon + title (grows, but shrinks +
+    // ellipsizes instead of pushing the trailing action off-screen) + action.
+    header: [
+      'flex items-center gap-2 px-2 h-14 shrink-0',
+      '[&>*:nth-child(2)]:grow [&>*:nth-child(2)]:min-w-0 [&>*:nth-child(2)]:overflow-hidden [&>*:nth-child(2)]:text-ellipsis [&>*:nth-child(2)]:whitespace-nowrap',
+    ],
     // Centered 24dp hero icon in the secondary color.
     icon: ['inline-flex self-center text-secondary'],
     title: ['text-headline-small text-on-surface m-0'],
