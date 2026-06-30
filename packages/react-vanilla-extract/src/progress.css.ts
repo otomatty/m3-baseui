@@ -24,11 +24,12 @@ export const linearRoot = style({
   overflow: 'hidden',
   borderRadius: vars.sys.shape.full,
   selectors: {
-    // Track-stop dot (4dp, primary) pinned at the far end.
+    // Track-stop dot (4dp, primary) pinned at the inline-end (mirrors under RTL).
+    // It's a determinate-only M3 concept, so it's hidden while indeterminate.
     '&::after': {
       content: '""',
       position: 'absolute',
-      right: 0,
+      insetInlineEnd: 0,
       top: '50%',
       transform: 'translateY(-50%)',
       width: '4px',
@@ -36,12 +37,17 @@ export const linearRoot = style({
       borderRadius: vars.sys.shape.full,
       background: `rgb(${vars.sys.color.primary})`,
     },
+    '&[data-indeterminate]::after': {
+      display: 'none',
+    },
   },
 });
 
 export const linearTrack = style({
   // Positioning container only; the inactive track is the `::before` pseudo so a
-  // 4dp gap separates it from the active indicator (`--m3-progress` + 4px).
+  // 4dp gap separates it from the active indicator (`--m3-progress` + 4px). The
+  // gap uses logical inline insets so it tracks the indicator (anchored by Base
+  // UI at inline-start) under `dir="rtl"`.
   position: 'absolute',
   inset: 0,
   selectors: {
@@ -50,14 +56,14 @@ export const linearTrack = style({
       position: 'absolute',
       top: 0,
       bottom: 0,
-      right: 0,
-      left: 'calc(var(--m3-progress, 0%) + 4px)',
+      insetInlineEnd: 0,
+      insetInlineStart: 'calc(var(--m3-progress, 0%) + 4px)',
       background: `rgb(${vars.sys.color.surfaceContainerHighest})`,
       borderRadius: vars.sys.shape.full,
     },
     // Indeterminate has no fraction: the inactive track spans the full width.
     [`${linearRoot}[data-indeterminate] &::before`]: {
-      left: 0,
+      insetInlineStart: 0,
     },
   },
 });

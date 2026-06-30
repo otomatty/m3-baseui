@@ -16,21 +16,26 @@ import { tv } from 'tailwind-variants';
 
 export const linearTv = tv({
   slots: {
-    // The track-stop dot (4dp, primary) lives at the far end via `after:`.
+    // The track-stop dot (4dp, primary) sits at the inline-end via `after:`. It's
+    // a determinate-only M3 concept, so it's hidden while indeterminate. Logical
+    // `end-0` mirrors with the indicator under `dir="rtl"`.
     root: [
       'group relative block w-full h-1 overflow-hidden rounded-full',
-      "after:content-[''] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2",
+      "after:content-[''] after:absolute after:end-0 after:top-1/2 after:-translate-y-1/2",
       'after:size-1 after:rounded-full after:bg-primary',
+      'group-data-[indeterminate]:after:hidden',
     ],
     // Positioning container only; the inactive track is the `before:` pseudo so a
-    // 4dp gap separates it from the active indicator (`--m3-progress` + 4px).
-    // Indeterminate has no fraction, so the inactive track spans the full width.
+    // 4dp gap separates it from the active indicator (`--m3-progress` + 4px). The
+    // gap uses logical inline insets so it tracks the indicator (which Base UI
+    // anchors at inline-start) under `dir="rtl"`. Indeterminate has no fraction,
+    // so the inactive track spans the full width.
     track: [
       'absolute inset-0',
-      "before:content-[''] before:absolute before:inset-y-0 before:right-0",
-      'before:[left:calc(var(--m3-progress,0%)+4px)]',
+      "before:content-[''] before:absolute before:inset-y-0 before:end-0",
+      'before:[inset-inline-start:calc(var(--m3-progress,0%)+4px)]',
       'before:bg-surface-container-highest before:rounded-full',
-      'group-data-[indeterminate]:before:left-0',
+      'group-data-[indeterminate]:before:start-0',
     ],
     indicator: [
       'absolute inset-y-0 left-0 bg-primary rounded-full',
