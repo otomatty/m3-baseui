@@ -23,7 +23,9 @@ export const linearTv = tv({
       'group relative block w-full h-1 overflow-hidden rounded-full',
       "after:content-[''] after:absolute after:end-0 after:top-1/2 after:-translate-y-1/2",
       'after:size-1 after:rounded-full after:bg-primary',
-      'group-data-[indeterminate]:after:hidden',
+      // Self variant (not `group-data-*`): the dot is on the root element itself,
+      // which carries `data-indeterminate` — it isn't a descendant of `.group`.
+      'data-[indeterminate]:after:hidden',
     ],
     // Positioning container only; the inactive track is the `before:` pseudo so a
     // 4dp gap separates it from the active indicator (`--m3-progress` + 4px). The
