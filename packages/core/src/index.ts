@@ -94,7 +94,11 @@ export {
   type ChipClassResolver,
 } from './chip.contract';
 export type { TooltipClasses, RichTooltipClasses } from './tooltip.contract';
-export type { DialogClasses } from './dialog.contract';
+export type {
+  DialogClasses,
+  DialogPopupOwnProps,
+  DialogPopupResolverArgs,
+} from './dialog.contract';
 export type { MenuClasses } from './menu.contract';
 export {
   TABS_VARIANTS,

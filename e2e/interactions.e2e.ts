@@ -32,6 +32,27 @@ test('Dialog opens, traps focus, and closes on Escape', async ({ page }) => {
   await expect(dialog).toBeHidden();
 });
 
+test('fullscreen Dialog opens edge-to-edge (data-fullscreen) with a header + divider', async ({
+  page,
+}) => {
+  await page.getByRole('button', { name: 'フルスクリーン' }).click();
+
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  // The fullscreen variant carries the data-* hook both engines emit.
+  await expect(dialog).toHaveAttribute('data-fullscreen', '');
+  await expect(dialog.getByRole('separator')).toBeVisible();
+
+  // The fullscreen surface fills the viewport.
+  const box = await dialog.boundingBox();
+  const viewport = page.viewportSize();
+  expect(box?.width).toBeCloseTo(viewport?.width ?? 0, 0);
+  expect(box?.height).toBeCloseTo(viewport?.height ?? 0, 0);
+
+  await page.getByRole('button', { name: '閉じる' }).click();
+  await expect(dialog).toBeHidden();
+});
+
 test('Menu opens (data-popup-open) and highlights items via keyboard', async ({ page }) => {
   // `exact` avoids also matching the "FAB メニュー" trigger.
   const trigger = page.getByRole('button', { name: 'メニュー', exact: true });
