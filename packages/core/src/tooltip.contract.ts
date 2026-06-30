@@ -23,6 +23,6 @@ export interface RichTooltipClasses {
   subhead: string;
   /** Rich-tooltip body (body-medium / on-surface-variant). */
   supportingText: string;
-  /** Trailing row of text-button actions. */
+  /** Action row of text buttons, leading-aligned at the bottom (per M3). */
   actions: string;
 }

@@ -62,7 +62,15 @@ describe('Rich tooltip tokens', () => {
     expect(t.supportingText()).toContain('text-on-surface-variant');
   });
 
-  test('actions lay out in a trailing row', () => {
-    expect(t.actions()).toContain('flex');
+  test('actions lay out in a leading-aligned wrapping row (M3 places them bottom-left)', () => {
+    // Assert the row contract, not just `flex` (which `flex-col` would also pass):
+    // a horizontal wrapping row, vertically centered, optically left-aligned via
+    // the -ml-2 pull so the text button's label meets the content's left edge.
+    const a = t.actions();
+    expect(a).toContain('flex');
+    expect(a).not.toContain('flex-col');
+    expect(a).toContain('flex-wrap');
+    expect(a).toContain('items-center');
+    expect(a).toContain('-ml-2');
   });
 });

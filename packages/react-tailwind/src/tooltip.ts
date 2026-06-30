@@ -7,8 +7,9 @@
  *
  * Rich (`RichTooltip`, Base UI Popover): surface-container surface (level2
  * elevation, 12dp corner, 320dp max) holding an optional title-small subhead,
- * body-medium supporting text, and a trailing action row. Built on Popover so
- * its buttons are reachable by keyboard and touch.
+ * body-medium supporting text, and a leading-aligned action row at the bottom
+ * (M3 places rich-tooltip actions bottom-left). Built on Popover so its buttons
+ * are reachable by keyboard and touch.
  */
 import { createTooltip, createRichTooltip } from '@m3-baseui/core';
 import { tv } from './tv';
@@ -41,6 +42,9 @@ export const richTooltipTv = tv({
     arrow: ['text-surface-container'],
     subhead: ['text-title-small text-on-surface m-0'],
     supportingText: ['text-body-medium text-on-surface-variant m-0'],
+    // M3 places rich-tooltip actions at the bottom-left (leading), not trailing
+    // like a dialog. -ml-2 pulls the text button so its label optically aligns
+    // with the content's left edge.
     actions: ['flex flex-wrap items-center gap-2 mt-1 -ml-2'],
   },
 });

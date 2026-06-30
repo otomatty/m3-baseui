@@ -22,8 +22,10 @@ hover/focus 駆動・タッチ無効の Base UI Tooltip ではなく、**Base UI
   アクセシブル名も配線（`RichTooltip.Subhead`）。
 - **supporting text**: `body-medium` / `on-surface-variant`。Popover の Description で
   アクセシブル説明も配線（`RichTooltip.SupportingText`）。
-- **action buttons（任意）**: text button を並べる末尾行（`RichTooltip.Actions`）。
-  `RichTooltip.Close` でアクション押下時にポップアップを閉じられる。
+- **action buttons（任意）**: コンテナ下部に **先頭（左）寄せ**で並ぶ text button の行
+  （`RichTooltip.Actions`）。M3 はリッチツールチップのアクションを bottom-left に配置する
+  （dialog の末尾寄せとは異なる）。`RichTooltip.Close` でアクション押下時にポップアップを
+  閉じられる。
 
 新規トークンは不要（既存の `surfaceContainer` / `titleSmall` / `bodyMedium` /
 `onSurfaceVariant` / `shape.medium` / `elevation.level2` で充足）。ポータル/位置計算系の

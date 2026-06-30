@@ -76,6 +76,9 @@ export const supportingText = style({
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
 });
 
+// M3 places rich-tooltip actions at the bottom-left (leading), not trailing like
+// a dialog. The negative left margin pulls the text button so its label optically
+// aligns with the content's left edge.
 export const actions = style({
   display: 'flex',
   flexWrap: 'wrap',
