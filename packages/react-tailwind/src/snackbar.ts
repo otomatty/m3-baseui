@@ -14,10 +14,14 @@ export const snackbarTv = tv({
   slots: {
     viewport: [
       'fixed bottom-4 left-1/2 -translate-x-1/2 z-50',
-      'flex flex-col gap-2 w-[min(560px,calc(100vw-32px))]',
+      // M3 container width: cap at 672dp, clamp to the viewport on small screens.
+      'flex flex-col gap-2 w-[calc(100vw-32px)] max-w-[672px]',
     ],
     root: [
       'relative flex items-center gap-2 min-h-12 box-border pl-4 pr-2 py-2',
+      // M3 container width follows content within min 344dp / max 672dp. The
+      // min is clamped by 100% so it never overflows a narrower viewport.
+      'w-fit min-w-[min(344px,100%)] max-w-[672px]',
       'rounded-extra-small bg-inverse-surface text-inverse-on-surface shadow-level3',
       'text-body-medium',
       'transition-[opacity,transform] duration-200 ease-emphasized',
