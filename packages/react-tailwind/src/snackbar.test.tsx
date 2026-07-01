@@ -148,6 +148,8 @@ describe('Snackbar', () => {
     expect(cls).toContain('max-w-[672px]');
     expect(cls).toContain('calc(100vw-32px)');
     expect(cls).not.toContain('560px');
+    // Center content-following (w-fit) snackbars under the bottom-center anchor.
+    expect(cls).toContain('items-center');
   });
 
   test('root container width follows content within M3 min 344dp / max 672dp', () => {

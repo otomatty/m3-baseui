@@ -13,6 +13,8 @@ export const viewport = style({
   zIndex: 50,
   display: 'flex',
   flexDirection: 'column',
+  // Center items so content-following (fit-content) snackbars stay under the anchor.
+  alignItems: 'center',
   gap: '8px',
   // M3 container width: cap at 672dp, clamp to the viewport on small screens.
   width: 'calc(100vw - 32px)',

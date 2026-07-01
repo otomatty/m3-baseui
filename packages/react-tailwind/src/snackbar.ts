@@ -15,7 +15,8 @@ export const snackbarTv = tv({
     viewport: [
       'fixed bottom-4 left-1/2 -translate-x-1/2 z-50',
       // M3 container width: cap at 672dp, clamp to the viewport on small screens.
-      'flex flex-col gap-2 w-[calc(100vw-32px)] max-w-[672px]',
+      // Center items so content-following (w-fit) snackbars stay under the anchor.
+      'flex flex-col items-center gap-2 w-[calc(100vw-32px)] max-w-[672px]',
     ],
     root: [
       'relative flex items-center gap-2 min-h-12 box-border pl-4 pr-2 py-2',
