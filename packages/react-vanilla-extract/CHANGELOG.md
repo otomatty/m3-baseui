@@ -1,5 +1,84 @@
 # @m3-baseui/react-vanilla-extract
 
+## 1.4.0
+
+### Minor Changes
+
+- eebc0a7: feat(dialog): full-screen バリアント / icon スロット / min-width 280dp / actions スロット（#62）
+
+  コンテナ・通知系の M3 仕様照合（#38）で判明した残課題。これまで Dialog は **basic
+  dialog のみ**で、M3 アナトミーの一部要素が欠けていた。M3 Dialog のアナトミーに沿って
+  以下を補う。両エンジンで同一 DOM・同一 `data-*` を出力する（drop-in 互換）。
+
+  - **full-screen バリアント**: `<Dialog.Popup fullscreen>` が edge-to-edge の `surface`
+    を描画（`data-fullscreen` を付与）。`Dialog.Header`（先頭 close + title + 末尾 action）
+    と `Dialog.Divider`（`outline-variant` の区切り線）レイアウトスロットを追加。
+  - **icon スロット（任意）**: 24dp・水平中央・`secondary` 色の `Dialog.Icon`。提示時は
+    `:has([data-slot="dialog-icon"])` で headline / supporting text を中央寄せ。
+  - **min-width 280dp**: basic dialog に min-width を付与（従来は max-width のみ）。
+  - **actions スロット**: end-aligned・ボタン間 8dp・supporting text から 24dp 上方間隔の
+    `Dialog.Actions`。
+
+  ロジックは core の `create-dialog` ファクトリに一元化。新規トークンは不要（既存の
+  `secondary` / `outline-variant` / shape / elevation で充足）。ポータル系のため対話は
+  E2E（Playwright + axe）で検証し、ユニット（Tailwind 代表）はトークン契約の断片一致に
+  限定した。
+
+- 5771401: feat(list,item): leading バリアント（avatar 40dp / image 56dp / video 100×56dp）を追加（#63）
+
+  コンテナ・通知系の M3 仕様照合（#38）で判明した残課題。これまで List/Item の leading は
+  **icon（24dp）のみ**実装され、contract の JSDoc が謳う avatar/image は未対応だった。
+
+  `List.Item` / `Item` に **`leadingVariant`**（`icon` | `avatar` | `image` | `video`、
+  既定 `icon`）を追加。M3 の leading 列幅に合わせ avatar=40dp（円形）・image=56dp・
+  video サムネイル=100×56dp とし、icon は従来どおり 24dp。サイズはファクトリが leading
+  スロットへ出力する **`data-leading`** 属性をフックに CSS 側で解決するため、両エンジンで
+  同一 DOM・同一 `data-*` を維持する（drop-in 互換）。`<img>` は列幅に合わせて
+  `object-fit: cover` で充填する。
+
+  a11y: 装飾アイコン（`leadingVariant="icon"`）のみ無条件 `aria-hidden` とし、情報を持つ
+  avatar/image/video は a11y ツリーに残す（呼び出し側が `<img alt>` 等でアクセシブル名を
+  付与する）。3 行レイアウトでは leading/trailing を従来どおり top 揃え（`items-start`）に
+  する。
+
+  新規エクスポート: `LIST_LEADING_VARIANTS` / `ListLeadingVariant` / `ITEM_LEADING_VARIANTS`
+  / `ItemLeadingVariant`（両エンジン + core）。新規トークンは不要。
+
+- 5fab09e: feat(tooltip): Rich tooltip バリアントを追加（#61）
+
+  コンテナ・通知系の M3 仕様照合（#38）で判明した残課題。これまで Tooltip は **Plain
+  tooltip のみ**実装され、M3 が定義するもう一方の **Rich tooltip** が未実装だった。
+
+  Rich tooltip は action buttons（操作可能なコントロール）を内包するため、視覚専用で
+  hover/focus 駆動・タッチ無効の Base UI Tooltip ではなく、**Base UI Popover**（クリック/
+  キーボードで開きフォーカス管理を行う）の上に実装した。これにより action がキーボード/
+  タッチ利用者からも到達可能になる（Plain tooltip は従来どおり Tooltip primitive のまま）。
+  新規エクスポートは `RichTooltip`（両エンジン）。両エンジンで同一 DOM・同一 `data-*` を
+  出力する（drop-in 互換）。
+
+  - **container**: `surface-container` / `elevation level2` / 角丸 `medium`(12dp) /
+    max-width 320dp（`RichTooltip.Popup`）。
+  - **subhead（任意）**: `title-small` / `on-surface`。Popover の Title を用いてポップアップの
+    アクセシブル名も配線（`RichTooltip.Subhead`）。
+  - **supporting text**: `body-medium` / `on-surface-variant`。Popover の Description で
+    アクセシブル説明も配線（`RichTooltip.SupportingText`）。
+  - **action buttons（任意）**: コンテナ下部に **先頭（左）寄せ**で並ぶ text button の行
+    （`RichTooltip.Actions`）。M3 はリッチツールチップのアクションを bottom-left に配置する
+    （dialog の末尾寄せとは異なる）。`RichTooltip.Close` でアクション押下時にポップアップを
+    閉じられる。
+
+  新規トークンは不要（既存の `surfaceContainer` / `titleSmall` / `bodyMedium` /
+  `onSurfaceVariant` / `shape.medium` / `elevation.level2` で充足）。ポータル/位置計算系の
+  ため対話は E2E（Playwright、両エンジン: クリックで開く / アクションがキーボード操作可能）で
+  検証し、ユニット（Tailwind 代表）はトークン契約の断片一致に限定した。
+
+### Patch Changes
+
+- Updated dependencies [eebc0a7]
+- Updated dependencies [5771401]
+- Updated dependencies [5fab09e]
+  - @m3-baseui/core@1.3.0
+
 ## 1.3.0
 
 ### Minor Changes

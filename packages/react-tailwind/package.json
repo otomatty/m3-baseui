@@ -1,6 +1,6 @@
 {
   "name": "@m3-baseui/react-tailwind",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "M3 components implemented with tailwind-variants over the shared @m3-baseui/core factories. Ships the Tailwind v4 @theme preset.",
   "type": "module",
   "license": "MIT",
