@@ -13,8 +13,12 @@ export const viewport = style({
   zIndex: 50,
   display: 'flex',
   flexDirection: 'column',
+  // Center items so content-following (fit-content) snackbars stay under the anchor.
+  alignItems: 'center',
   gap: '8px',
-  width: 'min(560px, calc(100vw - 32px))',
+  // M3 container width: cap at 672dp, clamp to the viewport on small screens.
+  width: 'calc(100vw - 32px)',
+  maxWidth: '672px',
 });
 
 export const root = style({
@@ -24,6 +28,11 @@ export const root = style({
   gap: '8px',
   minHeight: '48px',
   boxSizing: 'border-box',
+  // M3 container width follows content within min 344dp / max 672dp. The min is
+  // clamped by 100% so it never overflows a narrower viewport.
+  width: 'fit-content',
+  minWidth: 'min(344px, 100%)',
+  maxWidth: '672px',
   paddingLeft: '16px',
   paddingRight: '8px',
   paddingBlock: '8px',
