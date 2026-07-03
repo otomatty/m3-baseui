@@ -13,11 +13,7 @@
 import * as React from 'react';
 import { Progress } from '@base-ui/react/progress';
 
-import type {
-  CircularProgressProps,
-  LinearProgressProps,
-  ProgressClasses,
-} from './contract';
+import type { CircularProgressProps, LinearProgressProps, ProgressClasses } from './contract';
 import { cx } from '../../utils';
 import { mergeClassName } from '../../slot';
 

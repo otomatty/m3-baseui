@@ -12,10 +12,7 @@ import * as React from 'react';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
 import { Toggle } from '@base-ui/react/toggle';
 
-import type {
-  SegmentedButtonClasses,
-  SegmentedButtonItemOwnProps,
-} from './contract';
+import type { SegmentedButtonClasses, SegmentedButtonItemOwnProps } from './contract';
 import { mergeClassName } from '../../slot';
 import { Ripple } from '../../ripple/Ripple';
 

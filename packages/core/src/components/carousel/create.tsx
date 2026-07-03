@@ -13,11 +13,7 @@
  */
 import * as React from 'react';
 
-import type {
-  CarouselClassResolver,
-  CarouselSlotClasses,
-  CarouselVariant,
-} from './contract';
+import type { CarouselClassResolver, CarouselSlotClasses, CarouselVariant } from './contract';
 import { cx } from '../../utils';
 
 const CarouselClassContext = React.createContext<CarouselSlotClasses | null>(null);

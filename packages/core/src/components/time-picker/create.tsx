@@ -10,11 +10,7 @@
  */
 import * as React from 'react';
 
-import type {
-  TimePickerClassResolver,
-  TimePickerOwnProps,
-  TimeValue,
-} from './contract';
+import type { TimePickerClassResolver, TimePickerOwnProps, TimeValue } from './contract';
 
 const DEFAULT_VALUE: TimeValue = { hour: 12, minute: 0 };
 

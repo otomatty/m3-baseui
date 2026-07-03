@@ -12,10 +12,7 @@
  */
 import * as React from 'react';
 
-import type {
-  LoadingIndicatorClassResolver,
-  LoadingIndicatorProps,
-} from './contract';
+import type { LoadingIndicatorClassResolver, LoadingIndicatorProps } from './contract';
 import { cx } from '../../utils';
 
 /** 48dp viewBox; the active indicator spans ~38dp (M3 measurement). */

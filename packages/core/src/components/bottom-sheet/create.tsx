@@ -16,11 +16,7 @@
 import * as React from 'react';
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 
-import type {
-  BottomSheetClasses,
-  BottomSheetOwnProps,
-  BottomSheetVariant,
-} from './contract';
+import type { BottomSheetClasses, BottomSheetOwnProps, BottomSheetVariant } from './contract';
 import { createSlot, mergeClassName, type ClassValue } from '../../slot';
 import { cx } from '../../utils';
 
