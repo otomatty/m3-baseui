@@ -15,7 +15,7 @@ import { linkVeCss } from '../../scripts/link-ve-css';
  * in package.json so bundlers keep them while still tree-shaking the JS.
  */
 export default defineConfig({
-  entry: ['src/**/*.ts', '!src/**/*.css.ts', '!src/**/*.test.*'],
+  entry: ['src/index.ts', 'src/components/*/index.ts'],
   format: ['esm'],
   target: 'es2022',
   dts: true,

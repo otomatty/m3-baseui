@@ -57,7 +57,7 @@
   },
   "overrides": [
     {
-      "includes": ["packages/core/src/create-carousel.tsx"],
+      "includes": ["packages/core/src/components/carousel/create.tsx"],
       "linter": {
         "rules": {
           "a11y": {

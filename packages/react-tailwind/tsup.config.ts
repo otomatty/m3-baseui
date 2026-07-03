@@ -12,7 +12,7 @@ import { addUseClient, listEntryJs } from '../../scripts/add-use-client';
  * `'use client'` to every entry after the build.
  */
 export default defineConfig({
-  entry: ['src/**/*.ts', '!src/**/*.test.*', '!src/jest-dom.d.ts'],
+  entry: ['src/index.ts', 'src/tv.ts', 'src/components/*/index.ts'],
   format: ['esm'],
   target: 'es2022',
   dts: true,
