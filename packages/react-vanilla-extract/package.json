@@ -217,7 +217,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 tsup",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

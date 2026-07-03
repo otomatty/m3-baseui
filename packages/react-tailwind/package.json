@@ -221,7 +221,7 @@
     "styles"
   ],
   "scripts": {
-    "build": "tsup && bun run scripts/copy-token-css.ts",
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 tsup && bun run scripts/copy-token-css.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
