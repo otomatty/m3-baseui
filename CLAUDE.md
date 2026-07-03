@@ -82,7 +82,7 @@ bun run --filter @m3/example-playground build
 
 ### テスト規約
 - テストは原則 `@m3-baseui/react-tailwind` に対して書く（DOM は両エンジン共通のため代表とする）。
-- co-located の `*.test.tsx`（`packages/react-tailwind/src/<name>.test.tsx`）。
+- co-located の `*.test.tsx`（`packages/react-tailwind/src/components/<name>/<name>.test.tsx`）。
 - アサートは role/ARIA と `data-*` を優先。クラスは断片一致に留める。
 - ポータル/位置計算を伴う複雑系（Menu/Select/Tooltip/Dialog）の対話は **E2E**
   （`e2e/*.e2e.ts`、Playwright）に委ね、ユニットでは初期描画・単純クリックに限定する。
@@ -100,12 +100,12 @@ bun run --filter @m3/example-playground build
 
 ## コンポーネント追加の手順（7 ステップ）
 
-1. `packages/core/src/<name>.contract.ts` — バリアント型・props・スロット/解決器型
-2. `packages/core/src/create-<name>.tsx` — ファクトリ（`'use client'`、ロジック一元化）
-3. `packages/react-tailwind/src/<name>.ts` — `tv()` 解決器
-4. `packages/react-vanilla-extract/src/<name>.css.ts` + `<name>.ts` — recipe + 配線
+1. `packages/core/src/components/<name>/contract.ts` — バリアント型・props・スロット/解決器型
+2. `packages/core/src/components/<name>/create.tsx` — ファクトリ（`'use client'`、ロジック一元化）
+3. `packages/react-tailwind/src/components/<name>/<name>.ts` — `tv()` 解決器
+4. `packages/react-vanilla-extract/src/components/<name>/<name>.css.ts` + `<name>.ts` — recipe + 配線
 5. 両エンジンの `src/index.ts` に export 追加
-6. 両エンジンの `package.json` `exports` にサブパス追加
+6. 両エンジンの `package.json` `exports` にサブパス追加（`dist/components/<name>/index.js`）
 7. `examples/playground/src/App.tsx` にデモ節を追加（+ 上記 TDD のテスト）
 
 ## やらないこと
