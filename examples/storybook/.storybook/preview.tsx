@@ -1,5 +1,12 @@
-import type { Decorator, Preview } from '@storybook/react-vite';
-import { ThemeProvider, type ContrastLevel, type SchemeVariant } from '@m3-baseui/react-tailwind';
+import * as React from 'react';
+import type { Decorator, Preview, StoryFn } from '@storybook/react-vite';
+import { useArgs, useGlobals } from 'storybook/preview-api';
+import {
+  ThemeProvider,
+  type ContrastLevel,
+  type SchemeVariant,
+  type ThemeMode,
+} from '@m3-baseui/react-tailwind';
 import { EngineProvider, type EngineId } from '../src/engine';
 import './preview.css';
 
@@ -13,34 +20,68 @@ const SCHEMES: SchemeVariant[] = [
 ];
 const CONTRASTS: ContrastLevel[] = ['standard', 'medium', 'high'];
 
+type StorybookGlobals = {
+  engine: EngineId;
+  colorMode: ThemeMode;
+};
+
+type StorybookThemeArgs = {
+  seed: string;
+  scheme: SchemeVariant;
+  contrast: ContrastLevel;
+};
+
 /**
- * Global decorator: wires the theme Controls + the Engine toolbar into the
- * tree. `ThemeProvider` writes the generated `--md-sys-color-*` channels onto
- * its wrapper, which both engines read, so seed/scheme/contrast/mode drive
- * dynamic color for every story regardless of the active engine.
+ * Keep `data-theme` on `<html>` in sync with the toolbar selection.
+ *
+ * tokens.css applies dark vars via `[data-theme='dark']` and via
+ * `@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) }`.
+ * ThemeProvider only sets `data-theme` on its own wrapper, so without this
+ * hook Light mode on a dark OS keeps inheriting dark `:root` vars.
  */
-const withTheme: Decorator = (Story, context) => {
-  const engine = context.globals.engine as EngineId;
-  const { seed, scheme, contrast, mode } = context.args as {
-    seed: string;
-    scheme: SchemeVariant;
-    contrast: ContrastLevel;
-    mode: 'light' | 'dark' | 'system';
-  };
+function useDocumentTheme(mode: ThemeMode): void {
+  React.useEffect(() => {
+    const root = document.documentElement;
+    if (mode === 'system') {
+      root.removeAttribute('data-theme');
+    } else {
+      root.setAttribute('data-theme', mode);
+    }
+    return () => {
+      root.removeAttribute('data-theme');
+    };
+  }, [mode]);
+}
+
+function ThemeShell({ Story }: { Story: StoryFn }) {
+  const [{ seed, scheme, contrast }] = useArgs<StorybookThemeArgs>();
+  const [globals] = useGlobals();
+  const { engine, colorMode } = globals as StorybookGlobals;
+
+  useDocumentTheme(colorMode);
+
   return (
     <EngineProvider engine={engine}>
       <ThemeProvider
         seed={seed || undefined}
         scheme={scheme}
         contrast={contrast}
-        mode={mode}
+        mode={colorMode}
         className="p-6 min-h-[120px] bg-surface text-on-surface"
       >
         <Story />
       </ThemeProvider>
     </EngineProvider>
   );
-};
+}
+
+/**
+ * Global decorator: wires the theme Controls + the Engine / Color mode toolbars
+ * into the tree. `ThemeProvider` writes the generated `--md-sys-color-*`
+ * channels onto its wrapper when a seed is set; baseline tokens from tokens.css
+ * apply via `data-theme` on `<html>`.
+ */
+const withTheme: Decorator = (Story) => <ThemeShell Story={Story} />;
 
 const preview: Preview = {
   decorators: [withTheme],
@@ -58,14 +99,27 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    colorMode: {
+      description: 'Light / dark color mode for the preview canvas',
+      defaultValue: 'light',
+      toolbar: {
+        title: 'Color mode',
+        icon: 'mirror',
+        items: [
+          { value: 'light', title: 'Light', icon: 'sun' },
+          { value: 'dark', title: 'Dark', icon: 'moon' },
+          { value: 'system', title: 'System', icon: 'browser' },
+        ],
+        dynamicTitle: true,
+      },
+    },
   },
-  initialGlobals: { engine: 'tailwind' },
+  initialGlobals: { engine: 'tailwind', colorMode: 'light' },
   // Project-level args/argTypes apply to every story and surface in Controls.
   args: {
     seed: '#6750A4',
     scheme: 'tonalSpot',
     contrast: 'standard',
-    mode: 'light',
   },
   argTypes: {
     seed: { control: 'color', table: { category: 'Theme' }, name: 'Seed' },
@@ -80,12 +134,6 @@ const preview: Preview = {
       options: CONTRASTS,
       table: { category: 'Theme' },
       name: 'Contrast',
-    },
-    mode: {
-      control: 'inline-radio',
-      options: ['light', 'dark', 'system'],
-      table: { category: 'Theme' },
-      name: 'Mode',
     },
   },
   parameters: {

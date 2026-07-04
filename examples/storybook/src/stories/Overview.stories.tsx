@@ -61,8 +61,9 @@ const OVERVIEW_COMPONENT_GROUPS = [
 
 /**
  * Landing story. Explains the dual-engine setup and shows a live swatch grid
- * driven by the Theme controls (seed/scheme/contrast/mode) — flip the Engine
- * toolbar to confirm both builds render identically.
+ * driven by the Theme controls (seed/scheme/contrast) and the Color mode toolbar
+ * (light/dark/system) — flip the Engine toolbar to confirm both builds render
+ * identically.
  */
 export const Introduction: Story = {
   render: () => {
@@ -73,9 +74,9 @@ export const Introduction: Story = {
           <h1 className="text-headline-medium">M3 on Base UI</h1>
           <p className="text-body-medium text-on-surface-variant">
             Material Design 3 components on Base UI, shipped for two styling engines (Tailwind CSS
-            v4 &amp; vanilla-extract). Use the <strong>Engine</strong> toolbar to switch builds and
-            the <strong>Controls</strong> panel to drive dynamic color (seed / scheme / contrast /
-            mode).
+            v4 &amp; vanilla-extract). Use the <strong>Engine</strong> toolbar to switch builds, the{' '}
+            <strong>Color mode</strong> toolbar for light/dark mode, and the{' '}
+            <strong>Controls</strong> panel to drive dynamic color (seed / scheme / contrast).
           </p>
           <p className="text-body-medium text-on-surface-variant">
             左サイドバーの <strong>Components</strong>{' '}
