@@ -144,7 +144,10 @@ export function createTimePicker(resolve: TimePickerClassResolver) {
     const RADIUS_PCT = 38;
     const numbers =
       selection === 'hours'
-        ? Array.from({ length: 12 }, (_, i) => ({ pos: i, label: i === 0 ? 12 : i }))
+        ? Array.from({ length: 12 }, (_, i) => ({
+            pos: i,
+            label: i === 0 ? 12 : i,
+          }))
         : Array.from({ length: 12 }, (_, i) => ({ pos: i, label: i * 5 }));
 
     const handAngle = selection === 'hours' ? (displayHour % 12) * 30 : current.minute * 6;
@@ -161,32 +164,35 @@ export function createTimePicker(resolve: TimePickerClassResolver) {
     return (
       <div className={className ? `${c.root} ${className}` : c.root} data-variant="dial">
         <div className={c.header}>
-          <button
-            type="button"
-            className={c.field}
-            data-selected={selection === 'hours' || undefined}
-            aria-label="Hours"
-            aria-pressed={selection === 'hours'}
-            onClick={() => setSelection('hours')}
-          >
-            {is12 ? displayHour : pad2(current.hour)}
-          </button>
-          <span className={c.colon} aria-hidden="true">
-            :
-          </span>
-          <button
-            type="button"
-            className={c.field}
-            data-selected={selection === 'minutes' || undefined}
-            aria-label="Minutes"
-            aria-pressed={selection === 'minutes'}
-            onClick={() => setSelection('minutes')}
-          >
-            {pad2(current.minute)}
-          </button>
+          <div className={c.display}>
+            <button
+              type="button"
+              className={c.field}
+              data-selected={selection === 'hours' || undefined}
+              aria-label="Hours"
+              aria-pressed={selection === 'hours'}
+              onClick={() => setSelection('hours')}
+            >
+              {is12 ? displayHour : pad2(current.hour)}
+            </button>
+            <span className={c.colon} aria-hidden="true">
+              :
+            </span>
+            <button
+              type="button"
+              className={c.field}
+              data-selected={selection === 'minutes' || undefined}
+              aria-label="Minutes"
+              aria-pressed={selection === 'minutes'}
+              onClick={() => setSelection('minutes')}
+            >
+              {pad2(current.minute)}
+            </button>
+          </div>
           {periodToggle}
         </div>
-        <fieldset className={c.dial} aria-label="Clock">
+        {/* biome-ignore lint/a11y/useSemanticElements: fieldset breaks % top/height for absolutely positioned dial numbers in some browsers. */}
+        <div role="group" className={c.dial} aria-label="Clock">
           <span
             className={c.dialHand}
             aria-hidden="true"
@@ -213,7 +219,7 @@ export function createTimePicker(resolve: TimePickerClassResolver) {
               </button>
             );
           })}
-        </fieldset>
+        </div>
       </div>
     );
   }

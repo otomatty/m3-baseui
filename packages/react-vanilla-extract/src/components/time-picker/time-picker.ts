@@ -7,6 +7,7 @@ export type { TimePickerVariant, TimeValue } from '@m3-baseui/core';
 import {
   root,
   header,
+  display,
   field,
   colon,
   periods,
@@ -23,6 +24,7 @@ import {
 export const TimePicker = createTimePicker(() => ({
   root,
   header,
+  display,
   field,
   colon,
   periods,

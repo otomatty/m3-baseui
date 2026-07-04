@@ -30,8 +30,10 @@ export interface TimePickerOwnProps {
 
 export interface TimePickerClasses {
   root: string;
-  /** Header row: hour/minute fields + AM/PM toggle. */
+  /** Header row: hour/minute display + AM/PM toggle (98dp tall). */
   header: string;
+  /** Hour + colon + minute group; 12dp gap to the period toggle. */
+  display: string;
   /** The big hour/minute selector button (data-selected while active). */
   field: string;
   /** The ":" between the hour and minute fields. */
