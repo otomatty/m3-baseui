@@ -18,7 +18,9 @@ export const Basic: Story = {
             <BottomSheet.Popup>
               <BottomSheet.Handle />
               <BottomSheet.Title>共有先を選択</BottomSheet.Title>
-              <BottomSheet.Description>スワイプまたは背景タップで閉じます。</BottomSheet.Description>
+              <BottomSheet.Description>
+                スワイプまたは背景タップで閉じます。
+              </BottomSheet.Description>
               <div className="p-2">
                 <List.Root>
                   <List.Item interactive leading={<Icon name="link" />}>
