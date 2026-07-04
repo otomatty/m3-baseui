@@ -20,6 +20,45 @@ const ROLES = [
   ['surface-variant', 'bg-surface-variant text-on-surface-variant'],
 ] as const;
 
+const OVERVIEW_COMPONENT_GROUPS = [
+  {
+    title: 'Actions',
+    items: [
+      'Button',
+      'IconButton',
+      'ButtonGroup',
+      'SplitButton',
+      'Fab',
+      'FabMenu',
+      'SegmentedButton',
+    ],
+  },
+  {
+    title: 'Selection',
+    items: ['Selection controls', 'Chip'],
+  },
+  {
+    title: 'Text input',
+    items: ['TextField', 'Search', 'Select', 'Slider', 'DatePicker', 'TimePicker'],
+  },
+  {
+    title: 'Navigation',
+    items: ['NavigationBar', 'NavigationRail', 'NavigationDrawer', 'TopAppBar', 'BottomAppBar'],
+  },
+  {
+    title: 'Containment',
+    items: ['Card', 'Dialog', 'BottomSheet', 'SideSheet', 'Menu', 'Tooltip'],
+  },
+  {
+    title: 'Communication',
+    items: ['Badge', 'Divider', 'List', 'Item', 'Snackbar', 'Progress', 'LoadingIndicator'],
+  },
+  {
+    title: 'Layout & media',
+    items: ['Tabs', 'Toolbar', 'Carousel'],
+  },
+] as const;
+
 /**
  * Landing story. Explains the dual-engine setup and shows a live swatch grid
  * driven by the Theme controls (seed/scheme/contrast/mode) — flip the Engine
@@ -37,6 +76,10 @@ export const Introduction: Story = {
             v4 &amp; vanilla-extract). Use the <strong>Engine</strong> toolbar to switch builds and
             the <strong>Controls</strong> panel to drive dynamic color (seed / scheme / contrast /
             mode).
+          </p>
+          <p className="text-body-medium text-on-surface-variant">
+            左サイドバーの <strong>Components</strong>{' '}
+            から各コンポーネントのバリアント・状態を確認できます。
           </p>
         </div>
 
@@ -60,6 +103,35 @@ export const Introduction: Story = {
           </Button>
           <Button variant="outlined">Outlined</Button>
           <Button variant="text">Text</Button>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ComponentIndex: Story = {
+  render: () => {
+    const { Card } = useM3();
+    return (
+      <div className="flex max-w-3xl flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-headline-small">Component index</h2>
+          <p className="text-body-medium text-on-surface-variant">
+            公開 API の全コンポーネントに対応するストーリーです。Engine ツールバーで Tailwind /
+            vanilla-extract を切り替え、同一 DOM・同一 data-* 契約を確認できます。
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {OVERVIEW_COMPONENT_GROUPS.map(({ title, items }) => (
+            <Card key={title} variant="filled" className="p-4">
+              <p className="text-title-medium text-on-surface">{title}</p>
+              <ul className="mt-2 flex flex-col gap-1 text-body-medium text-on-surface-variant">
+                {items.map((name) => (
+                  <li key={name}>{name}</li>
+                ))}
+              </ul>
+            </Card>
+          ))}
         </div>
       </div>
     );
