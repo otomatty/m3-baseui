@@ -1,6 +1,5 @@
 import * as React from 'react';
-import type { Decorator, Preview, StoryFn } from '@storybook/react-vite';
-import { useArgs, useGlobals } from 'storybook/preview-api';
+import type { Decorator, Preview } from '@storybook/react-vite';
 import {
   ThemeProvider,
   type ContrastLevel,
@@ -31,15 +30,8 @@ type StorybookThemeArgs = {
   contrast: ContrastLevel;
 };
 
-/**
- * Keep `data-theme` on `<html>` in sync with the toolbar selection.
- *
- * tokens.css applies dark vars via `[data-theme='dark']` and via
- * `@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) }`.
- * ThemeProvider only sets `data-theme` on its own wrapper, so without this
- * hook Light mode on a dark OS keeps inheriting dark `:root` vars.
- */
-function useDocumentTheme(mode: ThemeMode): void {
+/** Sync `<html data-theme>` — see preview decorator comment for rationale. */
+function DocumentThemeSync({ mode }: { mode: ThemeMode }): null {
   React.useEffect(() => {
     const root = document.documentElement;
     if (mode === 'system') {
@@ -51,17 +43,27 @@ function useDocumentTheme(mode: ThemeMode): void {
       root.removeAttribute('data-theme');
     };
   }, [mode]);
+  return null;
 }
 
-function ThemeShell({ Story }: { Story: StoryFn }) {
-  const [{ seed, scheme, contrast }] = useArgs<StorybookThemeArgs>();
-  const [globals] = useGlobals();
-  const { engine, colorMode } = globals as StorybookGlobals;
-
-  useDocumentTheme(colorMode);
+/**
+ * Global decorator: wires the theme Controls + the Engine / Color mode toolbars
+ * into the tree. `ThemeProvider` writes the generated `--md-sys-color-*`
+ * channels onto its wrapper when a seed is set; baseline tokens from tokens.css
+ * apply via `data-theme` on `<html>` (synced by {@link DocumentThemeSync}).
+ *
+ * tokens.css applies dark vars via `[data-theme='dark']` and via
+ * `@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) }`.
+ * ThemeProvider only sets `data-theme` on its own wrapper, so `<html>` must be
+ * synced separately or Light mode on a dark OS keeps inheriting dark `:root` vars.
+ */
+const withTheme: Decorator = (Story, context) => {
+  const { seed, scheme, contrast } = context.args as StorybookThemeArgs;
+  const { engine, colorMode } = context.globals as StorybookGlobals;
 
   return (
     <EngineProvider engine={engine}>
+      <DocumentThemeSync mode={colorMode} />
       <ThemeProvider
         seed={seed || undefined}
         scheme={scheme}
@@ -73,15 +75,7 @@ function ThemeShell({ Story }: { Story: StoryFn }) {
       </ThemeProvider>
     </EngineProvider>
   );
-}
-
-/**
- * Global decorator: wires the theme Controls + the Engine / Color mode toolbars
- * into the tree. `ThemeProvider` writes the generated `--md-sys-color-*`
- * channels onto its wrapper when a seed is set; baseline tokens from tokens.css
- * apply via `data-theme` on `<html>`.
- */
-const withTheme: Decorator = (Story) => <ThemeShell Story={Story} />;
+};
 
 const preview: Preview = {
   decorators: [withTheme],
