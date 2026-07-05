@@ -32,8 +32,16 @@ export const menuSelectableItemPositionShape = [
   'data-[checked]:data-[position=last]:rounded-b-extra-small',
 ] as const;
 
+/** Fallback when rows are rendered via a wrapper and data-position is not stamped. */
+export const menuSelectableItemPositionShapeFallback = [
+  'data-[selected]:not([data-position]):rounded-extra-small',
+  'data-[checked]:not([data-position]):rounded-extra-small',
+] as const;
+
 export const menuSelectableItemDisabled = [
   'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
+  'data-[disabled]:data-[selected]:bg-transparent data-[disabled]:data-[selected]:text-on-surface/[0.38]',
+  'data-[disabled]:data-[checked]:bg-transparent data-[disabled]:data-[checked]:text-on-surface/[0.38]',
 ] as const;
 
 export const menuSelectableItemBase = [
@@ -42,6 +50,7 @@ export const menuSelectableItemBase = [
   ...menuSelectableItemStateLayer,
   ...menuSelectableItemSelectedFill,
   ...menuSelectableItemPositionShape,
+  ...menuSelectableItemPositionShapeFallback,
   ...menuSelectableItemDisabled,
 ] as const;
 

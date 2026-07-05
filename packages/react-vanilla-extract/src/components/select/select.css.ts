@@ -8,7 +8,12 @@ import { vars } from '@m3-baseui/tokens/contract.css';
 import { menuGroupLabel, selectMenuPopup } from '../menu/menu-surface.css';
 import { menuSelectableItemIndicator, selectMenuItem } from '../menu/menu-selectable-item.css';
 
-export { selectMenuPopup as popup, selectMenuItem as item, menuSelectableItemIndicator as itemIndicator, menuGroupLabel as groupLabel };
+export {
+  selectMenuPopup as popup,
+  selectMenuItem as item,
+  menuSelectableItemIndicator as itemIndicator,
+  menuGroupLabel as groupLabel,
+};
 
 export const trigger = style({
   position: 'relative',

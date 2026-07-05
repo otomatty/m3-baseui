@@ -35,6 +35,9 @@ const selectableSelectedShape = {
     background: `rgb(${vars.sys.color.secondaryContainer})`,
     color: `rgb(${vars.sys.color.onSecondaryContainer})`,
   },
+  '&[data-selected]:not([data-position]), &[data-checked]:not([data-position])': {
+    borderRadius: vars.sys.shape.extraSmall,
+  },
   '&[data-selected][data-position="only"], &[data-checked][data-position="only"]': {
     borderRadius: vars.sys.shape.extraSmall,
   },
@@ -48,6 +51,10 @@ const selectableSelectedShape = {
   '&[data-selected][data-position="last"], &[data-checked][data-position="last"]': {
     borderBottomLeftRadius: vars.sys.shape.extraSmall,
     borderBottomRightRadius: vars.sys.shape.extraSmall,
+  },
+  '&[data-disabled][data-selected], &[data-disabled][data-checked]': {
+    background: 'transparent',
+    color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
   },
 } as const;
 

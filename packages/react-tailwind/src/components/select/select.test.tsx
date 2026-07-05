@@ -112,6 +112,8 @@ describe('Select tokens', () => {
     expect(s.item()).toContain('data-[selected]:data-[position=only]:rounded-extra-small');
     expect(s.item()).toContain('data-[selected]:data-[position=first]:rounded-t-extra-small');
     expect(s.item()).toContain('data-[selected]:data-[position=last]:rounded-b-extra-small');
+    expect(s.item()).toContain('data-[selected]:data-[position=middle]:rounded-none');
+    expect(s.item()).toContain('data-[selected]:not([data-position]):rounded-extra-small');
     expect(s.itemIndicator()).toContain('text-on-surface');
     expect(s.itemIndicator()).not.toContain('text-primary');
     expect(s.itemIndicator()).toContain('group-data-[selected]:text-on-secondary-container');

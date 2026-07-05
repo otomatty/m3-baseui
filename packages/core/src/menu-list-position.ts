@@ -9,6 +9,11 @@ import * as React from 'react';
 
 export type MenuListItemPosition = 'only' | 'first' | 'middle' | 'last';
 
+export interface AssignListItemPositionsOptions {
+  /** Only descend into explicit list containers (Group / RadioGroup), not submenus. */
+  shouldRecurseInto?: (child: React.ReactElement) => boolean;
+}
+
 /** Map a zero-based index + total count to the M3 segmented-menu position token. */
 export function getMenuListItemPosition(index: number, count: number): MenuListItemPosition {
   if (count <= 1) return 'only';
@@ -20,6 +25,7 @@ export function getMenuListItemPosition(index: number, count: number): MenuListI
 function collectPositionableItems(
   children: React.ReactNode,
   isPositionableItem: (child: React.ReactElement) => boolean,
+  shouldRecurseInto?: (child: React.ReactElement) => boolean,
 ): React.ReactElement[] {
   const items: React.ReactElement[] = [];
   React.Children.forEach(children, (child) => {
@@ -28,11 +34,17 @@ function collectPositionableItems(
       items.push(child);
       return;
     }
-    if (child.props && typeof child.props === 'object' && 'children' in child.props) {
+    if (
+      shouldRecurseInto?.(child) &&
+      child.props &&
+      typeof child.props === 'object' &&
+      'children' in child.props
+    ) {
       items.push(
         ...collectPositionableItems(
           child.props.children as React.ReactNode,
           isPositionableItem,
+          shouldRecurseInto,
         ),
       );
     }
@@ -43,6 +55,7 @@ function collectPositionableItems(
 function assignPositions(
   children: React.ReactNode,
   isPositionableItem: (child: React.ReactElement) => boolean,
+  shouldRecurseInto: ((child: React.ReactElement) => boolean) | undefined,
   count: number,
   indexRef: { current: number },
 ): React.ReactNode {
@@ -53,13 +66,19 @@ function assignPositions(
       indexRef.current += 1;
       return React.cloneElement(child, { 'data-position': position } as Record<string, string>);
     }
-    if (child.props && typeof child.props === 'object' && 'children' in child.props) {
+    if (
+      shouldRecurseInto?.(child) &&
+      child.props &&
+      typeof child.props === 'object' &&
+      'children' in child.props
+    ) {
       return React.cloneElement(
         child,
         {},
         assignPositions(
           child.props.children as React.ReactNode,
           isPositionableItem,
+          shouldRecurseInto,
           count,
           indexRef,
         ),
@@ -77,8 +96,10 @@ function assignPositions(
 export function assignListItemPositions(
   children: React.ReactNode,
   isPositionableItem: (child: React.ReactElement) => boolean,
+  options?: AssignListItemPositionsOptions,
 ): React.ReactNode {
-  const count = collectPositionableItems(children, isPositionableItem).length;
+  const shouldRecurseInto = options?.shouldRecurseInto;
+  const count = collectPositionableItems(children, isPositionableItem, shouldRecurseInto).length;
   if (count === 0) return children;
-  return assignPositions(children, isPositionableItem, count, { current: 0 });
+  return assignPositions(children, isPositionableItem, shouldRecurseInto, count, { current: 0 });
 }

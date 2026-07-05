@@ -102,13 +102,7 @@ export function createSelect(classes: SelectClasses, field: SelectFieldClassReso
     React.ElementRef<typeof SelectPrimitive.Positioner>,
     PositionerProps
   >(function Positioner(
-    {
-      alignItemWithTrigger = false,
-      side = 'bottom',
-      sideOffset = 4,
-      align = 'start',
-      ...props
-    },
+    { alignItemWithTrigger = false, side = 'bottom', sideOffset = 4, align = 'start', ...props },
     ref,
   ) {
     return (
@@ -205,10 +199,9 @@ export function createSelect(classes: SelectClasses, field: SelectFieldClassReso
   const Item = createSlot(SelectPrimitive.Item, classes.item, { ripple: true });
   const Popup = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Popup>, SelectPopupProps>(
     function Popup({ className, children, ...props }, ref) {
-      const positionedChildren = assignListItemPositions(
-        children,
-        (child) => child.type === Item,
-      );
+      const positionedChildren = assignListItemPositions(children, (child) => child.type === Item, {
+        shouldRecurseInto: (child) => child.type === SelectPrimitive.Group,
+      });
       return (
         <SelectPrimitive.Popup
           ref={ref}

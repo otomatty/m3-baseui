@@ -75,9 +75,14 @@ describe('Menu tokens', () => {
   });
 
   test('selectable items use M3 position-based checked shapes (issue #98)', () => {
-    expect(m.checkboxItem()).toContain('data-[checked]:data-[position=first]:rounded-t-extra-small');
+    expect(m.checkboxItem()).toContain(
+      'data-[checked]:data-[position=first]:rounded-t-extra-small',
+    );
     expect(m.checkboxItem()).toContain('data-[checked]:data-[position=last]:rounded-b-extra-small');
     expect(m.checkboxItem()).toContain('data-[checked]:data-[position=middle]:rounded-none');
+    expect(m.checkboxItem()).toContain('data-[checked]:data-[position=only]:rounded-extra-small');
+    expect(m.radioItem()).toContain('data-[checked]:data-[position=first]:rounded-t-extra-small');
+    expect(m.checkboxItem()).toContain('data-[checked]:not([data-position]):rounded-extra-small');
   });
 });
 

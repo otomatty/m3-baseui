@@ -38,10 +38,7 @@ export function createMenu(classes: MenuClasses) {
   const Positioner = React.forwardRef<
     React.ElementRef<typeof MenuPrimitive.Positioner>,
     MenuPositionerProps
-  >(function Positioner(
-    { side = 'bottom', sideOffset = 8, align = 'start', ...props },
-    ref,
-  ) {
+  >(function Positioner({ side = 'bottom', sideOffset = 8, align = 'start', ...props }, ref) {
     return (
       <MenuPrimitive.Positioner
         ref={ref}
@@ -61,10 +58,14 @@ export function createMenu(classes: MenuClasses) {
 
   const isMenuSelectableItem = (child: React.ReactElement) =>
     child.type === CheckboxItem || child.type === RadioItem;
+  const isMenuPositionContainer = (child: React.ReactElement) =>
+    child.type === MenuPrimitive.Group || child.type === MenuPrimitive.RadioGroup;
 
   const Popup = React.forwardRef<React.ElementRef<typeof MenuPrimitive.Popup>, MenuPopupProps>(
     function Popup({ className, children, ...props }, ref) {
-      const positionedChildren = assignListItemPositions(children, isMenuSelectableItem);
+      const positionedChildren = assignListItemPositions(children, isMenuSelectableItem, {
+        shouldRecurseInto: isMenuPositionContainer,
+      });
       return (
         <MenuPrimitive.Popup
           ref={ref}
