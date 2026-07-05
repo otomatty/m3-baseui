@@ -53,6 +53,22 @@ describe('Select tokens', () => {
     expect(s.popup()).toContain('rounded-extra-small');
   });
 
+  test('popup width follows M3 menu bounds (112–280dp, at least anchor)', () => {
+    expect(s.popup()).toContain('min-w-[max(112px,var(--anchor-width))]');
+    expect(s.popup()).toContain('max-w-[280px]');
+  });
+
+  test('selectable item matches M3 menu item: label-large, on-surface check, selected fill', () => {
+    expect(s.item()).toContain('text-label-large');
+    expect(s.item()).not.toContain('text-body-large');
+    expect(s.item()).toContain('data-[selected]:bg-secondary-container');
+    expect(s.item()).toContain('data-[selected]:text-on-secondary-container');
+    expect(s.item()).toContain('data-[selected]:rounded-extra-small');
+    expect(s.itemIndicator()).toContain('text-on-surface');
+    expect(s.itemIndicator()).not.toContain('text-primary');
+    expect(s.itemIndicator()).toContain('group-data-[selected]:text-on-secondary-container');
+  });
+
   test('scroll arrows stick to the popup edges with the surface color', () => {
     expect(s.scrollUpArrow()).toContain('sticky');
     expect(s.scrollUpArrow()).toContain('top-0');
