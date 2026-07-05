@@ -16,7 +16,11 @@ export function SelectionControlsDemo() {
         <Checkbox checked={agree} onCheckedChange={setAgree} />
         利用規約に同意する
       </label>
-      <RadioGroup value={plan} onValueChange={setPlan} aria-label="プラン">
+      <RadioGroup
+        value={plan}
+        onValueChange={(value) => setPlan(String(value))}
+        aria-label="プラン"
+      >
         <label className="flex items-center gap-3 text-body-large">
           <Radio value="free" />
           無料

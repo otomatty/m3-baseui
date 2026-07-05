@@ -104,7 +104,7 @@ const PREVIEWS: Record<string, () => ReactNode> = {
   ),
 
   'segmented-button': () => (
-    <SegmentedButton.Root defaultValue="week">
+    <SegmentedButton.Root defaultValue={['week']}>
       <SegmentedButton.Item value="day">日</SegmentedButton.Item>
       <SegmentedButton.Item value="week">週</SegmentedButton.Item>
       <SegmentedButton.Item value="month">月</SegmentedButton.Item>
@@ -190,7 +190,7 @@ const PREVIEWS: Record<string, () => ReactNode> = {
 
   'navigation-bar': () => (
     <div className="w-56 overflow-hidden rounded-large border border-outline-variant bg-surface">
-      <NavigationBar.Root defaultValue="home">
+      <NavigationBar.Root defaultValue={['home']}>
         <NavigationBar.Item value="home" icon={<Icon name="home" />}>
           ホーム
         </NavigationBar.Item>
@@ -206,7 +206,7 @@ const PREVIEWS: Record<string, () => ReactNode> = {
 
   'navigation-rail': () => (
     <div className="h-36 overflow-hidden rounded-large border border-outline-variant bg-surface">
-      <NavigationRail.Root defaultValue="home" className="h-full">
+      <NavigationRail.Root defaultValue={['home']} className="h-full">
         <NavigationRail.Item value="home" icon={<Icon name="home" />}>
           ホーム
         </NavigationRail.Item>
