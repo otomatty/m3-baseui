@@ -140,12 +140,21 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     name: 'FabMenu',
     group: 'Actions',
     description: 'FAB から展開する Speed Dial メニュー。子アクションを縦に配置します。',
-    importCode: twImport('FabMenu, ThemeProvider'),
-    usageCode: `<FabMenu>
-  <FabMenu.Action icon={<Icon name="edit" />} label="編集" onClick={...} />
-  <FabMenu.Action icon={<Icon name="share" />} label="共有" onClick={...} />
-</FabMenu>`,
-    props: [{ name: 'children', type: 'FabMenu.Action[]', description: 'メニューアクション' }],
+    importCode: twImport('FabMenu, Fab, ThemeProvider'),
+    usageCode: `<FabMenu.Root>
+  <FabMenu.Trigger color="primary" aria-label="作成">
+    <Icon name="add" />
+  </FabMenu.Trigger>
+  <FabMenu.Portal>
+    <FabMenu.Positioner sideOffset={12} align="end" side="top">
+      <FabMenu.Popup>
+        <FabMenu.Item icon={<Icon name="edit" />}>編集</FabMenu.Item>
+        <FabMenu.Item icon={<Icon name="share" />}>共有</FabMenu.Item>
+      </FabMenu.Popup>
+    </FabMenu.Positioner>
+  </FabMenu.Portal>
+</FabMenu.Root>`,
+    props: [{ name: 'FabMenu.Item icon', type: 'ReactNode', description: '先頭アイコン' }],
   },
   {
     slug: 'segmented-button',
@@ -236,10 +245,35 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     description:
       'M3 検索バー。leading 検索アイコンとクリアボタンを備えた TextField 派生コンポーネントです。',
     importCode: twImport('Search, ThemeProvider'),
-    usageCode: `<Search placeholder="検索" value={query} onValueChange={setQuery} />`,
+    usageCode: `<Search.Root items={['りんご', 'みかん', 'ぶどう']}>
+  <Search.Bar>
+    <Search.Icon>
+      <Search.SearchGlyph />
+    </Search.Icon>
+    <Search.Input placeholder="検索" aria-label="検索" />
+    <Search.Clear aria-label="クリア">×</Search.Clear>
+  </Search.Bar>
+  <Search.Portal>
+    <Search.Positioner sideOffset={4}>
+      <Search.Popup>
+        <Search.Empty>該当なし</Search.Empty>
+        <Search.List>
+          {(item) => (
+            <Search.Item key={item} value={item}>
+              {item}
+              <Search.ItemIndicator>
+                <Search.Check />
+              </Search.ItemIndicator>
+            </Search.Item>
+          )}
+        </Search.List>
+      </Search.Popup>
+    </Search.Positioner>
+  </Search.Portal>
+</Search.Root>`,
     props: [
-      { name: 'value', type: 'string', description: '入力値' },
-      { name: 'onValueChange', type: '(value: string) => void', description: '変更コールバック' },
+      { name: 'Search.Root items', type: 'readonly string[]', description: '候補リスト' },
+      { name: 'value / onValueChange', type: 'string', description: '選択値と変更ハンドラ' },
     ],
   },
   {
@@ -293,12 +327,26 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     description:
       'カレンダーポップアップ付き日付入力。TextField トリガーとカレンダーグリッドを組み合わせます。',
     importCode: twImport('DatePicker, ThemeProvider'),
-    usageCode: `<DatePicker label="日付" value={date} onValueChange={setDate} />`,
+    usageCode: `<DatePicker.Root>
+  <DatePicker.Field>
+    <DatePicker.Input placeholder="YYYY/MM/DD" aria-label="日付" />
+    <DatePicker.FieldIcon aria-label="カレンダーを開く">
+      <Icon name="calendar_today" />
+    </DatePicker.FieldIcon>
+  </DatePicker.Field>
+  <DatePicker.Portal>
+    <DatePicker.Positioner sideOffset={4} align="start">
+      <DatePicker.Popup>
+        <DatePicker.Calendar value={date} onValueChange={setDate} />
+      </DatePicker.Popup>
+    </DatePicker.Positioner>
+  </DatePicker.Portal>
+</DatePicker.Root>`,
     props: [
-      { name: 'value', type: 'Date | null', description: '選択日' },
+      { name: 'DatePicker.Calendar value', type: 'Date | null', description: '選択日' },
       {
-        name: 'onValueChange',
-        type: '(date: Date | null) => void',
+        name: 'DatePicker.Calendar onValueChange',
+        type: '(date: Date) => void',
         description: '変更コールバック',
       },
     ],
@@ -309,10 +357,26 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     group: 'Text input',
     description: '時刻入力フィールド。ダイアログまたはポップアップで時・分を選択します。',
     importCode: twImport('TimePicker, ThemeProvider'),
-    usageCode: `<TimePicker label="時刻" value={time} onValueChange={setTime} />`,
+    usageCode: `const [time, setTime] = useState({ hour: 10, minute: 30 });
+
+<TimePicker variant="dial" value={time} onValueChange={setTime} />`,
     props: [
-      { name: 'value', type: 'string', description: 'HH:mm 形式の時刻' },
-      { name: 'onValueChange', type: '(value: string) => void', description: '変更コールバック' },
+      {
+        name: 'value / defaultValue',
+        type: 'TimeValue ({ hour: number; minute: number })',
+        description: '0–23 時・0–59 分',
+      },
+      {
+        name: 'onValueChange',
+        type: '(value: TimeValue) => void',
+        description: '変更コールバック',
+      },
+      {
+        name: 'variant',
+        type: "'dial' | 'input'",
+        default: "'dial'",
+        description: '時計盤 / 数値入力レイアウト',
+      },
     ],
   },
   {
@@ -358,12 +422,22 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     description:
       'モーダル／標準／永続の M3 ナビゲーションドロワー。NavigationDrawer.Item でメニュー項目を構成します。',
     importCode: twImport('NavigationDrawer, ThemeProvider'),
-    usageCode: `<NavigationDrawer open={open} onOpenChange={setOpen} variant="modal">
-  <NavigationDrawer.Item icon={<Icon name="home" />} label="ホーム" selected />
-</NavigationDrawer>`,
+    usageCode: `<NavigationDrawer.Root variant="modal" aria-label="メール">
+  <NavigationDrawer.Headline>メール</NavigationDrawer.Headline>
+  <NavigationDrawer.Item leading={<Icon name="inbox" />} selected>
+    受信トレイ
+  </NavigationDrawer.Item>
+  <NavigationDrawer.Item leading={<Icon name="send" />}>
+    送信済み
+  </NavigationDrawer.Item>
+</NavigationDrawer.Root>`,
     props: [
-      { name: 'open / onOpenChange', type: 'boolean', description: '開閉状態' },
-      { name: 'variant', type: "'modal' | 'standard' | 'persistent'", description: 'ドロワー種別' },
+      {
+        name: 'NavigationDrawer.Root variant',
+        type: "'modal' | 'standard' | 'persistent'",
+        description: 'ドロワー種別',
+      },
+      { name: 'NavigationDrawer.Item selected', type: 'boolean', description: '選択状態' },
     ],
   },
   {
@@ -446,24 +520,52 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     name: 'BottomSheet',
     group: 'Containment',
     description: '画面下部からスライドするシート。ドラッグハンドルとスクリムを備えます。',
-    importCode: twImport('BottomSheet, ThemeProvider'),
-    usageCode: `<BottomSheet open={open} onOpenChange={setOpen}>
-  <BottomSheet.Content>…</BottomSheet.Content>
-</BottomSheet>`,
-    props: [{ name: 'open / onOpenChange', type: 'boolean', description: '開閉状態' }],
+    importCode: twImport('BottomSheet, Button, ThemeProvider'),
+    usageCode: `<BottomSheet.Root>
+  <BottomSheet.Trigger render={<Button variant="tonal">開く</Button>} />
+  <BottomSheet.Portal>
+    <BottomSheet.Backdrop />
+    <BottomSheet.Viewport>
+      <BottomSheet.Popup>
+        <BottomSheet.Handle />
+        <BottomSheet.Title>タイトル</BottomSheet.Title>
+        <BottomSheet.Description>本文</BottomSheet.Description>
+      </BottomSheet.Popup>
+    </BottomSheet.Viewport>
+  </BottomSheet.Portal>
+</BottomSheet.Root>`,
+    props: [
+      {
+        name: 'open / onOpenChange',
+        type: 'boolean',
+        description: 'BottomSheet.Root の制御モード',
+      },
+    ],
   },
   {
     slug: 'side-sheet',
     name: 'SideSheet',
     group: 'Containment',
     description: '画面端からスライドするサイドシート。modal / standard バリアント。',
-    importCode: twImport('SideSheet, ThemeProvider'),
-    usageCode: `<SideSheet open={open} onOpenChange={setOpen} side="end">
-  <SideSheet.Content>…</SideSheet.Content>
-</SideSheet>`,
+    importCode: twImport('SideSheet, Button, ThemeProvider'),
+    usageCode: `<SideSheet.Root>
+  <SideSheet.Trigger render={<Button variant="tonal">開く</Button>} />
+  <SideSheet.Portal>
+    <SideSheet.Backdrop />
+    <SideSheet.Viewport>
+      <SideSheet.Popup>
+        <SideSheet.Header>
+          <SideSheet.Title>タイトル</SideSheet.Title>
+          <SideSheet.Close aria-label="閉じる" />
+        </SideSheet.Header>
+        <SideSheet.Description>本文</SideSheet.Description>
+      </SideSheet.Popup>
+    </SideSheet.Viewport>
+  </SideSheet.Portal>
+</SideSheet.Root>`,
     props: [
-      { name: 'side', type: "'start' | 'end'", description: '表示する端' },
-      { name: 'open / onOpenChange', type: 'boolean', description: '開閉状態' },
+      { name: 'SideSheet.Root side', type: "'left' | 'right'", default: "'right'", description: '表示する端' },
+      { name: 'open / onOpenChange', type: 'boolean', description: 'SideSheet.Root の制御モード' },
     ],
   },
   {
@@ -538,12 +640,23 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     group: 'Communication',
     description:
       'M3 リストコンテナ。List.Item または Item コンポーネントと組み合わせて使用します。',
-    importCode: twImport('List, Item, ThemeProvider'),
-    usageCode: `<List>
-  <Item headline="項目 1" supportingText="説明" />
-  <Item headline="項目 2" />
-</List>`,
-    props: [{ name: 'children', type: 'ReactNode', description: 'リスト項目' }],
+    importCode: twImport('List, ThemeProvider'),
+    usageCode: `<List.Root>
+  <List.Item interactive leading={<Icon name="inbox" />} supportingText="未読 3 件">
+    受信トレイ
+  </List.Item>
+  <List.Item interactive leading={<Icon name="send" />}>
+    送信済み
+  </List.Item>
+</List.Root>`,
+    props: [
+      { name: 'List.Item interactive', type: 'boolean', description: 'クリック可能な行' },
+      {
+        name: 'leading / trailing / supportingText',
+        type: 'ReactNode | string',
+        description: 'スロット',
+      },
+    ],
   },
   {
     slug: 'item',
