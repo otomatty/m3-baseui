@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { SegmentedButton } from '../segmented-button/segmented-button';
+import { SegmentedButton, segmentedButtonTv } from '../segmented-button/segmented-button';
 
 function Single() {
   return (
@@ -73,5 +73,15 @@ describe('SegmentedButton', () => {
     expect(screen.getByRole('button', { name: /日/ }).className).toContain(
       'focus-visible:outline-[3px]',
     );
+  });
+
+  test('Expressive: selection color springs (effects) and the checkmark width springs (spatial)', () => {
+    const s = segmentedButtonTv();
+    // Selection color transition uses the fast effects spring (was ease-standard 150ms).
+    expect(s.item()).toContain('ease-spring-effects-fast');
+    expect(s.item()).not.toContain('ease-standard');
+    // The checkmark's width (a spatial change) uses the fast spatial spring.
+    expect(s.check()).toContain('ease-spring-spatial-fast');
+    expect(s.check()).not.toContain('ease-standard');
   });
 });

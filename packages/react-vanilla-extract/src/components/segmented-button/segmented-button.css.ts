@@ -37,7 +37,8 @@ export const item = style({
   fontSize: vars.sys.typescale.labelLarge.fontSize,
   lineHeight: vars.sys.typescale.labelLarge.lineHeight,
   letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
-  transition: `background-color 150ms ${vars.sys.motion.easing.standard}, color 150ms ${vars.sys.motion.easing.standard}`,
+  // M3 Expressive: the selection color transition rides the fast effects spring.
+  transition: `background-color ${vars.sys.motion.duration.springEffectsFast} ${vars.sys.motion.easing.springEffectsFast}, color ${vars.sys.motion.duration.springEffectsFast} ${vars.sys.motion.easing.springEffectsFast}`,
   selectors: {
     '&:first-child': {
       borderLeft: 'none',
@@ -87,7 +88,8 @@ export const check = style({
   opacity: 0,
   overflow: 'hidden',
   pointerEvents: 'none',
-  transition: `width 150ms ${vars.sys.motion.easing.standard}, opacity 150ms ${vars.sys.motion.easing.standard}`,
+  // M3 Expressive: the checkmark's width (a spatial change) rides the fast spatial spring.
+  transition: `width ${vars.sys.motion.duration.springSpatialFast} ${vars.sys.motion.easing.springSpatialFast}, opacity ${vars.sys.motion.duration.springSpatialFast} ${vars.sys.motion.easing.springSpatialFast}`,
   selectors: {
     [`${item}[data-pressed] &`]: { width: '18px', opacity: 1 },
   },
