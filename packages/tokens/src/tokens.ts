@@ -313,7 +313,12 @@ export const tokens = {
       small: '8px',
       medium: '12px',
       large: '16px',
+      // M3 Expressive additions: intermediate steps used by the larger FAB /
+      // extended-FAB / FAB-menu sizes (Compose CornerLargeIncreased = 20dp,
+      // CornerExtraLargeIncreased = 32dp).
+      largeIncreased: '20px',
       extraLarge: '28px',
+      extraLargeIncreased: '32px',
       full: '9999px',
     },
 

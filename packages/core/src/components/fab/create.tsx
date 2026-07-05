@@ -17,8 +17,9 @@ import { Ripple } from '../../ripple/Ripple';
 export function createFab(resolve: FabClassResolver) {
   function Fab(
     {
-      size = 'regular',
-      color = 'surface',
+      size = 'small',
+      variant = 'standard',
+      color = 'primary',
       ripple = true,
       className,
       children,
@@ -27,7 +28,7 @@ export function createFab(resolve: FabClassResolver) {
     }: FabProps & { render?: useRender.RenderProp },
     forwardedRef: React.Ref<HTMLButtonElement>,
   ): React.JSX.Element {
-    const cls = cx(resolve({ size, color }), className);
+    const cls = cx(resolve({ size, color, variant }), className);
 
     return useRender({
       render: render ?? <button type="button" />,

@@ -15,12 +15,19 @@ describe('FabMenu tokens', () => {
     expect(popup).toContain('data-[ending-style]:opacity-0');
   });
 
-  test('item is a 56dp full-corner pill with label-large type + elevation', () => {
+  test('item is a 56dp full-corner pill with title-medium type + elevation', () => {
     const item = fabMenuTv({ color: 'primary' }).item();
     expect(item).toContain('h-14');
     expect(item).toContain('rounded-full');
-    expect(item).toContain('text-label-large');
+    expect(item).toContain('text-title-medium');
     expect(item).toContain('shadow-level3');
+    // M3 Expressive: 24dp leading/trailing padding, 8dp icon-label gap.
+    expect(item).toContain('px-6');
+    expect(item).toContain('gap-2');
+  });
+
+  test('popup stacks items with a 4dp gap', () => {
+    expect(fabMenuTv().popup()).toContain('gap-1');
   });
 
   test('item color maps to container / on-container tokens', () => {

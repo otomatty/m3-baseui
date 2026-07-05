@@ -11,17 +11,33 @@ export const Sizes: Story = {
     const { Fab } = useM3();
     return (
       <div className="flex flex-wrap items-center gap-4">
-        <Fab size="small" color="surface" aria-label="編集">
+        <Fab size="small" color="primary" aria-label="編集">
           <Icon name="edit" />
         </Fab>
-        <Fab color="primary" aria-label="追加">
+        <Fab size="medium" color="primary" aria-label="追加">
           <Icon name="add" />
         </Fab>
         <Fab size="large" color="secondary" aria-label="作成">
           <Icon name="edit" />
         </Fab>
-        <Fab size="extended" color="tertiary">
+      </div>
+    );
+  },
+};
+
+export const Extended: Story = {
+  render: () => {
+    const { Fab } = useM3();
+    return (
+      <div className="flex flex-wrap items-center gap-4">
+        <Fab variant="extended" size="small" color="primary">
           <Icon name="add" /> 作成
+        </Fab>
+        <Fab variant="extended" size="medium" color="secondary">
+          <Icon name="edit" /> 編集
+        </Fab>
+        <Fab variant="extended" size="large" color="tertiary">
+          <Icon name="add" /> 新規作成
         </Fab>
       </div>
     );
@@ -33,9 +49,6 @@ export const Colors: Story = {
     const { Fab } = useM3();
     return (
       <div className="flex flex-wrap items-center gap-4">
-        <Fab color="surface" aria-label="surface">
-          <Icon name="add" />
-        </Fab>
         <Fab color="primary" aria-label="primary">
           <Icon name="add" />
         </Fab>

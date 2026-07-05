@@ -64,7 +64,9 @@
   --radius-small: var(--md-sys-shape-small);
   --radius-medium: var(--md-sys-shape-medium);
   --radius-large: var(--md-sys-shape-large);
+  --radius-large-increased: var(--md-sys-shape-large-increased);
   --radius-extra-large: var(--md-sys-shape-extra-large);
+  --radius-extra-large-increased: var(--md-sys-shape-extra-large-increased);
   --radius-full: var(--md-sys-shape-full);
 
   /* ---- Elevation / shadow ---- */

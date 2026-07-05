@@ -1,9 +1,13 @@
 /**
- * fab.ts — tailwind-variants for the M3 FAB.
+ * fab.ts — tailwind-variants for the M3 (Expressive) FAB.
  *
- * Four sizes + four container colors, elevation level3 (level4 on hover) and a
- * currentColor state-layer `::before`. The pointer ripple is added by the
- * factory. Same DOM as the VE build.
+ * Three sizes (small 56 / medium 80 / large 96 dp) × two variants (standard
+ * icon-only square, extended icon + label pill) × three container colors
+ * (primary / secondary / tertiary). Elevation level3 (level4 on hover) and a
+ * currentColor state-layer `::before`. The size×variant geometry (container,
+ * corner, icon, padding, label typescale) is resolved via compoundVariants so
+ * every M3 combination maps to exact dp values. The pointer ripple is added by
+ * the factory. Same DOM as the VE build.
  */
 import { createFab } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
@@ -27,24 +31,51 @@ export const fabTv = tv({
     'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38',
   ],
   variants: {
-    size: {
-      small: 'size-10 rounded-medium [&_svg]:size-6',
-      regular: 'size-14 rounded-large [&_svg]:size-6',
-      large: 'size-24 rounded-extra-large [&_svg]:size-9',
-      extended: 'h-14 min-w-20 px-4 gap-3 rounded-large text-label-large [&_svg]:size-6',
-    },
+    // Geometry is set by compoundVariants (size × variant); these keys exist so
+    // the resolver can accept them.
+    size: { small: '', medium: '', large: '' },
+    variant: { standard: '', extended: '' },
     color: {
-      surface: 'bg-surface-container-high text-primary',
       primary: 'bg-primary-container text-on-primary-container',
       secondary: 'bg-secondary-container text-on-secondary-container',
       tertiary: 'bg-tertiary-container text-on-tertiary-container',
     },
   },
+  compoundVariants: [
+    // ---- Standard (icon-only square): container / corner / icon ----
+    { size: 'small', variant: 'standard', class: 'size-14 rounded-large [&_svg]:size-6' }, // 56 / 16 / 24
+    {
+      size: 'medium',
+      variant: 'standard',
+      class: 'size-20 rounded-large-increased [&_svg]:size-7', // 80 / 20 / 28
+    },
+    { size: 'large', variant: 'standard', class: 'size-24 rounded-extra-large [&_svg]:size-8' }, // 96 / 28 / 32
+    // ---- Extended (icon + label pill): height / corner / icon / padding / gap / label ----
+    // `min-w-*` keeps the pill affordance for short / text-only labels (wider
+    // than tall), matching the pre-Expressive extended FAB which guarded this.
+    {
+      size: 'small',
+      variant: 'extended',
+      class: 'h-14 min-w-20 px-4 gap-2 rounded-large text-title-medium [&_svg]:size-6', // 56 / 16 / 24 / 16 / 8
+    },
+    {
+      size: 'medium',
+      variant: 'extended',
+      class:
+        'h-20 min-w-28 px-[26px] gap-4 rounded-large-increased text-title-large [&_svg]:size-7', // 80 / 20 / 28 / 26 / 16
+    },
+    {
+      size: 'large',
+      variant: 'extended',
+      class: 'h-24 min-w-32 px-7 gap-5 rounded-extra-large text-headline-small [&_svg]:size-8', // 96 / 28 / 32 / 28 / 20
+    },
+  ],
   defaultVariants: {
-    size: 'regular',
-    color: 'surface',
+    size: 'small',
+    variant: 'standard',
+    color: 'primary',
   },
 });
 
-export const Fab = createFab(({ size, color }) => fabTv({ size, color }));
-export type { FabProps, FabSize, FabColor } from '@m3-baseui/core';
+export const Fab = createFab(({ size, color, variant }) => fabTv({ size, color, variant }));
+export type { FabProps, FabSize, FabVariant, FabColor } from '@m3-baseui/core';

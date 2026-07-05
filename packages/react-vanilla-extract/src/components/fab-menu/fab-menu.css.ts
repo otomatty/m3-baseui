@@ -12,7 +12,7 @@ export const popup = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-end',
-  gap: '8px',
+  gap: '4px',
   background: 'transparent',
   outline: 'none',
   transformOrigin: 'var(--transform-origin)',
@@ -30,9 +30,9 @@ const itemBase = style({
   position: 'relative',
   display: 'inline-flex',
   alignItems: 'center',
-  gap: '12px',
+  gap: '8px',
   height: '56px',
-  paddingInline: '16px',
+  paddingInline: '24px',
   overflow: 'hidden',
   boxSizing: 'border-box',
   cursor: 'pointer',
@@ -41,11 +41,11 @@ const itemBase = style({
   borderRadius: vars.sys.shape.full,
   boxShadow: vars.sys.elevation.level3,
   transition: `box-shadow 150ms ${vars.sys.motion.easing.standard}`,
-  fontFamily: vars.sys.typescale.labelLarge.fontFamily,
-  fontWeight: vars.sys.typescale.labelLarge.fontWeight,
-  fontSize: vars.sys.typescale.labelLarge.fontSize,
-  lineHeight: vars.sys.typescale.labelLarge.lineHeight,
-  letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+  fontFamily: vars.sys.typescale.titleMedium.fontFamily,
+  fontWeight: vars.sys.typescale.titleMedium.fontWeight,
+  fontSize: vars.sys.typescale.titleMedium.fontSize,
+  lineHeight: vars.sys.typescale.titleMedium.lineHeight,
+  letterSpacing: vars.sys.typescale.titleMedium.letterSpacing,
   selectors: {
     '&::before': {
       content: '""',
@@ -80,10 +80,6 @@ export const item = recipe({
   base: itemBase,
   variants: {
     color: {
-      surface: {
-        background: `rgb(${vars.sys.color.surfaceContainerHigh})`,
-        color: `rgb(${vars.sys.color.primary})`,
-      },
       primary: {
         background: `rgb(${vars.sys.color.primaryContainer})`,
         color: `rgb(${vars.sys.color.onPrimaryContainer})`,

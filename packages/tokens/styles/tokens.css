@@ -56,7 +56,9 @@
   --md-sys-shape-small: 8px;
   --md-sys-shape-medium: 12px;
   --md-sys-shape-large: 16px;
+  --md-sys-shape-large-increased: 20px;
   --md-sys-shape-extra-large: 28px;
+  --md-sys-shape-extra-large-increased: 32px;
   --md-sys-shape-full: 9999px;
   --md-sys-elevation-level0: none;
   --md-sys-elevation-level1: 0px 1px 2px 0px rgb(0 0 0 / 0.30), 0px 1px 3px 1px rgb(0 0 0 / 0.15);

@@ -5,7 +5,7 @@ import { createFabMenu } from '@m3-baseui/core';
 import { fab } from '../fab/fab.css';
 import { popup, item } from './fab-menu.css';
 
-export const FabMenu = createFabMenu(({ size, color }) => fab({ size, color }), {
+export const FabMenu = createFabMenu(({ size, color, variant }) => fab({ size, color, variant }), {
   popup,
   item: (color) => item({ color }),
 });
