@@ -119,6 +119,22 @@ describe('Slider', () => {
     expect(screen.getByText('75')).toBeInTheDocument();
   });
 
+  test('single slider marks the active end for the handle gap', () => {
+    const { container } = render(<Example />);
+    // The track carries the active-end fraction so the inactive rail can start a
+    // handle gap past it; a single slider is not a range.
+    expect(container.querySelector('[style*="--m3-slider-end: 40%"]')).not.toBeNull();
+    expect(container.querySelector('[data-range]')).toBeNull();
+  });
+
+  test('range slider flags data-range on the root for the two-sided gap', () => {
+    const { container } = render(<RangeExample />);
+    expect(container.querySelector('[data-range]')).not.toBeNull();
+    // active region spans 25%→75%
+    expect(container.querySelector('[style*="--m3-slider-start: 25%"]')).not.toBeNull();
+    expect(container.querySelector('[style*="--m3-slider-end: 75%"]')).not.toBeNull();
+  });
+
   test('value label is hidden until the thumb is pressed', () => {
     render(<ValueLabelExample />);
     const label = screen.getByText('40');
@@ -131,48 +147,78 @@ describe('Slider', () => {
   });
 });
 
-describe('Slider tokens', () => {
+describe('Slider tokens (M3 Expressive)', () => {
   const s = sliderTv();
 
-  test('active track = primary, inactive track = surface-container-highest', () => {
+  test('16dp track: control ≥44dp tall, track 16dp', () => {
+    // Expressive: InactiveTrackHeight/ActiveTrackHeight = 16dp; the 44dp handle
+    // sets the control (touch) height.
+    expect(s.control()).toContain('h-11');
+    expect(s.track()).toContain('h-4');
+  });
+
+  test('active track = primary, inactive track = secondary-container', () => {
+    // Active fill is the indicator (primary). The inactive rail is drawn on the
+    // track pseudos (secondary-container) so the handle gaps stay transparent.
     expect(s.indicator()).toContain('bg-primary');
-    expect(s.track()).toContain('bg-surface-container-highest');
+    expect(s.track()).toContain('before:bg-secondary-container');
+    expect(s.track()).toContain('after:bg-secondary-container');
+    // the M3 2021 surface-container-highest rail is gone
+    expect(s.track()).not.toContain('bg-surface-container-highest');
   });
 
-  test('handle = primary with a 40dp primary state layer', () => {
+  test('bar handle: 4×44dp, CornerFull, no state layer', () => {
+    expect(s.thumb()).toContain('w-1');
+    expect(s.thumb()).toContain('h-11');
+    expect(s.thumb()).toContain('rounded-full');
     expect(s.thumb()).toContain('bg-primary');
-    expect(s.thumb()).toContain('before:size-10');
-    expect(s.thumb()).toContain('before:bg-primary');
-    expect(s.thumb()).toContain('group/thumb');
+    // the 20dp circular thumb + 40dp state layer is gone
+    expect(s.thumb()).not.toContain('before:size-10');
+    expect(s.thumb()).not.toContain('group/thumb');
   });
 
-  test('state layer opacities: hover/focus and the dragged (0.16) state layer while dragging', () => {
-    // M3 sliders use the dedicated dragged state-layer opacity (0.16) while the
-    // handle is being dragged — not the pressed (0.10) value.
-    expect(s.thumb()).toContain('hover:before:opacity-[var(--md-sys-state-hover)]');
-    expect(s.thumb()).toContain('focus-visible:before:opacity-[var(--md-sys-state-focus)]');
-    expect(s.thumb()).toContain('data-[dragging]:before:opacity-[var(--md-sys-state-dragged)]');
-    expect(s.thumb()).not.toContain('data-[dragging]:before:opacity-[var(--md-sys-state-pressed)]');
+  test('handle shrinks to 2dp on pressed/focus (hover stays 4dp) via fast-spatial spring', () => {
+    // PressedHandleWidth / FocusHandleWidth = 2dp; HoverHandleWidth stays 4dp.
+    expect(s.thumb()).toContain('data-[dragging]:w-0.5');
+    expect(s.thumb()).toContain('focus-visible:w-0.5');
+    expect(s.thumb()).toContain('transition-[width]');
+    expect(s.thumb()).toContain('ease-spring-spatial-fast');
+    expect(s.thumb()).toContain('duration-[var(--md-sys-motion-duration-spring-spatial-fast)]');
+    // no leftover state-layer opacity transitions
+    expect(s.thumb()).not.toContain('data-[dragging]:before:opacity-[var(--md-sys-state-dragged)]');
   });
 
-  test('disabled is per-token (no blanket opacity): inactive 0.12 / active+handle 0.38 on-surface', () => {
+  test('6dp handle gap + 2dp inside corner on active/inactive tracks', () => {
+    // Active fill trims to a 2dp inner corner; the inactive rail starts a
+    // handle-gap (6dp + half the 4dp handle = 8px) past the active end.
+    expect(s.indicator()).toContain('rounded-e-[2px]');
+    expect(s.track()).toContain('before:[inset-inline-start:calc(var(--m3-slider-end)_+_8px)]');
+    expect(s.track()).toContain('before:rounded-s-[2px]');
+  });
+
+  test('disabled is per-token: inactive 0.12 / active+handle 0.38 on-surface', () => {
     // root carries the group hook so descendants can react to data-disabled
     expect(s.root()).toContain('group');
-    expect(s.track()).toContain('group-data-[disabled]:bg-on-surface/[0.12]');
+    expect(s.track()).toContain('group-data-[disabled]:before:bg-on-surface/[0.12]');
+    expect(s.track()).toContain('group-data-[disabled]:after:bg-on-surface/[0.12]');
     expect(s.indicator()).toContain('group-data-[disabled]:bg-on-surface/[0.38]');
     expect(s.thumb()).toContain('group-data-[disabled]:bg-on-surface/[0.38]');
-    // the old blanket opacity is gone
-    expect(s.thumb()).not.toContain('data-[disabled]:opacity-[0.38]');
   });
 
-  test('discrete ticks use on-primary on the active track and on-surface-variant elsewhere', () => {
-    expect(s.tick()).toContain('bg-on-surface-variant');
-    expect(s.tick()).toContain('data-[active]:bg-on-primary/[0.38]');
+  test('stop dots reverse: primary on inactive track, secondary-container on active, on-surface disabled', () => {
+    expect(s.tick()).toContain('bg-primary');
+    expect(s.tick()).toContain('data-[active]:bg-secondary-container');
+    expect(s.tick()).toContain('group-data-[disabled]:bg-on-surface');
+    // the M3 2021 tick colors are gone
+    expect(s.tick()).not.toContain('bg-on-surface-variant');
+    expect(s.tick()).not.toContain('data-[active]:bg-on-primary/[0.38]');
   });
 
-  test('floating value label uses primary container and on-primary label-large text', () => {
-    expect(s.valueLabel()).toContain('bg-primary');
-    expect(s.valueLabel()).toContain('text-on-primary');
+  test('value indicator uses inverse-surface container + inverse-on-surface text, 12dp bottom space', () => {
+    expect(s.valueLabel()).toContain('bg-inverse-surface');
+    expect(s.valueLabel()).toContain('text-inverse-on-surface');
     expect(s.valueLabel()).toContain('text-label-large');
+    expect(s.valueLabel()).toContain('mb-3');
+    expect(s.valueLabel()).not.toContain('bg-primary');
   });
 });
