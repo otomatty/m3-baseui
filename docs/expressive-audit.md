@@ -34,7 +34,7 @@ Issue #105 のトラッキングに基づく監査結果。全 39 コンポー�
 | icon-button | 一部 | shape 軸（square/押下/選択 morph）と toggle 配色改定が未対応（サイズ体系は完全一致） | あり（tonal toggle selected 色ほか） |
 | button-group | 一部 | 押下時の近隣スクイーズ（+15%）・シーム morph・standard gap 8→12px | なし（視覚差のみ） |
 | split-button | 一部 | シーム角 4dp 化・hover/押下 morph・開時 trailing 円形化・サイズ体系 | なし（text バリアント削除時のみ破壊的） |
-| segmented-button | **準拠** | Expressive 版トークンは Compose に存在せず（connected button group へ置換方向） | — |
+| segmented-button | 一部（モーションのみ） | 選択遷移・チェックマークが `ease-standard` 150ms のまま（spring 未適用）。静的トークンはベースライン準拠、Expressive 版トークンは Compose に存在せず | なし |
 | slider | **未対応** | M3 2021 レガシー版のまま（16dp トラック・バーハンドル・ギャップ・stop dots すべて未対応） | あり（視覚の全交換） |
 | progress | 一部 | トラック色 SecondaryContainer 化・indeterminate の wavy 化・circular wavy 微調整 | あり（indeterminate の視覚） |
 | loading-indicator | 一部 | 核心の 7 シェイプポリゴンモーフ・contained 配色 | あり（アニメーションの視覚） |
@@ -164,7 +164,7 @@ Issue #105 のトラッキングに基づく監査結果。全 39 コンポー�
 
 ## segmented-button
 
-**総合判定: 準拠**（ベースライン M3 として。Compose に Expressive 版セグメンテッドボタントークンは**存在しない** — `OutlinedSegmentedButtonTokens.kt` は 2023 年 v0_162 のまま。Expressive デザインではこの役割は **connected button group** に置き換わる方向）
+**総合判定: 一部**（静的トークンはベースライン M3 に準拠。モーション軸のみ spring 未適用 → #122。Compose に Expressive 版セグメンテッドボタントークンは**存在しない** — `OutlinedSegmentedButtonTokens.kt` は 2023 年 v0_162 のまま。Expressive デザインではこの役割は **connected button group** に置き換わる方向）
 
 参照した Compose トークンファイル: `OutlinedSegmentedButtonTokens.kt`（v0_162）
 
@@ -175,7 +175,7 @@ Issue #105 のトラッキングに基づく監査結果。全 39 コンポー�
 | シェイプ | 外形 | `rounded-full` / `shape.full` | Shape = CornerFull | — | 一致。shape morph の要求なし |
 | シェイプ | アウトライン | 1px `outline` | OutlineWidth = 1dp / OutlineColor = Outline | — | 一致 |
 | タイポ | ラベル | labelLarge | LabelTextFont = LabelLarge（Emphasized ではない） | — | 一致 |
-| モーション | 選択遷移・チェックマーク | 150ms `ease-standard` | Compose 実装は motionScheme スプリングだがトークンファイル上の要求なし | 非破壊 | Expressive 統一感を出すなら `springEffectsFast`(150ms) へ置換可（任意） |
+| モーション | 選択遷移・チェックマーク | 150ms `ease-standard`（TW `segmented-button.ts:21,36` / VE `segmented-button.css.ts:40,90`） | Compose 実装は motionScheme スプリングで駆動（トークンファイル上の要求はなし） | 非破壊 | 色遷移は `spring-effects-fast`、チェックマーク幅（空間変化）は `spring-spatial-fast` へ置換（→ #122） |
 | 配色/状態 | 選択色 | `secondary-container` / `on-secondary-container` | SelectedContainerColor = SecondaryContainer 等 | — | 一致。disabled ラベル onSurface/38・仕切り onSurface/12 も一致 |
 | 配色/状態 | disabled 時の外周アウトライン | root の `border-outline` は disabled 変化なし（item の仕切りのみ減光） | DisabledOutlineColor = OnSurface/12 | 非破壊 | グループ全体 disabled 時のみの微細な乖離 |
 
@@ -377,7 +377,7 @@ Issue #105 のトラッキングに基づく監査結果。全 39 コンポー�
 9. **button-group** — connected 押下シーム morph（→4dp）・選択 50% full・standard gap 12px 化・近隣スクイーズ（ExpandedRatio 0.15 + FastSpatial）
 10. **toolbar** — docked バリアント追加・vibrant selected 反転色・standard コンテンツ on-surface 化・elevation level0 化の要否判断
 11. **navigation-rail（expanded）** — collapsed 96dp / expanded 220–360dp / horizontal item / modal 変種（中規模、4 から分割）
-12. **segmented-button** — 対応不要（ベースライン準拠。任意で選択遷移の spring 化のみ）
+12. **segmented-button** — 選択遷移・チェックマークの spring 化のみ（小タスク。静的トークンはベースライン準拠のため構造変更は不要）
 
 ## 横断的な所見
 
