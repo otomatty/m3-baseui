@@ -42,15 +42,6 @@ export const selectTv = tv({
     ],
     itemIndicator: selectable.itemIndicator(),
     groupLabel: surface.groupLabel(),
-    // Sticky scroll affordances at the popup edges; surface-tinted with a chevron.
-    scrollUpArrow: [
-      'sticky top-0 z-[1] flex items-center justify-center h-6 cursor-default',
-      'bg-surface-container text-on-surface-variant [&>svg]:size-5',
-    ],
-    scrollDownArrow: [
-      'sticky bottom-0 z-[1] flex items-center justify-center h-6 cursor-default',
-      'bg-surface-container text-on-surface-variant [&>svg]:size-5',
-    ],
   },
 });
 
@@ -153,8 +144,6 @@ export const Select = createSelect(
     item: s.item(),
     itemIndicator: s.itemIndicator(),
     groupLabel: s.groupLabel(),
-    scrollUpArrow: s.scrollUpArrow(),
-    scrollDownArrow: s.scrollDownArrow(),
   },
   ({ variant }) => {
     const f = selectFieldTv({ variant });
