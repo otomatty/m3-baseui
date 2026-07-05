@@ -35,30 +35,37 @@ const PATH_LENGTH = 100;
 const INDETERMINATE_ARC = 25;
 
 // ---- M3 Expressive wavy shape -------------------------------------------------
-// Linear waves at a fixed 40px wavelength (the flow keyframe advances one tile);
-// amplitudes default per shape. Circular derives its wave count from the ring.
+// Determinate linear waves at a 40dp wavelength (`ActiveWaveWavelength`); the
+// indeterminate wave is tighter at 20dp (`IndeterminateActiveWaveWavelength`).
+// Circular derives its wave count from the ring (`ActiveWaveWavelength` 15dp).
 const LINEAR_WAVELENGTH = 40;
+const LINEAR_INDETERMINATE_WAVELENGTH = 20;
 const LINEAR_AMPLITUDE = 3;
-const CIRCULAR_AMPLITUDE = 2;
+// Circular: `ActiveWaveAmplitude` 1.6dp / `ActiveWaveWavelength` 15dp / `WaveSize`
+// 48dp (the wavy ring's outer box grows to 48 while the 40dp ring stays put).
+const CIRCULAR_AMPLITUDE = 1.6;
+const CIRCULAR_WAVELENGTH = 15;
+const CIRCULAR_WAVE_SIZE_RATIO = 48 / 40;
 
 const round = (n: number) => Math.round(n * 100) / 100;
 
 /**
- * A repeating sine tile (one `LINEAR_WAVELENGTH`-wide period) as a `mask-image`
- * data URI. The active bar is a solid `primary` rectangle; this mask carves it
- * into a stroked wave of the given `thickness`, and the engine CSS scrolls it.
+ * A repeating sine tile (one `wavelength`-wide period) as a `mask-image` data URI.
+ * The active bar is a solid `primary` rectangle; this mask carves it into a
+ * stroked wave of the given `thickness`, and the engine CSS scrolls it by one
+ * wavelength (`--m3-wave-size`).
  */
-function linearWaveMask(thickness: number, amplitude: number): string {
+function linearWaveMask(thickness: number, amplitude: number, wavelength: number): string {
   const height = thickness + 2 * amplitude;
   const mid = height / 2;
   const steps = 24;
   let d = `M0 ${mid}`;
   for (let i = 1; i <= steps; i++) {
-    const x = round((LINEAR_WAVELENGTH * i) / steps);
+    const x = round((wavelength * i) / steps);
     const y = round(mid - amplitude * Math.sin((i / steps) * 2 * Math.PI));
     d += `L${x} ${y}`;
   }
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${LINEAR_WAVELENGTH}" height="${height}" viewBox="0 0 ${LINEAR_WAVELENGTH} ${height}"><path d="${d}" fill="none" stroke="#000" stroke-width="${thickness}" stroke-linecap="round"/></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${wavelength}" height="${height}" viewBox="0 0 ${wavelength} ${height}"><path d="${d}" fill="none" stroke="#000" stroke-width="${thickness}" stroke-linecap="round"/></svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
@@ -129,19 +136,25 @@ export function createProgress(classes: ProgressClasses) {
     // engines (M3 default 4dp, thick variant 8dp).
     const safeThickness =
       Number.isFinite(thickness) && (thickness as number) > 0 ? (thickness as number) : 4;
-    // Wavy applies to the determinate active bar only; the track grows taller to
-    // fit the wave and the engine CSS masks + scrolls it (see `--m3-wave`).
-    const wave = wavy && clampedValue != null;
+    // M3 Expressive `wavy` applies to both determinate and indeterminate: the
+    // active bar becomes a flowing sine wave (engine CSS masks + scrolls it via
+    // `--m3-wave`) and the track grows taller to fit it. The indeterminate wave
+    // uses the tighter 20dp wavelength (`IndeterminateActiveWaveWavelength`); the
+    // determinate wave uses 40dp (`ActiveWaveWavelength`).
+    const indeterminate = clampedValue == null;
+    const wave = wavy;
     const amp =
       Number.isFinite(amplitude) && (amplitude as number) > 0
         ? (amplitude as number)
         : LINEAR_AMPLITUDE;
+    const waveLength = indeterminate ? LINEAR_INDETERMINATE_WAVELENGTH : LINEAR_WAVELENGTH;
     // Publish the fill fraction as a CSS variable so the engine CSS can place the
     // M3 gap (between the active indicator and the inactive track) and the
     // track-stop dot from it — Base UI sizes the indicator with the same percent.
     // Indeterminate (null) omits it so the inactive track spans the full width.
     // `--m3-thickness` keeps the flat track/stop dot at stroke height even when
-    // the wavy root is taller.
+    // the wavy root is taller. `--m3-wave-size` is the wavelength the engine CSS
+    // uses for the mask tile width and the flow distance.
     // Computed `height` goes before `...style` so an explicit caller
     // `style.height` still wins (back-compat); the internal `--m3-*` vars go
     // after so they always resolve regardless of caller style.
@@ -149,8 +162,13 @@ export function createProgress(classes: ProgressClasses) {
       height: wave ? safeThickness + 2 * amp : safeThickness,
       ...style,
       '--m3-thickness': `${safeThickness}px`,
-      ...(clampedValue == null ? {} : { '--m3-progress': `${(clampedValue / safeMax) * 100}%` }),
-      ...(wave ? { '--m3-wave': linearWaveMask(safeThickness, amp) } : {}),
+      ...(indeterminate ? {} : { '--m3-progress': `${(clampedValue / safeMax) * 100}%` }),
+      ...(wave
+        ? {
+            '--m3-wave': linearWaveMask(safeThickness, amp, waveLength),
+            '--m3-wave-size': `${waveLength}px`,
+          }
+        : {}),
     } as React.CSSProperties;
     return (
       <Progress.Root
@@ -199,8 +217,13 @@ export function createProgress(classes: ProgressClasses) {
       Number.isFinite(thickness) && (thickness as number) > 0
         ? Math.min(thickness as number, safeSize / 2)
         : Math.min(CIRCULAR_THICKNESS, safeSize / 2);
-    const center = safeSize / 2;
     const radius = (safeSize - safeThickness) / 2;
+    // M3 Expressive `wavy` now applies to both determinate and indeterminate.
+    const wave = wavy;
+    // `WaveSize`: the wavy ring's outer box grows to 48dp (from the 40dp `Size`)
+    // so the wave can extend outward while the ring itself stays at 40dp.
+    const boxSize = wave ? safeSize * CIRCULAR_WAVE_SIZE_RATIO : safeSize;
+    const center = boxSize / 2;
     // Centerline spacing = the 4dp visible gap + a full stroke so the round caps
     // (which each reach half a stroke past their arc end) don't consume it. As a
     // share of the normalized 100-unit path:
@@ -211,17 +234,17 @@ export function createProgress(classes: ProgressClasses) {
     // active arc is (almost) full so a stray rounded-cap dot can't appear).
     const inactive = PATH_LENGTH - active - gap * 2;
 
-    // Wavy (determinate only): the active arc is drawn as a sine-modulated path.
-    // Pull the baseline in by the amplitude so the wave peaks stay inside the box.
-    const wave = wavy && !indeterminate;
+    // The active arc is drawn as a sine-modulated path when wavy. The 48dp box
+    // gives outward room, so the wave oscillates around the true ring radius
+    // (`ActiveWaveAmplitude` 1.6dp, `ActiveWaveWavelength` 15dp).
     const amp = Math.min(
       Number.isFinite(amplitude) && (amplitude as number) > 0
         ? (amplitude as number)
         : CIRCULAR_AMPLITUDE,
       Math.max(0, radius - safeThickness),
     );
-    const waveRadius = radius - amp;
-    const waves = Math.max(3, Math.round((2 * Math.PI * waveRadius) / 12));
+    const waveRadius = radius;
+    const waves = Math.max(3, Math.round((2 * Math.PI * waveRadius) / CIRCULAR_WAVELENGTH));
     // Same cap allowance as the plain ring: 4dp visible gap + a full stroke.
     const gapFrac = (CIRCULAR_GAP + safeThickness) / (2 * Math.PI * waveRadius);
     const inactiveStart = fraction + gapFrac;
@@ -230,7 +253,7 @@ export function createProgress(classes: ProgressClasses) {
     // Root sizing is inline (not a class) so `size` is honored by both engines.
     // Computed size goes first so an explicit caller `style.width/height` still
     // wins (back-compat: pre-`size` callers sized the ring via inline style).
-    const rootStyle = { width: safeSize, height: safeSize, ...style } as React.CSSProperties;
+    const rootStyle = { width: boxSize, height: boxSize, ...style } as React.CSSProperties;
     const common = {
       cx: center,
       cy: center,
@@ -248,33 +271,55 @@ export function createProgress(classes: ProgressClasses) {
         aria-valuemax={indeterminate ? undefined : safeMax}
         aria-valuenow={indeterminate ? undefined : clampedValue}
         data-indeterminate={indeterminate ? '' : undefined}
+        data-wavy={wave ? '' : undefined}
         className={cx(classes.circular.root, className)}
         style={rootStyle}
         {...props}
       >
-        <svg viewBox={`0 0 ${safeSize} ${safeSize}`} aria-hidden="true">
+        <svg viewBox={`0 0 ${boxSize} ${boxSize}`} aria-hidden="true">
           {wave ? (
-            // Wavy determinate: sine-modulated active arc + a plain inactive arc,
-            // both anchored at the top (the paths carry their own geometry, so no
-            // rotate wrapper). Round caps come from the slot classes.
-            <>
-              {inactiveEnd - inactiveStart > 0.001 ? (
-                <path
-                  className={classes.circular.track}
-                  fill="none"
-                  strokeWidth={safeThickness}
-                  d={arcPath(center, center, waveRadius, inactiveStart, inactiveEnd)}
-                />
-              ) : null}
-              {fraction > 0 ? (
+            indeterminate ? (
+              // Wavy indeterminate: a fixed-sweep sine-modulated arc anchored at
+              // the top; the engine CSS rotation on the root spins it (advance).
+              <g transform={`rotate(-90 ${center} ${center})`}>
                 <path
                   className={classes.circular.indicator}
                   fill="none"
                   strokeWidth={safeThickness}
-                  d={wavyArcPath(center, center, waveRadius, 0, fraction, amp, waves)}
+                  d={wavyArcPath(
+                    center,
+                    center,
+                    waveRadius,
+                    0,
+                    INDETERMINATE_ARC / PATH_LENGTH,
+                    amp,
+                    waves,
+                  )}
                 />
-              ) : null}
-            </>
+              </g>
+            ) : (
+              // Wavy determinate: sine-modulated active arc + a plain inactive arc,
+              // both anchored at the top (the paths carry their own geometry, so no
+              // rotate wrapper). Round caps come from the slot classes.
+              <>
+                {inactiveEnd - inactiveStart > 0.001 ? (
+                  <path
+                    className={classes.circular.track}
+                    fill="none"
+                    strokeWidth={safeThickness}
+                    d={arcPath(center, center, waveRadius, inactiveStart, inactiveEnd)}
+                  />
+                ) : null}
+                {fraction > 0 ? (
+                  <path
+                    className={classes.circular.indicator}
+                    fill="none"
+                    strokeWidth={safeThickness}
+                    d={wavyArcPath(center, center, waveRadius, 0, fraction, amp, waves)}
+                  />
+                ) : null}
+              </>
+            )
           ) : (
             // Rotate so both arcs start at the top (12 o'clock) and grow clockwise.
             <g transform={`rotate(-90 ${center} ${center})`}>

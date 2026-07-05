@@ -1,18 +1,23 @@
 /**
  * progress.ts — tailwind-variants slots for the M3 Progress indicators.
  *
- * Linear: a `surface-container-highest` inactive track with a `primary` active
+ * Linear: a `secondary-container` inactive track with a `primary` active
  * indicator (height from the factory's `thickness`). Per M3 the inactive track
  * (`::before`) starts a 4dp gap past the active tip — positioned from the
  * `--m3-progress` fraction — and a `primary` track-stop dot (`::after`) sits at
  * the far end. Indeterminate keys off the Root's `data-indeterminate`: it drops
  * the gap/dot and runs the M3 disjoint two-bar motion (`m3-linear-primary` +
- * `m3-linear-secondary` in preset.css). Circular: a 40dp / 4dp `primary` ring
- * (size/thickness configurable); `data-indeterminate` rotates the ring while the
- * arc grows/shrinks (advance). Same DOM as the VE build.
+ * `m3-linear-secondary` in preset.css), unless `data-wavy` is also set (M3
+ * Expressive wavy indeterminate: a full-width flowing 20dp wave). Circular: a
+ * 40dp / 4dp `primary` ring (size/thickness configurable); `data-indeterminate`
+ * rotates the ring while the arc grows/shrinks (advance). Same DOM as the VE build.
  */
 import { createProgress } from '@m3-baseui/core';
-import { tv } from 'tailwind-variants';
+import { tv } from '../../tv';
+
+// Determinate value transitions use the M3 Expressive effects spring.
+const SPRING =
+  'duration-[var(--md-sys-motion-duration-spring-effects-default)] ease-spring-effects-default';
 
 export const linearTv = tv({
   slots: {
@@ -41,30 +46,32 @@ export const linearTv = tv({
       "before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:end-0",
       'before:h-[var(--m3-thickness,100%)]',
       'before:[inset-inline-start:calc(var(--m3-progress,0%)_+_4px)]',
-      'before:bg-surface-container-highest before:rounded-full',
+      'before:bg-secondary-container before:rounded-full',
       'group-data-[indeterminate]:before:start-0',
     ],
-    // Primary bar. Determinate: width from Base UI. Indeterminate: full width,
-    // scaled + slid by the disjoint `primary` keyframe (origin at the start edge).
-    // Wavy determinate: a scrolling sine tile masks the solid bar into a wave.
+    // Primary bar. Determinate: width from Base UI. Indeterminate (non-wavy): full
+    // width, scaled + slid by the disjoint `primary` keyframe. Wavy (determinate
+    // or indeterminate): a scrolling sine tile masks the solid bar into a flowing
+    // wave — and for wavy indeterminate the disjoint scale keyframe is suppressed
+    // so the mask isn't distorted (a full-width flowing wave reads as active).
     indicator: [
-      'absolute inset-y-0 left-0 origin-left bg-primary rounded-full',
-      'transition-[width] duration-200 ease-standard',
+      `absolute inset-y-0 left-0 origin-left bg-primary rounded-full transition-[width] ${SPRING}`,
       'group-data-[indeterminate]:w-full group-data-[indeterminate]:transition-none',
-      'group-data-[indeterminate]:animate-m3-linear-primary',
+      'group-[&[data-indeterminate]:not([data-wavy])]:animate-m3-linear-primary',
       'group-data-[wavy]:rounded-none',
       'group-data-[wavy]:[-webkit-mask-image:var(--m3-wave)] group-data-[wavy]:[mask-image:var(--m3-wave)]',
       'group-data-[wavy]:[-webkit-mask-repeat:repeat-x] group-data-[wavy]:[mask-repeat:repeat-x]',
-      'group-data-[wavy]:[-webkit-mask-size:40px_100%] group-data-[wavy]:[mask-size:40px_100%]',
+      'group-data-[wavy]:[-webkit-mask-size:var(--m3-wave-size,40px)_100%] group-data-[wavy]:[mask-size:var(--m3-wave-size,40px)_100%]',
       'group-data-[wavy]:animate-m3-wave-flow',
       // Reduced motion: freeze the loops and show a static ~40% bar / static wave.
-      'motion-reduce:group-data-[indeterminate]:w-2/5',
+      'motion-reduce:group-[&[data-indeterminate]:not([data-wavy])]:w-2/5',
       'motion-reduce:group-data-[indeterminate]:animate-none motion-reduce:group-data-[wavy]:animate-none',
     ],
-    // Second disjoint bar: only present visually while indeterminate.
+    // Second disjoint bar: only present while non-wavy indeterminate (the wavy
+    // indeterminate is a single flowing wave).
     indicatorSecondary: [
       'absolute inset-y-0 left-0 w-full origin-left bg-primary rounded-full hidden',
-      'group-data-[indeterminate]:block group-data-[indeterminate]:animate-m3-linear-secondary',
+      'group-[&[data-indeterminate]:not([data-wavy])]:block group-[&[data-indeterminate]:not([data-wavy])]:animate-m3-linear-secondary',
       // Reduced motion: a single static bar reads better than two frozen ones.
       'motion-reduce:group-data-[indeterminate]:hidden',
     ],
@@ -84,13 +91,15 @@ export const circularTv = tv({
     ],
     // Both ends are rounded (M3); the inactive track sits behind with a 4dp gap.
     track: [
-      'stroke-surface-container-highest [stroke-linecap:round]',
-      'transition-[stroke-dasharray,stroke-dashoffset] duration-300 ease-standard',
+      'stroke-secondary-container [stroke-linecap:round]',
+      `transition-[stroke-dasharray,stroke-dashoffset] ${SPRING}`,
     ],
     indicator: [
       'stroke-primary [stroke-linecap:round]',
-      'transition-[stroke-dasharray,stroke-dashoffset] duration-300 ease-standard',
-      'group-data-[indeterminate]:animate-m3-circular-dash group-data-[indeterminate]:transition-none',
+      `transition-[stroke-dasharray,stroke-dashoffset] ${SPRING}`,
+      // Non-wavy indeterminate advances via the dash keyframe; the wavy
+      // indeterminate arc is a static path that the ring rotation (root) spins.
+      'group-[&[data-indeterminate]:not([data-wavy])]:animate-m3-circular-dash group-data-[indeterminate]:transition-none',
       // Reduced motion: freeze the arc at its static 25% length (no rotation).
       'motion-reduce:group-data-[indeterminate]:animate-none',
     ],

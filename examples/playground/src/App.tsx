@@ -1044,6 +1044,7 @@ export function App() {
               <Progress.Linear value={66} thickness={8} aria-label="ダウンロード（太）" />
               <Progress.Linear value={66} wavy aria-label="ダウンロード（波）" />
               <Progress.Linear aria-label="読み込み中" />
+              <Progress.Linear wavy aria-label="読み込み中（波）" />
               <div className="flex items-center gap-6">
                 <Progress.Circular value={66} aria-label="アップロード" />
                 <Progress.Circular
@@ -1054,6 +1055,7 @@ export function App() {
                 />
                 <Progress.Circular value={66} wavy aria-label="アップロード（波）" />
                 <Progress.Circular aria-label="処理中" />
+                <Progress.Circular wavy aria-label="処理中（波）" />
               </div>
             </div>
           </Section>

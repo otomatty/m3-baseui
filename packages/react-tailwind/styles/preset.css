@@ -69,12 +69,12 @@
   }
 }
 
-/* Wavy linear: scroll the sine mask tile by one wavelength (40px) for a seamless
- * flowing wave. */
+/* Wavy linear: scroll the sine mask tile by one wavelength (`--m3-wave-size`:
+ * 40px determinate / 20px indeterminate) for a seamless flowing wave. */
 @keyframes m3-wave-flow {
   to {
-    -webkit-mask-position-x: 40px;
-    mask-position-x: 40px;
+    -webkit-mask-position-x: var(--m3-wave-size, 40px);
+    mask-position-x: var(--m3-wave-size, 40px);
   }
 }
 

@@ -39,11 +39,15 @@ const circularDash = keyframes({
   '100%': { strokeDasharray: '60 100', strokeDashoffset: '-58' },
 });
 
-// Wavy linear: scroll the sine mask tile by one wavelength (40px) for a seamless
-// flowing wave. Matches the Tailwind preset keyframe.
+// Wavy linear: scroll the sine mask tile by one wavelength (`--m3-wave-size`:
+// 40px determinate / 20px indeterminate) for a seamless flowing wave. Matches
+// the Tailwind preset keyframe.
 const waveFlow = keyframes({
   '0%': { WebkitMaskPosition: '0 center', maskPosition: '0 center' },
-  '100%': { WebkitMaskPosition: '40px center', maskPosition: '40px center' },
+  '100%': {
+    WebkitMaskPosition: 'var(--m3-wave-size, 40px) center',
+    maskPosition: 'var(--m3-wave-size, 40px) center',
+  },
 });
 
 export const linearRoot = style({
@@ -92,7 +96,7 @@ export const linearTrack = style({
       height: 'var(--m3-thickness, 100%)',
       insetInlineEnd: 0,
       insetInlineStart: 'calc(var(--m3-progress, 0%) + 4px)',
-      background: `rgb(${vars.sys.color.surfaceContainerHighest})`,
+      background: `rgb(${vars.sys.color.secondaryContainer})`,
       borderRadius: vars.sys.shape.full,
     },
     // Indeterminate has no fraction: the inactive track spans the full width.
@@ -102,9 +106,11 @@ export const linearTrack = style({
   },
 });
 
-// Primary bar. Determinate: width from Base UI. Indeterminate: full width,
-// scaled + slid by the disjoint `primary` keyframe (origin at the start edge).
-// Wavy determinate: a scrolling sine tile (`--m3-wave`) masks the solid bar.
+// Primary bar. Determinate: width from Base UI. Indeterminate (non-wavy): full
+// width, scaled + slid by the disjoint `primary` keyframe. Wavy (determinate or
+// indeterminate): a scrolling sine tile (`--m3-wave`) masks the solid bar into a
+// flowing wave — the disjoint scale keyframe is suppressed when wavy so the mask
+// isn't distorted (a full-width flowing wave reads as active).
 export const linearIndicator = style({
   position: 'absolute',
   top: 0,
@@ -113,11 +119,13 @@ export const linearIndicator = style({
   transformOrigin: 'left center',
   background: `rgb(${vars.sys.color.primary})`,
   borderRadius: vars.sys.shape.full,
-  transition: `width 200ms ${vars.sys.motion.easing.standard}`,
+  transition: `width ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
   selectors: {
     [`${linearRoot}[data-indeterminate] &`]: {
       width: '100%',
       transition: 'none',
+    },
+    [`${linearRoot}[data-indeterminate]:not([data-wavy]) &`]: {
       animation: `${linearPrimary} 2s linear infinite`,
     },
     [`${linearRoot}[data-wavy] &`]: {
@@ -126,8 +134,8 @@ export const linearIndicator = style({
       maskImage: 'var(--m3-wave)',
       WebkitMaskRepeat: 'repeat-x',
       maskRepeat: 'repeat-x',
-      WebkitMaskSize: '40px 100%',
-      maskSize: '40px 100%',
+      WebkitMaskSize: 'var(--m3-wave-size, 40px) 100%',
+      maskSize: 'var(--m3-wave-size, 40px) 100%',
       animation: `${waveFlow} 1s linear infinite`,
     },
   },
@@ -135,14 +143,16 @@ export const linearIndicator = style({
     // Reduced motion: freeze the loops — a static ~40% bar / static wave.
     '(prefers-reduced-motion: reduce)': {
       selectors: {
-        [`${linearRoot}[data-indeterminate] &`]: { width: '40%', animation: 'none' },
+        [`${linearRoot}[data-indeterminate]:not([data-wavy]) &`]: { width: '40%' },
+        [`${linearRoot}[data-indeterminate] &`]: { animation: 'none' },
         [`${linearRoot}[data-wavy] &`]: { animation: 'none' },
       },
     },
   },
 });
 
-// Second disjoint bar: only shown/animated while indeterminate.
+// Second disjoint bar: only shown/animated while non-wavy indeterminate (the
+// wavy indeterminate is a single flowing wave).
 export const linearIndicatorSecondary = style({
   position: 'absolute',
   top: 0,
@@ -154,7 +164,7 @@ export const linearIndicatorSecondary = style({
   background: `rgb(${vars.sys.color.primary})`,
   borderRadius: vars.sys.shape.full,
   selectors: {
-    [`${linearRoot}[data-indeterminate] &`]: {
+    [`${linearRoot}[data-indeterminate]:not([data-wavy]) &`]: {
       display: 'block',
       animation: `${linearSecondary} 2s linear infinite`,
     },
@@ -189,20 +199,25 @@ globalStyle(`${circularRoot} svg`, { display: 'block', width: '100%', height: '1
 
 // Both ends rounded (M3); the inactive track sits behind with a 4dp gap.
 export const circularTrack = style({
-  stroke: `rgb(${vars.sys.color.surfaceContainerHighest})`,
+  stroke: `rgb(${vars.sys.color.secondaryContainer})`,
   strokeLinecap: 'round',
-  transition: `stroke-dasharray 300ms ${vars.sys.motion.easing.standard}, stroke-dashoffset 300ms ${vars.sys.motion.easing.standard}`,
+  transition: `stroke-dasharray ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}, stroke-dashoffset ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
 });
 
 export const circularIndicator = style({
   stroke: `rgb(${vars.sys.color.primary})`,
   strokeLinecap: 'round',
-  transition: `stroke-dasharray 300ms ${vars.sys.motion.easing.standard}, stroke-dashoffset 300ms ${vars.sys.motion.easing.standard}`,
+  transition: `stroke-dasharray ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}, stroke-dashoffset ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
   selectors: {
-    // Indeterminate: the arc grows/shrinks (advance) instead of transitioning.
-    [`${circularRoot}[data-indeterminate] &`]: {
+    // Non-wavy indeterminate: the arc grows/shrinks (advance) instead of
+    // transitioning. The wavy indeterminate arc is a static path spun by the
+    // ring rotation (no dash keyframe, which would re-dash the solid wave).
+    [`${circularRoot}[data-indeterminate]:not([data-wavy]) &`]: {
       transition: 'none',
       animation: `${circularDash} 1.4s ease-in-out infinite`,
+    },
+    [`${circularRoot}[data-indeterminate][data-wavy] &`]: {
+      transition: 'none',
     },
   },
   '@media': {
