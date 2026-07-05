@@ -63,7 +63,12 @@ export {
 } from './components/time-picker';
 export {
   BUTTON_VARIANTS,
+  BUTTON_SIZES,
+  BUTTON_SHAPES,
+  toToggle,
   type ButtonVariant,
+  type ButtonSize,
+  type ButtonShape,
   type ButtonOwnProps,
   type ButtonProps,
   type ButtonResolverArgs,
