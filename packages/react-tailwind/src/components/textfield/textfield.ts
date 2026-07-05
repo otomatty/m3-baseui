@@ -10,15 +10,17 @@
 import { createTextField } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
 
+const iconVisual = 'inline-flex items-center justify-center shrink-0 text-on-surface-variant [&>svg]:size-6';
+
 export const textFieldTv = tv({
   slots: {
     root: 'flex flex-col gap-1 min-w-[210px]',
     field: [
-      'relative flex items-stretch gap-3 h-14 px-4 box-border',
+      'relative flex items-stretch gap-3 h-14 px-4 box-border text-on-surface',
       'transition-[border-color,padding] duration-150 ease-standard',
       'group-data-[disabled]:opacity-[0.38] group-data-[disabled]:pointer-events-none',
     ],
-    inputWrap: 'relative flex-1 flex items-center min-w-0',
+    inputWrap: 'relative z-0 flex-1 flex items-center min-w-0 overflow-visible',
     input: [
       'peer w-full bg-transparent outline-none border-0 p-0 text-body-large text-on-surface',
       'placeholder:text-on-surface-variant',
@@ -29,8 +31,18 @@ export const textFieldTv = tv({
       'transition-all duration-150 ease-standard',
       'group-data-[focused]:text-primary group-data-[invalid]:text-error',
     ],
-    leadingIcon: 'flex items-center shrink-0 text-on-surface-variant',
-    trailingIcon: 'flex items-center shrink-0 text-on-surface-variant',
+    leadingIcon: iconVisual,
+    trailingIcon: iconVisual,
+    leadingIconButton: [
+      'relative inline-flex items-center justify-center shrink-0 size-12 p-0',
+      'border-0 bg-transparent cursor-pointer text-on-surface-variant [&>svg]:size-6',
+      'group-data-[disabled]:pointer-events-none',
+    ],
+    trailingIconButton: [
+      'relative inline-flex items-center justify-center shrink-0 size-12 p-0',
+      'border-0 bg-transparent cursor-pointer text-on-surface-variant [&>svg]:size-6',
+      'group-data-[disabled]:pointer-events-none',
+    ],
     supporting: [
       'flex justify-between gap-4 px-4 text-body-small text-on-surface-variant',
       'group-data-[invalid]:text-error',
@@ -42,9 +54,15 @@ export const textFieldTv = tv({
     variant: {
       filled: {
         field: [
-          'rounded-t-extra-small bg-surface-container-highest',
-          'border-b-2 border-outline',
-          // M3 filled focus-active-indicator-height is 3dp (resting/error stay 2dp).
+          'overflow-hidden rounded-t-extra-small bg-surface-container-highest',
+          // M3 filled hover: state layer (on-surface × state-hover) + indicator color.
+          'before:absolute before:inset-0 before:rounded-[inherit] before:bg-current before:opacity-0 before:pointer-events-none',
+          'before:transition-opacity before:duration-100',
+          'hover:before:opacity-[var(--md-sys-state-hover)]',
+          'group-data-[disabled]:before:opacity-0',
+          // M3 filled resting active-indicator: 1dp on-surface-variant.
+          'border-b border-on-surface-variant hover:border-on-surface',
+          // M3 filled focus-active-indicator-height is 3dp.
           'group-data-[focused]:border-b-[3px] group-data-[focused]:border-primary group-data-[invalid]:border-error',
         ],
         input: 'pt-3',
@@ -55,15 +73,18 @@ export const textFieldTv = tv({
       },
       outlined: {
         field: [
-          'rounded-extra-small border border-outline',
+          // Outlined hover = outline color only (no container state layer per M3).
+          'overflow-visible rounded-extra-small border border-outline hover:border-on-surface',
           // M3 outlined focus-outline-width is 3dp (matches Select's trigger);
           // padding drops 2px so content stays steady as the 1dp border grows.
           'group-data-[focused]:border-[3px] group-data-[focused]:border-primary group-data-[focused]:px-[14px]',
           'group-data-[invalid]:border-error',
         ],
         label: [
-          'group-data-[focused]:top-0 group-data-[focused]:-translate-y-1/2 group-data-[focused]:text-body-small group-data-[focused]:bg-surface group-data-[focused]:px-1',
-          'group-data-[filled]:top-0 group-data-[filled]:-translate-y-1/2 group-data-[filled]:text-body-small group-data-[filled]:bg-surface group-data-[filled]:px-1',
+          'group-data-[focused]:top-0 group-data-[focused]:-translate-y-1/2 group-data-[focused]:z-[1]',
+          'group-data-[focused]:text-body-small group-data-[focused]:bg-surface group-data-[focused]:px-1 group-data-[focused]:leading-none',
+          'group-data-[filled]:top-0 group-data-[filled]:-translate-y-1/2 group-data-[filled]:z-[1]',
+          'group-data-[filled]:text-body-small group-data-[filled]:bg-surface group-data-[filled]:px-1 group-data-[filled]:leading-none',
         ],
       },
     },
@@ -83,10 +104,12 @@ export const TextField = createTextField(({ variant }) => {
     label: c.label(),
     leadingIcon: c.leadingIcon(),
     trailingIcon: c.trailingIcon(),
+    leadingIconButton: c.leadingIconButton(),
+    trailingIconButton: c.trailingIconButton(),
     supporting: c.supporting(),
     supportingText: c.supportingText(),
     counter: c.counter(),
   };
 });
 
-export type { TextFieldProps, TextFieldVariant } from '@m3-baseui/core';
+export type { TextFieldIconAction, TextFieldProps, TextFieldVariant } from '@m3-baseui/core';

@@ -41,12 +41,26 @@ describe('TextField', () => {
 });
 
 describe('TextField tokens', () => {
+  test('filled resting active indicator is M3 1dp on-surface-variant', () => {
+    const field = textFieldTv({ variant: 'filled' }).field();
+    expect(field).toContain('border-b border-on-surface-variant');
+    expect(field).not.toContain('border-b-2');
+    expect(field).not.toContain('border-outline');
+  });
+
   test('filled active indicator grows to the M3 3dp focus height', () => {
     const field = textFieldTv({ variant: 'filled' }).field();
     // Resting indicator stays on the bottom border; focus = primary at 3dp
     // (M3 filled-text-field focus-active-indicator-height: 3px).
     expect(field).toContain('group-data-[focused]:border-b-[3px]');
     expect(field).toContain('group-data-[focused]:border-primary');
+  });
+
+  test('filled container exposes the M3 hover state layer and indicator color', () => {
+    const field = textFieldTv({ variant: 'filled' }).field();
+    expect(field).toContain('hover:before:opacity-[var(--md-sys-state-hover)]');
+    expect(field).toContain('hover:border-on-surface');
+    expect(field).toContain('group-data-[disabled]:before:opacity-0');
   });
 
   test('outlined focus outline is the M3 3dp width, not 2dp', () => {
@@ -57,5 +71,39 @@ describe('TextField tokens', () => {
     expect(field).toContain('group-data-[focused]:px-[14px]');
     expect(field).not.toContain('group-data-[focused]:border-2');
     expect(field).not.toContain('group-data-[focused]:px-[15px]');
+  });
+
+  test('outlined hover changes outline color only (no container state layer)', () => {
+    const field = textFieldTv({ variant: 'outlined' }).field();
+    expect(field).toContain('hover:border-on-surface');
+    expect(field).not.toContain('hover:before:opacity-[var(--md-sys-state-hover)]');
+    expect(field).not.toContain('before:absolute');
+    expect(field).toContain('overflow-visible');
+    expect(field).not.toContain('overflow-hidden');
+  });
+
+  test('outlined floated label stays above the border notch (not clipped)', () => {
+    const label = textFieldTv({ variant: 'outlined' }).label();
+    expect(label).toContain('group-data-[focused]:z-[1]');
+    expect(label).toContain('group-data-[focused]:bg-surface');
+    expect(label).toContain('group-data-[focused]:leading-none');
+  });
+
+  test('filled field keeps overflow hidden for the hover state layer', () => {
+    const field = textFieldTv({ variant: 'filled' }).field();
+    expect(field).toContain('overflow-hidden');
+  });
+
+  test('interactive trailing icon exposes a 48dp touch target', () => {
+    render(
+      <TextField
+        label="検索"
+        trailingIcon={<span data-testid="icon" />}
+        trailingIconAction={{ 'aria-label': 'クリア', onClick: () => {} }}
+      />,
+    );
+    const button = screen.getByRole('button', { name: 'クリア' });
+    expect(button.querySelector('[data-touch-target]')).not.toBeNull();
+    expect(textFieldTv().trailingIconButton()).toContain('size-12');
   });
 });

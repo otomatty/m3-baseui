@@ -11,8 +11,44 @@
 import * as React from 'react';
 import { Field } from '@base-ui/react/field';
 
-import type { TextFieldClassResolver, TextFieldProps } from './contract';
+import type { TextFieldClassResolver, TextFieldIconAction, TextFieldProps } from './contract';
 import { cx } from '../../utils';
+import { TouchTarget } from '../../touch-target';
+
+function TextFieldIconSlot({
+  icon,
+  action,
+  decorativeClass,
+  buttonClass,
+  disabled,
+}: {
+  icon: React.ReactNode;
+  action?: TextFieldIconAction;
+  decorativeClass: string;
+  buttonClass: string;
+  disabled?: boolean;
+}) {
+  if (action) {
+    return (
+      <button
+        type="button"
+        className={buttonClass}
+        aria-label={action['aria-label']}
+        onClick={action.onClick}
+        disabled={disabled}
+      >
+        {icon}
+        <TouchTarget />
+      </button>
+    );
+  }
+
+  return (
+    <span className={decorativeClass} aria-hidden="true">
+      {icon}
+    </span>
+  );
+}
 
 export function createTextField(resolve: TextFieldClassResolver) {
   function TextField(
@@ -23,6 +59,8 @@ export function createTextField(resolve: TextFieldClassResolver) {
       error = false,
       leadingIcon,
       trailingIcon,
+      leadingIconAction,
+      trailingIconAction,
       showCounter = false,
       maxLength,
       className,
@@ -66,9 +104,13 @@ export function createTextField(resolve: TextFieldClassResolver) {
       >
         <div className={c.field}>
           {leadingIcon ? (
-            <span className={c.leadingIcon} aria-hidden="true">
-              {leadingIcon}
-            </span>
+            <TextFieldIconSlot
+              icon={leadingIcon}
+              action={leadingIconAction}
+              decorativeClass={c.leadingIcon}
+              buttonClass={c.leadingIconButton}
+              disabled={disabled}
+            />
           ) : null}
           <span className={c.inputWrap}>
             <Field.Control
@@ -89,9 +131,13 @@ export function createTextField(resolve: TextFieldClassResolver) {
             ) : null}
           </span>
           {trailingIcon ? (
-            <span className={c.trailingIcon} aria-hidden="true">
-              {trailingIcon}
-            </span>
+            <TextFieldIconSlot
+              icon={trailingIcon}
+              action={trailingIconAction}
+              decorativeClass={c.trailingIcon}
+              buttonClass={c.trailingIconButton}
+              disabled={disabled}
+            />
           ) : null}
         </div>
         {showSupporting ? (
