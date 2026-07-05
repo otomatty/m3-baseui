@@ -172,6 +172,39 @@ describe('Button', () => {
     );
   });
 
+  test('size-linked typescale does not drop the variant label color (tailwind-merge config)', () => {
+    // The configured `tv` helper must treat `text-<role>` as font-size, not a
+    // color, so a filled button keeps `text-on-primary` alongside its typescale.
+    render(<Button size="m">C</Button>);
+    const btn = screen.getByRole('button', { name: 'C' });
+    expect(btn.className).toContain('text-on-primary');
+    expect(btn.className).toContain('text-title-medium');
+  });
+
+  test('selected morph resolves the corner class (round → square, no leftover rounded-full)', () => {
+    // tailwind-merge must dedupe conflicting `rounded-*` so the selected corner
+    // overrides the resting one — otherwise both survive and CSS order decides.
+    render(
+      <Button shape="round" size="s" selected>
+        Rs
+      </Button>,
+    );
+    const btn = screen.getByRole('button', { name: 'Rs' });
+    expect(btn.className).toContain('rounded-medium'); // swapped to square
+    expect(btn.className).not.toContain('rounded-full'); // resting round dropped
+  });
+
+  test('selected square morph resolves to rounded-full (no leftover rounded-medium)', () => {
+    render(
+      <Button shape="square" size="s" selected>
+        Sq
+      </Button>,
+    );
+    const btn = screen.getByRole('button', { name: 'Sq' });
+    expect(btn.className).toContain('rounded-full');
+    expect(btn.className).not.toContain('rounded-medium');
+  });
+
   // ---- Toggle (selected) ---------------------------------------------------
 
   test('selected drives aria-pressed + data-selected (toggle semantics)', () => {

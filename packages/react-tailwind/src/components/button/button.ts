@@ -14,8 +14,8 @@
  * (`before:opacity-[var(--md-sys-state-hover)]`) drive the state layer off the
  * channel-triple colors.
  */
-import { createButton } from '@m3-baseui/core';
-import { tv } from 'tailwind-variants';
+import { createButton, toToggle } from '@m3-baseui/core';
+import { tv } from '../../tv';
 
 export const button = tv({
   base: [
@@ -176,10 +176,6 @@ export const button = tv({
     shape: 'round',
   },
 });
-
-/** Map the tri-state `selected` (undefined = plain) to the `toggle` variant. */
-const toToggle = (selected: boolean | undefined): 'on' | 'off' | undefined =>
-  selected === undefined ? undefined : selected ? 'on' : 'off';
 
 export const Button = createButton(({ variant, size, shape, selected }) =>
   button({ variant, size, shape, toggle: toToggle(selected) }),

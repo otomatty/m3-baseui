@@ -35,6 +35,15 @@ export interface ButtonResolverArgs {
 /** A function that turns variant state into a class string for one engine. */
 export type ButtonClassResolver = (args: ButtonResolverArgs) => string;
 
+/**
+ * Map the tri-state `selected` prop to a toggle key. `undefined` (a plain,
+ * non-toggle button) returns `undefined` so an engine's `toggle` variant stays
+ * unset — neither the selected nor unselected look is applied. Shared here so
+ * both engines convert identically (engine packages only swap the resolver).
+ */
+export const toToggle = (selected: boolean | undefined): 'on' | 'off' | undefined =>
+  selected === undefined ? undefined : selected ? 'on' : 'off';
+
 /** Props owned by the M3 Button (beyond native <button> attributes). */
 export interface ButtonOwnProps {
   /** M3 button variant. @default 'filled' */

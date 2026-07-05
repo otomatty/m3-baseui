@@ -65,6 +65,7 @@ export {
   BUTTON_VARIANTS,
   BUTTON_SIZES,
   BUTTON_SHAPES,
+  toToggle,
   type ButtonVariant,
   type ButtonSize,
   type ButtonShape,
