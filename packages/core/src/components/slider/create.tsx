@@ -35,6 +35,31 @@ function useM3SliderContext(): M3SliderContextValue {
   return context;
 }
 
+// M3 Expressive handle gap: 6dp on each side of the handle plus half the 4dp
+// handle = 8px between the track edge and the handle center.
+const HANDLE_GAP = '8px';
+
+/**
+ * Active-region fraction for the M3 handle gap. A single slider fills from 0 to
+ * the value; a range fills between the low and high thumbs. The percentages feed
+ * the active fill's inline geometry and the `--m3-slider-*` vars the inactive
+ * rail pseudos read.
+ */
+function useSliderActive(): { range: boolean; startPct: number; endPct: number } {
+  const {
+    state: { values, min, max },
+  } = useM3SliderContext();
+  const range = values.length > 1;
+  const first = values[0] ?? min;
+  const lo = range ? Math.min(...values) : first;
+  const hi = range ? Math.max(...values) : first;
+  return {
+    range,
+    startPct: range ? valueToPercent(lo, min, max) : 0,
+    endPct: valueToPercent(hi, min, max),
+  };
+}
+
 function valueToPercent(value: number, min: number, max: number): number {
   if (max <= min) {
     return 0;
@@ -125,7 +150,12 @@ export function createSlider(classes: SliderClasses) {
         {...props}
         className={mergeClassName(classes.root, className)}
         render={(rootProps, state) => {
-          const element = renderSliderRoot(rootProps, state, render);
+          // `data-range` lets the styling engines add the leading-side handle gap
+          // (and the 2dp inner corner on the active fill's start) for range
+          // sliders without a second class variant.
+          const rangeProps =
+            state.values.length > 1 ? { ...rootProps, 'data-range': '' } : rootProps;
+          const element = renderSliderRoot(rangeProps, state, render);
           return (
             <M3SliderContext.Provider value={{ state, locale, format }}>
               {element}
@@ -154,11 +184,21 @@ export function createSlider(classes: SliderClasses) {
   const Track = React.forwardRef<
     HTMLDivElement,
     React.ComponentPropsWithoutRef<typeof SliderPrimitive.Track>
-  >(function Track({ className, ...props }, ref) {
+  >(function Track({ className, style, ...props }, ref) {
+    const { startPct, endPct } = useSliderActive();
+    // Publish the active-region fraction so the inactive rail pseudos can offset
+    // by the handle gap. The internal vars go after `...style` so they always
+    // resolve regardless of caller style.
+    const trackStyle = {
+      ...style,
+      '--m3-slider-start': `${startPct}%`,
+      '--m3-slider-end': `${endPct}%`,
+    } as React.CSSProperties;
     return (
       <SliderPrimitive.Track
         ref={ref}
         className={mergeClassName(classes.track, className)}
+        style={trackStyle}
         {...props}
       />
     );
@@ -168,11 +208,26 @@ export function createSlider(classes: SliderClasses) {
   const Indicator = React.forwardRef<
     HTMLDivElement,
     React.ComponentPropsWithoutRef<typeof SliderPrimitive.Indicator>
-  >(function Indicator({ className, ...props }, ref) {
+  >(function Indicator({ className, style, ...props }, ref) {
+    const { range, startPct, endPct } = useSliderActive();
+    // Own the active fill's geometry so it stops a handle gap short of the
+    // handle(s): trailing edge always, leading edge only for range (its start
+    // meets a handle). Overrides Base UI's width/inset so the gap is exact.
+    const indicatorStyle = {
+      ...style,
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      width: 'auto',
+      height: 'auto',
+      insetInlineStart: range ? `calc(${startPct}% + ${HANDLE_GAP})` : 0,
+      insetInlineEnd: `calc(${100 - endPct}% + ${HANDLE_GAP})`,
+    } as React.CSSProperties;
     return (
       <SliderPrimitive.Indicator
         ref={ref}
         className={mergeClassName(classes.indicator, className)}
+        style={indicatorStyle}
         {...props}
       />
     );
