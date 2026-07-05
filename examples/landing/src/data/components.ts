@@ -153,18 +153,18 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     group: 'Actions',
     description: '排他的な選択肢を提示するセグメントボタン。単一選択モードをサポートします。',
     importCode: twImport('SegmentedButton, ThemeProvider'),
-    usageCode: `<SegmentedButton value={view} onValueChange={setView}>
+    usageCode: `<SegmentedButton.Root defaultValue={['list']}>
   <SegmentedButton.Item value="list">リスト</SegmentedButton.Item>
   <SegmentedButton.Item value="grid">グリッド</SegmentedButton.Item>
-</SegmentedButton>`,
+</SegmentedButton.Root>`,
     props: [
-      { name: 'value', type: 'string', description: '選択中の値' },
       {
-        name: 'onValueChange',
-        type: '(value: string) => void',
-        description: '選択変更コールバック',
+        name: 'defaultValue / value',
+        type: 'readonly string[]',
+        description: '選択中の値（ToggleGroup）',
       },
     ],
+    notes: ['単一選択が既定。複数選択は Root に multiple を指定。'],
   },
   {
     slug: 'selection-controls',
@@ -321,11 +321,17 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     group: 'Navigation',
     description: 'モバイル向けボトムナビゲーションバー。NavigationBar.Item で目的地を配置します。',
     importCode: twImport('NavigationBar, ThemeProvider'),
-    usageCode: `<NavigationBar value={tab} onValueChange={setTab}>
-  <NavigationBar.Item value="home" icon={<Icon name="home" />} label="ホーム" />
-  <NavigationBar.Item value="search" icon={<Icon name="search" />} label="検索" />
-</NavigationBar>`,
-    props: [{ name: 'value / onValueChange', type: 'string', description: '選択中のタブ' }],
+    usageCode: `<NavigationBar.Root defaultValue={['home']}>
+  <NavigationBar.Item value="home" icon={<Icon name="home" />}>ホーム</NavigationBar.Item>
+  <NavigationBar.Item value="search" icon={<Icon name="search" />}>検索</NavigationBar.Item>
+</NavigationBar.Root>`,
+    props: [
+      {
+        name: 'defaultValue / value',
+        type: 'readonly string[]',
+        description: '選択中の目的地',
+      },
+    ],
   },
   {
     slug: 'navigation-rail',
@@ -334,10 +340,16 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     description:
       'コンパクト／展開可能なサイドレール。NavigationRail.Item で主要目的地を配置します。',
     importCode: twImport('NavigationRail, ThemeProvider'),
-    usageCode: `<NavigationRail expanded={expanded}>
-  <NavigationRail.Item icon={<Icon name="inbox" />} label="受信" selected />
-</NavigationRail>`,
-    props: [{ name: 'expanded', type: 'boolean', description: 'ラベル付き展開状態' }],
+    usageCode: `<NavigationRail.Root defaultValue={['home']}>
+  <NavigationRail.Item value="home" icon={<Icon name="home" />}>ホーム</NavigationRail.Item>
+</NavigationRail.Root>`,
+    props: [
+      {
+        name: 'defaultValue / value',
+        type: 'readonly string[]',
+        description: '選択中の目的地',
+      },
+    ],
   },
   {
     slug: 'navigation-drawer',
@@ -358,17 +370,20 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     slug: 'top-app-bar',
     name: 'TopAppBar',
     group: 'Navigation',
-    description:
-      '画面上部のアプリバー。center-aligned / small / medium / large のバリアントを提供します。',
+    description: '画面上部のアプリバー。small / center / medium / large のバリアントを提供します。',
     importCode: twImport('TopAppBar, ThemeProvider'),
-    usageCode: `<TopAppBar variant="center-aligned" title="ページタイトル" />`,
+    usageCode: `<TopAppBar variant="center">
+  ページタイトル
+</TopAppBar>`,
     props: [
       {
         name: 'variant',
-        type: "'center-aligned' | 'small' | 'medium' | 'large'",
+        type: "'small' | 'center' | 'medium' | 'large'",
+        default: "'small'",
         description: 'App bar バリアント',
       },
-      { name: 'title', type: 'string', description: 'タイトルテキスト' },
+      { name: 'children', type: 'ReactNode', description: 'ヘッドライン（タイトル）' },
+      { name: 'leading / trailing', type: 'ReactNode', description: '先頭・末尾アクション' },
     ],
   },
   {
@@ -408,7 +423,7 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     name: 'Dialog',
     group: 'Containment',
     description:
-      '複合コンポーネント（Dialog.Root / Trigger / Portal / Backdrop / Popup / Title / Description / Close）。M3 スクラムとサーフェスダイアログ。',
+      '複合コンポーネント（Dialog.Root / Trigger / Portal / Backdrop / Popup / Title / Description / Close）。M3 スクリムとサーフェスダイアログ。',
     importCode: twImport('Dialog, Button, ThemeProvider'),
     usageCode: `<Dialog.Root>
   <Dialog.Trigger render={<Button variant="tonal">開く</Button>} />
@@ -430,7 +445,7 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     slug: 'bottom-sheet',
     name: 'BottomSheet',
     group: 'Containment',
-    description: '画面下部からスライドするシート。ドラッグハンドルとスクラムを備えます。',
+    description: '画面下部からスライドするシート。ドラッグハンドルとスクリムを備えます。',
     importCode: twImport('BottomSheet, ThemeProvider'),
     usageCode: `<BottomSheet open={open} onOpenChange={setOpen}>
   <BottomSheet.Content>…</BottomSheet.Content>
@@ -494,12 +509,13 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     group: 'Communication',
     description: 'small / large の M3 バッジ。数値カウントやドット表示に使用します。',
     importCode: twImport('Badge, ThemeProvider'),
-    usageCode: `<Badge count={3}>
-  <IconButton variant="standard" aria-label="通知"><Icon name="notifications" /></IconButton>
-</Badge>`,
+    usageCode: `<span className="relative inline-flex">
+  <Icon name="notifications" />
+  <Badge value={3} aria-label="3件の通知" />
+</span>`,
     props: [
-      { name: 'count', type: 'number', description: '表示する数（0 で非表示）' },
-      { name: 'size', type: "'small' | 'large'", default: "'small'", description: 'バッジサイズ' },
+      { name: 'value', type: 'ReactNode', description: '表示する数（省略時はドット）' },
+      { name: 'max', type: 'number', description: '数値の上限（例: 99+）' },
     ],
   },
   {
@@ -581,12 +597,11 @@ function SnackbarDemo() {
     description:
       'linear / circular の M3 プログレスインジケーター。determinate / indeterminate をサポート。',
     importCode: twImport('Progress, ThemeProvider'),
-    usageCode: `<Progress variant="linear" value={60} />
-<Progress variant="circular" indeterminate />`,
+    usageCode: `<Progress.Linear value={60} aria-label="進捗" />
+<Progress.Circular value={66} aria-label="進捗" />`,
     props: [
-      { name: 'variant', type: "'linear' | 'circular'", description: '形状' },
-      { name: 'value', type: 'number', description: '0–100（determinate）' },
-      { name: 'indeterminate', type: 'boolean', description: '不定進捗' },
+      { name: 'Progress.Linear value', type: 'number', description: '0–100（determinate）' },
+      { name: 'Progress.Circular value', type: 'number', description: '0–100（determinate）' },
     ],
   },
   {
@@ -634,13 +649,13 @@ function SnackbarDemo() {
     slug: 'carousel',
     name: 'Carousel',
     group: 'Layout & media',
-    description: '横スクロールカルーセル。Carousel.Item で各スライドを配置します。',
-    importCode: twImport('Carousel, Card, ThemeProvider'),
-    usageCode: `<Carousel>
-  <Carousel.Item><Card variant="filled">1</Card></Carousel.Item>
-  <Carousel.Item><Card variant="filled">2</Card></Carousel.Item>
-</Carousel>`,
-    props: [{ name: 'children', type: 'Carousel.Item[]', description: 'スライド項目' }],
+    description: '横スクロールカルーセル。Carousel.Root / Item で各スライドを配置します。',
+    importCode: twImport('Carousel, ThemeProvider'),
+    usageCode: `<Carousel.Root aria-label="ギャラリー">
+  <Carousel.Item>スライド 1</Carousel.Item>
+  <Carousel.Item>スライド 2</Carousel.Item>
+</Carousel.Root>`,
+    props: [{ name: 'Carousel.Item', type: 'component', description: '各スライド' }],
   },
 ];
 

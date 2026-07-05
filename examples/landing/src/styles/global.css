@@ -91,10 +91,18 @@ html {
 }
 
 body {
+  position: relative;
   margin: 0;
   background: rgb(var(--md-sys-color-surface));
   color: rgb(var(--md-sys-color-on-surface));
   font-family: var(--md-ref-typeface-plain, 'Roboto', system-ui, sans-serif);
+}
+
+/* iOS 26+ Safari: fixed backdrops may not cover the full scrollable viewport. */
+@supports (-webkit-touch-callout: none) {
+  .docs-nav-backdrop {
+    position: absolute;
+  }
 }
 
 /* ── Documentation prose ─────────────────────────────────────────────── */

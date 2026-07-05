@@ -73,7 +73,9 @@ const jsonLd = Astro.site
           var t = JSON.parse(raw);
           if (t && t.mode) document.documentElement.setAttribute('data-theme', t.mode);
           if (t && t.css) document.documentElement.style.cssText += t.css;
-        } catch (e) {}
+        } catch {
+          // ignore storage read/parse errors
+        }
       })();
     </script>
   </head>

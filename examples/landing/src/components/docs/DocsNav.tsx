@@ -379,7 +379,7 @@ export function DocsNav({ currentPath = '/docs' }: DocsNavProps) {
         </div>
 
         <DialogPrimitive.Portal>
-          <DialogPrimitive.Backdrop className="fixed inset-0 z-40 bg-scrim/40 transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0" />
+          <DialogPrimitive.Backdrop className="docs-nav-backdrop fixed inset-0 z-40 bg-scrim/40 transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0" />
           <DialogPrimitive.Popup className="fixed inset-y-0 left-0 z-50 flex w-[86%] max-w-[320px] flex-col overflow-y-auto rounded-e-large bg-surface-container-low p-3 shadow-level2 transition-transform duration-300 ease-emphasized data-ending-style:-translate-x-full data-starting-style:-translate-x-full">
             <div className="mb-2 flex items-center gap-2 px-2 py-2">
               <DialogPrimitive.Close
@@ -449,40 +449,8 @@ export function DocsNav({ currentPath = '/docs' }: DocsNavProps) {
               })}
             </nav>
 
-            <div className="mt-auto flex flex-col gap-3 px-2 pt-6">
-              <Button
-                variant="outlined"
-                startIcon={<Icon name={dark ? 'light_mode' : 'dark_mode'} />}
-                onClick={() => changeMode(dark ? 'light' : 'dark')}
-              >
-                {dark ? 'ライトモードに切替' : 'ダークモードに切替'}
-              </Button>
-              {/* biome-ignore lint/a11y/useSemanticElements: toolbar-style swatch group, not a form fieldset */}
-              <div role="group" aria-label="配色（シード色）" className="flex flex-wrap gap-2 px-1">
-                {SEEDS.map((option) => {
-                  const isActiveSeed = seed === option.value;
-                  return (
-                    <button
-                      key={option.value}
-                      type="button"
-                      title={option.name}
-                      aria-label={option.name}
-                      aria-pressed={isActiveSeed}
-                      onClick={() => changeSeed(option.value)}
-                      className={
-                        isActiveSeed
-                          ? 'relative flex size-8 items-center justify-center rounded-full ring-2 ring-primary ring-offset-2 ring-offset-surface-container-low'
-                          : 'relative flex size-8 items-center justify-center rounded-full'
-                      }
-                      style={{ background: option.value }}
-                    >
-                      {isActiveSeed ? (
-                        <Icon name="check" size={18} className="text-white drop-shadow" />
-                      ) : null}
-                    </button>
-                  );
-                })}
-              </div>
+            <div className="mt-auto px-2 pt-6">
+              <ThemeMenuBody mode={mode} seed={seed} onMode={changeMode} onSeed={changeSeed} />
             </div>
           </DialogPrimitive.Popup>
         </DialogPrimitive.Portal>
