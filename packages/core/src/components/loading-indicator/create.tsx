@@ -76,17 +76,26 @@ const SHAPE_FNS: ShapeFn[] = [
   (t) => [CENTER + 18 * Math.cos(t), CENTER + 13 * Math.sin(t)], // Oval
 ];
 
-/** Sample a shape into a closed `M … L … Z` polyline (uniform point count). */
-function shapePath(fn: ShapeFn): string {
+// Sample each shape to the same number of points so they can be interpolated
+// point-by-point (the morph runs as a JS `d`-attribute tween — see the factory —
+// which works in every browser, unlike a CSS `d`/WAAPI animation).
+const SHAPE_POINTS: [number, number][][] = SHAPE_FNS.map((fn) => {
+  const pts: [number, number][] = [];
+  for (let i = 0; i < SAMPLES; i++) pts.push(fn((TAU * i) / SAMPLES));
+  return pts;
+});
+
+/** Build a closed `M … L … Z` polyline from a shape's sampled points. */
+function pointsToPath(pts: [number, number][]): string {
   let d = '';
-  for (let i = 0; i < SAMPLES; i++) {
-    const [x, y] = fn((TAU * i) / SAMPLES);
+  for (let i = 0; i < pts.length; i++) {
+    const [x, y] = pts[i] ?? [CENTER, CENTER];
     d += `${i === 0 ? 'M' : 'L'}${round(x)} ${round(y)}`;
   }
   return `${d}Z`;
 }
 
-const SHAPES = SHAPE_FNS.map(shapePath);
+const SHAPES = SHAPE_POINTS.map(pointsToPath);
 // Tight viewBox around the outer radius so the SVG bounds the 38dp active
 // indicator exactly: `contained` renders a real 48dp container with the shape
 // inset, `uncontained` is just the 38dp shape.
@@ -107,29 +116,42 @@ export function createLoadingIndicator(resolve: LoadingIndicatorClassResolver) {
       const pathRef = React.useRef<SVGPathElement>(null);
 
       // Morph through the seven shapes (650ms each), looping seamlessly back to
-      // the first. The Web Animations API keeps this engine-agnostic (identical
-      // in both builds) and lets us honor prefers-reduced-motion. The steady
-      // rotation is a separate CSS animation on the shape (per engine).
+      // the first. We tween the path's `d` *attribute* with requestAnimationFrame
+      // (interpolating the sampled points), which works in every browser — a CSS
+      // `d` / Web Animations approach silently no-ops in Safari and Firefox. The
+      // morph is engine-agnostic (identical in both builds), honors
+      // prefers-reduced-motion, and the steady rotation is a separate CSS
+      // animation on the shape (per engine).
       React.useEffect(() => {
         const path = pathRef.current;
-        if (!path || typeof path.animate !== 'function' || prefersReducedMotion()) return;
-        const frames = SHAPES.map((d, i) => ({
-          d: `path("${d}")`,
-          offset: i / SHAPES.length,
-          // Each morph settles before the next fires (Compose uses a spring).
-          easing: 'ease-in-out',
-        }));
-        frames.push({ d: `path("${SHAPES[0]}")`, offset: 1, easing: 'ease-in-out' });
-        try {
-          const anim = path.animate(frames, {
-            duration: MORPH_INTERVAL_MS * SHAPES.length,
-            iterations: Number.POSITIVE_INFINITY,
-          });
-          return () => anim.cancel();
-        } catch {
-          // Environments without a working WAAPI (e.g. the unit-test DOM) simply
-          // render the static first shape — no throw, no morph.
-        }
+        if (!path || prefersReducedMotion() || typeof requestAnimationFrame !== 'function') return;
+        const count = SHAPE_POINTS.length;
+        const cycle = MORPH_INTERVAL_MS * count;
+        // Ease each morph so it settles before the next fires (Compose uses a spring).
+        const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+        let raf = 0;
+        let start = 0;
+        const frame = (now: number) => {
+          if (!start) start = now;
+          const phase = (((now - start) % cycle) + cycle) % cycle; // 0…cycle
+          const pos = phase / MORPH_INTERVAL_MS; // 0…count
+          const i = Math.floor(pos) % count;
+          const from = SHAPE_POINTS[i] ?? [];
+          const to = SHAPE_POINTS[(i + 1) % count] ?? [];
+          const f = easeInOut(pos - Math.floor(pos));
+          let d = '';
+          for (let k = 0; k < from.length; k++) {
+            const a = from[k] ?? [CENTER, CENTER];
+            const b = to[k] ?? [CENTER, CENTER];
+            d += `${k === 0 ? 'M' : 'L'}${round(a[0] + (b[0] - a[0]) * f)} ${round(
+              a[1] + (b[1] - a[1]) * f,
+            )}`;
+          }
+          path.setAttribute('d', `${d}Z`);
+          raf = requestAnimationFrame(frame);
+        };
+        raf = requestAnimationFrame(frame);
+        return () => cancelAnimationFrame(raf);
       }, []);
 
       // `props` are spread first so the shared DOM/`data-*` contract (role,
