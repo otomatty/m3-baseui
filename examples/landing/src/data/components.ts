@@ -687,26 +687,46 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
     name: 'Snackbar',
     group: 'Communication',
     description:
-      'SnackbarProvider と useSnackbar によるトースト通知。アクション付きメッセージを表示します。',
-    importCode: twImport('SnackbarProvider, useSnackbar, Button, ThemeProvider'),
+      'Snackbar.Provider と useSnackbar によるトースト通知。Viewport 内に Root を描画してメッセージを表示します。',
+    importCode: twImport('Snackbar, useSnackbar, Button, ThemeProvider'),
     usageCode: `function App() {
   return (
     <ThemeProvider seed="#6750A4">
-      <SnackbarProvider>
+      <Snackbar.Provider>
         <SnackbarDemo />
-      </SnackbarProvider>
+      </Snackbar.Provider>
     </ThemeProvider>
+  );
+}
+
+function SnackbarList() {
+  const { toasts } = useSnackbar();
+  return (
+    <>
+      {toasts.map((toast) => (
+        <Snackbar.Root key={toast.id} toast={toast}>
+          <Snackbar.Content>
+            <Snackbar.Title />
+          </Snackbar.Content>
+        </Snackbar.Root>
+      ))}
+    </>
   );
 }
 
 function SnackbarDemo() {
   const { add } = useSnackbar();
   return (
-    <Button onClick={() => add({ message: '保存しました' })}>表示</Button>
+    <>
+      <Button onClick={() => add({ title: '保存しました' })}>表示</Button>
+      <Snackbar.Viewport>
+        <SnackbarList />
+      </Snackbar.Viewport>
+    </>
   );
 }`,
     props: [{ name: 'add', type: '(options) => void', description: 'useSnackbar フックから取得' }],
-    notes: ['SnackbarProvider は ThemeProvider の内側に配置してください。'],
+    notes: ['Snackbar.Provider は ThemeProvider の内側に配置してください。'],
   },
   {
     slug: 'progress',
