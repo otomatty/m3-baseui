@@ -5,8 +5,8 @@
  * Base UI Select composition exposed as a namespace. The Trigger is styled as an
  * M3 outlined field; the Popup is an M3 menu surface (112–280dp, at least anchor
  * width) positioned below the anchor (no trigger overlap). Selectable items use label-large, secondary-container fill when
- * selected, and a leading check (on-secondary-container when selected). Scroll
- * arrows are sticky affordances when the list overflows.
+ * selected, and a leading check (on-secondary-container when selected). The popup
+ * scrolls via plain overflow — M3 Menus have no sticky chevron affordance (issue #97).
  */
 import * as React from 'react';
 import { Select as SelectPrimitive } from '@base-ui/react/select';
@@ -15,15 +15,6 @@ import { Field } from '@base-ui/react/field';
 import type { SelectClasses, SelectFieldClassResolver, SelectFieldOwnProps } from './contract';
 import { assignListItemPositions } from '../../menu-list-position';
 import { createSlot, mergeClassName, type ClassValue } from '../../slot';
-
-/** Default chevron glyphs for the scroll arrows. */
-function Chevron({ up }: { up?: boolean }): React.JSX.Element {
-  return (
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-      <path fill="currentColor" d={up ? 'M7 14l5-5 5 5z' : 'M7 10l5 5 5-5z'} />
-    </svg>
-  );
-}
 
 /** Default trailing dropdown glyph (M3 `arrow_drop_down`). */
 function ArrowDropDown(): React.JSX.Element {
@@ -34,8 +25,6 @@ function ArrowDropDown(): React.JSX.Element {
   );
 }
 
-type ScrollUpProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpArrow>;
-type ScrollDownProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownArrow>;
 type PositionerProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.Positioner>;
 type SelectPopupProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.Popup>;
 
@@ -58,41 +47,6 @@ export type SelectFieldProps = SelectFieldOwnProps &
  * @returns A namespace of Base UI select parts wrapped with M3 styling + ripple.
  */
 export function createSelect(classes: SelectClasses, field: SelectFieldClassResolver) {
-  // Scroll arrows carry a default chevron when the caller supplies no children.
-  /** Sticky top scroll affordance; renders a default up-chevron when empty. */
-  const ScrollUpArrow = React.forwardRef<
-    React.ElementRef<typeof SelectPrimitive.ScrollUpArrow>,
-    ScrollUpProps
-  >(function ScrollUpArrow({ className, children, ...props }, ref) {
-    return (
-      <SelectPrimitive.ScrollUpArrow
-        ref={ref}
-        className={mergeClassName(classes.scrollUpArrow, className as ClassValue)}
-        {...props}
-      >
-        {children ?? <Chevron up />}
-      </SelectPrimitive.ScrollUpArrow>
-    );
-  });
-  ScrollUpArrow.displayName = 'M3Select.ScrollUpArrow';
-
-  /** Sticky bottom scroll affordance; renders a default down-chevron when empty. */
-  const ScrollDownArrow = React.forwardRef<
-    React.ElementRef<typeof SelectPrimitive.ScrollDownArrow>,
-    ScrollDownProps
-  >(function ScrollDownArrow({ className, children, ...props }, ref) {
-    return (
-      <SelectPrimitive.ScrollDownArrow
-        ref={ref}
-        className={mergeClassName(classes.scrollDownArrow, className as ClassValue)}
-        {...props}
-      >
-        {children ?? <Chevron />}
-      </SelectPrimitive.ScrollDownArrow>
-    );
-  });
-  ScrollDownArrow.displayName = 'M3Select.ScrollDownArrow';
-
   /**
    * Positions the menu below the anchor without overlapping it. Base UI Select
    * defaults to `alignItemWithTrigger` (native-select text alignment); M3 Menus
@@ -235,8 +189,6 @@ export function createSelect(classes: SelectClasses, field: SelectFieldClassReso
     ItemIndicator: createSlot(SelectPrimitive.ItemIndicator, classes.itemIndicator, {
       defaultProps: { keepMounted: true },
     }),
-    ScrollUpArrow,
-    ScrollDownArrow,
     Group: SelectPrimitive.Group,
     GroupLabel: createSlot(SelectPrimitive.GroupLabel, classes.groupLabel),
   };

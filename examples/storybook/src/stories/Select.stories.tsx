@@ -29,7 +29,6 @@ export const Basic: Story = {
         <Select.Portal>
           <Select.Positioner sideOffset={4}>
             <Select.Popup>
-              <Select.ScrollUpArrow />
               {FRUITS.map(([value, label, meta]) => (
                 <Select.Item key={value} value={value}>
                   <Select.ItemIndicator>
@@ -39,7 +38,6 @@ export const Basic: Story = {
                   <span data-slot="select-trailing">{meta}</span>
                 </Select.Item>
               ))}
-              <Select.ScrollDownArrow />
             </Select.Popup>
           </Select.Positioner>
         </Select.Portal>
@@ -65,7 +63,6 @@ function ExposedDropdown({ variant }: { variant: 'outlined' | 'filled' }) {
       <Select.Portal>
         <Select.Positioner sideOffset={4}>
           <Select.Popup>
-            <Select.ScrollUpArrow />
             {FRUITS.map(([value, label, meta]) => (
               <Select.Item key={value} value={value}>
                 <Select.ItemIndicator>
@@ -75,7 +72,6 @@ function ExposedDropdown({ variant }: { variant: 'outlined' | 'filled' }) {
                 <span data-slot="select-trailing">{meta}</span>
               </Select.Item>
             ))}
-            <Select.ScrollDownArrow />
           </Select.Popup>
         </Select.Positioner>
       </Select.Portal>

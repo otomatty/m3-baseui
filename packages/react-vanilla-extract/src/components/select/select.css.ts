@@ -73,24 +73,6 @@ export const icon = style({
   },
 });
 
-// Sticky scroll affordances at the popup edges; surface-tinted with a chevron.
-const scrollArrowBase = {
-  position: 'sticky',
-  zIndex: 1,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '24px',
-  cursor: 'default',
-  background: `rgb(${vars.sys.color.surfaceContainer})`,
-  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-} as const;
-
-export const scrollUpArrow = style({ ...scrollArrowBase, top: 0 });
-export const scrollDownArrow = style({ ...scrollArrowBase, bottom: 0 });
-globalStyle(`${scrollUpArrow} > svg`, { width: '20px', height: '20px' });
-globalStyle(`${scrollDownArrow} > svg`, { width: '20px', height: '20px' });
-
 /* ------------------------------------------------------------------ *
  * Exposed Dropdown Menu anchor (issue #96) — the Select as a TextField.
  * The floating label, focus/filled border and trailing icon key off the
