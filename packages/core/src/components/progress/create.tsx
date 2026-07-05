@@ -23,6 +23,10 @@ import { mergeClassName } from '../../slot';
 // M3 circular defaults: 40dp outer diameter, 4dp stroke (spec range 24–240dp).
 const CIRCULAR_SIZE = 40;
 const CIRCULAR_THICKNESS = 4;
+// M3 indicator↔track gap: the *visible* break (4dp). The round stroke caps each
+// extend half the stroke past their arc end, so the centerline spacing must add
+// a full stroke width on top of this to actually leave a 4dp break.
+const CIRCULAR_GAP = 4;
 // Dash lengths are expressed against a normalized `pathLength="100"` so the
 // indeterminate keyframes and the determinate gap are radius-independent (they
 // stay correct for any `size`).
@@ -194,9 +198,10 @@ export function createProgress(classes: ProgressClasses) {
         : Math.min(CIRCULAR_THICKNESS, safeSize / 2);
     const center = safeSize / 2;
     const radius = (safeSize - safeThickness) / 2;
-    // M3 leaves a ~4dp gap (≈ the stroke thickness) between the active arc and
-    // the inactive track; as a share of the normalized 100-unit path that is:
-    const gap = (safeThickness / (2 * Math.PI * radius)) * PATH_LENGTH;
+    // Centerline spacing = the 4dp visible gap + a full stroke so the round caps
+    // (which each reach half a stroke past their arc end) don't consume it. As a
+    // share of the normalized 100-unit path:
+    const gap = ((CIRCULAR_GAP + safeThickness) / (2 * Math.PI * radius)) * PATH_LENGTH;
     const fraction = indeterminate ? 0 : clampedValue / safeMax;
     const active = fraction * PATH_LENGTH;
     // Inactive track spans the remainder minus a gap at each end (hidden when the
@@ -214,7 +219,8 @@ export function createProgress(classes: ProgressClasses) {
     );
     const waveRadius = radius - amp;
     const waves = Math.max(3, Math.round((2 * Math.PI * waveRadius) / 12));
-    const gapFrac = safeThickness / (2 * Math.PI * waveRadius);
+    // Same cap allowance as the plain ring: 4dp visible gap + a full stroke.
+    const gapFrac = (CIRCULAR_GAP + safeThickness) / (2 * Math.PI * waveRadius);
     const inactiveStart = fraction + gapFrac;
     const inactiveEnd = 1 - gapFrac;
 
