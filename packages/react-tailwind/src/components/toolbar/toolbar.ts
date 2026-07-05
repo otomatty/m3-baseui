@@ -34,8 +34,9 @@ export const toolbarTv = tv({
     },
     variant: {
       standard: 'bg-surface-container text-on-surface',
-      vibrant:
-        'bg-primary-container text-on-primary-container [&_button]:text-on-primary-container [&_a]:text-on-primary-container',
+      // Container colors only; the vibrant child-color forcing lives in the
+      // floating+vibrant compound so a docked (surface) toolbar doesn't inherit it.
+      vibrant: 'bg-primary-container text-on-primary-container',
     },
     orientation: {
       horizontal: 'flex-row h-16',
@@ -48,7 +49,15 @@ export const toolbarTv = tv({
     { type: 'floating', orientation: 'vertical', class: 'py-2' },
     { type: 'docked', orientation: 'horizontal', class: 'px-4' },
     { type: 'docked', orientation: 'vertical', class: 'py-4' },
-    // Docked is always surface-container (there is no vibrant docked token).
+    // Only a *floating* vibrant toolbar forces its children to on-primary-container
+    // (IconButton otherwise paints on-surface-variant).
+    {
+      type: 'floating',
+      variant: 'vibrant',
+      class: '[&_button]:text-on-primary-container [&_a]:text-on-primary-container',
+    },
+    // Docked is always surface-container (there is no vibrant docked token), so its
+    // children keep their own colors — no vibrant forcing.
     { type: 'docked', variant: 'vibrant', class: 'bg-surface-container text-on-surface' },
   ],
   defaultVariants: { type: 'floating', variant: 'standard', orientation: 'horizontal' },

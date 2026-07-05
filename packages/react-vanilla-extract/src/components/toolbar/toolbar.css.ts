@@ -65,10 +65,12 @@ export const toolbar = recipe({
 // (the bottom app bar's role="toolbar" has no data-variant), so scope to it.
 globalStyle('[role="toolbar"][data-variant] svg', { width: '24px', height: '24px' });
 
-// Vibrant: force interactive children to the container's on-primary-container
-// foreground (IconButton paints its own on-surface-variant). Exclude disabled
-// so they keep their dimmed color — matching the Tailwind build's cascade.
+// Vibrant (floating only): force interactive children to the container's
+// on-primary-container foreground (IconButton paints its own on-surface-variant).
+// Exclude disabled so they keep their dimmed color — matching the Tailwind build's
+// cascade. Scoped to `data-type="floating"` so a docked (surface) vibrant toolbar
+// keeps its children on their own colors.
 globalStyle(
-  '[role="toolbar"][data-variant="vibrant"] button:not(:disabled):not([data-disabled]), [role="toolbar"][data-variant="vibrant"] a:not([data-disabled])',
+  '[role="toolbar"][data-type="floating"][data-variant="vibrant"] button:not(:disabled):not([data-disabled]), [role="toolbar"][data-type="floating"][data-variant="vibrant"] a:not([data-disabled])',
   { color: `rgb(${vars.sys.color.onPrimaryContainer})` },
 );

@@ -62,10 +62,18 @@ describe('Toolbar tokens', () => {
     );
   });
 
-  test('vibrant forces interactive children to the on-primary-container color', () => {
-    const cls = toolbarTv({ variant: 'vibrant', orientation: 'horizontal' });
+  test('floating vibrant forces interactive children to the on-primary-container color', () => {
+    const cls = toolbarTv({ type: 'floating', variant: 'vibrant', orientation: 'horizontal' });
     expect(cls).toContain('[&_button]:text-on-primary-container');
     expect(cls).toContain('[&_a]:text-on-primary-container');
+  });
+
+  test('docked vibrant does NOT force children (docked is always surface-container)', () => {
+    const cls = toolbarTv({ type: 'docked', variant: 'vibrant', orientation: 'horizontal' });
+    // Root reverts to surface-container; children keep their own colors.
+    expect(cls).toContain('bg-surface-container');
+    expect(cls).not.toContain('[&_button]:text-on-primary-container');
+    expect(cls).not.toContain('[&_a]:text-on-primary-container');
   });
 
   test('Expressive: a data-expanded=false hook collapses the bar (show/hide)', () => {
