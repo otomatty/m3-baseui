@@ -16,8 +16,16 @@ export interface ProgressSlotClasses {
   indicator: string;
 }
 
+export interface LinearProgressSlotClasses extends ProgressSlotClasses {
+  /**
+   * The second disjoint bar. It's always in the DOM (drop-in parity) but only
+   * shown/animated for the indeterminate state, giving M3's two-segment motion.
+   */
+  indicatorSecondary: string;
+}
+
 export interface ProgressClasses {
-  linear: ProgressSlotClasses;
+  linear: LinearProgressSlotClasses;
   circular: ProgressSlotClasses;
 }
 
@@ -26,6 +34,16 @@ export interface LinearProgressOwnProps {
   value?: number | null;
   /** Maximum value. @default 100 */
   max?: number;
+  /** Track thickness in px (M3 default 4dp; thick variant 8dp). @default 4 */
+  thickness?: number;
+  /**
+   * M3 Expressive wavy active shape (determinate only; ignored while
+   * indeterminate). The active indicator becomes a flowing sine wave and the
+   * track grows taller to fit it. @default false
+   */
+  wavy?: boolean;
+  /** Wave peak amplitude in px when `wavy`. @default 3 */
+  amplitude?: number;
 }
 
 export type LinearProgressProps = LinearProgressOwnProps &
@@ -36,6 +54,20 @@ export interface CircularProgressOwnProps {
   value?: number | null;
   /** Maximum value. @default 100 */
   max?: number;
+  /**
+   * Outer diameter in px. M3 default is 40dp (spec range 24–240dp); a
+   * non-finite/non-positive value falls back to 40. @default 40
+   */
+  size?: number;
+  /** Stroke thickness in px (M3 default 4dp; thick variant 8dp). @default 4 */
+  thickness?: number;
+  /**
+   * M3 Expressive wavy active ring (determinate only; ignored while
+   * indeterminate). The active arc becomes a sine-modulated wave. @default false
+   */
+  wavy?: boolean;
+  /** Wave peak amplitude in px when `wavy`. @default 2 */
+  amplitude?: number;
 }
 
 export type CircularProgressProps = CircularProgressOwnProps &

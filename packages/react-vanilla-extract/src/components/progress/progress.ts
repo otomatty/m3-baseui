@@ -6,13 +6,19 @@ import {
   linearRoot,
   linearTrack,
   linearIndicator,
+  linearIndicatorSecondary,
   circularRoot,
   circularTrack,
   circularIndicator,
 } from './progress.css';
 
 export const Progress = createProgress({
-  linear: { root: linearRoot, track: linearTrack, indicator: linearIndicator },
+  linear: {
+    root: linearRoot,
+    track: linearTrack,
+    indicator: linearIndicator,
+    indicatorSecondary: linearIndicatorSecondary,
+  },
   circular: { root: circularRoot, track: circularTrack, indicator: circularIndicator },
 });
 export type { LinearProgressProps, CircularProgressProps } from '@m3-baseui/core';
