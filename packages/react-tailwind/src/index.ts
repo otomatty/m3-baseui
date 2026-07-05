@@ -2,7 +2,7 @@
  * @m3-baseui/react-tailwind — M3 components, Tailwind v4 build.
  */
 export { Button, button } from './components/button';
-export type { ButtonProps, ButtonVariant } from './components/button';
+export type { ButtonProps, ButtonVariant, ButtonSize, ButtonShape } from './components/button';
 
 export { IconButton, iconButton } from './components/icon-button';
 export type { IconButtonProps, IconButtonVariant } from './components/icon-button';
