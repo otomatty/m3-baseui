@@ -1,5 +1,42 @@
 # @m3-baseui/core
 
+## 3.0.0
+
+### Major Changes
+
+- b078bd8: Select no longer exposes `Select.ScrollUpArrow` / `Select.ScrollDownArrow`.
+
+  M3 Menus have no sticky chevron scroll affordance — the menu surface scrolls
+  via plain `overflow` (matching Material 3 Compose's `ScrollState` + `Column`
+  pattern). The sticky arrows were a Base UI Select carry-over that diverged from
+  the spec and interfered with the `:first-child` / `:last-child` item corner
+  shapes (issue #98).
+
+  **Breaking (Select):**
+
+  - The `ScrollUpArrow` and `ScrollDownArrow` parts are removed from the Select
+    namespace in both engines, along with the `scrollUpArrow` / `scrollDownArrow`
+    slots on `SelectClasses`.
+
+  Migration: delete `<Select.ScrollUpArrow />` / `<Select.ScrollDownArrow />` from
+  your `Select.Popup`. The popup already scrolls on overflow, so no replacement is
+  needed. Custom class overrides for the `scrollUpArrow` / `scrollDownArrow` slots
+  can be dropped.
+
+### Minor Changes
+
+- a402a41: Carousel: keyboard scrolling + M3 four-layout parity (issue #78)
+
+  - The focusable scroller now advances one item at a time with the arrow keys
+    along its scroll axis (←/→ horizontally, ↑/↓ for `full-screen`). Navigation
+    lives in `@m3-baseui/core`, so both engines share the behavior, DOM, and
+    `data-*` contract. A caller `onKeyDown` still runs and can opt out via
+    `preventDefault()`.
+  - Added a keyboard-only focus ring (3px secondary, WCAG 2.4.7) and
+    `prefers-reduced-motion` handling for the scroll animation in both engines.
+  - Added the missing M3 `uncontained` layout, completing the four variants
+    (`multi-browse` / `uncontained` / `hero` / `full-screen`).
+
 ## 2.0.0
 
 ### Major Changes
