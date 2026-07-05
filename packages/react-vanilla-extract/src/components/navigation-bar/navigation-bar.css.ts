@@ -11,7 +11,8 @@ export const root = style({
   alignItems: 'stretch',
   justifyContent: 'space-around',
   width: '100%',
-  height: '80px',
+  // M3 Expressive NavigationBarTokens.ContainerHeight = 64dp (was the legacy 80dp).
+  height: '64px',
   background: `rgb(${vars.sys.color.surfaceContainer})`,
 });
 
@@ -24,8 +25,7 @@ export const item = style({
   justifyContent: 'center',
   gap: '4px',
   paddingInline: '4px',
-  paddingTop: '12px',
-  paddingBottom: '16px',
+  paddingBlock: '4px',
   background: 'transparent',
   border: 'none',
   cursor: 'pointer',
@@ -42,7 +42,8 @@ export const iconWrap = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: '64px',
+  // 56×32 active indicator (NavigationBarVerticalItemTokens).
+  width: '56px',
   height: '32px',
 });
 
@@ -52,13 +53,14 @@ export const indicator = style({
   borderRadius: vars.sys.shape.full,
   background: 'transparent',
   overflow: 'hidden',
-  transition: `background-color 150ms ${vars.sys.motion.easing.standard}`,
+  // Expressive: the pill color animates with the effects (color) spring.
+  transition: `background-color ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
   selectors: {
     '&::before': {
       content: '""',
       position: 'absolute',
       inset: 0,
-      background: 'currentColor',
+      background: `rgb(${vars.sys.color.onSecondaryContainer})`,
       opacity: 0,
       pointerEvents: 'none',
       transition: `opacity 100ms ${vars.sys.motion.easing.standard}`,
@@ -78,7 +80,7 @@ export const icon = style({
   alignItems: 'center',
   justifyContent: 'center',
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-  transition: `color 150ms ${vars.sys.motion.easing.standard}`,
+  transition: `color ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
   selectors: {
     [`${item}[data-pressed] &`]: { color: `rgb(${vars.sys.color.onSecondaryContainer})` },
     // M3 disabled: icon dims to on-surface/0.38. The combined selector keeps a
@@ -99,11 +101,13 @@ export const label = style({
   fontSize: vars.sys.typescale.labelMedium.fontSize,
   lineHeight: vars.sys.typescale.labelMedium.lineHeight,
   letterSpacing: vars.sys.typescale.labelMedium.letterSpacing,
-  transition: `color 150ms ${vars.sys.motion.easing.standard}`,
+  transition: `color ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
   selectors: {
+    // Expressive: active label is `secondary`, emphasized via the
+    // labelMediumEmphasized typescale (weight 700).
     [`${item}[data-pressed] &`]: {
-      color: `rgb(${vars.sys.color.onSurface})`,
-      fontWeight: '700',
+      color: `rgb(${vars.sys.color.secondary})`,
+      fontWeight: vars.sys.typescale.labelMediumEmphasized.fontWeight,
     },
     // M3 disabled: label dims to on-surface/0.38 (combined selector keeps a
     // disabled+active label dimmed too).

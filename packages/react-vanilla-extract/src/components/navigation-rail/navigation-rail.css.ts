@@ -11,10 +11,11 @@ export const root = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '12px',
+  // ItemVerticalSpace 4dp / TopSpace 44dp / ContainerWidth 96dp (Expressive collapsed).
+  gap: '4px',
   height: '100%',
-  width: '80px',
-  paddingBlock: '20px',
+  width: '96px',
+  paddingBlock: '44px',
   background: `rgb(${vars.sys.color.surface})`,
 });
 
@@ -23,7 +24,8 @@ export const header = style({
   flexDirection: 'column',
   alignItems: 'center',
   gap: '12px',
-  marginBottom: '4px',
+  // 40dp minimum space below the header (HeaderSpaceMinimum).
+  marginBottom: '40px',
 });
 
 export const item = style({
@@ -32,6 +34,8 @@ export const item = style({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
+  // 64dp item container height.
+  height: '64px',
   gap: '4px',
   paddingInline: '4px',
   paddingBlock: '4px',
@@ -61,13 +65,14 @@ export const indicator = style({
   borderRadius: vars.sys.shape.full,
   background: 'transparent',
   overflow: 'hidden',
-  transition: `background-color 150ms ${vars.sys.motion.easing.standard}`,
+  // Expressive: the pill color animates with the effects (color) spring.
+  transition: `background-color ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
   selectors: {
     '&::before': {
       content: '""',
       position: 'absolute',
       inset: 0,
-      background: 'currentColor',
+      background: `rgb(${vars.sys.color.onSecondaryContainer})`,
       opacity: 0,
       pointerEvents: 'none',
       transition: `opacity 100ms ${vars.sys.motion.easing.standard}`,
@@ -87,7 +92,7 @@ export const icon = style({
   alignItems: 'center',
   justifyContent: 'center',
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-  transition: `color 150ms ${vars.sys.motion.easing.standard}`,
+  transition: `color ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
   selectors: {
     [`${item}[data-pressed] &`]: { color: `rgb(${vars.sys.color.onSecondaryContainer})` },
     // M3 disabled: icon dims to on-surface/0.38 (combined selector keeps a
@@ -108,11 +113,12 @@ export const label = style({
   fontSize: vars.sys.typescale.labelMedium.fontSize,
   lineHeight: vars.sys.typescale.labelMedium.lineHeight,
   letterSpacing: vars.sys.typescale.labelMedium.letterSpacing,
-  transition: `color 150ms ${vars.sys.motion.easing.standard}`,
+  transition: `color ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
   selectors: {
+    // Expressive: active label is `secondary`, emphasized via labelMediumEmphasized.
     [`${item}[data-pressed] &`]: {
-      color: `rgb(${vars.sys.color.onSurface})`,
-      fontWeight: '700',
+      color: `rgb(${vars.sys.color.secondary})`,
+      fontWeight: vars.sys.typescale.labelMediumEmphasized.fontWeight,
     },
     // M3 disabled: label dims to on-surface/0.38 (combined selector keeps a
     // disabled+active label dimmed too).

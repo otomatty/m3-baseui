@@ -43,11 +43,35 @@ describe('NavigationRail', () => {
 });
 
 describe('NavigationRail tokens', () => {
-  test('80dp vertical rail on surface', () => {
+  test('Expressive: 96dp collapsed rail on surface, 44dp top space, 4dp item gap', () => {
     const s = navigationRailTv();
-    expect(s.root()).toContain('w-20');
+    // NavigationRailCollapsedTokens.ContainerWidth = 96dp (was the legacy 80dp).
+    expect(s.root()).toContain('w-24');
+    expect(s.root()).not.toContain('w-20');
     expect(s.root()).toContain('flex-col');
     expect(s.root()).toContain('bg-surface');
+    // TopSpace 44dp, ItemVerticalSpace 4dp.
+    expect(s.root()).toContain('py-11');
+    expect(s.root()).toContain('gap-1');
+    // Item container height 64dp.
+    expect(s.item()).toContain('h-16');
+  });
+
+  test('Expressive: active label is secondary + labelMediumEmphasized', () => {
+    const s = navigationRailTv();
+    // NavigationRailColorTokens.ItemActiveLabelText = Secondary.
+    expect(s.label()).toContain('group-data-[pressed]:text-secondary');
+    expect(s.label()).toContain('group-data-[pressed]:text-label-medium-emphasized');
+    expect(s.label()).not.toContain('font-bold');
+  });
+
+  test('Expressive: state layer is on-secondary-container and the indicator springs', () => {
+    const s = navigationRailTv();
+    expect(s.indicator()).toContain('before:bg-on-secondary-container');
+    expect(s.indicator()).not.toContain('before:bg-current');
+    // Only the pill background color animates here, so it uses the effects (color)
+    // spring; the size spring is N/A because the indicator does not resize.
+    expect(s.indicator()).toContain('ease-spring-effects-default');
   });
 
   test('disabled is per-token (icon + label on-surface/0.38, no state layer)', () => {
