@@ -14,12 +14,10 @@ const pageTitle = `${title} | m3-baseui`;
 
 <Layout title={pageTitle} description={description}>
   <DocsNav currentPath={Astro.url.pathname} client:load />
-  <main class="doc-content min-w-0 px-4 py-8 sm:px-8 lg:ml-[23rem] lg:px-10 lg:py-12">
-    <div class="mx-auto max-w-4xl">
+  <main class="doc-content doc-page-frame min-w-0 px-4 py-8 sm:px-8 lg:px-0 lg:py-12">
+    <div class="doc-content-inner">
       <slot />
     </div>
   </main>
-  <div class="lg:ml-[23rem]">
-    <SiteFooter />
-  </div>
+  <SiteFooter />
 </Layout>

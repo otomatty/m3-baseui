@@ -1,6 +1,6 @@
 ---
 import DocsLayout from '../../../layouts/DocsLayout.astro';
-import { COMPONENT_GROUPS } from '../../../config/docs-nav';
+import { ComponentIndex } from '../../../components/docs/ComponentIndex';
 import { COMPONENT_DOCS } from '../../../data/components';
 ---
 
@@ -15,23 +15,5 @@ import { COMPONENT_DOCS } from '../../../data/components';
     ライブデモがあるコンポーネントはページ内で操作できます。
   </p>
 
-  {
-    COMPONENT_GROUPS.map((group) => (
-      <section class="doc-section">
-        <h2>{group.title}</h2>
-        <div class="doc-card-grid">
-          {group.items.map((item) => {
-            const slug = item.href.replace('/docs/components/', '');
-            const doc = COMPONENT_DOCS.find((d) => d.slug === slug);
-            return (
-              <a href={item.href} class="doc-card">
-                <p class="doc-card__title">{item.label}</p>
-                {doc && <p class="doc-card__body">{doc.description}</p>}
-              </a>
-            );
-          })}
-        </div>
-      </section>
-    ))
-  }
+  <ComponentIndex client:load />
 </DocsLayout>
