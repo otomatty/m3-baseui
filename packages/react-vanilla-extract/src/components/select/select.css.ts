@@ -350,6 +350,8 @@ export const fieldLabelVariant = styleVariants({
       [`${field}[data-focused] &`]: floatFilled,
       [`${field}[data-filled] &`]: floatFilled,
       [`${field}[data-popup-open] &`]: floatFilled,
+      // A placeholder floats the label at rest so the two texts don't overlap.
+      [`${field}[data-has-placeholder] &`]: floatFilled,
     },
   },
   outlined: {
@@ -357,6 +359,7 @@ export const fieldLabelVariant = styleVariants({
       [`${field}[data-focused] &`]: floatOutlined,
       [`${field}[data-filled] &`]: floatOutlined,
       [`${field}[data-popup-open] &`]: floatOutlined,
+      [`${field}[data-has-placeholder] &`]: floatOutlined,
     },
   },
 });
@@ -368,7 +371,8 @@ export const fieldIcon = style({
   transition: `transform 150ms ${vars.sys.motion.easing.standard}`,
   selectors: {
     [`${field}[data-popup-open] &`]: { transform: 'rotate(180deg)' },
-    [`${field}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
+    // Disabled dimming comes from `field`'s own opacity (0.38); an extra alpha
+    // here would compound it to ~0.14 (and diverge from fieldLeadingIcon).
   },
 });
 globalStyle(`${fieldIcon} > svg`, { width: '24px', height: '24px' });

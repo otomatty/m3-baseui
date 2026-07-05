@@ -77,7 +77,9 @@ export const selectTv = tv({
  */
 export const selectFieldTv = tv({
   slots: {
-    root: 'flex flex-col gap-1 min-w-[210px]',
+    // The `group` hook lives here (not in engine-neutral core): supporting text
+    // keys its error color off Field.Root's `group-data-[invalid]`.
+    root: 'group flex flex-col gap-1 min-w-[210px]',
     field: [
       'group/field relative flex items-stretch gap-3 h-14 px-4 box-border w-full',
       'text-on-surface text-body-large cursor-pointer text-left outline-none',
@@ -93,9 +95,10 @@ export const selectFieldTv = tv({
       'group-data-[focused]/field:text-primary group-data-[invalid]/field:text-error',
     ],
     icon: [
+      // Disabled dimming comes from the field's own opacity (0.38); no per-icon
+      // color override here, else it would compound to ~0.14.
       'flex items-center text-on-surface-variant transition-transform duration-150 [&>svg]:size-6',
       'group-data-[popup-open]/field:rotate-180',
-      'group-data-[disabled]/field:text-on-surface/[0.38]',
     ],
     leadingIcon:
       'inline-flex items-center justify-center shrink-0 text-on-surface-variant [&>svg]:size-6',
@@ -127,6 +130,7 @@ export const selectFieldTv = tv({
           'group-data-[focused]/field:top-1.5 group-data-[focused]/field:translate-y-0 group-data-[focused]/field:text-body-small',
           'group-data-[filled]/field:top-1.5 group-data-[filled]/field:translate-y-0 group-data-[filled]/field:text-body-small',
           'group-data-[popup-open]/field:top-1.5 group-data-[popup-open]/field:translate-y-0 group-data-[popup-open]/field:text-body-small',
+          'group-data-[has-placeholder]/field:top-1.5 group-data-[has-placeholder]/field:translate-y-0 group-data-[has-placeholder]/field:text-body-small',
         ],
       },
       outlined: {
@@ -142,6 +146,7 @@ export const selectFieldTv = tv({
           'group-data-[focused]/field:top-0 group-data-[focused]/field:-translate-y-1/2 group-data-[focused]/field:z-[1] group-data-[focused]/field:text-body-small group-data-[focused]/field:bg-surface group-data-[focused]/field:px-1 group-data-[focused]/field:leading-none',
           'group-data-[filled]/field:top-0 group-data-[filled]/field:-translate-y-1/2 group-data-[filled]/field:z-[1] group-data-[filled]/field:text-body-small group-data-[filled]/field:bg-surface group-data-[filled]/field:px-1 group-data-[filled]/field:leading-none',
           'group-data-[popup-open]/field:top-0 group-data-[popup-open]/field:-translate-y-1/2 group-data-[popup-open]/field:z-[1] group-data-[popup-open]/field:text-body-small group-data-[popup-open]/field:bg-surface group-data-[popup-open]/field:px-1 group-data-[popup-open]/field:leading-none',
+          'group-data-[has-placeholder]/field:top-0 group-data-[has-placeholder]/field:-translate-y-1/2 group-data-[has-placeholder]/field:z-[1] group-data-[has-placeholder]/field:text-body-small group-data-[has-placeholder]/field:bg-surface group-data-[has-placeholder]/field:px-1 group-data-[has-placeholder]/field:leading-none',
         ],
       },
     },

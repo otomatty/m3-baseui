@@ -65,6 +65,31 @@ describe('Select.Field (Exposed Dropdown Menu)', () => {
     const { container } = render(<Example />);
     expect(container.querySelector('[data-slot="select-icon"]')).not.toBeNull();
   });
+
+  test('renders the floating label as phrasing content (valid inside the button)', () => {
+    render(<Example />);
+    // A <div> label would be reparented out of the <span>/<button> on hydration;
+    // Select.Label is rendered as a <span> to keep the subtree valid.
+    expect(screen.getByText('果物').tagName).toBe('SPAN');
+  });
+
+  test('a placeholder floats the label at rest so the two texts do not overlap', () => {
+    render(
+      <Select.Field label="果物" placeholder="選択">
+        <Select.Portal>
+          <Select.Positioner>
+            <Select.Popup>
+              <Select.Item value="apple">
+                <Select.ItemIndicator />
+                <Select.ItemText>りんご</Select.ItemText>
+              </Select.Item>
+            </Select.Popup>
+          </Select.Positioner>
+        </Select.Portal>
+      </Select.Field>,
+    );
+    expect(screen.getByRole('combobox', { name: '果物' })).toHaveAttribute('data-has-placeholder');
+  });
 });
 
 describe('Select.Field tokens', () => {
@@ -94,11 +119,16 @@ describe('Select.Field tokens', () => {
     expect(selectFieldTv().icon()).toContain('group-data-[popup-open]/field:rotate-180');
   });
 
-  test('label floats on filled / focused / open state', () => {
+  test('label floats on filled / focused / open / placeholder state', () => {
     const label = selectFieldTv({ variant: 'outlined' }).label();
     expect(label).toContain('group-data-[filled]/field:');
     expect(label).toContain('group-data-[focused]/field:');
     expect(label).toContain('group-data-[popup-open]/field:');
+    expect(label).toContain('group-data-[has-placeholder]/field:');
+  });
+
+  test('trailing icon does not double-dim when disabled (field opacity handles it)', () => {
+    expect(selectFieldTv().icon()).not.toContain('group-data-[disabled]/field:text-on-surface');
   });
 
   test('supporting text turns error color when invalid', () => {

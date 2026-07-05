@@ -14,7 +14,6 @@ import { Field } from '@base-ui/react/field';
 
 import type { SelectClasses, SelectFieldClassResolver, SelectFieldOwnProps } from './contract';
 import { createSlot, mergeClassName, type ClassValue } from '../../slot';
-import { cx } from '../../utils';
 
 /** Default chevron glyphs for the scroll arrows. */
 function Chevron({ up }: { up?: boolean }): React.JSX.Element {
@@ -120,14 +119,21 @@ export function createSelect(classes: SelectClasses, field: SelectFieldClassReso
       const c = field({ variant });
       return (
         <Field.Root
-          className={cx('group', c.root, className)}
+          className={mergeClassName(c.root, className as ClassValue)}
           disabled={disabled}
           // Drive Base UI Field's invalid state so data-invalid propagates to
           // the Select trigger (the field control), not just the Root node.
           invalid={error || undefined}
         >
           <SelectPrimitive.Root disabled={disabled} {...rootProps}>
-            <SelectPrimitive.Trigger ref={ref} className={cx(c.field, triggerClassName)}>
+            <SelectPrimitive.Trigger
+              ref={ref}
+              className={mergeClassName(c.field, triggerClassName as ClassValue)}
+              // A placeholder needs the label floated even at rest, otherwise the
+              // resting label paints over the placeholder text (they share the
+              // value slot). The float styling keys off this hook.
+              data-has-placeholder={placeholder != null ? '' : undefined}
+            >
               {leadingIcon != null ? (
                 <span className={c.leadingIcon} aria-hidden="true" data-slot="select-leading-icon">
                   {leadingIcon}
@@ -137,8 +143,12 @@ export function createSelect(classes: SelectClasses, field: SelectFieldClassReso
                 <SelectPrimitive.Value className={c.value} placeholder={placeholder} />
                 {label != null ? (
                   // Base UI Select.Label associates with the trigger via
-                  // aria-labelledby (it renders a <div>, so no <label>-in-button).
-                  <SelectPrimitive.Label className={c.label}>{label}</SelectPrimitive.Label>
+                  // aria-labelledby. Render it as a <span> (phrasing content) so
+                  // the button subtree stays valid — a <div> would be reparented
+                  // during hydration and desync the styled structure.
+                  <SelectPrimitive.Label render={<span />} className={c.label}>
+                    {label}
+                  </SelectPrimitive.Label>
                 ) : null}
               </span>
               <SelectPrimitive.Icon className={c.icon} data-slot="select-icon">
