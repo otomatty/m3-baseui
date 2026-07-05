@@ -260,6 +260,27 @@ export function App() {
                 <Icon name="add" size={24} />
               </IconButton>
             </div>
+            {/* M3 Expressive shape (square) + toggle morph (round↔square) */}
+            <div className="flex flex-wrap items-center gap-3 mt-3">
+              <IconButton variant="filled" shape="square" aria-label="Square">
+                <Icon name="add" />
+              </IconButton>
+              <IconButton variant="filled" shape="round" selected aria-label="Round selected">
+                <Icon name="favorite" filled />
+              </IconButton>
+              <IconButton variant="filled" shape="square" selected aria-label="Square selected">
+                <Icon name="favorite" filled />
+              </IconButton>
+              <IconButton variant="tonal" selected aria-label="Tonal selected">
+                <Icon name="star" filled />
+              </IconButton>
+              <IconButton variant="tonal" selected={false} aria-label="Tonal unselected">
+                <Icon name="star" />
+              </IconButton>
+              <IconButton variant="filled" selected={false} aria-label="Filled unselected">
+                <Icon name="star" />
+              </IconButton>
+            </div>
           </Section>
 
           <Section title="Selection controls">

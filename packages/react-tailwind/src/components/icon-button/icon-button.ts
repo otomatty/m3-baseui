@@ -1,12 +1,20 @@
 /**
- * icon-button.ts — tailwind-variants resolver for the M3 Icon Button.
+ * icon-button.ts — tailwind-variants resolver for the M3 (Expressive) Icon Button.
  *
- * 40×40 circular target with a centered icon. The `selected` variant supports
- * toggle icon buttons; when `selected` is undefined the variant's default
- * (filled/active) look is used. Emits the same DOM + ripple as the VE build.
+ * Emits the same DOM + `data-*` state as the vanilla-extract build (drop-in
+ * compatible); only the class strings differ. The `rounded-<role>` corner
+ * utilities come from the Tailwind v4 `@theme` preset in
+ * `@m3-baseui/tokens/theme.css`; the configured `tv` helper teaches
+ * tailwind-merge to dedupe them so a morph override drops the resting corner.
+ *
+ * M3 Expressive: five sizes (XS 32 → XL 136 dp) drive height / icon size and
+ * (with `width`) the container width; `shape` picks the resting corner
+ * (round=full circle vs a size-specific square), the corner morphs smaller on
+ * press, and toggle buttons (`selected`) swap to the opposite shape
+ * (round↔square) plus the Selected/Unselected color set.
  */
-import { createIconButton } from '@m3-baseui/core';
-import { tv } from 'tailwind-variants';
+import { createIconButton, toToggle } from '@m3-baseui/core';
+import { tv } from '../../tv';
 
 // M3 Expressive container widths (px) per size × width. Tailwind v4's dynamic
 // spacing scale resolves any integer (e.g. w-13 = 52px, w-46 = 184px).
@@ -26,6 +34,38 @@ const widthCompounds = Object.entries(WIDTHS).flatMap(([size, w]) =>
   })),
 );
 
+// Resting square corner (ContainerShapeSquare) per size bucket.
+const SQUARE_CORNER = {
+  xs: 'rounded-medium', // 12dp
+  s: 'rounded-medium', // 12dp
+  m: 'rounded-large', // 16dp
+  l: 'rounded-extra-large', // 28dp
+  xl: 'rounded-extra-large', // 28dp
+} as const;
+
+// Resting square corner: `shape: square` maps to the size-specific corner.
+const squareShapeCompounds = (Object.keys(SQUARE_CORNER) as (keyof typeof SQUARE_CORNER)[]).map(
+  (size) => ({ shape: 'square' as const, size, class: SQUARE_CORNER[size] }),
+);
+
+// Selected shape morph (Expressive's signature behavior). Listed after the
+// resting corner so tailwind-merge keeps these: a selected `round` container
+// morphs to the square corner; a selected `square` container morphs to `full`.
+const selectedShapeCompounds = [
+  ...(Object.keys(SQUARE_CORNER) as (keyof typeof SQUARE_CORNER)[]).map((size) => ({
+    shape: 'round' as const,
+    toggle: 'on' as const,
+    size,
+    class: SQUARE_CORNER[size],
+  })),
+  ...(Object.keys(SQUARE_CORNER) as (keyof typeof SQUARE_CORNER)[]).map((size) => ({
+    shape: 'square' as const,
+    toggle: 'on' as const,
+    size,
+    class: 'rounded-full',
+  })),
+];
+
 export const iconButton = tv({
   base: [
     'relative inline-flex items-center justify-center shrink-0',
@@ -33,7 +73,9 @@ export const iconButton = tv({
     // The state layer is already rounded (before:rounded-[inherit]); the ripple
     // self-clips.
     'rounded-full cursor-pointer select-none border-0 bg-transparent',
-    'transition-[box-shadow,background-color,color] duration-200 ease-standard',
+    // Motion: Compose uses DefaultEffects (critically-damped spring, no bounce)
+    // for the shape/color transitions — spring-effects-default here.
+    'transition-[box-shadow,background-color,color,border-color,border-radius] duration-200 ease-spring-effects-default',
     // State layer overlay
     'before:absolute before:inset-0 before:rounded-[inherit] before:bg-current before:opacity-0 before:pointer-events-none',
     'before:transition-opacity before:duration-100',
@@ -44,14 +86,14 @@ export const iconButton = tv({
     // Focus ring (M3: 3px secondary, 2px offset)
     'focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-secondary',
     // Disabled: no interaction, no state layer. Per-variant disabled colors
-    // (container on-surface/12, icon on-surface/38) live on each variant.
+    // (container on-surface/10, icon on-surface/38) live on each variant.
     'disabled:pointer-events-none disabled:before:opacity-0',
     'data-[disabled]:pointer-events-none data-[disabled]:before:opacity-0',
   ],
   variants: {
     // Disabled icon is on-surface/38 for every variant; filled/tonal disabled
-    // container is on-surface/12; outlined disabled outline is on-surface/12
-    // (material-web parity).
+    // container is on-surface/10 (DisabledContainerOpacity); outlined disabled
+    // outline stays outline-variant (Expressive DisabledOutlineColor).
     variant: {
       standard: [
         'text-on-surface-variant',
@@ -59,57 +101,81 @@ export const iconButton = tv({
       ],
       filled: [
         'bg-primary text-on-primary',
-        'disabled:bg-on-surface/12 disabled:text-on-surface/38',
-        'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38',
+        'disabled:bg-on-surface/10 disabled:text-on-surface/38',
+        'data-[disabled]:bg-on-surface/10 data-[disabled]:text-on-surface/38',
       ],
       tonal: [
         'bg-secondary-container text-on-secondary-container',
-        'disabled:bg-on-surface/12 disabled:text-on-surface/38',
-        'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38',
+        'disabled:bg-on-surface/10 disabled:text-on-surface/38',
+        'data-[disabled]:bg-on-surface/10 data-[disabled]:text-on-surface/38',
       ],
       outlined: [
-        'border border-outline text-on-surface-variant',
-        'disabled:border-on-surface/12 disabled:text-on-surface/38',
-        'data-[disabled]:border-on-surface/12 data-[disabled]:text-on-surface/38',
+        'border border-outline-variant text-on-surface-variant',
+        'disabled:border-outline-variant disabled:text-on-surface/38',
+        'data-[disabled]:border-outline-variant data-[disabled]:text-on-surface/38',
       ],
     },
-    selected: {
-      true: '',
-      false: '',
+    // Toggle state, string-keyed so a plain (non-toggle) button — `toggle`
+    // unset — fires neither compound below (a boolean variant would default to
+    // `off` in tailwind-variants and wrongly apply the unselected look).
+    toggle: {
+      on: '',
+      off: '',
     },
     // Container height + icon size per M3 Expressive size. Width comes from the
-    // (size, width) compound variants below.
+    // (size, width) compound variants below. The pressed corner morph
+    // (PressedContainerShape: XS·S small 8 / M medium 12 / L·XL large 16) rides
+    // on data-[pressed]/active so its attribute-selector specificity wins over
+    // the resting `rounded-*`.
     size: {
-      xs: 'h-8 [&>svg]:size-5',
-      s: 'h-10 [&>svg]:size-6',
-      m: 'h-14 [&>svg]:size-6',
-      l: 'h-24 [&>svg]:size-8',
-      xl: 'h-[136px] [&>svg]:size-10',
+      xs: 'h-8 [&>svg]:size-5 data-[pressed]:rounded-small active:rounded-small',
+      s: 'h-10 [&>svg]:size-6 data-[pressed]:rounded-small active:rounded-small',
+      m: 'h-14 [&>svg]:size-6 data-[pressed]:rounded-medium active:rounded-medium',
+      l: 'h-24 [&>svg]:size-8 data-[pressed]:rounded-large active:rounded-large',
+      xl: 'h-[136px] [&>svg]:size-10 data-[pressed]:rounded-large active:rounded-large',
     },
     width: {
       narrow: '',
       default: '',
       wide: '',
     },
+    // round = full circle; the square corner is size-specific (compounds below).
+    shape: {
+      round: 'rounded-full',
+      square: '',
+    },
   },
   compoundVariants: [
     ...widthCompounds,
-    { variant: 'standard', selected: true, class: 'text-primary' },
-    { variant: 'filled', selected: false, class: 'bg-surface-container-highest text-primary' },
+    ...squareShapeCompounds,
+    ...selectedShapeCompounds,
+    // ---- Outlined border width (OutlinedOutlineWidth: L 2 / XL 3 dp) ------
+    { variant: 'outlined', size: 'l', class: 'border-2' },
+    { variant: 'outlined', size: 'xl', class: 'border-[3px]' },
+    // ---- Toggle colors (Selected*/Unselected* tokens) ---------------------
+    // standard: unselected = on-surface-variant (base); selected = primary.
+    { variant: 'standard', toggle: 'on', class: 'text-primary' },
+    // filled: base = default & selected look (primary/on-primary); unselected =
+    // surface-container + on-surface-variant (was surface-container-highest+primary).
     {
-      variant: 'tonal',
-      selected: false,
-      class: 'bg-surface-container-highest text-on-surface-variant',
+      variant: 'filled',
+      toggle: 'off',
+      class: 'bg-surface-container text-on-surface-variant',
     },
+    // tonal: base = default & unselected look (secondary-container); selected =
+    // secondary + on-secondary (was left at the variant default — the "selection
+    // not visible" bug this issue fixes).
+    { variant: 'tonal', toggle: 'on', class: 'bg-secondary text-on-secondary' },
+    // outlined: selected fills with the inverse surface (base = unselected).
     {
       variant: 'outlined',
-      selected: true,
+      toggle: 'on',
       class: [
         'bg-inverse-surface text-inverse-on-surface border-transparent',
-        // M3 disabled + selected: faint on-surface/12 container, no outline
+        // M3 disabled + selected: faint on-surface/10 container, no outline
         // (icon falls back to on-surface/38 from the variant). NOT transparent.
-        'disabled:bg-on-surface/12 disabled:border-transparent',
-        'data-[disabled]:bg-on-surface/12 data-[disabled]:border-transparent',
+        'disabled:bg-on-surface/10 disabled:border-transparent',
+        'data-[disabled]:bg-on-surface/10 data-[disabled]:border-transparent',
       ],
     },
   ],
@@ -117,10 +183,17 @@ export const iconButton = tv({
     variant: 'standard',
     size: 's',
     width: 'default',
+    shape: 'round',
   },
 });
 
-export const IconButton = createIconButton(({ variant, selected, size, width }) =>
-  iconButton({ variant, selected, size, width }),
+export const IconButton = createIconButton(({ variant, selected, size, width, shape }) =>
+  iconButton({ variant, size, width, shape, toggle: toToggle(selected) }),
 );
-export type { IconButtonProps, IconButtonVariant } from '@m3-baseui/core';
+export type {
+  IconButtonProps,
+  IconButtonVariant,
+  IconButtonSize,
+  IconButtonWidth,
+  IconButtonShape,
+} from '@m3-baseui/core';
