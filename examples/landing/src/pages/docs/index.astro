@@ -1,0 +1,430 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+
+const quickStart = [
+  {
+    href: '/docs/getting-started',
+    icon: 'rocket_launch',
+    title: '導入',
+    desc: 'パッケージのインストールと CSS 配線',
+  },
+  {
+    href: '/docs/theming',
+    icon: 'palette',
+    title: 'テーマ・動的配色',
+    desc: 'ThemeProvider と seed / scheme',
+  },
+  {
+    href: '/docs/engines',
+    icon: 'layers',
+    title: 'スタイリングエンジン',
+    desc: 'Tailwind v4 と vanilla-extract の選択',
+  },
+  {
+    href: '/docs/components',
+    icon: 'widgets',
+    title: 'コンポーネント一覧',
+    desc: '各 API と実装例',
+  },
+];
+
+const layers = [
+  {
+    num: 1,
+    icon: 'touch_app',
+    title: 'Behavior',
+    desc: 'Base UI が a11y / フォーカス / キーボード / data-* 状態を担当',
+  },
+  {
+    num: 2,
+    icon: 'tune',
+    title: 'Token',
+    desc: '@m3-baseui/tokens が単一ソース → --md-sys-* CSS 変数を生成（エンジン非依存の境界線）',
+  },
+  {
+    num: 3,
+    icon: 'brush',
+    title: 'Styling',
+    desc: 'Tailwind v4 または vanilla-extract のクラス解決器。出力 DOM は同一',
+  },
+  {
+    num: 4,
+    icon: 'contrast',
+    title: 'Theme',
+    desc: 'ThemeProvider が動的配色（HCT）でスキームを解決',
+  },
+];
+---
+
+<DocsLayout
+  title="はじめに"
+  description="m3-baseui ドキュメント — Base UI 上の Material Design 3 React コンポーネントライブラリ。"
+>
+  <h1>ドキュメント</h1>
+  <p class="doc-lead">
+    m3-baseui は Base UI をベースに Material Design 3 を実装した React コンポーネントライブラリです。
+    vanilla-extract と Tailwind CSS v4 の 2 エンジンに drop-in 互換で対応し、動的配色とアクセシビリティを備えています。
+  </p>
+
+  <section class="doc-section">
+    <h2>クイックスタート</h2>
+    <p>目的に応じて次のページから読み進めてください。</p>
+    <div class="start-grid">
+      {
+        quickStart.map((item) => (
+          <a class="start-card doc-card" href={item.href}>
+            <span class="start-card__icon material-symbols-outlined" aria-hidden="true">
+              {item.icon}
+            </span>
+            <span class="start-card__title">{item.title}</span>
+            <span class="start-card__desc">{item.desc}</span>
+            <span class="start-card__arrow material-symbols-outlined" aria-hidden="true">
+              arrow_forward
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="doc-section">
+    <h2>アーキテクチャ</h2>
+    <p>
+      4 レイヤー構成です。上から順にデータと依存が流れ、Layer 2 の <code>--md-sys-*</code> CSS 変数が
+      エンジン非依存の境界線になります。React ロジックは <code>@m3-baseui/core</code> に一元化されています。
+    </p>
+
+    <figure class="arch-figure">
+      <svg
+        class="arch-svg"
+        viewBox="0 0 720 504"
+        role="img"
+        aria-label="Behavior・Token・Styling・Theme の 4 レイヤーが上から下へ積層する図。Layer 2 の Token がエンジン非依存の境界線。"
+      >
+        <!-- flow arrows -->
+        <line class="arch-flow" x1="360" y1="110" x2="360" y2="140" />
+        <polygon class="arch-flow-head" points="353,139 367,139 360,147" />
+        <line class="arch-flow" x1="360" y1="234" x2="360" y2="264" />
+        <polygon class="arch-flow-head" points="353,263 367,263 360,271" />
+        <line class="arch-flow" x1="360" y1="358" x2="360" y2="388" />
+        <polygon class="arch-flow-head" points="353,387 367,387 360,395" />
+
+        <!-- Layer 1: Behavior -->
+        <rect class="arch-box" x="110" y="24" width="500" height="84" rx="20" />
+        <circle class="arch-num" cx="150" cy="66" r="21" />
+        <text class="arch-num-text" x="150" y="73" text-anchor="middle">1</text>
+        <text class="arch-title" x="190" y="62">Behavior</text>
+        <text class="arch-sub" x="190" y="88">Base UI — a11y / フォーカス / キーボード / data-*</text>
+
+        <!-- Layer 2: Token (boundary) -->
+        <rect class="arch-box arch-box--accent" x="110" y="148" width="500" height="84" rx="20" />
+        <circle class="arch-num" cx="150" cy="190" r="21" />
+        <text class="arch-num-text" x="150" y="197" text-anchor="middle">2</text>
+        <text class="arch-title arch-title--accent" x="190" y="186">Token</text>
+        <text class="arch-sub arch-sub--accent" x="190" y="212">--md-sys-* CSS 変数（単一ソース）</text>
+        <rect class="arch-pill" x="440" y="170" width="150" height="28" rx="14" />
+        <text class="arch-pill-text" x="515" y="189" text-anchor="middle">エンジン非依存の境界線</text>
+
+        <!-- Layer 3: Styling -->
+        <rect class="arch-box" x="110" y="272" width="500" height="84" rx="20" />
+        <circle class="arch-num" cx="150" cy="314" r="21" />
+        <text class="arch-num-text" x="150" y="321" text-anchor="middle">3</text>
+        <text class="arch-title" x="190" y="310">Styling</text>
+        <text class="arch-sub" x="190" y="336">Tailwind v4 / vanilla-extract のクラス解決器</text>
+
+        <!-- Layer 4: Theme -->
+        <rect class="arch-box" x="110" y="396" width="500" height="84" rx="20" />
+        <circle class="arch-num" cx="150" cy="438" r="21" />
+        <text class="arch-num-text" x="150" y="445" text-anchor="middle">4</text>
+        <text class="arch-title" x="190" y="434">Theme</text>
+        <text class="arch-sub" x="190" y="460">ThemeProvider / 動的配色（HCT）</text>
+      </svg>
+      <figcaption class="arch-caption">
+        Layer 2（Token）を境に、上の Behavior は共通、下の Styling がエンジン別に切り替わります。
+      </figcaption>
+    </figure>
+
+    <div class="layer-grid">
+      {
+        layers.map((layer) => (
+          <div class="layer-card">
+            <span class="layer-card__num">{layer.num}</span>
+            <span class="layer-card__icon material-symbols-outlined" aria-hidden="true">
+              {layer.icon}
+            </span>
+            <div class="layer-card__text">
+              <p class="layer-card__title">{layer.title}</p>
+              <p class="layer-card__desc">{layer.desc}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="doc-section">
+    <h2>drop-in 互換</h2>
+    <p>
+      2 つのエンジンはコンポーネント API・出力 DOM・<code>data-*</code> 属性がすべて同一です。
+      import パスを差し替えるだけで入れ替えられます。
+    </p>
+
+    <figure class="arch-figure">
+      <svg
+        class="arch-svg arch-svg--wide"
+        viewBox="0 0 720 250"
+        role="img"
+        aria-label="react-tailwind と react-vanilla-extract の 2 エンジンが、同一 DOM・同一 data-* を出力する図。"
+      >
+        <!-- connectors -->
+        <path class="arch-flow" fill="none" d="M185 100 V140 H360" />
+        <path class="arch-flow" fill="none" d="M535 100 V140 H360" />
+        <line class="arch-flow" x1="360" y1="140" x2="360" y2="166" />
+        <polygon class="arch-flow-head" points="353,165 367,165 360,173" />
+
+        <!-- engine boxes -->
+        <rect class="arch-box" x="70" y="28" width="230" height="72" rx="18" />
+        <text class="arch-title" x="185" y="62" text-anchor="middle">react-tailwind</text>
+        <text class="arch-sub" x="185" y="84" text-anchor="middle">tailwind-variants</text>
+
+        <rect class="arch-box" x="420" y="28" width="230" height="72" rx="18" />
+        <text class="arch-title" x="535" y="62" text-anchor="middle">react-vanilla-extract</text>
+        <text class="arch-sub" x="535" y="84" text-anchor="middle">VE recipes</text>
+
+        <!-- shared output -->
+        <rect class="arch-box arch-box--accent" x="185" y="172" width="350" height="72" rx="18" />
+        <text class="arch-title arch-title--accent" x="360" y="206" text-anchor="middle">同一 DOM + 同一 data-*</text>
+        <text class="arch-sub arch-sub--accent" x="360" y="228" text-anchor="middle">Ripple / slot / tokens は共通</text>
+      </svg>
+    </figure>
+  </section>
+</DocsLayout>
+
+<style>
+  /* ── クイックスタート カード ─────────────────────────── */
+  .start-grid {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .start-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  a.start-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    border: 1px solid rgb(var(--md-sys-color-outline-variant));
+    border-radius: 1.5rem;
+    background: rgb(var(--md-sys-color-surface-container-low));
+    color: inherit;
+    text-decoration: none;
+    transition:
+      background 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  a.start-card:hover {
+    background: rgb(var(--md-sys-color-surface-container));
+    box-shadow: 0 2px 8px rgb(var(--md-sys-color-shadow) / 0.12);
+  }
+
+  .start-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 0.75rem;
+    border-radius: 0.9rem;
+    background: rgb(var(--md-sys-color-primary-container));
+    color: rgb(var(--md-sys-color-on-primary-container));
+    font-size: 24px;
+  }
+
+  .start-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgb(var(--md-sys-color-on-surface));
+  }
+
+  .start-card__desc {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.2rem;
+    color: rgb(var(--md-sys-color-on-surface-variant));
+  }
+
+  .start-card__arrow {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.1rem;
+    font-size: 20px;
+    color: rgb(var(--md-sys-color-primary));
+    transition: transform 0.15s ease;
+  }
+
+  a.start-card:hover .start-card__arrow {
+    transform: translateX(3px);
+  }
+
+  /* ── アーキテクチャ図（SVG） ─────────────────────────── */
+  .arch-figure {
+    margin: 1.5rem 0 0.5rem;
+    padding: 1.25rem 1rem;
+    border: 1px solid rgb(var(--md-sys-color-outline-variant));
+    border-radius: 1.5rem;
+    background: rgb(var(--md-sys-color-surface-container-lowest));
+  }
+
+  .arch-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 34rem;
+    margin-inline: auto;
+    font-family: var(--md-ref-typeface-plain, 'Roboto', system-ui, sans-serif);
+  }
+
+  .arch-svg--wide {
+    max-width: 40rem;
+  }
+
+  .arch-caption {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.75rem;
+    line-height: 1.1rem;
+    color: rgb(var(--md-sys-color-on-surface-variant));
+  }
+
+  .arch-box {
+    fill: rgb(var(--md-sys-color-surface-container-high));
+    stroke: rgb(var(--md-sys-color-outline-variant));
+    stroke-width: 1.5;
+  }
+
+  .arch-box--accent {
+    fill: rgb(var(--md-sys-color-primary-container));
+    stroke: rgb(var(--md-sys-color-primary));
+    stroke-width: 2;
+    stroke-dasharray: 7 5;
+  }
+
+  .arch-num {
+    fill: rgb(var(--md-sys-color-primary));
+  }
+
+  .arch-num-text {
+    fill: rgb(var(--md-sys-color-on-primary));
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .arch-title {
+    fill: rgb(var(--md-sys-color-on-surface));
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .arch-title--accent {
+    fill: rgb(var(--md-sys-color-on-primary-container));
+  }
+
+  .arch-sub {
+    fill: rgb(var(--md-sys-color-on-surface-variant));
+    font-size: 13px;
+  }
+
+  .arch-sub--accent {
+    fill: rgb(var(--md-sys-color-on-primary-container));
+    opacity: 0.85;
+  }
+
+  .arch-flow {
+    stroke: rgb(var(--md-sys-color-outline));
+    stroke-width: 2;
+  }
+
+  .arch-flow-head {
+    fill: rgb(var(--md-sys-color-outline));
+  }
+
+  .arch-pill {
+    fill: rgb(var(--md-sys-color-primary));
+  }
+
+  .arch-pill-text {
+    fill: rgb(var(--md-sys-color-on-primary));
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  /* ── レイヤー説明カード ─────────────────────────────── */
+  .layer-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .layer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .layer-card {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 1rem 1.125rem;
+    border: 1px solid rgb(var(--md-sys-color-outline-variant));
+    border-radius: 1.25rem;
+    background: rgb(var(--md-sys-color-surface-container-low));
+  }
+
+  .layer-card__num {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    background: rgb(var(--md-sys-color-primary));
+    color: rgb(var(--md-sys-color-on-primary));
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .layer-card__icon {
+    flex: none;
+    font-size: 22px;
+    color: rgb(var(--md-sys-color-primary));
+  }
+
+  .layer-card__text {
+    min-width: 0;
+  }
+
+  .layer-card__title {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: rgb(var(--md-sys-color-on-surface));
+  }
+
+  .layer-card__desc {
+    margin: 0.15rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.15rem;
+    color: rgb(var(--md-sys-color-on-surface-variant));
+  }
+</style>

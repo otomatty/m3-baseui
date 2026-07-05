@@ -1,0 +1,22 @@
+---
+import Layout from './Layout.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { DocsNav } from '../components/docs/DocsNav';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <DocsNav currentPath={Astro.url.pathname} client:load />
+  <main class="doc-page-frame min-w-0 px-4 lg:px-0">
+    <div class="doc-content-inner">
+      <slot />
+    </div>
+  </main>
+  <SiteFooter />
+</Layout>

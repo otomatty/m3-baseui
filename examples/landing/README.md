@@ -1,8 +1,15 @@
 # @m3/example-landing
 
-`m3-baseui` を紹介する Astro 製ランディングページ。本文・特徴・導入手順は
-静的 HTML として生成し（SEO 向け）、ライブデモのみ `@m3-baseui/react-tailwind`
-を React アイランド（`client:visible`）として部分ハイドレートする。
+`m3-baseui` の公開サイト（ランディング + ドキュメント）。Astro 静的サイトとして
+Cloudflare Pages（https://m3-baseui.pages.dev）へデプロイする。
+
+- **/** — ランディング（Hero / ライブデモ / 特徴 / 導入概要）
+- **/docs/** — ドキュメント（導入・テーマ・エンジン・全コンポーネント API）
+- Storybook（`bun run storybook`）はローカル開発用カタログで、公開サイトとは別
+
+本文・ガイド・コンポーネント参照は静的 HTML として生成し（SEO 向け）、
+ライブデモのみ `@m3-baseui/react-tailwind` を React アイランド（`client:visible`）
+として部分ハイドレートする。
 
 ## 開発
 
@@ -15,6 +22,22 @@ bun run --filter @m3/example-landing preview    # ビルド結果をプレビュ
 
 ワークスペースのライブラリは `@m3/source` 条件で TS ソースに解決するため、
 事前ビルドは不要（dev / build / SSR すべてに設定済み）。
+
+## サイト構成
+
+| パス | 内容 |
+| --- | --- |
+| `/` | ランディング |
+| `/docs` | ドキュメントトップ |
+| `/docs/getting-started` | インストール・CSS 配線 |
+| `/docs/theming` | ThemeProvider / 動的配色 |
+| `/docs/engines` | Tailwind vs vanilla-extract |
+| `/docs/components` | コンポーネント索引 |
+| `/docs/components/[slug]` | 各コンポーネントの API・使用例・ライブデモ |
+
+コンポーネントメタデータ: `src/data/components.ts`  
+サイドバー定義: `src/config/docs-nav.ts`  
+ライブデモ: `src/components/demos/`（段階的に追加可能）
 
 ## Cloudflare Pages へのデプロイ
 

@@ -1,0 +1,23 @@
+---
+import Layout from './Layout.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { DocsNav } from '../components/docs/DocsNav';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const pageTitle = `${title} | m3-baseui`;
+---
+
+<Layout title={pageTitle} description={description}>
+  <DocsNav currentPath={Astro.url.pathname} client:load />
+  <main class="doc-content doc-page-frame min-w-0 px-4 py-8 sm:px-8 lg:px-0 lg:py-12">
+    <div class="doc-content-inner">
+      <slot />
+    </div>
+  </main>
+  <SiteFooter />
+</Layout>

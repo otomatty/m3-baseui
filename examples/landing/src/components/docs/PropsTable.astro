@@ -1,0 +1,40 @@
+---
+import type { PropDoc } from '../../data/components';
+
+interface Props {
+  props: PropDoc[];
+}
+
+const { props: propDocs } = Astro.props;
+---
+
+{
+  propDocs.length > 0 && (
+    <div class="doc-props-table-wrap">
+      <table class="doc-props-table">
+        <thead>
+          <tr>
+            <th scope="col">Prop</th>
+            <th scope="col">型</th>
+            <th scope="col">既定値</th>
+            <th scope="col">説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          {propDocs.map((prop) => (
+            <tr>
+              <td>
+                <code>{prop.name}</code>
+              </td>
+              <td>
+                <code>{prop.type}</code>
+              </td>
+              <td>{prop.default ? <code>{prop.default}</code> : '—'}</td>
+              <td>{prop.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}

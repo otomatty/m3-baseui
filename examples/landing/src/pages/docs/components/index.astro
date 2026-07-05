@@ -1,0 +1,19 @@
+---
+import DocsLayout from '../../../layouts/DocsLayout.astro';
+import { ComponentIndex } from '../../../components/docs/ComponentIndex';
+import { COMPONENT_DOCS } from '../../../data/components';
+---
+
+<DocsLayout
+  title="コンポーネント一覧"
+  description="m3-baseui の全コンポーネント API リファレンスと実装例。"
+>
+  <h1>コンポーネント</h1>
+  <p class="doc-lead">
+    公開 API の全 {COMPONENT_DOCS.length} コンポーネントです。
+    各ページに import 例・使用例・主要 props を掲載しています。
+    ライブデモがあるコンポーネントはページ内で操作できます。
+  </p>
+
+  <ComponentIndex />
+</DocsLayout>
