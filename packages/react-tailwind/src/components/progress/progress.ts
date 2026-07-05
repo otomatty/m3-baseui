@@ -50,15 +50,23 @@ export const linearTv = tv({
 
 export const circularTv = tv({
   slots: {
+    // Size comes from the factory (inline width/height) so `size` is honored.
+    // Indeterminate rotates the whole ring; the arc grows/shrinks via the
+    // indicator's own `dash` animation (M3 "advance").
     root: [
-      'inline-flex items-center justify-center size-12',
+      'group inline-flex items-center justify-center',
       '[&_svg]:block [&_svg]:size-full',
-      'data-[indeterminate]:animate-spin',
+      'data-[indeterminate]:animate-m3-circular-rotate',
     ],
-    track: 'stroke-surface-container-highest [stroke-width:4px]',
+    // Both ends are rounded (M3); the inactive track sits behind with a 4dp gap.
+    track: [
+      'stroke-surface-container-highest [stroke-linecap:round]',
+      'transition-[stroke-dasharray,stroke-dashoffset] duration-300 ease-standard',
+    ],
     indicator: [
-      'stroke-primary [stroke-width:4px] [stroke-linecap:round]',
-      'transition-[stroke-dashoffset] duration-300 ease-standard',
+      'stroke-primary [stroke-linecap:round]',
+      'transition-[stroke-dasharray,stroke-dashoffset] duration-300 ease-standard',
+      'group-data-[indeterminate]:animate-m3-circular-dash group-data-[indeterminate]:transition-none',
     ],
   },
 });

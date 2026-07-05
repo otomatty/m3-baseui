@@ -14,11 +14,14 @@
 /*
  * Component keyframes that can't be expressed as utilities. The linear progress
  * indeterminate bar slides a 40%-wide indicator across the track; the circular
- * indeterminate spinner reuses Tailwind's built-in `animate-spin` (1s), which the
- * VE build matches.
+ * indeterminate spinner rotates the ring (`m3-circular-rotate`) while the active
+ * arc grows and shrinks (`m3-circular-dash`, the M3 "advance" motion). The VE
+ * build matches every period below.
  */
 @theme {
   --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;
+  --animate-m3-circular-rotate: m3-circular-rotate 1.4s linear infinite;
+  --animate-m3-circular-dash: m3-circular-dash 1.4s ease-in-out infinite;
   /* M3 Expressive loading indicator: the active shape rotates while it morphs
    * (approximated as a rotate + scale pulse). The VE build matches this period. */
   --animate-m3-loading: m3-loading 1.2s ease-in-out infinite;
@@ -30,6 +33,30 @@
   }
   100% {
     transform: translateX(400%);
+  }
+}
+
+/* Circular indeterminate: continuous rotation of the whole ring. */
+@keyframes m3-circular-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Circular indeterminate: the arc length (dasharray) grows then shrinks while the
+ * dashoffset sweeps it around — normalized against `pathLength="100"`. */
+@keyframes m3-circular-dash {
+  0% {
+    stroke-dasharray: 1 100;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 60 100;
+    stroke-dashoffset: -8;
+  }
+  100% {
+    stroke-dasharray: 60 100;
+    stroke-dashoffset: -58;
   }
 }
 

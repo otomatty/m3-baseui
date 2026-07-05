@@ -36,6 +36,13 @@ export interface CircularProgressOwnProps {
   value?: number | null;
   /** Maximum value. @default 100 */
   max?: number;
+  /**
+   * Outer diameter in px. M3 default is 40dp (spec range 24–240dp); a
+   * non-finite/non-positive value falls back to 40. @default 40
+   */
+  size?: number;
+  /** Stroke thickness in px (M3 default 4dp; thick variant 8dp). @default 4 */
+  thickness?: number;
 }
 
 export type CircularProgressProps = CircularProgressOwnProps &

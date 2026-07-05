@@ -71,24 +71,58 @@ describe('Progress.Linear', () => {
 });
 
 describe('Progress.Circular', () => {
-  test('determinate ring reports aria value + draws the arc', () => {
+  test('determinate ring reports aria value + draws track and active arc', () => {
     const { container } = render(<Progress.Circular value={25} aria-label="処理中" />);
     const bar = screen.getByRole('progressbar', { name: '処理中' });
     expect(bar).toHaveAttribute('aria-valuenow', '25');
-    expect(bar.className).toContain('size-12');
-    // determinate draws both the track and the active arc
+    // determinate draws both the inactive track and the active arc.
     expect(container.querySelectorAll('circle')).toHaveLength(2);
+    // Arcs are normalized against pathLength=100 so the gap is size-independent.
+    const arcs = container.querySelectorAll('circle');
+    for (const arc of arcs) expect(arc.getAttribute('pathLength')).toBe('100');
   });
 
-  test('indeterminate spins and drops the track + aria value', () => {
+  test('defaults to the M3 40dp outer diameter (viewBox + inline size)', () => {
+    const { container } = render(<Progress.Circular value={25} aria-label="処理中" />);
+    const bar = screen.getByRole('progressbar', { name: '処理中' });
+    expect(bar.style.width).toBe('40px');
+    expect(bar.style.height).toBe('40px');
+    expect(container.querySelector('svg')?.getAttribute('viewBox')).toBe('0 0 40 40');
+  });
+
+  test('honors a custom size and thickness', () => {
+    const { container } = render(
+      <Progress.Circular value={50} size={240} thickness={8} aria-label="処理中" />,
+    );
+    const bar = screen.getByRole('progressbar', { name: '処理中' });
+    expect(bar.style.width).toBe('240px');
+    expect(container.querySelector('svg')?.getAttribute('viewBox')).toBe('0 0 240 240');
+    const arc = container.querySelectorAll('circle')[1] as SVGCircleElement;
+    expect(arc.getAttribute('stroke-width')).toBe('8');
+  });
+
+  test('leaves a gap between active and inactive track (inactive is offset)', () => {
+    const { container } = render(<Progress.Circular value={50} aria-label="処理中" />);
+    const circles = container.querySelectorAll('circle');
+    const track = circles[0] as SVGCircleElement;
+    const active = circles[1] as SVGCircleElement;
+    // The active arc starts at the top (no offset); the inactive track is pushed
+    // past the active arc + gap, so it carries a non-zero negative offset.
+    expect(active.getAttribute('stroke-dashoffset')).toBe('0');
+    expect(Number(track.getAttribute('stroke-dashoffset'))).toBeLessThan(0);
+  });
+
+  test('indeterminate rotates the ring, drops the track + aria value', () => {
     const { container } = render(<Progress.Circular aria-label="処理中" />);
     const bar = screen.getByRole('progressbar', { name: '処理中' });
     expect(bar).toHaveAttribute('data-indeterminate');
     expect(bar).not.toHaveAttribute('aria-valuenow');
+    // Only the active arc is drawn (no inactive track in the indeterminate ring).
     expect(container.querySelectorAll('circle')).toHaveLength(1);
-    // Built-in `animate-spin` (1s) works in every setup; the VE build matches
-    // that period for drop-in parity.
-    expect(bar.className).toContain('animate-spin');
+    // The ring rotates; the arc grows/shrinks via the indicator's dash animation.
+    expect(bar.className).toContain('animate-m3-circular-rotate');
+    const arc = container.querySelector('circle') as SVGCircleElement;
+    expect(arc.getAttribute('class')).toContain('animate-m3-circular-dash');
   });
 
   test('clamps the value and survives a non-positive max (no NaN arc)', () => {
@@ -96,7 +130,9 @@ describe('Progress.Circular', () => {
     const bar = screen.getByRole('progressbar', { name: '処理中' });
     // value is clamped to safeMax; aria stays in sync and the arc is finite.
     expect(bar).toHaveAttribute('aria-valuenow', '5');
-    const arc = container.querySelectorAll('circle')[1] as SVGCircleElement;
-    expect(arc.getAttribute('stroke-dashoffset')).not.toContain('NaN');
+    for (const arc of container.querySelectorAll('circle')) {
+      expect(arc.getAttribute('stroke-dasharray')).not.toContain('NaN');
+      expect(arc.getAttribute('stroke-dashoffset') ?? '').not.toContain('NaN');
+    }
   });
 });

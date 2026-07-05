@@ -12,8 +12,18 @@ const linearIndeterminate = keyframes({
   '100%': { transform: 'translateX(400%)' },
 });
 
-const circularSpin = keyframes({
+// Circular indeterminate: continuous ring rotation paired with the arc grow/
+// shrink below (M3 "advance"). Periods match the Tailwind preset for parity.
+const circularRotate = keyframes({
   to: { transform: 'rotate(360deg)' },
+});
+
+// The active arc length (dasharray) grows then shrinks while the offset sweeps
+// it around, normalized against `pathLength="100"` (radius-independent).
+const circularDash = keyframes({
+  '0%': { strokeDasharray: '1 100', strokeDashoffset: '0' },
+  '50%': { strokeDasharray: '60 100', strokeDashoffset: '-8' },
+  '100%': { strokeDasharray: '60 100', strokeDashoffset: '-58' },
 });
 
 export const linearRoot = style({
@@ -89,23 +99,29 @@ export const circularRoot = style({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: '48px',
-  height: '48px',
+  // Size (width/height) comes from the factory inline so `size` is honored.
   selectors: {
-    // 1s matches Tailwind's built-in `animate-spin` period (drop-in parity).
-    '&[data-indeterminate]': { animation: `${circularSpin} 1s linear infinite` },
+    '&[data-indeterminate]': { animation: `${circularRotate} 1.4s linear infinite` },
   },
 });
 globalStyle(`${circularRoot} svg`, { display: 'block', width: '100%', height: '100%' });
 
+// Both ends rounded (M3); the inactive track sits behind with a 4dp gap.
 export const circularTrack = style({
   stroke: `rgb(${vars.sys.color.surfaceContainerHighest})`,
-  strokeWidth: '4px',
+  strokeLinecap: 'round',
+  transition: `stroke-dasharray 300ms ${vars.sys.motion.easing.standard}, stroke-dashoffset 300ms ${vars.sys.motion.easing.standard}`,
 });
 
 export const circularIndicator = style({
   stroke: `rgb(${vars.sys.color.primary})`,
-  strokeWidth: '4px',
   strokeLinecap: 'round',
-  transition: `stroke-dashoffset 300ms ${vars.sys.motion.easing.standard}`,
+  transition: `stroke-dasharray 300ms ${vars.sys.motion.easing.standard}, stroke-dashoffset 300ms ${vars.sys.motion.easing.standard}`,
+  selectors: {
+    // Indeterminate: the arc grows/shrinks (advance) instead of transitioning.
+    [`${circularRoot}[data-indeterminate] &`]: {
+      transition: 'none',
+      animation: `${circularDash} 1.4s ease-in-out infinite`,
+    },
+  },
 });

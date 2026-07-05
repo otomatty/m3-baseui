@@ -16,6 +16,8 @@
  * preset. */
 @theme {
   --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;
+  --animate-m3-circular-rotate: m3-circular-rotate 1.4s linear infinite;
+  --animate-m3-circular-dash: m3-circular-dash 1.4s ease-in-out infinite;
 }
 
 @keyframes m3-linear-indeterminate {
@@ -24,6 +26,27 @@
   }
   100% {
     transform: translateX(400%);
+  }
+}
+
+@keyframes m3-circular-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes m3-circular-dash {
+  0% {
+    stroke-dasharray: 1 100;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 60 100;
+    stroke-dashoffset: -8;
+  }
+  100% {
+    stroke-dasharray: 60 100;
+    stroke-dashoffset: -58;
   }
 }
 
