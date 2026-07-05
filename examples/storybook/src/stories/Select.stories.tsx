@@ -47,3 +47,48 @@ export const Basic: Story = {
     );
   },
 };
+
+/**
+ * Exposed Dropdown Menu (M3): the Select anchored to a TextField via
+ * `Select.Field` — floating label, supporting text and a trailing
+ * `arrow_drop_down` that rotates on open. Popup items are passed as children.
+ */
+function ExposedDropdown({ variant }: { variant: 'outlined' | 'filled' }) {
+  const { Select } = useM3();
+  return (
+    <Select.Field
+      variant={variant}
+      label="果物"
+      supportingText="ひとつ選択してください"
+      defaultValue="apple"
+    >
+      <Select.Portal>
+        <Select.Positioner sideOffset={4}>
+          <Select.Popup>
+            <Select.ScrollUpArrow />
+            {FRUITS.map(([value, label, meta]) => (
+              <Select.Item key={value} value={value}>
+                <Select.ItemIndicator>
+                  <Icon name="check" size={20} />
+                </Select.ItemIndicator>
+                <Select.ItemText>{label}</Select.ItemText>
+                <span data-slot="select-trailing">{meta}</span>
+              </Select.Item>
+            ))}
+            <Select.ScrollDownArrow />
+          </Select.Popup>
+        </Select.Positioner>
+      </Select.Portal>
+    </Select.Field>
+  );
+}
+
+export const ExposedDropdownOutlined: Story = {
+  name: 'Exposed Dropdown (outlined)',
+  render: () => <ExposedDropdown variant="outlined" />,
+};
+
+export const ExposedDropdownFilled: Story = {
+  name: 'Exposed Dropdown (filled)',
+  render: () => <ExposedDropdown variant="filled" />,
+};
