@@ -53,6 +53,8 @@ describe('Fab', () => {
     let fab = screen.getByRole('button', { name: /作成/ });
     expect(fab.className).toContain('h-14'); // 56dp height
     expect(fab.className).toContain('text-title-medium');
+    // keeps a min-width so short / text-only labels stay a pill (wider than tall)
+    expect(fab.className).toContain('min-w-20');
 
     rerender(
       <Fab variant="extended" size="medium">

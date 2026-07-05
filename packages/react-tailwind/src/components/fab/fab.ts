@@ -51,20 +51,23 @@ export const fabTv = tv({
     },
     { size: 'large', variant: 'standard', class: 'size-24 rounded-extra-large [&_svg]:size-8' }, // 96 / 28 / 32
     // ---- Extended (icon + label pill): height / corner / icon / padding / gap / label ----
+    // `min-w-*` keeps the pill affordance for short / text-only labels (wider
+    // than tall), matching the pre-Expressive extended FAB which guarded this.
     {
       size: 'small',
       variant: 'extended',
-      class: 'h-14 px-4 gap-2 rounded-large text-title-medium [&_svg]:size-6', // 56 / 16 / 24 / 16 / 8
+      class: 'h-14 min-w-20 px-4 gap-2 rounded-large text-title-medium [&_svg]:size-6', // 56 / 16 / 24 / 16 / 8
     },
     {
       size: 'medium',
       variant: 'extended',
-      class: 'h-20 px-[26px] gap-4 rounded-large-increased text-title-large [&_svg]:size-7', // 80 / 20 / 28 / 26 / 16
+      class:
+        'h-20 min-w-28 px-[26px] gap-4 rounded-large-increased text-title-large [&_svg]:size-7', // 80 / 20 / 28 / 26 / 16
     },
     {
       size: 'large',
       variant: 'extended',
-      class: 'h-24 px-7 gap-5 rounded-extra-large text-headline-small [&_svg]:size-8', // 96 / 28 / 32 / 28 / 20
+      class: 'h-24 min-w-32 px-7 gap-5 rounded-extra-large text-headline-small [&_svg]:size-8', // 96 / 28 / 32 / 28 / 20
     },
   ],
   defaultVariants: {

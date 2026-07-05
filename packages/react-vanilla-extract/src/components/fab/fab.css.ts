@@ -28,8 +28,11 @@ const stdLarge = style({ width: '96px', height: '96px', borderRadius: vars.sys.s
 globalStyle(`${stdLarge} svg`, { width: '32px', height: '32px' });
 
 // ---- Extended (icon + label pill): height / corner / icon / padding / gap / label ----
+// `minWidth` keeps the pill affordance for short / text-only labels (wider than
+// tall), matching the Tailwind build and the pre-Expressive extended FAB.
 const extSmall = style({
   height: '56px',
+  minWidth: '80px',
   paddingInline: '16px',
   gap: '8px',
   borderRadius: vars.sys.shape.large,
@@ -43,6 +46,7 @@ globalStyle(`${extSmall} svg`, { width: '24px', height: '24px' });
 
 const extMedium = style({
   height: '80px',
+  minWidth: '112px',
   paddingInline: '26px',
   gap: '16px',
   borderRadius: vars.sys.shape.largeIncreased,
@@ -56,6 +60,7 @@ globalStyle(`${extMedium} svg`, { width: '28px', height: '28px' });
 
 const extLarge = style({
   height: '96px',
+  minWidth: '128px',
   paddingInline: '28px',
   gap: '20px',
   borderRadius: vars.sys.shape.extraLarge,
