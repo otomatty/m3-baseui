@@ -108,6 +108,22 @@ test('Select opens and commits a chosen option', async ({ page }) => {
   await expect(trigger).not.toHaveAttribute('data-popup-open', '');
 });
 
+test('Exposed Dropdown (Select.Field) opens and commits via the TextField anchor', async ({
+  page,
+}) => {
+  // The two Select.Field anchors follow the bare Select; both are labelled 果物.
+  const trigger = page.getByRole('combobox', { name: '果物' }).first();
+  await trigger.click();
+  await expect(trigger).toHaveAttribute('data-popup-open', '');
+
+  const option = page.getByRole('option', { name: /さくらんぼ/ }).first();
+  await expect(option).toBeVisible();
+  await option.click();
+
+  await expect(trigger).toHaveText(/cherry/);
+  await expect(trigger).not.toHaveAttribute('data-popup-open', '');
+});
+
 test('Tooltip shows on hover/focus', async ({ page }) => {
   const trigger = page.getByRole('button', { name: '情報' });
   // Hover covers the pointer path; focus is the deterministic trigger (a single

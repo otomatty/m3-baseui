@@ -111,7 +111,16 @@ export type {
   SliderTickListProps,
   SliderValueLabelProps,
 } from './components/slider';
-export type { SelectClasses } from './components/select';
+export type { SelectFieldProps } from './components/select';
+export {
+  SELECT_FIELD_VARIANTS,
+  type SelectClasses,
+  type SelectFieldVariant,
+  type SelectFieldResolverArgs,
+  type SelectFieldSlotClasses,
+  type SelectFieldClassResolver,
+  type SelectFieldOwnProps,
+} from './components/select';
 export {
   TEXT_FIELD_VARIANTS,
   type TextFieldVariant,
