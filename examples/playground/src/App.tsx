@@ -472,6 +472,42 @@ export function App() {
                 </Select.Portal>
               </Select.Root>
 
+              {/* Exposed Dropdown Menu (issue #96): Select anchored to a TextField. */}
+              {(['outlined', 'filled'] as const).map((variant) => (
+                <Select.Field
+                  key={variant}
+                  variant={variant}
+                  label="果物"
+                  supportingText="ひとつ選択"
+                  defaultValue="apple"
+                >
+                  <Select.Portal>
+                    <Select.Positioner sideOffset={4}>
+                      <Select.Popup>
+                        <Select.ScrollUpArrow />
+                        {[
+                          ['apple', 'りんご', '01'],
+                          ['banana', 'バナナ', '02'],
+                          ['cherry', 'さくらんぼ', '03'],
+                          ['grape', 'ぶどう', '04'],
+                          ['melon', 'メロン', '05'],
+                          ['orange', 'オレンジ', '06'],
+                        ].map(([value, label, meta]) => (
+                          <Select.Item key={value} value={value}>
+                            <Select.ItemIndicator>
+                              <Icon name="check" size={20} />
+                            </Select.ItemIndicator>
+                            <Select.ItemText>{label}</Select.ItemText>
+                            <span data-slot="select-trailing">{meta}</span>
+                          </Select.Item>
+                        ))}
+                        <Select.ScrollDownArrow />
+                      </Select.Popup>
+                    </Select.Positioner>
+                  </Select.Portal>
+                </Select.Field>
+              ))}
+
               <Tooltip.Provider>
                 <Tooltip.Root>
                   <Tooltip.Trigger render={<IconButton variant="standard" aria-label="情報" />}>

@@ -24,6 +24,7 @@ export { Tabs } from './components/tabs';
 export type { TabsVariant } from './components/tabs';
 export { Slider } from './components/slider';
 export { Select } from './components/select';
+export type { SelectFieldProps } from './components/select';
 
 export { TextField } from './components/textfield';
 export type { TextFieldIconAction, TextFieldProps, TextFieldVariant } from './components/textfield';

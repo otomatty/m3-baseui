@@ -20,7 +20,8 @@ export { Menu, menuTv } from './components/menu';
 export { Tabs, tabsTv } from './components/tabs';
 export type { TabsVariant } from './components/tabs';
 export { Slider, sliderTv } from './components/slider';
-export { Select, selectTv } from './components/select';
+export { Select, selectTv, selectFieldTv } from './components/select';
+export type { SelectFieldProps } from './components/select';
 
 export { TextField, textFieldTv } from './components/textfield';
 export type { TextFieldProps, TextFieldVariant, TextFieldIconAction } from './components/textfield';
