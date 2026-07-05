@@ -65,7 +65,10 @@ function makeSize(
   return s;
 }
 
-const sizeXs = makeSize('xs', '32px', '16px', '8px', vars.sys.typescale.labelLarge, '20px');
+// XS is special-cased in Compose Button.kt: 12dp horizontal padding
+// (ExtraSmallContentPadding) and a 4dp icon gap (ExtraSmallIconSpacing) — tighter
+// than the ButtonXSmallTokens values (16 / 8). S–XL use their token values.
+const sizeXs = makeSize('xs', '32px', '12px', '4px', vars.sys.typescale.labelLarge, '20px');
 const sizeS = makeSize('s', '40px', '16px', '8px', vars.sys.typescale.labelLarge, '20px');
 const sizeM = makeSize('m', '56px', '24px', '8px', vars.sys.typescale.titleMedium, '24px');
 const sizeL = makeSize('l', '96px', '48px', '12px', vars.sys.typescale.headlineSmall, '32px');
@@ -188,13 +191,15 @@ export const button = recipe({
         color: `rgb(${vars.sys.color.onSurfaceVariant})`,
         border: `1px solid rgb(${vars.sys.color.outlineVariant})`,
         selectors: {
+          // Compose outlinedButtonBorder(enabled=false) tints the outline with
+          // DisabledContainerOpacity (0.1), so the disabled border is faint.
           '&:disabled': {
             color: `rgb(${vars.sys.color.onSurfaceVariant} / 0.38)`,
-            borderColor: `rgb(${vars.sys.color.outlineVariant})`,
+            borderColor: `rgb(${vars.sys.color.outlineVariant} / 0.1)`,
           },
           '&[data-disabled]': {
             color: `rgb(${vars.sys.color.onSurfaceVariant} / 0.38)`,
-            borderColor: `rgb(${vars.sys.color.outlineVariant})`,
+            borderColor: `rgb(${vars.sys.color.outlineVariant} / 0.1)`,
           },
         },
       },

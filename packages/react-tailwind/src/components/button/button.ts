@@ -62,8 +62,10 @@ export const button = tv({
       ],
       outlined: [
         'bg-transparent text-on-surface-variant border border-outline-variant',
-        'disabled:text-on-surface-variant/38 disabled:border-outline-variant',
-        'data-[disabled]:text-on-surface-variant/38 data-[disabled]:border-outline-variant',
+        // Compose outlinedButtonBorder(enabled=false) tints the outline with
+        // DisabledContainerOpacity (0.1), so the disabled border is faint.
+        'disabled:text-on-surface-variant/38 disabled:border-outline-variant/10',
+        'data-[disabled]:text-on-surface-variant/38 data-[disabled]:border-outline-variant/10',
       ],
       elevated: [
         'bg-surface-container-low text-primary shadow-level1',
@@ -83,7 +85,11 @@ export const button = tv({
     // attribute-selector specificity wins over the resting `rounded-*`.
     size: {
       xs: [
-        'h-8 px-4 gap-2 text-label-large [&_[data-slot=button-icon]>svg]:size-5',
+        // XS is special-cased in Compose Button.kt: contentPaddingFor returns
+        // ExtraSmallContentPadding (12dp) and iconSpacingFor returns
+        // ExtraSmallIconSpacing (4dp) — tighter than the ButtonXSmallTokens
+        // Leading/TrailingSpace (16) and IconLabelSpace (8). S–XL use their tokens.
+        'h-8 px-3 gap-1 text-label-large [&_[data-slot=button-icon]>svg]:size-5',
         'data-[pressed]:rounded-small active:rounded-small',
       ],
       s: [

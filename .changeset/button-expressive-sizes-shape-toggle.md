@@ -12,8 +12,9 @@ v0_11_0 + `Button.kt`). Both engines emit identical DOM/`data-*` (drop-in).
 **New props**
 
 - `size` (`xs` | `s` | `m` | `l` | `xl`, default `s`): heights 32/40/56/96/136dp,
-  icons 20/20/24/32/40dp, symmetric horizontal padding 16/16/24/48/64dp,
-  icon–label gap 8/8/8/12/16dp, and size-linked typescale
+  icons 20/20/24/32/40dp, symmetric horizontal padding 12/16/24/48/64dp,
+  icon–label gap 4/8/8/12/16dp (XS is special-cased in Compose `Button.kt` to
+  12dp/4dp; S–XL use their `Button{Size}Tokens` values), and size-linked typescale
   (XS·S labelLarge / M titleMedium / L headlineSmall / XL headlineLarge —
   Compose does **not** use the Emphasized companions).
 - `shape` (`round` | `square`, default `round`): square corners are

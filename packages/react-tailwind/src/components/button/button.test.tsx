@@ -122,6 +122,24 @@ describe('Button', () => {
     expect(btn.className).toContain(type);
   });
 
+  test('XS is special-cased to 12dp padding + 4dp gap (Compose ExtraSmall*), tighter than S', () => {
+    render(<Button size="xs">X</Button>);
+    const btn = screen.getByRole('button', { name: 'X' });
+    expect(btn.className).toContain('px-3'); // 12dp (ExtraSmallContentPadding)
+    expect(btn.className).toContain('gap-1'); // 4dp (ExtraSmallIconSpacing)
+    expect(btn.className).not.toContain('px-4');
+  });
+
+  test('disabled outlined border is faint (outline-variant @ 0.1, Compose DisabledContainerOpacity)', () => {
+    render(
+      <Button variant="outlined" disabled>
+        DO
+      </Button>,
+    );
+    const btn = screen.getByRole('button', { name: 'DO' });
+    expect(btn.className).toContain('disabled:border-outline-variant/10');
+  });
+
   test('S size fix: icon is 20dp and padding stays symmetric (no asymmetric icon padding)', () => {
     render(<Button startIcon={<svg data-testid="lead" />}>Save</Button>);
     const btn = screen.getByRole('button', { name: 'Save' });
