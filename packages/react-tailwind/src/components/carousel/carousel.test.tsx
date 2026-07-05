@@ -134,4 +134,13 @@ describe('Carousel tokens', () => {
     // Smooth snap animation drops under prefers-reduced-motion.
     expect(s.root()).toContain('motion-reduce:scroll-auto');
   });
+
+  test('Expressive: items use the extra-large (28dp) corner', () => {
+    // Every M3 sample masks items with shapes.extraLarge (28dp), not large (16dp).
+    for (const variant of ['multi-browse', 'uncontained', 'hero', 'full-screen'] as const) {
+      const s = carouselTv({ variant });
+      expect(s.item()).toContain('rounded-extra-large');
+      expect(s.item()).not.toContain('rounded-large');
+    }
+  });
 });

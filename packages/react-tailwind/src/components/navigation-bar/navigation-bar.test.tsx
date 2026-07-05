@@ -64,4 +64,34 @@ describe('NavigationBar tokens', () => {
     const s = navigationBarTv();
     expect(s.icon()).toContain('[&_svg]:size-6');
   });
+
+  test('Expressive: 64dp container height and 56×32 active indicator', () => {
+    const s = navigationBarTv();
+    // NavigationBarTokens.ContainerHeight = 64dp (was the legacy 80dp).
+    expect(s.root()).toContain('h-16');
+    expect(s.root()).not.toContain('h-20');
+    // NavigationBarVerticalItemTokens.ActiveIndicatorWidth/Height = 56×32
+    // (the rail was already 56; the bar was wrongly 64).
+    expect(s.iconWrap()).toContain('w-14');
+    expect(s.iconWrap()).toContain('h-8');
+  });
+
+  test('Expressive: active label is secondary + labelMediumEmphasized (not font-bold)', () => {
+    const s = navigationBarTv();
+    // ItemActiveLabelTextColor = Secondary (Expressive change from on-surface).
+    expect(s.label()).toContain('group-data-[pressed]:text-secondary');
+    // Emphasis via the labelMediumEmphasized typescale (weight 700), not a raw font-bold.
+    expect(s.label()).toContain('group-data-[pressed]:text-label-medium-emphasized');
+    expect(s.label()).not.toContain('font-bold');
+    expect(s.label()).not.toContain('group-data-[pressed]:text-on-surface ');
+  });
+
+  test('Expressive: state layer is on-secondary-container and the indicator springs', () => {
+    const s = navigationBarTv();
+    // State layer color is explicit on-secondary-container (was currentColor).
+    expect(s.indicator()).toContain('before:bg-on-secondary-container');
+    expect(s.indicator()).not.toContain('before:bg-current');
+    // Indicator color transition uses the spring-effects-default easing.
+    expect(s.indicator()).toContain('ease-spring-effects-default');
+  });
 });

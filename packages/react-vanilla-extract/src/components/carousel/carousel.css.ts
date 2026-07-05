@@ -52,7 +52,8 @@ export const item = recipe({
     scrollSnapAlign: 'start',
     flexShrink: 0,
     overflow: 'hidden',
-    borderRadius: vars.sys.shape.large,
+    // M3 Expressive: every sample masks items with shapes.extraLarge (28dp).
+    borderRadius: vars.sys.shape.extraLarge,
   },
   variants: {
     variant: {

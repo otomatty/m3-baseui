@@ -7,8 +7,12 @@
  * carrying its destination `value`. The selected item surfaces `data-pressed`,
  * which drives the active-indicator pill and the icon/label colors via CSS.
  * `Root` also renders an optional `header` (menu button / FAB) above the
- * destinations. Each engine injects slot classes, so the DOM and `data-*` state
- * are identical between builds.
+ * destinations. The M3 Expressive `expanded` mode widens the rail (220–360dp) and
+ * lays its items out horizontally (icon + label), and `modal` renders the
+ * expanded rail as an elevated `surface-container` sheet; both are surfaced via
+ * `data-expanded` / `data-modal` on the root so the engine CSS switches the
+ * layout without changing the DOM. Each engine injects slot classes, so the DOM
+ * and `data-*` state are identical between builds.
  */
 import * as React from 'react';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
@@ -21,6 +25,10 @@ import { Ripple } from '../../ripple/Ripple';
 type RootProps = React.ComponentPropsWithoutRef<typeof ToggleGroup> & {
   /** Leading header region (menu icon button / FAB), above the destinations. */
   header?: React.ReactNode;
+  /** M3 Expressive expanded rail (220–360dp wide, horizontal items). @default false */
+  expanded?: boolean;
+  /** Render the expanded rail as an elevated modal sheet (implies `expanded`). @default false */
+  modal?: boolean;
 };
 type ItemProps = Omit<React.ComponentPropsWithoutRef<typeof Toggle>, 'children'> & {
   /** Destination icon. */
@@ -31,9 +39,21 @@ type ItemProps = Omit<React.ComponentPropsWithoutRef<typeof Toggle>, 'children'>
 
 export function createNavigationRail(classes: NavigationRailClasses) {
   const Root = React.forwardRef<HTMLDivElement, RootProps>(function Root(
-    { className, header, children, value, defaultValue, onValueChange, ...props },
+    {
+      className,
+      header,
+      expanded = false,
+      modal = false,
+      children,
+      value,
+      defaultValue,
+      onValueChange,
+      ...props
+    },
     ref,
   ) {
+    // `modal` implies an expanded rail.
+    const isExpanded = expanded || modal;
     // A navigation rail always keeps one destination active. Base UI's
     // ToggleGroup still toggles off (emitting `[]`) when the pressed item is
     // tapped again, so Root owns the value and drops that deselect emission —
@@ -51,6 +71,8 @@ export function createNavigationRail(classes: NavigationRailClasses) {
         ref={ref}
         value={current}
         onValueChange={handleValueChange}
+        data-expanded={isExpanded ? '' : undefined}
+        data-modal={modal ? '' : undefined}
         className={mergeClassName(classes.root, className)}
         {...props}
       >

@@ -229,7 +229,9 @@ export type {
   SplitButtonGroupOwnProps,
   SplitButtonLeadingOwnProps,
   SplitButtonTrailingOwnProps,
+  SplitButtonVariant,
 } from './components/split-button';
+export { SPLIT_BUTTON_VARIANTS } from './components/split-button';
 export {
   NAV_DRAWER_VARIANTS,
   type NavigationDrawerVariant,
@@ -269,8 +271,10 @@ export {
   type SideSheetOwnProps,
 } from './components/side-sheet';
 export {
+  TOOLBAR_TYPES,
   TOOLBAR_VARIANTS,
   TOOLBAR_ORIENTATIONS,
+  type ToolbarType,
   type ToolbarVariant,
   type ToolbarOrientation,
   type ToolbarResolverArgs,

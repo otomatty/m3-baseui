@@ -58,33 +58,56 @@ const surfaceBase = {
   cursor: 'pointer',
   userSelect: 'none',
   ...labelLarge,
-  transitionProperty: 'background-color, color, border-color',
-  transitionDuration: vars.sys.motion.duration.short4,
-  transitionTimingFunction: vars.sys.motion.easing.standard,
+  // Seam corners morph on hover/press, so `border-radius` joins the transition,
+  // driven by the M3 Expressive effects (shape) spring.
+  transitionProperty: 'background-color, color, border-color, border-radius',
+  transitionDuration: vars.sys.motion.duration.springEffectsDefault,
+  transitionTimingFunction: vars.sys.motion.easing.springEffectsDefault,
 } as const;
 
-// leading: outer (start) corner full, seam (end) corner reduced.
+// leading: outer (start) corner full, seam (end) corner extra-small (4dp) which
+// morphs to medium (12dp) on hover/press. Padding 16dp outer / 12dp seam.
 export const leadingBase = style({
   ...surfaceBase,
   gap: '8px',
-  paddingInline: '24px',
+  paddingInlineStart: '16px',
+  paddingInlineEnd: '12px',
   borderStartStartRadius: vars.sys.shape.full,
   borderEndStartRadius: vars.sys.shape.full,
-  borderStartEndRadius: vars.sys.shape.small,
-  borderEndEndRadius: vars.sys.shape.small,
-  selectors: { ...surfaceSelectors },
+  borderStartEndRadius: vars.sys.shape.extraSmall,
+  borderEndEndRadius: vars.sys.shape.extraSmall,
+  selectors: {
+    ...surfaceSelectors,
+    '&:hover, &[data-pressed]': {
+      borderStartEndRadius: vars.sys.shape.medium,
+      borderEndEndRadius: vars.sys.shape.medium,
+    },
+  },
 });
 
-// trailing: seam (start) corner reduced, outer (end) corner full.
+// trailing: seam (start) corner extra-small (morphs to medium on hover/press),
+// outer (end) corner full; the whole button becomes a full circle while the menu
+// is open (data-popup-open). Padding 13dp each side.
 export const trailingBase = style({
   ...surfaceBase,
   gap: '4px',
-  paddingInline: '12px',
-  borderStartStartRadius: vars.sys.shape.small,
-  borderEndStartRadius: vars.sys.shape.small,
+  paddingInline: '13px',
+  borderStartStartRadius: vars.sys.shape.extraSmall,
+  borderEndStartRadius: vars.sys.shape.extraSmall,
   borderStartEndRadius: vars.sys.shape.full,
   borderEndEndRadius: vars.sys.shape.full,
-  selectors: { ...surfaceSelectors },
+  selectors: {
+    ...surfaceSelectors,
+    // The seam morphs to medium on hover/press — but NOT while the menu is open,
+    // where the whole button is a full circle. The explicit `:not([data-popup-open])`
+    // guard (rather than relying on declaration order) makes open win over hover and
+    // matches the Tailwind build for drop-in parity.
+    '&:hover:not([data-popup-open]), &[data-pressed]:not([data-popup-open])': {
+      borderStartStartRadius: vars.sys.shape.medium,
+      borderEndStartRadius: vars.sys.shape.medium,
+    },
+    '&[data-popup-open]': { borderRadius: vars.sys.shape.full },
+  },
 });
 
 // Per-variant container color (identical on both surfaces). M3 disabled is
@@ -125,14 +148,6 @@ const variants = {
       '&[data-disabled]': { background: onSurface12, color: onSurface38, boxShadow: 'none' },
     },
   },
-  text: {
-    background: 'transparent',
-    color: `rgb(${vars.sys.color.primary})`,
-    selectors: {
-      '&:disabled': { color: onSurface38 },
-      '&[data-disabled]': { color: onSurface38 },
-    },
-  },
 } as const;
 
 export const leading = recipe({ base: leadingBase, variants: { variant: variants } });
@@ -144,12 +159,13 @@ export const chevron = style({
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
-  transition: `transform ${vars.sys.motion.duration.short4} ${vars.sys.motion.easing.standard}`,
+  transition: `transform ${vars.sys.motion.duration.springSpatialDefault} ${vars.sys.motion.easing.springSpatialDefault}`,
   selectors: {
     [`${trailingBase}[data-popup-open] &`]: { transform: 'rotate(180deg)' },
   },
 });
-globalStyle(`${chevron} > svg`, { width: '18px', height: '18px' });
+// M3 Small TrailingIconSize = 22dp.
+globalStyle(`${chevron} > svg`, { width: '22px', height: '22px' });
 
 // Dropdown surface (same as the M3 Menu surface).
 export const popup = style({

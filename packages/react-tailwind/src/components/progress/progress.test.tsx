@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { render, screen } from '@testing-library/react';
-import { Progress } from '../progress/progress';
+import { Progress, circularTv, linearTv } from '../progress/progress';
 
 describe('Progress.Linear', () => {
   test('determinate exposes the value via aria', () => {
@@ -102,12 +102,27 @@ describe('Progress.Linear', () => {
     expect(bar.style.getPropertyValue('--m3-thickness')).toBe('4px');
   });
 
-  test('wavy is ignored while indeterminate (no data-wavy, no mask)', () => {
+  test('Expressive: wavy indeterminate flows a 20dp wave (data-wavy + mask + wave-size)', () => {
     render(<Progress.Linear wavy aria-label="読み込み" />);
     const bar = screen.getByRole('progressbar', { name: '読み込み' });
     expect(bar).toHaveAttribute('data-indeterminate');
-    expect(bar).not.toHaveAttribute('data-wavy');
-    expect(bar.style.getPropertyValue('--m3-wave')).toBe('');
+    // Expressive: wavy now applies to indeterminate (was determinate-only).
+    expect(bar).toHaveAttribute('data-wavy');
+    expect(bar.style.getPropertyValue('--m3-wave')).toContain('data:image/svg+xml');
+    // IndeterminateActiveWaveWavelength = 20dp.
+    expect(bar.style.getPropertyValue('--m3-wave-size')).toBe('20px');
+  });
+
+  test('Expressive: determinate wavy uses the 40dp wavelength', () => {
+    render(<Progress.Linear value={50} wavy aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar.style.getPropertyValue('--m3-wave-size')).toBe('40px');
+  });
+
+  test('Expressive: inactive track is secondary-container', () => {
+    // ProgressIndicatorTokens.TrackColor = SecondaryContainer (was surface-container-highest).
+    expect(linearTv().track()).toContain('before:bg-secondary-container');
+    expect(linearTv().track()).not.toContain('surface-container-highest');
   });
 
   test('carries reduced-motion fallbacks that freeze the indeterminate loop', () => {
@@ -213,11 +228,20 @@ describe('Progress.Circular', () => {
     expect(d).toContain('L');
   });
 
-  test('wavy is ignored while indeterminate (still a spinning circle)', () => {
+  test('Expressive: wavy indeterminate draws a single wavy arc path (spun by the ring)', () => {
     const { container } = render(<Progress.Circular wavy aria-label="処理中" />);
     const bar = screen.getByRole('progressbar', { name: '処理中' });
     expect(bar).toHaveAttribute('data-indeterminate');
-    expect(container.querySelectorAll('circle')).toHaveLength(1);
-    expect(container.querySelectorAll('path')).toHaveLength(0);
+    expect(bar).toHaveAttribute('data-wavy');
+    // A single sine-modulated <path>, no dashed <circle>.
+    expect(container.querySelectorAll('circle')).toHaveLength(0);
+    const paths = container.querySelectorAll('path');
+    expect(paths).toHaveLength(1);
+    expect(paths[0]?.getAttribute('d')).toContain('L');
+  });
+
+  test('Expressive: track is secondary-container', () => {
+    expect(circularTv().track()).toContain('stroke-secondary-container');
+    expect(circularTv().track()).not.toContain('surface-container-highest');
   });
 });

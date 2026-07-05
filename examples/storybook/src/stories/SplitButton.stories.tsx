@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ButtonVariant } from '@m3-baseui/react-tailwind';
+import type { SplitButtonVariant } from '@m3-baseui/react-tailwind';
 import { useM3 } from '../engine';
 
 const meta = { title: 'Components/SplitButton' } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const VARIANTS: ButtonVariant[] = ['filled', 'tonal', 'outlined', 'elevated'];
+const VARIANTS: SplitButtonVariant[] = ['filled', 'tonal', 'outlined', 'elevated'];
 
 export const Variants: Story = {
   render: () => {

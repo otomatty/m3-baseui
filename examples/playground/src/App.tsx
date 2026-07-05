@@ -155,6 +155,7 @@ export function App() {
   const [textStyles, setTextStyles] = useState<string[]>(['bold']);
   const [drawer, setDrawer] = useState('inbox');
   const [rail, setRail] = useState<string[]>(['home']);
+  const [railExpanded, setRailExpanded] = useState<string[]>(['home']);
 
   return (
     <ThemeProvider seed={seed} scheme="tonalSpot" mode="system">
@@ -1042,6 +1043,30 @@ export function App() {
                 </NavigationRail.Item>
               </NavigationRail.Root>
             </div>
+            {/* expanded rail: 220–360dp wide with horizontal (icon + label) items. */}
+            <div className="mt-6 h-[400px] w-fit overflow-hidden rounded-large border border-outline-variant">
+              <NavigationRail.Root
+                expanded
+                value={railExpanded}
+                onValueChange={setRailExpanded}
+                aria-label="拡張ナビゲーションレール"
+                header={
+                  <Fab color="primary" aria-label="作成">
+                    <Icon name="add" />
+                  </Fab>
+                }
+              >
+                <NavigationRail.Item value="home" icon={<Icon name="home" />}>
+                  ホーム
+                </NavigationRail.Item>
+                <NavigationRail.Item value="search" icon={<Icon name="search" />}>
+                  検索
+                </NavigationRail.Item>
+                <NavigationRail.Item value="favorites" icon={<Icon name="favorite" />}>
+                  お気に入り
+                </NavigationRail.Item>
+              </NavigationRail.Root>
+            </div>
           </Section>
 
           <Section title="Divider">
@@ -1065,6 +1090,7 @@ export function App() {
               <Progress.Linear value={66} thickness={8} aria-label="ダウンロード（太）" />
               <Progress.Linear value={66} wavy aria-label="ダウンロード（波）" />
               <Progress.Linear aria-label="読み込み中" />
+              <Progress.Linear wavy aria-label="読み込み中（波）" />
               <div className="flex items-center gap-6">
                 <Progress.Circular value={66} aria-label="アップロード" />
                 <Progress.Circular
@@ -1075,6 +1101,7 @@ export function App() {
                 />
                 <Progress.Circular value={66} wavy aria-label="アップロード（波）" />
                 <Progress.Circular aria-label="処理中" />
+                <Progress.Circular wavy aria-label="処理中（波）" />
               </div>
             </div>
           </Section>
@@ -1138,6 +1165,18 @@ export function App() {
                 </IconButton>
               </Toolbar>
             </div>
+            {/* docked: a full-width, square-cornered surface-container bar. */}
+            <Toolbar type="docked" aria-label="ドックツールバー" className="mt-6">
+              <IconButton aria-label="元に戻す">
+                <Icon name="undo" />
+              </IconButton>
+              <IconButton aria-label="やり直す">
+                <Icon name="redo" />
+              </IconButton>
+              <IconButton aria-label="項目を追加">
+                <Icon name="add" />
+              </IconButton>
+            </Toolbar>
           </Section>
 
           <Section title="Carousel">

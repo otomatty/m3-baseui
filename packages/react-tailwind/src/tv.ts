@@ -18,7 +18,13 @@
  */
 import { type TV, tv as baseTv } from 'tailwind-variants';
 
-const TYPESCALE = [
+// The 15 M3 typescale roles. Each also has an `…-emphasized` companion (M3
+// Expressive, weight-shifted); both the base and emphasized names are `text-<role>`
+// font-size utilities, so both must be registered or tailwind-merge misgroups the
+// emphasized name as a color and drops a co-applied `text-<color>` (e.g. an active
+// `text-secondary` label). Deriving the emphasized set from the base list keeps a
+// single source of truth so a new role can't be added to only one half.
+const TYPESCALE_BASE = [
   'display-large',
   'display-medium',
   'display-small',
@@ -34,6 +40,10 @@ const TYPESCALE = [
   'label-large',
   'label-medium',
   'label-small',
+] as const;
+const TYPESCALE = [
+  ...TYPESCALE_BASE,
+  ...TYPESCALE_BASE.map((role) => `${role}-emphasized` as const),
 ] as const;
 
 // M3 shape scale exposed as `rounded-<role>` (see @m3-baseui/tokens theme.css

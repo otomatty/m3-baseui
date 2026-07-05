@@ -3,10 +3,15 @@
  */
 import { createLoadingIndicator } from '@m3-baseui/core';
 import { cx } from '@m3-baseui/core';
-import { root, contained as containedClass, indicator } from './loading-indicator.css';
+import {
+  root,
+  contained as containedClass,
+  indicator,
+  containedIndicator,
+} from './loading-indicator.css';
 
 export const LoadingIndicator = createLoadingIndicator(({ contained }) => ({
   root: contained ? cx(root, containedClass) : root,
-  indicator,
+  indicator: contained ? cx(indicator, containedIndicator) : indicator,
 }));
 export type { LoadingIndicatorProps } from '@m3-baseui/core';

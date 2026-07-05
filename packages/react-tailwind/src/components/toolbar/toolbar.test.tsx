@@ -22,6 +22,13 @@ describe('Toolbar', () => {
     expect(screen.getByRole('toolbar', { name: 'v' })).toHaveAttribute('data-variant', 'vibrant');
   });
 
+  test('type defaults to floating and docked is reflected via data-type', () => {
+    const { rerender } = render(<Toolbar aria-label="t" />);
+    expect(screen.getByRole('toolbar', { name: 't' })).toHaveAttribute('data-type', 'floating');
+    rerender(<Toolbar aria-label="t" type="docked" />);
+    expect(screen.getByRole('toolbar', { name: 't' })).toHaveAttribute('data-type', 'docked');
+  });
+
   test('vertical orientation sets aria-orientation and data-orientation', () => {
     render(<Toolbar aria-label="vert" orientation="vertical" />);
     const bar = screen.getByRole('toolbar', { name: 'vert' });
@@ -31,11 +38,26 @@ describe('Toolbar', () => {
 });
 
 describe('Toolbar tokens', () => {
-  test('floating pill: rounded-full + elevation', () => {
-    expect(toolbarTv({ variant: 'standard', orientation: 'horizontal' })).toContain('rounded-full');
-    expect(toolbarTv({ variant: 'standard', orientation: 'horizontal' })).toContain(
-      'shadow-level3',
-    );
+  test('Expressive: floating pill is rounded-full with NO elevation (Level0)', () => {
+    const cls = toolbarTv({ type: 'floating', variant: 'standard', orientation: 'horizontal' });
+    expect(cls).toContain('rounded-full');
+    // Compose FloatingToolbar defaults to Level0 — the level3 shadow is removed.
+    expect(cls).not.toContain('shadow-level3');
+  });
+
+  test('Expressive: docked is a square-cornered, full-width surface-container bar', () => {
+    const cls = toolbarTv({ type: 'docked', variant: 'standard', orientation: 'horizontal' });
+    expect(cls).toContain('rounded-none');
+    expect(cls).toContain('w-full');
+    expect(cls).toContain('bg-surface-container');
+    // 16dp leading/trailing space.
+    expect(cls).toContain('px-4');
+  });
+
+  test('Expressive: standard content is on-surface (was on-surface-variant)', () => {
+    const cls = toolbarTv({ variant: 'standard', orientation: 'horizontal' });
+    expect(cls).toContain('text-on-surface');
+    expect(cls).not.toContain('text-on-surface-variant');
   });
 
   test('color roles per variant', () => {
@@ -47,9 +69,23 @@ describe('Toolbar tokens', () => {
     );
   });
 
-  test('vibrant forces interactive children to inherit the on-primary-container color', () => {
-    expect(toolbarTv({ variant: 'vibrant', orientation: 'horizontal' })).toContain(
-      '[&_button]:text-on-primary-container',
-    );
+  test('floating vibrant forces interactive children to the on-primary-container color', () => {
+    const cls = toolbarTv({ type: 'floating', variant: 'vibrant', orientation: 'horizontal' });
+    expect(cls).toContain('[&_button]:text-on-primary-container');
+    expect(cls).toContain('[&_a]:text-on-primary-container');
+  });
+
+  test('docked vibrant does NOT force children (docked is always surface-container)', () => {
+    const cls = toolbarTv({ type: 'docked', variant: 'vibrant', orientation: 'horizontal' });
+    // Root reverts to surface-container; children keep their own colors.
+    expect(cls).toContain('bg-surface-container');
+    expect(cls).not.toContain('[&_button]:text-on-primary-container');
+    expect(cls).not.toContain('[&_a]:text-on-primary-container');
+  });
+
+  test('Expressive: a data-expanded=false hook collapses the bar (show/hide)', () => {
+    const cls = toolbarTv();
+    expect(cls).toContain('data-[expanded=false]:opacity-0');
+    expect(cls).toContain('ease-spring-spatial-fast');
   });
 });

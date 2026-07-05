@@ -48,17 +48,37 @@ describe('SplitButton', () => {
     );
   });
 
-  test('the two parts share the seam: leading end corner + trailing start corner reduced', () => {
-    expect(splitButtonTv({ variant: 'filled' }).leading()).toContain('rounded-e-small');
-    expect(splitButtonTv({ variant: 'filled' }).leading()).toContain('rounded-s-full');
-    expect(splitButtonTv({ variant: 'filled' }).trailing()).toContain('rounded-s-small');
-    expect(splitButtonTv({ variant: 'filled' }).trailing()).toContain('rounded-e-full');
+  test('Expressive: the seam corner is extra-small (4dp) and morphs to medium on hover/press', () => {
+    const t = splitButtonTv({ variant: 'filled' });
+    // Static seam = extra-small (was small/8dp); outer corners stay full.
+    expect(t.leading()).toContain('rounded-e-extra-small');
+    expect(t.leading()).toContain('rounded-s-full');
+    expect(t.trailing()).toContain('rounded-s-extra-small');
+    expect(t.trailing()).toContain('rounded-e-full');
+    // Hover/press morph the seam to medium (12dp); the trailing morph is gated
+    // off while the menu is open (open → full circle must win).
+    expect(t.leading()).toContain('hover:rounded-e-medium');
+    expect(t.leading()).toContain('data-[pressed]:rounded-e-medium');
+    expect(t.trailing()).toContain('[&:hover:not([data-popup-open])]:rounded-s-medium');
+    expect(t.trailing()).toContain('[&[data-pressed]:not([data-popup-open])]:rounded-s-medium');
   });
 
-  test('the trailing chevron rotates while the menu is open (data-popup-open)', () => {
+  test('Expressive: the trailing button morphs to a full circle while the menu is open', () => {
     const t = splitButtonTv({ variant: 'filled' });
     expect(t.trailing()).toContain('group');
+    // The chevron rotates AND the trailing button becomes a full circle.
     expect(t.chevron()).toContain('group-data-[popup-open]:rotate-180');
+    expect(t.trailing()).toContain('data-[popup-open]:rounded-full');
+  });
+
+  test('Expressive: the trailing icon is 22dp', () => {
+    expect(splitButtonTv().chevron()).toContain('[&>svg]:size-[22px]');
+  });
+
+  test('popup close mirrors open (opacity + scale) — drop-in with the VE build', () => {
+    const popup = splitButtonTv().popup();
+    expect(popup).toContain('data-[starting-style]:scale-95');
+    expect(popup).toContain('data-[ending-style]:scale-95');
   });
 
   test('surfaces carry a currentColor ::before state layer and the M3 focus ring', () => {
