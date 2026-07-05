@@ -57,11 +57,16 @@ export const linearTv = tv({
       'group-data-[wavy]:[-webkit-mask-repeat:repeat-x] group-data-[wavy]:[mask-repeat:repeat-x]',
       'group-data-[wavy]:[-webkit-mask-size:40px_100%] group-data-[wavy]:[mask-size:40px_100%]',
       'group-data-[wavy]:animate-m3-wave-flow',
+      // Reduced motion: freeze the loops and show a static ~40% bar / static wave.
+      'motion-reduce:group-data-[indeterminate]:w-2/5',
+      'motion-reduce:group-data-[indeterminate]:animate-none motion-reduce:group-data-[wavy]:animate-none',
     ],
     // Second disjoint bar: only present visually while indeterminate.
     indicatorSecondary: [
       'absolute inset-y-0 left-0 w-full origin-left bg-primary rounded-full hidden',
       'group-data-[indeterminate]:block group-data-[indeterminate]:animate-m3-linear-secondary',
+      // Reduced motion: a single static bar reads better than two frozen ones.
+      'motion-reduce:group-data-[indeterminate]:hidden',
     ],
   },
 });
@@ -75,6 +80,7 @@ export const circularTv = tv({
       'group inline-flex items-center justify-center',
       '[&_svg]:block [&_svg]:size-full',
       'data-[indeterminate]:animate-m3-circular-rotate',
+      'motion-reduce:data-[indeterminate]:animate-none',
     ],
     // Both ends are rounded (M3); the inactive track sits behind with a 4dp gap.
     track: [
@@ -85,6 +91,8 @@ export const circularTv = tv({
       'stroke-primary [stroke-linecap:round]',
       'transition-[stroke-dasharray,stroke-dashoffset] duration-300 ease-standard',
       'group-data-[indeterminate]:animate-m3-circular-dash group-data-[indeterminate]:transition-none',
+      // Reduced motion: freeze the arc at its static 25% length (no rotation).
+      'motion-reduce:group-data-[indeterminate]:animate-none',
     ],
   },
 });

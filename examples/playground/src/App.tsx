@@ -961,9 +961,18 @@ export function App() {
           <Section title="Progress">
             <div className="flex max-w-md flex-col gap-6">
               <Progress.Linear value={66} aria-label="ダウンロード" />
+              <Progress.Linear value={66} thickness={8} aria-label="ダウンロード（太）" />
+              <Progress.Linear value={66} wavy aria-label="ダウンロード（波）" />
               <Progress.Linear aria-label="読み込み中" />
               <div className="flex items-center gap-6">
                 <Progress.Circular value={66} aria-label="アップロード" />
+                <Progress.Circular
+                  value={66}
+                  size={56}
+                  thickness={6}
+                  aria-label="アップロード（大）"
+                />
+                <Progress.Circular value={66} wavy aria-label="アップロード（波）" />
                 <Progress.Circular aria-label="処理中" />
               </div>
             </div>

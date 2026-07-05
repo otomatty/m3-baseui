@@ -101,6 +101,12 @@ describe('Progress.Linear', () => {
     expect(bar).not.toHaveAttribute('data-wavy');
     expect(bar.style.getPropertyValue('--m3-wave')).toBe('');
   });
+
+  test('carries reduced-motion fallbacks that freeze the indeterminate loop', () => {
+    const { container } = render(<Progress.Linear aria-label="読み込み" />);
+    // The looping animations drop under prefers-reduced-motion (a11y).
+    expect(container.innerHTML).toContain('motion-reduce:group-data-[indeterminate]:animate-none');
+  });
 });
 
 describe('Progress.Circular', () => {

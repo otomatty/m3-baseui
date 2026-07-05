@@ -131,6 +131,15 @@ export const linearIndicator = style({
       animation: `${waveFlow} 1s linear infinite`,
     },
   },
+  '@media': {
+    // Reduced motion: freeze the loops — a static ~40% bar / static wave.
+    '(prefers-reduced-motion: reduce)': {
+      selectors: {
+        [`${linearRoot}[data-indeterminate] &`]: { width: '40%', animation: 'none' },
+        [`${linearRoot}[data-wavy] &`]: { animation: 'none' },
+      },
+    },
+  },
 });
 
 // Second disjoint bar: only shown/animated while indeterminate.
@@ -150,6 +159,14 @@ export const linearIndicatorSecondary = style({
       animation: `${linearSecondary} 2s linear infinite`,
     },
   },
+  '@media': {
+    // Reduced motion: a single static bar reads better than two frozen ones.
+    '(prefers-reduced-motion: reduce)': {
+      selectors: {
+        [`${linearRoot}[data-indeterminate] &`]: { display: 'none' },
+      },
+    },
+  },
 });
 
 export const circularRoot = style({
@@ -159,6 +176,13 @@ export const circularRoot = style({
   // Size (width/height) comes from the factory inline so `size` is honored.
   selectors: {
     '&[data-indeterminate]': { animation: `${circularRotate} 1.4s linear infinite` },
+  },
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      selectors: {
+        '&[data-indeterminate]': { animation: 'none' },
+      },
+    },
   },
 });
 globalStyle(`${circularRoot} svg`, { display: 'block', width: '100%', height: '100%' });
@@ -179,6 +203,14 @@ export const circularIndicator = style({
     [`${circularRoot}[data-indeterminate] &`]: {
       transition: 'none',
       animation: `${circularDash} 1.4s ease-in-out infinite`,
+    },
+  },
+  '@media': {
+    // Reduced motion: freeze the arc at its static 25% length (no rotation).
+    '(prefers-reduced-motion: reduce)': {
+      selectors: {
+        [`${circularRoot}[data-indeterminate] &`]: { animation: 'none' },
+      },
     },
   },
 });
