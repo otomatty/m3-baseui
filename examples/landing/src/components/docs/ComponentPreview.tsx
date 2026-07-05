@@ -284,9 +284,7 @@ const PREVIEWS: Record<string, () => ReactNode> = {
   dialog: () => (
     <div className="w-48 rounded-extra-large bg-surface-container-high p-4 shadow-level2">
       <p className="m-0 text-title-small text-on-surface">変更を保存しますか？</p>
-      <p className="mt-1 text-body-small text-on-surface-variant">
-        この操作は取り消せません。
-      </p>
+      <p className="mt-1 text-body-small text-on-surface-variant">この操作は取り消せません。</p>
       <div className="mt-3 flex justify-end gap-1">
         <Button variant="text">キャンセル</Button>
         <Button variant="filled">保存</Button>
@@ -298,9 +296,7 @@ const PREVIEWS: Record<string, () => ReactNode> = {
     <div className="w-52 rounded-t-large bg-surface-container-low p-3 shadow-level2">
       <div className="mx-auto mb-2 h-1 w-8 rounded-full bg-outline-variant" />
       <p className="m-0 text-title-small">共有先を選択</p>
-      <p className="mt-1 text-body-small text-on-surface-variant">
-        スワイプで閉じます
-      </p>
+      <p className="mt-1 text-body-small text-on-surface-variant">スワイプで閉じます</p>
     </div>
   ),
 
@@ -325,9 +321,7 @@ const PREVIEWS: Record<string, () => ReactNode> = {
         </span>
         コピー
       </div>
-      <div className="flex h-12 items-center px-3 text-label-large text-on-surface">
-        ログアウト
-      </div>
+      <div className="flex h-12 items-center px-3 text-label-large text-on-surface">ログアウト</div>
     </div>
   ),
 

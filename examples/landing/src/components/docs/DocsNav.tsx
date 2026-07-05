@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { useEffect, useRef, useState } from 'react';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import {
   Button,
   Dialog,
@@ -9,9 +9,9 @@ import {
   TopAppBar,
   applyScheme,
   generateScheme,
-} from "@m3-baseui/react-tailwind";
-import { Icon } from "@m3-baseui/icons";
-import { COMPONENT_GROUPS } from "../../config/docs-nav";
+} from '@m3-baseui/react-tailwind';
+import { Icon } from '@m3-baseui/icons';
+import { COMPONENT_GROUPS } from '../../config/docs-nav';
 
 /**
  * DocsNav — the M3-official-style navigation for the docs.
@@ -24,27 +24,26 @@ import { COMPONENT_GROUPS } from "../../config/docs-nav";
  * collapsible navigation. Theme (mode + dynamic color) is applied to <html> so
  * the whole static site and portaled surfaces react.
  */
-const cn = (...c: Array<string | false | undefined>): string =>
-  c.filter(Boolean).join(" ");
+const cn = (...c: Array<string | false | undefined>): string => c.filter(Boolean).join(' ');
 
-type Mode = "light" | "dark";
+type Mode = 'light' | 'dark';
 
 interface SeedOption {
   name: string;
   value: string;
 }
 
-const STORAGE_KEY = "m3-docs-theme";
-const DEFAULT_SEED = "#6750A4";
+const STORAGE_KEY = 'm3-docs-theme';
+const DEFAULT_SEED = '#6750A4';
 
 const SEEDS: SeedOption[] = [
-  { name: "パープル", value: "#6750A4" },
-  { name: "ブルー", value: "#00639B" },
-  { name: "グリーン", value: "#386A20" },
-  { name: "レッド", value: "#B3261E" },
-  { name: "オレンジ", value: "#8B5000" },
-  { name: "ピンク", value: "#7D5260" },
-  { name: "ティール", value: "#006A6A" },
+  { name: 'パープル', value: '#6750A4' },
+  { name: 'ブルー', value: '#00639B' },
+  { name: 'グリーン', value: '#386A20' },
+  { name: 'レッド', value: '#B3261E' },
+  { name: 'オレンジ', value: '#8B5000' },
+  { name: 'ピンク', value: '#7D5260' },
+  { name: 'ティール', value: '#006A6A' },
 ];
 
 interface RailItem {
@@ -56,39 +55,39 @@ interface RailItem {
 }
 
 const RAIL_ITEMS: RailItem[] = [
-  { value: "home", label: "はじめに", href: "/docs", icon: "menu_book" },
+  { value: 'home', label: 'はじめに', href: '/docs', icon: 'menu_book' },
   {
-    value: "getting-started",
-    label: "導入",
-    href: "/docs/getting-started",
-    icon: "rocket_launch",
+    value: 'getting-started',
+    label: '導入',
+    href: '/docs/getting-started',
+    icon: 'rocket_launch',
   },
-  { value: "theming", label: "テーマ", href: "/docs/theming", icon: "palette" },
+  { value: 'theming', label: 'テーマ', href: '/docs/theming', icon: 'palette' },
   {
-    value: "engines",
-    label: "エンジン",
-    href: "/docs/engines",
-    icon: "layers",
+    value: 'engines',
+    label: 'エンジン',
+    href: '/docs/engines',
+    icon: 'layers',
   },
   {
-    value: "components",
-    label: "部品",
-    href: "/docs/components",
-    icon: "widgets",
+    value: 'components',
+    label: '部品',
+    href: '/docs/components',
+    icon: 'widgets',
     expandable: true,
   },
 ];
 
-const COMPONENTS_HREF = "/docs/components";
+const COMPONENTS_HREF = '/docs/components';
 
 function activeValue(path: string): string {
-  if (path.startsWith("/docs/components")) return "components";
-  if (path.startsWith("/docs/getting-started")) return "getting-started";
-  if (path.startsWith("/docs/theming")) return "theming";
-  if (path.startsWith("/docs/engines")) return "engines";
-  if (path === "/docs" || path === "/docs/") return "home";
+  if (path.startsWith('/docs/components')) return 'components';
+  if (path.startsWith('/docs/getting-started')) return 'getting-started';
+  if (path.startsWith('/docs/theming')) return 'theming';
+  if (path.startsWith('/docs/engines')) return 'engines';
+  if (path === '/docs' || path === '/docs/') return 'home';
   // No rail destination is active outside the docs (e.g. the landing page).
-  return "";
+  return '';
 }
 
 function isActivePath(href: string, path: string): boolean {
@@ -97,9 +96,7 @@ function isActivePath(href: string, path: string): boolean {
 
 /** The component group that contains the current page (for default-open state). */
 function currentGroupTitle(path: string): string | undefined {
-  return COMPONENT_GROUPS.find((g) =>
-    g.items.some((i) => isActivePath(i.href, path)),
-  )?.title;
+  return COMPONENT_GROUPS.find((g) => g.items.some((i) => isActivePath(i.href, path)))?.title;
 }
 
 interface GroupsProps {
@@ -136,10 +133,7 @@ function CollapsibleGroups({ currentPath }: GroupsProps) {
               <Icon
                 name="expand_more"
                 size={20}
-                className={cn(
-                  "transition-transform duration-150",
-                  expanded && "rotate-180",
-                )}
+                className={cn('transition-transform duration-150', expanded && 'rotate-180')}
               />
             </button>
             {expanded ? (
@@ -150,12 +144,12 @@ function CollapsibleGroups({ currentPath }: GroupsProps) {
                     <li key={item.href}>
                       <a
                         href={item.href}
-                        aria-current={active ? "page" : undefined}
+                        aria-current={active ? 'page' : undefined}
                         className={cn(
-                          "block rounded-full px-4 py-2 text-body-medium transition-colors",
+                          'block rounded-full px-4 py-2 text-body-medium transition-colors',
                           active
-                            ? "bg-secondary-container text-on-secondary-container"
-                            : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
+                            ? 'bg-secondary-container text-on-secondary-container'
+                            : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface',
                         )}
                       >
                         {item.label}
@@ -179,45 +173,41 @@ interface StoredTheme {
 }
 
 function readStored(): StoredTheme {
-  if (typeof window === "undefined")
-    return { mode: "light", seed: DEFAULT_SEED };
+  if (typeof window === 'undefined') return { mode: 'light', seed: DEFAULT_SEED };
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<StoredTheme>;
       return {
-        mode: parsed.mode === "dark" ? "dark" : "light",
-        seed: typeof parsed.seed === "string" ? parsed.seed : DEFAULT_SEED,
+        mode: parsed.mode === 'dark' ? 'dark' : 'light',
+        seed: typeof parsed.seed === 'string' ? parsed.seed : DEFAULT_SEED,
       };
     }
   } catch {
     // ignore malformed storage
   }
   const prefersDark =
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches;
-  return { mode: prefersDark ? "dark" : "light", seed: DEFAULT_SEED };
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return { mode: prefersDark ? 'dark' : 'light', seed: DEFAULT_SEED };
 }
 
 /** Apply the generated scheme + mode onto <html> and cache the color vars. */
 function applyTheme(mode: Mode, seed: string): void {
   const root = document.documentElement;
-  const schemes = generateScheme(seed, "tonalSpot", "standard");
-  applyScheme(root, mode === "dark" ? schemes.dark : schemes.light);
-  root.setAttribute("data-theme", mode);
+  const schemes = generateScheme(seed, 'tonalSpot', 'standard');
+  applyScheme(root, mode === 'dark' ? schemes.dark : schemes.light);
+  root.setAttribute('data-theme', mode);
 
-  let css = "";
+  let css = '';
   for (let i = 0; i < root.style.length; i += 1) {
     const prop = root.style[i];
-    if (prop.startsWith("--md-sys-color-")) {
+    if (prop.startsWith('--md-sys-color-')) {
       css += `${prop}: ${root.style.getPropertyValue(prop)};`;
     }
   }
   try {
-    window.localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ mode, seed, css }),
-    );
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ mode, seed, css }));
   } catch {
     // ignore storage write errors
   }
@@ -226,13 +216,7 @@ function applyTheme(mode: Mode, seed: string): void {
 /** GitHub のロゴマーク（Material Symbols には無いため SVG で実装）。 */
 function GithubMark() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width="24"
-      height="24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
       <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.03 11.03 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.78 1.05.78 2.12 0 1.53-.01 2.76-.01 3.14 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z" />
     </svg>
   );
@@ -249,9 +233,7 @@ interface ThemeMenuBodyProps {
 function ThemeMenuBody({ mode, seed, onMode, onSeed }: ThemeMenuBodyProps) {
   return (
     <div className="w-full">
-      <p className="mb-2 text-label-medium text-on-surface-variant">
-        表示モード
-      </p>
+      <p className="mb-2 text-label-medium text-on-surface-variant">表示モード</p>
       {/* biome-ignore lint/a11y/useSemanticElements: toolbar-style button group, not a form fieldset */}
       <div
         role="group"
@@ -260,8 +242,8 @@ function ThemeMenuBody({ mode, seed, onMode, onSeed }: ThemeMenuBodyProps) {
       >
         {(
           [
-            { value: "light", label: "ライト", icon: "light_mode" },
-            { value: "dark", label: "ダーク", icon: "dark_mode" },
+            { value: 'light', label: 'ライト', icon: 'light_mode' },
+            { value: 'dark', label: 'ダーク', icon: 'dark_mode' },
           ] as const
         ).map((option) => {
           const active = mode === option.value;
@@ -273,8 +255,8 @@ function ThemeMenuBody({ mode, seed, onMode, onSeed }: ThemeMenuBodyProps) {
               onClick={() => onMode(option.value)}
               className={
                 active
-                  ? "flex items-center justify-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-label-large text-on-primary"
-                  : "flex items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-label-large text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                  ? 'flex items-center justify-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-label-large text-on-primary'
+                  : 'flex items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-label-large text-on-surface-variant transition-colors hover:bg-surface-container-high'
               }
             >
               <Icon name={option.icon} size={18} />
@@ -284,15 +266,9 @@ function ThemeMenuBody({ mode, seed, onMode, onSeed }: ThemeMenuBodyProps) {
         })}
       </div>
 
-      <p className="mb-2 text-label-medium text-on-surface-variant">
-        配色（シード色）
-      </p>
+      <p className="mb-2 text-label-medium text-on-surface-variant">配色（シード色）</p>
       {/* biome-ignore lint/a11y/useSemanticElements: toolbar-style button group, not a form fieldset */}
-      <div
-        role="group"
-        aria-label="配色（シード色）"
-        className="flex flex-wrap gap-2"
-      >
+      <div role="group" aria-label="配色（シード色）" className="flex flex-wrap gap-2">
         {SEEDS.map((option) => {
           const active = seed === option.value;
           return (
@@ -305,18 +281,12 @@ function ThemeMenuBody({ mode, seed, onMode, onSeed }: ThemeMenuBodyProps) {
               onClick={() => onSeed(option.value)}
               className={
                 active
-                  ? "relative flex size-9 items-center justify-center rounded-full ring-2 ring-primary ring-offset-2 ring-offset-surface-container-low transition-transform"
-                  : "relative flex size-9 items-center justify-center rounded-full transition-transform hover:scale-110"
+                  ? 'relative flex size-9 items-center justify-center rounded-full ring-2 ring-primary ring-offset-2 ring-offset-surface-container-low transition-transform'
+                  : 'relative flex size-9 items-center justify-center rounded-full transition-transform hover:scale-110'
               }
               style={{ background: option.value }}
             >
-              {active ? (
-                <Icon
-                  name="check"
-                  size={20}
-                  className="text-white drop-shadow"
-                />
-              ) : null}
+              {active ? <Icon name="check" size={20} className="text-white drop-shadow" /> : null}
             </button>
           );
         })}
@@ -329,15 +299,13 @@ interface DocsNavProps {
   currentPath?: string;
 }
 
-export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
+export function DocsNav({ currentPath = '/docs' }: DocsNavProps) {
   const active = activeValue(currentPath);
-  const [mode, setMode] = useState<Mode>("light");
+  const [mode, setMode] = useState<Mode>('light');
   const [seed, setSeed] = useState<string>(DEFAULT_SEED);
   const [flyoutOpen, setFlyoutOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [drawerComponentsOpen, setDrawerComponentsOpen] = useState(
-    active === "components",
-  );
+  const [drawerComponentsOpen, setDrawerComponentsOpen] = useState(active === 'components');
   const closeTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
@@ -368,7 +336,7 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
     closeTimer.current = window.setTimeout(() => setFlyoutOpen(false), 120);
   };
 
-  const dark = mode === "dark";
+  const dark = mode === 'dark';
 
   return (
     <>
@@ -380,10 +348,7 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
             leading={
               <DialogPrimitive.Trigger
                 render={
-                  <IconButton
-                    variant="standard"
-                    aria-label="ナビゲーションを開く"
-                  >
+                  <IconButton variant="standard" aria-label="ナビゲーションを開く">
                     <Icon name="menu" />
                   </IconButton>
                 }
@@ -406,10 +371,7 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
               </IconButton>
             }
           >
-            <a
-              href="/docs"
-              className="flex items-center gap-2 text-title-medium text-on-surface"
-            >
+            <a href="/docs" className="flex items-center gap-2 text-title-medium text-on-surface">
               <Icon name="palette" className="text-primary" />
               m3-baseui
             </a>
@@ -422,18 +384,12 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
             <div className="mb-2 flex items-center gap-2 px-2 py-2">
               <DialogPrimitive.Close
                 render={
-                  <IconButton
-                    variant="standard"
-                    aria-label="ナビゲーションを閉じる"
-                  >
+                  <IconButton variant="standard" aria-label="ナビゲーションを閉じる">
                     <Icon name="menu_open" />
                   </IconButton>
                 }
               />
-              <a
-                href="/docs"
-                className="flex items-center gap-2 text-title-medium text-on-surface"
-              >
+              <a href="/docs" className="flex items-center gap-2 text-title-medium text-on-surface">
                 <Icon name="palette" className="text-primary" />
                 m3-baseui
               </a>
@@ -464,8 +420,8 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
                         <Icon
                           name="expand_more"
                           className={cn(
-                            "transition-transform duration-150",
-                            drawerComponentsOpen && "rotate-180",
+                            'transition-transform duration-150',
+                            drawerComponentsOpen && 'rotate-180',
                           )}
                         />
                       }
@@ -477,9 +433,8 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
                         <a
                           href={COMPONENTS_HREF}
                           aria-current={
-                            active === "components" &&
-                            currentPath === COMPONENTS_HREF
-                              ? "page"
+                            active === 'components' && currentPath === COMPONENTS_HREF
+                              ? 'page'
                               : undefined
                           }
                           className="mb-1 block rounded-full px-4 py-2 text-body-medium text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface"
@@ -497,17 +452,13 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
             <div className="mt-auto flex flex-col gap-3 px-2 pt-6">
               <Button
                 variant="outlined"
-                startIcon={<Icon name={dark ? "light_mode" : "dark_mode"} />}
-                onClick={() => changeMode(dark ? "light" : "dark")}
+                startIcon={<Icon name={dark ? 'light_mode' : 'dark_mode'} />}
+                onClick={() => changeMode(dark ? 'light' : 'dark')}
               >
-                {dark ? "ライトモードに切替" : "ダークモードに切替"}
+                {dark ? 'ライトモードに切替' : 'ダークモードに切替'}
               </Button>
               {/* biome-ignore lint/a11y/useSemanticElements: toolbar-style swatch group, not a form fieldset */}
-              <div
-                role="group"
-                aria-label="配色（シード色）"
-                className="flex flex-wrap gap-2 px-1"
-              >
+              <div role="group" aria-label="配色（シード色）" className="flex flex-wrap gap-2 px-1">
                 {SEEDS.map((option) => {
                   const isActiveSeed = seed === option.value;
                   return (
@@ -520,17 +471,13 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
                       onClick={() => changeSeed(option.value)}
                       className={
                         isActiveSeed
-                          ? "relative flex size-8 items-center justify-center rounded-full ring-2 ring-primary ring-offset-2 ring-offset-surface-container-low"
-                          : "relative flex size-8 items-center justify-center rounded-full"
+                          ? 'relative flex size-8 items-center justify-center rounded-full ring-2 ring-primary ring-offset-2 ring-offset-surface-container-low'
+                          : 'relative flex size-8 items-center justify-center rounded-full'
                       }
                       style={{ background: option.value }}
                     >
                       {isActiveSeed ? (
-                        <Icon
-                          name="check"
-                          size={18}
-                          className="text-white drop-shadow"
-                        />
+                        <Icon name="check" size={18} className="text-white drop-shadow" />
                       ) : null}
                     </button>
                   );
@@ -545,8 +492,7 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
       <aside
         className="fixed left-0 top-0 z-30 hidden h-screen w-20 flex-col border-r border-outline-variant bg-surface lg:flex"
         onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget as Node | null))
-            setFlyoutOpen(false);
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFlyoutOpen(false);
         }}
       >
         <a
@@ -568,7 +514,7 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
                 key={item.value}
                 value={item.value}
                 icon={<Icon name={item.icon} />}
-                aria-current={item.value === active ? "page" : undefined}
+                aria-current={item.value === active ? 'page' : undefined}
                 // biome-ignore lint/a11y/useAnchorContent: icon + label are injected as children by NavigationRail.Item's render
                 render={<a href={item.href} />}
                 {...(item.expandable
@@ -590,20 +536,15 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
             <Dialog.Trigger
               render={
                 <IconButton variant="standard" aria-label="テーマ設定">
-                  <Icon name={dark ? "dark_mode" : "light_mode"} />
+                  <Icon name={dark ? 'dark_mode' : 'light_mode'} />
                 </IconButton>
               }
             />
             <Dialog.Portal>
               <Dialog.Backdrop />
-              <Dialog.Popup style={{ width: "360px" }}>
+              <Dialog.Popup style={{ width: '360px' }}>
                 <Dialog.Title>テーマ設定</Dialog.Title>
-                <ThemeMenuBody
-                  mode={mode}
-                  seed={seed}
-                  onMode={changeMode}
-                  onSeed={changeSeed}
-                />
+                <ThemeMenuBody mode={mode} seed={seed} onMode={changeMode} onSeed={changeSeed} />
                 <Dialog.Actions>
                   <Dialog.Close render={<Button variant="text">閉じる</Button>} />
                 </Dialog.Actions>
@@ -633,6 +574,7 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
             from behind the rail. */}
         <div
           aria-hidden={!flyoutOpen}
+          inert={!flyoutOpen ? '' : undefined}
           className="pointer-events-none absolute left-full top-0 z-40 h-screen w-80 overflow-hidden"
         >
           {/* biome-ignore lint/a11y/noStaticElementInteractions: hover-intent bridge; keyboard open/close is handled via the rail item onFocus and the aside onBlur */}
@@ -640,9 +582,9 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
             onMouseEnter={openFlyout}
             onMouseLeave={scheduleCloseFlyout}
             className={cn(
-              "pointer-events-auto flex h-full w-72 flex-col overflow-y-auto rounded-e-large bg-surface-container-low p-3 shadow-level2",
-              "transition-transform duration-300 ease-emphasized will-change-transform",
-              flyoutOpen ? "translate-x-0" : "-translate-x-full",
+              'pointer-events-auto flex h-full w-72 flex-col overflow-y-auto rounded-e-large bg-surface-container-low p-3 shadow-level2',
+              'transition-transform duration-300 ease-emphasized will-change-transform',
+              flyoutOpen ? 'translate-x-0' : '-translate-x-full',
             )}
           >
             <p className="px-3 pb-1 pt-2 text-title-small text-on-surface-variant">
@@ -650,14 +592,12 @@ export function DocsNav({ currentPath = "/docs" }: DocsNavProps) {
             </p>
             <a
               href={COMPONENTS_HREF}
-              aria-current={
-                currentPath === COMPONENTS_HREF ? "page" : undefined
-              }
+              aria-current={currentPath === COMPONENTS_HREF ? 'page' : undefined}
               className={cn(
-                "mb-1 block rounded-full px-4 py-2 text-body-medium transition-colors",
+                'mb-1 block rounded-full px-4 py-2 text-body-medium transition-colors',
                 currentPath === COMPONENTS_HREF
-                  ? "bg-secondary-container text-on-secondary-container"
-                  : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
+                  ? 'bg-secondary-container text-on-secondary-container'
+                  : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface',
               )}
             >
               コンポーネント一覧
