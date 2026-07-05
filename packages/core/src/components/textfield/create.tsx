@@ -21,12 +21,14 @@ function TextFieldIconSlot({
   decorativeClass,
   buttonClass,
   disabled,
+  slotName,
 }: {
   icon: React.ReactNode;
   action?: TextFieldIconAction;
   decorativeClass: string;
   buttonClass: string;
   disabled?: boolean;
+  slotName: 'leading' | 'trailing';
 }) {
   if (action) {
     return (
@@ -36,6 +38,7 @@ function TextFieldIconSlot({
         aria-label={action['aria-label']}
         onClick={action.onClick}
         disabled={disabled}
+        data-slot={`${slotName}-icon-button`}
       >
         {icon}
         <TouchTarget />
@@ -44,7 +47,7 @@ function TextFieldIconSlot({
   }
 
   return (
-    <span className={decorativeClass} aria-hidden="true">
+    <span className={decorativeClass} aria-hidden="true" data-slot={`${slotName}-icon`}>
       {icon}
     </span>
   );
@@ -110,6 +113,7 @@ export function createTextField(resolve: TextFieldClassResolver) {
               decorativeClass={c.leadingIcon}
               buttonClass={c.leadingIconButton}
               disabled={disabled}
+              slotName="leading"
             />
           ) : null}
           <span className={c.inputWrap}>
@@ -137,6 +141,7 @@ export function createTextField(resolve: TextFieldClassResolver) {
               decorativeClass={c.trailingIcon}
               buttonClass={c.trailingIconButton}
               disabled={disabled}
+              slotName="trailing"
             />
           ) : null}
         </div>

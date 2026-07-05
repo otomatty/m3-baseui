@@ -103,6 +103,7 @@ describe('TextField tokens', () => {
       />,
     );
     const button = screen.getByRole('button', { name: 'クリア' });
+    expect(button).toHaveAttribute('data-slot', 'trailing-icon-button');
     expect(button.querySelector('[data-touch-target]')).not.toBeNull();
     expect(textFieldTv().trailingIconButton()).toContain('size-12');
   });

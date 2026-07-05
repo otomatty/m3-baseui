@@ -19,6 +19,3 @@ blob-report/
 
 # Storybook (issue #6)
 storybook-static/
-
-# e2e test results
-e2e/visual.e2e.ts-snapshots/

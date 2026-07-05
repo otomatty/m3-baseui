@@ -10,7 +10,8 @@
 import { createTextField } from '@m3-baseui/core';
 import { tv } from 'tailwind-variants';
 
-const iconVisual = 'inline-flex items-center justify-center shrink-0 text-on-surface-variant [&>svg]:size-6';
+const iconVisual =
+  'inline-flex items-center justify-center shrink-0 text-on-surface-variant [&>svg]:size-6';
 
 export const textFieldTv = tv({
   slots: {
@@ -34,13 +35,13 @@ export const textFieldTv = tv({
     leadingIcon: iconVisual,
     trailingIcon: iconVisual,
     leadingIconButton: [
-      'relative inline-flex items-center justify-center shrink-0 size-12 p-0',
-      'border-0 bg-transparent cursor-pointer text-on-surface-variant [&>svg]:size-6',
+      iconVisual,
+      'relative size-12 p-0 border-0 bg-transparent cursor-pointer',
       'group-data-[disabled]:pointer-events-none',
     ],
     trailingIconButton: [
-      'relative inline-flex items-center justify-center shrink-0 size-12 p-0',
-      'border-0 bg-transparent cursor-pointer text-on-surface-variant [&>svg]:size-6',
+      iconVisual,
+      'relative size-12 p-0 border-0 bg-transparent cursor-pointer',
       'group-data-[disabled]:pointer-events-none',
     ],
     supporting: [
