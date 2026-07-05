@@ -32,7 +32,7 @@ describe('ButtonGroup', () => {
     expect(cls).toContain('[&>*:not(:first-child):not(:last-child)]:rounded-small');
   });
 
-  test('Expressive: connected seam morphs to extra-small on press', () => {
+  test('Expressive: connected seam morphs to extra-small on press (first/middle/last)', () => {
     const cls = buttonGroup({ variant: 'connected' });
     expect(cls).toContain(
       '[&>*:not(:first-child):not(:last-child):is(:active,[data-pressed])]:rounded-extra-small',
@@ -40,12 +40,29 @@ describe('ButtonGroup', () => {
     expect(cls).toContain(
       '[&>*:first-child:not(:last-child):is(:active,[data-pressed])]:rounded-e-extra-small',
     );
+    expect(cls).toContain(
+      '[&>*:last-child:not(:first-child):is(:active,[data-pressed])]:rounded-s-extra-small',
+    );
   });
 
-  test('Expressive: a selected connected child rounds fully', () => {
+  test('Expressive: a selected connected child rounds fully (first/middle/last)', () => {
     const cls = buttonGroup({ variant: 'connected' });
     expect(cls).toContain('[&>*[data-selected]:not(:first-child):not(:last-child)]:rounded-full');
     expect(cls).toContain('[&>*[data-selected]:first-child:not(:last-child)]:rounded-e-full');
+    expect(cls).toContain('[&>*[data-selected]:last-child:not(:first-child)]:rounded-s-full');
+  });
+
+  test('a selected connected child exposes data-selected + aria-pressed for the seam morph', () => {
+    render(
+      <ButtonGroup variant="connected" aria-label="表示切替">
+        <Button selected>グリッド</Button>
+        <Button selected={false}>リスト</Button>
+      </ButtonGroup>,
+    );
+    // The seam morph keys off data-selected — assert the DOM contract, not just classes.
+    const grid = screen.getByRole('button', { name: 'グリッド', pressed: true });
+    expect(grid).toHaveAttribute('data-selected');
+    expect(screen.getByRole('button', { name: 'リスト' })).not.toHaveAttribute('data-selected');
   });
 
   test('Expressive: pressed child grows by the ExpandedRatio (squeeze)', () => {

@@ -11,12 +11,8 @@
  */
 import { createNavigationBar } from '@m3-baseui/core';
 import { tv } from '../../tv';
-
-// Color transitions use the M3 Expressive effects spring (critically damped, no
-// bounce). Tailwind exposes the spring easings but not their durations, so the
-// duration is read from the raw custom property.
-const SPRING_COLOR =
-  'transition-colors duration-[var(--md-sys-motion-duration-spring-effects-default)] ease-spring-effects-default';
+// Color transitions use the M3 Expressive effects spring (critically damped, no bounce).
+import { SPRING_COLOR } from '../../motion';
 
 export const navigationBarTv = tv({
   slots: {

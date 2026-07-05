@@ -22,6 +22,13 @@ describe('Toolbar', () => {
     expect(screen.getByRole('toolbar', { name: 'v' })).toHaveAttribute('data-variant', 'vibrant');
   });
 
+  test('type defaults to floating and docked is reflected via data-type', () => {
+    const { rerender } = render(<Toolbar aria-label="t" />);
+    expect(screen.getByRole('toolbar', { name: 't' })).toHaveAttribute('data-type', 'floating');
+    rerender(<Toolbar aria-label="t" type="docked" />);
+    expect(screen.getByRole('toolbar', { name: 't' })).toHaveAttribute('data-type', 'docked');
+  });
+
   test('vertical orientation sets aria-orientation and data-orientation', () => {
     render(<Toolbar aria-label="vert" orientation="vertical" />);
     const bar = screen.getByRole('toolbar', { name: 'vert' });

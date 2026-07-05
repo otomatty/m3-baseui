@@ -155,6 +155,7 @@ export function App() {
   const [textStyles, setTextStyles] = useState<string[]>(['bold']);
   const [drawer, setDrawer] = useState('inbox');
   const [rail, setRail] = useState<string[]>(['home']);
+  const [railExpanded, setRailExpanded] = useState<string[]>(['home']);
 
   return (
     <ThemeProvider seed={seed} scheme="tonalSpot" mode="system">
@@ -1046,8 +1047,8 @@ export function App() {
             <div className="mt-6 h-[400px] w-fit overflow-hidden rounded-large border border-outline-variant">
               <NavigationRail.Root
                 expanded
-                value={rail}
-                onValueChange={setRail}
+                value={railExpanded}
+                onValueChange={setRailExpanded}
                 aria-label="拡張ナビゲーションレール"
                 header={
                   <Fab color="primary" aria-label="作成">

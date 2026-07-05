@@ -98,7 +98,11 @@ export const trailingBase = style({
   borderEndEndRadius: vars.sys.shape.full,
   selectors: {
     ...surfaceSelectors,
-    '&:hover, &[data-pressed]': {
+    // The seam morphs to medium on hover/press — but NOT while the menu is open,
+    // where the whole button is a full circle. The explicit `:not([data-popup-open])`
+    // guard (rather than relying on declaration order) makes open win over hover and
+    // matches the Tailwind build for drop-in parity.
+    '&:hover:not([data-popup-open]), &[data-pressed]:not([data-popup-open])': {
       borderStartStartRadius: vars.sys.shape.medium,
       borderEndStartRadius: vars.sys.shape.medium,
     },
