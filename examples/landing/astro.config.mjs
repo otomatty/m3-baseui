@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import expressiveCode from 'astro-expressive-code';
 import tailwindcss from '@tailwindcss/vite';
 
 // Used for canonical URLs, OGP and the sitemap. Defaults to the Cloudflare
@@ -15,7 +16,7 @@ export default defineConfig({
   // A purely static site (`output: "static"`), so no Cloudflare adapter is
   // needed — Pages serves the `dist/` output directly.
   site,
-  integrations: [react(), ...(isPreviewBuild ? [] : [sitemap()])],
+  integrations: [expressiveCode(), react(), ...(isPreviewBuild ? [] : [sitemap()])],
   vite: {
     plugins: [tailwindcss()],
     // Resolve workspace packages to their TS source in dev/build so no

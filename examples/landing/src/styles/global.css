@@ -170,26 +170,13 @@ body {
   margin: 0.75rem 0 1.25rem;
 }
 
-.doc-code-block__title {
-  margin: 0 0 0.375rem;
-  font-size: var(--md-sys-typescale-label-medium-size, 0.75rem);
-  color: rgb(var(--md-sys-color-on-surface-variant));
-}
-
-.doc-code-block__pre {
-  overflow-x: auto;
+/* Expressive Code: M3 トークンとレイアウトの微調整 */
+.doc-code-block .expressive-code {
   margin: 0;
-  border-radius: 0.75rem;
-  background: rgb(var(--md-sys-color-surface-container-highest));
-  padding: 1rem 1.25rem;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: rgb(var(--md-sys-color-on-surface));
 }
 
-.doc-code-block__pre code {
-  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
-  white-space: pre;
+.doc-code-block .frame {
+  --ec-frm-frameBoxShadowCssValue: none;
 }
 
 .doc-props-table-wrap {
