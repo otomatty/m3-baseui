@@ -188,6 +188,30 @@ export function App() {
                 Trailing
               </Button>
             </div>
+            <div className="flex flex-wrap items-center gap-3">
+              {(['xs', 's', 'm', 'l', 'xl'] as const).map((s) => (
+                <Button key={s} size={s}>
+                  {s.toUpperCase()}
+                </Button>
+              ))}
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              {(['xs', 's', 'm', 'l', 'xl'] as const).map((s) => (
+                <Button key={s} size={s} shape="square">
+                  {s.toUpperCase()}
+                </Button>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Button selected={false}>Unselected</Button>
+              <Button selected>Selected</Button>
+              <Button variant="outlined" selected={false}>
+                Unselected
+              </Button>
+              <Button variant="outlined" selected>
+                Selected
+              </Button>
+            </div>
           </Section>
 
           <Section title="Icon Button">
