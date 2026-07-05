@@ -64,7 +64,8 @@ export const icon = style({
 });
 
 export const popup = style({
-  minWidth: 'var(--anchor-width)',
+  minWidth: 'max(112px, var(--anchor-width))',
+  maxWidth: '280px',
   maxHeight: 'var(--available-height)',
   paddingBlock: '8px',
   overflow: 'auto',
@@ -80,12 +81,20 @@ export const popup = style({
   },
 });
 
+const labelLarge = {
+  fontFamily: vars.sys.typescale.labelLarge.fontFamily,
+  fontWeight: vars.sys.typescale.labelLarge.fontWeight,
+  fontSize: vars.sys.typescale.labelLarge.fontSize,
+  lineHeight: vars.sys.typescale.labelLarge.lineHeight,
+  letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+} as const;
+
 export const item = style({
   position: 'relative',
   display: 'grid',
   gridTemplateColumns: '24px 1fr auto',
   alignItems: 'center',
-  gap: '8px',
+  gap: '12px',
   height: '48px',
   paddingInline: '12px',
   overflow: 'hidden',
@@ -93,11 +102,7 @@ export const item = style({
   userSelect: 'none',
   outline: 'none',
   color: `rgb(${vars.sys.color.onSurface})`,
-  fontFamily: vars.sys.typescale.labelLarge.fontFamily,
-  fontWeight: vars.sys.typescale.labelLarge.fontWeight,
-  fontSize: vars.sys.typescale.labelLarge.fontSize,
-  lineHeight: vars.sys.typescale.labelLarge.lineHeight,
-  letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+  ...labelLarge,
   selectors: {
     '&::before': {
       content: '""',
@@ -111,6 +116,12 @@ export const item = style({
     '&:hover::before': { opacity: vars.sys.state.hover },
     '&[data-highlighted]::before': { opacity: vars.sys.state.hover },
     '&:active::before': { opacity: vars.sys.state.pressed },
+    // M3 selectable menu item: secondary-container fill + on-secondary-container label.
+    '&[data-selected]': {
+      background: `rgb(${vars.sys.color.secondaryContainer})`,
+      color: `rgb(${vars.sys.color.onSecondaryContainer})`,
+      borderRadius: vars.sys.shape.extraSmall,
+    },
     // M3 disabled (per-token, not a blanket fade): label + trailing supporting
     // text on-surface/0.38, no state layer.
     '&[data-disabled]': {
@@ -130,6 +141,9 @@ globalStyle(`${item} [data-slot="select-trailing"]`, {
   fontSize: vars.sys.typescale.labelLarge.fontSize,
   lineHeight: vars.sys.typescale.labelLarge.lineHeight,
   letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+});
+globalStyle(`${item}[data-selected] [data-slot="select-trailing"]`, {
+  color: `rgb(${vars.sys.color.onSecondaryContainer})`,
 });
 globalStyle(`${item}[data-disabled] [data-slot="select-trailing"]`, {
   color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
@@ -157,12 +171,15 @@ export const itemIndicator = style({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: `rgb(${vars.sys.color.primary})`,
+  color: `rgb(${vars.sys.color.onSurface})`,
   // keepMounted keeps the indicator in every item's grid; hide the glyph unless
   // the parent item is selected so the 24px column stays reserved (labels align).
   visibility: 'hidden',
   selectors: {
-    [`${item}[data-selected] &`]: { visibility: 'visible' },
+    [`${item}[data-selected] &`]: {
+      visibility: 'visible',
+      color: `rgb(${vars.sys.color.onSecondaryContainer})`,
+    },
     // M3 disabled: the selected-check indicator dims with its row (own text color).
     [`${item}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
   },

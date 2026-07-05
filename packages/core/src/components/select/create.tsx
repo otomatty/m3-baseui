@@ -3,9 +3,10 @@
  * create-select.tsx — headless M3 Select parts.
  *
  * Base UI Select composition exposed as a namespace. The Trigger is styled as an
- * M3 outlined field; the Popup reuses the M3 menu surface; each Item gets a
- * state layer + ripple and a leading ItemIndicator (check). Scroll arrows are
- * sticky affordances shown at the popup edges when the list overflows.
+ * M3 outlined field; the Popup is an M3 menu surface (112–280dp, at least anchor
+ * width). Selectable items use label-large, secondary-container fill when
+ * selected, and a leading check (on-secondary-container when selected). Scroll
+ * arrows are sticky affordances when the list overflows.
  */
 import * as React from 'react';
 import { Select as SelectPrimitive } from '@base-ui/react/select';

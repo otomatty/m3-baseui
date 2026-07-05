@@ -3,8 +3,9 @@
  *
  * Trigger = outlined field (56dp; 3dp primary border when open/focused, per the
  * M3 outlined-field focus-outline-width). Popup = M3 menu surface sized to the
- * anchor. Items mirror the Menu item (state layer + ripple) with a leading check
- * indicator. Same DOM as the VE build.
+ * anchor, clamped to the M3 menu 112–280dp bounds. Selectable items use
+ * label-large, a leading check (on-surface; on-secondary-container when
+ * selected), and secondary-container fill on the selected row. Same DOM as VE.
  *
  * Disabled follows the M3 outlined-field per-token opacities (not a blanket
  * fade): outline on-surface/0.12, label/value + icon on-surface/0.38.
@@ -27,7 +28,7 @@ export const selectTv = tv({
     value: 'flex-1 truncate',
     icon: 'flex text-on-surface-variant transition-transform duration-150 group-data-[popup-open]:rotate-180 group-data-[disabled]:text-on-surface/[0.38]',
     popup: [
-      'min-w-[var(--anchor-width)] max-h-[var(--available-height)] py-2 overflow-auto',
+      'min-w-[max(112px,var(--anchor-width))] max-w-[280px] max-h-[var(--available-height)] py-2 overflow-auto',
       'bg-surface-container text-on-surface rounded-extra-small shadow-level2',
       'origin-[var(--transform-origin)] transition-[opacity,transform] duration-150 ease-standard',
       'data-[starting-style]:opacity-0 data-[starting-style]:scale-95',
@@ -35,21 +36,24 @@ export const selectTv = tv({
       'focus:outline-none',
     ],
     item: [
-      'group relative grid grid-cols-[24px_1fr_auto] items-center gap-2 h-12 px-3 overflow-hidden',
+      'group relative grid grid-cols-[24px_1fr_auto] items-center gap-3 h-12 px-3 overflow-hidden',
       'cursor-pointer select-none outline-none text-label-large text-on-surface',
       'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
       'hover:before:opacity-[var(--md-sys-state-hover)]',
       'data-[highlighted]:before:opacity-[var(--md-sys-state-hover)]',
       'active:before:opacity-[var(--md-sys-state-pressed)]',
+      // M3 selectable menu item: secondary-container fill + on-secondary-container label.
+      'data-[selected]:bg-secondary-container data-[selected]:text-on-secondary-container data-[selected]:rounded-extra-small',
       // M3 disabled (per-token, not a blanket fade): label + trailing supporting
       // text on-surface/0.38, no state layer.
       'data-[disabled]:text-on-surface/[0.38] data-[disabled]:before:opacity-0 data-[disabled]:pointer-events-none',
       'data-[disabled]:[&_[data-slot=select-trailing]]:text-on-surface/[0.38]',
       // M3 trailing supporting text (e.g. meta) sits in the last column.
       '[&_[data-slot=select-trailing]]:pl-4 [&_[data-slot=select-trailing]]:text-label-large [&_[data-slot=select-trailing]]:text-on-surface-variant',
+      'data-[selected]:[&_[data-slot=select-trailing]]:text-on-secondary-container',
     ],
     itemIndicator:
-      'inline-flex items-center justify-center text-primary invisible group-data-[selected]:visible group-data-[disabled]:text-on-surface/[0.38]',
+      'inline-flex items-center justify-center text-on-surface invisible group-data-[selected]:visible group-data-[selected]:text-on-secondary-container group-data-[disabled]:text-on-surface/[0.38]',
     groupLabel: 'px-3 py-2 text-label-small text-on-surface-variant',
     // Sticky scroll affordances at the popup edges; surface-tinted with a chevron.
     scrollUpArrow: [
