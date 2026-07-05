@@ -57,12 +57,16 @@ describe('NavigationRail tokens', () => {
     expect(s.item()).toContain('h-16');
   });
 
-  test('Expressive: active label is secondary + labelMediumEmphasized', () => {
+  test('Expressive: active label is secondary + weight-emphasized (size-preserving)', () => {
     const s = navigationRailTv();
     // NavigationRailColorTokens.ItemActiveLabelText = Secondary.
     expect(s.label()).toContain('group-data-[pressed]:text-secondary');
-    expect(s.label()).toContain('group-data-[pressed]:text-label-medium-emphasized');
-    expect(s.label()).not.toContain('font-bold');
+    // Weight-only emphasis (700) so it never downgrades the expanded item's
+    // labelLarge size back to labelMedium — matches the VE build.
+    expect(s.label()).toContain('group-data-[pressed]:font-bold');
+    expect(s.label()).not.toContain('group-data-[pressed]:text-label-medium-emphasized');
+    // Content stays above the indicator pill in the expanded layout.
+    expect(s.label()).toContain('z-10');
   });
 
   test('Expressive: state layer is on-secondary-container and the indicator springs', () => {
@@ -87,10 +91,12 @@ describe('NavigationRail tokens', () => {
     expect(s.root()).toContain('group/rail');
     expect(s.root()).toContain('data-[expanded]:w-[220px]');
     expect(s.root()).toContain('data-[expanded]:max-w-[360px]');
-    // Items become horizontal (icon left, label right) with labelLarge.
+    // Items become horizontal (icon left, label right) with labelLarge size.
     expect(s.item()).toContain('group-data-[expanded]/rail:flex-row');
     expect(s.item()).toContain('group-data-[expanded]/rail:h-14');
-    expect(s.label()).toContain('group-data-[expanded]/rail:text-label-large');
+    expect(s.label()).toContain(
+      'group-data-[expanded]/rail:text-[length:var(--md-sys-typescale-label-large-size)]',
+    );
     // Modal is an elevated surface-container sheet with a 16dp corner.
     expect(s.root()).toContain('data-[modal]:shadow-level2');
     expect(s.root()).toContain('data-[modal]:rounded-large');

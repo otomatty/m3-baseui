@@ -58,7 +58,9 @@ export const navigationRailTv = tv({
       'group-data-[disabled]:before:opacity-0',
     ],
     icon: [
-      'relative flex items-center justify-center text-on-surface-variant',
+      // `z-10` keeps the icon above the active-indicator pill when the expanded
+      // rail's indicator spans the whole item.
+      'relative z-10 flex items-center justify-center text-on-surface-variant',
       SPRING_COLOR,
       // Raw <svg> icons render at 24dp (Material Symbols set their own size).
       '[&_svg]:size-6',
@@ -70,12 +72,20 @@ export const navigationRailTv = tv({
       'group-[&[data-disabled][data-pressed]]:text-on-surface/[0.38]',
     ],
     label: [
-      'text-label-medium text-on-surface-variant',
+      // `relative z-10` keeps the label above the indicator pill / state layer,
+      // which spans the whole item in the expanded horizontal layout.
+      'relative z-10 text-label-medium text-on-surface-variant',
       SPRING_COLOR,
-      // Expanded horizontal items use labelLarge (NavigationRailHorizontalItemTokens).
-      'group-data-[expanded]/rail:text-label-large',
-      // Expressive: active label is `secondary`, emphasized via labelMediumEmphasized.
-      'group-data-[pressed]:text-secondary group-data-[pressed]:text-label-medium-emphasized',
+      // Expanded horizontal items use the labelLarge size/line-height/tracking
+      // (NavigationRailHorizontalItemTokens) but deliberately NOT its font-weight:
+      // leaving weight free lets the active `font-bold` win (tailwind-merge does not
+      // merge weight across group-data variants), and it mirrors the VE build.
+      'group-data-[expanded]/rail:text-[length:var(--md-sys-typescale-label-large-size)]',
+      'group-data-[expanded]/rail:leading-[var(--md-sys-typescale-label-large-line-height)]',
+      'group-data-[expanded]/rail:tracking-[var(--md-sys-typescale-label-large-tracking)]',
+      // Expressive: active label is `secondary` and weight-emphasized (700), size-
+      // preserving so the expanded labelLarge is not downgraded — matches the VE build.
+      'group-data-[pressed]:text-secondary group-data-[pressed]:font-bold',
       // M3 disabled: label dims to on-surface/0.38 (same-element override).
       'group-data-[disabled]:text-on-surface/[0.38]',
       'group-[&[data-disabled][data-pressed]]:text-on-surface/[0.38]',

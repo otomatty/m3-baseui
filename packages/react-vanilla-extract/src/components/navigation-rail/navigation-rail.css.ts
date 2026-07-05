@@ -124,6 +124,9 @@ export const indicator = style({
 
 export const icon = style({
   position: 'relative',
+  // Keep the icon above the active-indicator pill when the expanded rail's
+  // indicator spans the whole item.
+  zIndex: 10,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -143,6 +146,10 @@ export const icon = style({
 globalStyle(`${icon} svg`, { width: '24px', height: '24px' });
 
 export const label = style({
+  // Keep the label above the indicator pill / state layer, which spans the whole
+  // item in the expanded horizontal layout.
+  position: 'relative',
+  zIndex: 10,
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
   fontFamily: vars.sys.typescale.labelMedium.fontFamily,
   fontWeight: vars.sys.typescale.labelMedium.fontWeight,
