@@ -1,0 +1,49 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+---
+
+<DocsLayout
+  title="はじめに"
+  description="m3-baseui ドキュメント — Base UI 上の Material Design 3 React コンポーネントライブラリ。"
+>
+  <h1>ドキュメント</h1>
+  <p class="doc-lead">
+    m3-baseui は Base UI をベースに Material Design 3 を実装した React コンポーネントライブラリです。
+    vanilla-extract と Tailwind CSS v4 の 2 エンジンに drop-in 互換で対応し、動的配色とアクセシビリティを備えています。
+  </p>
+
+  <section class="doc-section">
+    <h2>クイックスタート</h2>
+    <ol>
+      <li><a href="/docs/getting-started">導入</a> — パッケージのインストールと CSS 配線</li>
+      <li><a href="/docs/theming">テーマ・動的配色</a> — ThemeProvider と seed / scheme</li>
+      <li><a href="/docs/engines">スタイリングエンジン</a> — Tailwind v4 と vanilla-extract の選択</li>
+      <li><a href="/docs/components">コンポーネント一覧</a> — 各 API と実装例</li>
+    </ol>
+  </section>
+
+  <section class="doc-section">
+    <h2>アーキテクチャ</h2>
+    <p>
+      4 レイヤー構成です。Layer 2 の <code>--md-sys-*</code> CSS 変数がエンジン非依存の境界線となり、
+      React ロジックは <code>@m3-baseui/core</code> に一元化されています。
+    </p>
+    <ul>
+      <li><strong>Behavior</strong> — Base UI（a11y / focus / keyboard / data-* 状態）</li>
+      <li><strong>Token</strong> — <code>@m3-baseui/tokens</code>（単一ソース → CSS 変数）</li>
+      <li><strong>Styling</strong> — Tailwind v4 または vanilla-extract のクラス解決器</li>
+      <li><strong>Theme</strong> — ThemeProvider / 動的配色（HCT）</li>
+    </ul>
+  </section>
+
+  <section class="doc-section">
+    <h2>Storybook について</h2>
+    <div class="doc-callout">
+      <p>
+        リポジトリ内の Storybook（<code>bun run storybook</code>）は<strong>ローカル開発用</strong>のカタログです。
+        全バリアントの目視確認や Engine 切替の drop-in 検証に使います。
+        この公開ドキュメントサイトとは別にメンテナンスします。
+      </p>
+    </div>
+  </section>
+</DocsLayout>

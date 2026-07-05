@@ -1,0 +1,129 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import CodeBlock from '../../components/docs/CodeBlock.astro';
+---
+
+<DocsLayout
+  title="テーマ・動的配色"
+  description="ThemeProvider、seed / scheme / contrast / mode による M3 動的配色の設定方法。"
+>
+  <h1>テーマ・動的配色</h1>
+  <p class="doc-lead">
+    m3-baseui は Material Color Utilities（HCT）でシード色から配色スキームを生成します。
+    <code>ThemeProvider</code> が <code>--md-sys-color-*</code> CSS 変数を書き込み、
+    全コンポーネントがトークン経由で色を参照します。
+  </p>
+
+  <p class="doc-m3-ref">
+    <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+    参考: Material Design 3 公式ガイドライン{' '}
+    <a href="https://m3.material.io/styles/color/system/overview" target="_blank" rel="noopener noreferrer">
+      m3.material.io/styles/color/system/overview
+    </a>
+  </p>
+
+  <div class="doc-callout">
+    <p>
+      このドキュメントサイト右上のヘッダー（M3 の
+      <a href="https://m3.material.io/components/app-bars/overview" target="_blank" rel="noopener noreferrer">Top app bar</a>）
+      から、シード色（カラー）とライト / ダークモードを切り替えられます。
+      選択内容は <code>localStorage</code> に保存され、サイト全体へリアルタイムに反映されます。
+    </p>
+  </div>
+
+  <section class="doc-section">
+    <h2>ThemeProvider</h2>
+    <CodeBlock
+      code={`<ThemeProvider
+  seed="#6750A4"
+  scheme="tonalSpot"
+  mode="system"
+  contrast="standard"
+>
+  {children}
+</ThemeProvider>`}
+    />
+    <table class="doc-props-table">
+      <thead>
+        <tr>
+          <th scope="col">Prop</th>
+          <th scope="col">型</th>
+          <th scope="col">既定値</th>
+          <th scope="col">説明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>seed</code></td>
+          <td><code>string</code></td>
+          <td>—</td>
+          <td>16 進シード色。設定すると動的配色が有効になります</td>
+        </tr>
+        <tr>
+          <td><code>scheme</code></td>
+          <td><code>SchemeVariant</code></td>
+          <td><code>tonalSpot</code></td>
+          <td>tonalSpot / vibrant / expressive / neutral / content / fidelity</td>
+        </tr>
+        <tr>
+          <td><code>mode</code></td>
+          <td><code>'light' | 'dark' | 'system'</code></td>
+          <td><code>system</code></td>
+          <td>ライト / ダーク / OS 設定に追従</td>
+        </tr>
+        <tr>
+          <td><code>contrast</code></td>
+          <td><code>'standard' | 'medium' | 'high'</code></td>
+          <td><code>standard</code></td>
+          <td>コントラストレベル</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="doc-section">
+    <h2>useTheme でモード切替</h2>
+    <CodeBlock
+      code={`import { IconButton, useTheme } from '@m3-baseui/react-tailwind';
+
+function ModeToggle() {
+  const { resolvedMode, setMode } = useTheme();
+  const dark = resolvedMode === 'dark';
+  return (
+    <IconButton
+      variant="tonal"
+      aria-label={dark ? 'ライトモード' : 'ダークモード'}
+      onClick={() => setMode(dark ? 'light' : 'dark')}
+    >
+      …
+    </IconButton>
+  );
+}`}
+    />
+  </section>
+
+  <section class="doc-section">
+    <h2>トークンと CSS 変数</h2>
+    <p>
+      色はチャンネル三値（例: <code>103 80 164</code>）で保持され、
+      <code>rgb(var(--md-sys-color-primary))</code> のように参照します。
+      トークンの単一ソースは <code>packages/tokens/src/tokens.ts</code> です。
+    </p>
+    <p>
+      Tailwind 利用時は <code>@m3-baseui/tokens/theme.css</code> が
+      <code>@theme</code> プリセットへマップし、<code>bg-primary</code> 等のユーティリティが使えます。
+    </p>
+  </section>
+
+  <section class="doc-section">
+    <h2>ポータルと動的配色</h2>
+    <div class="doc-callout">
+      <p>
+        Dialog / Menu / Select などポータル描画するコンポーポントは、
+        ThemeProvider の外側 DOM にマウントされる場合があります。
+        アプリ全体で動的配色を使う場合は、生成された CSS 変数が
+        <code>document.documentElement</code> まで届くよう layout 設計に注意してください。
+      </p>
+    </div>
+  </section>
+</DocsLayout>

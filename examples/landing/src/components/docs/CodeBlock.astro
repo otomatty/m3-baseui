@@ -1,0 +1,13 @@
+---
+interface Props {
+  code: string;
+  title?: string;
+}
+
+const { code, title } = Astro.props;
+---
+
+<div class="doc-code-block">
+  {title && <p class="doc-code-block__title">{title}</p>}
+  <pre class="doc-code-block__pre"><code>{code}</code></pre>
+</div>

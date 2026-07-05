@@ -1,0 +1,25 @@
+---
+import Layout from './Layout.astro';
+import { SiteHeader } from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter.astro';
+import DocSidebar from '../components/docs/DocSidebar.astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const pageTitle = `${title} | m3-baseui`;
+---
+
+<Layout title={pageTitle} description={description}>
+  <SiteHeader currentPath={Astro.url.pathname} client:load />
+  <div class="docs-shell mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-7xl flex-col lg:flex-row">
+    <DocSidebar currentPath={Astro.url.pathname} />
+    <main class="doc-content min-w-0 flex-1 px-4 py-8 sm:px-8 lg:py-10">
+      <slot />
+    </main>
+  </div>
+  <SiteFooter />
+</Layout>

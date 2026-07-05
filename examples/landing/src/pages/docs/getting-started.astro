@@ -1,0 +1,122 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import CodeBlock from '../../components/docs/CodeBlock.astro';
+---
+
+<DocsLayout
+  title="導入"
+  description="m3-baseui のインストール、CSS 配線、ThemeProvider の設定方法。"
+>
+  <h1>導入</h1>
+  <p class="doc-lead">
+    React 18+ プロジェクトに m3-baseui を追加する手順です。スタイリングエンジンは
+    <strong>Tailwind CSS v4</strong> か <strong>vanilla-extract</strong> のどちらか一方を選びます。
+  </p>
+
+  <section class="doc-section">
+    <h2>1. エンジンを選ぶ</h2>
+    <p>
+      両エンジンは同一 DOM・同一 <code>data-*</code> 属性を出力する drop-in 互換です。
+      通常はアプリが既に使っている方を選んでください。
+    </p>
+    <p>
+      詳細は <a href="/docs/engines">スタイリングエンジン</a> を参照してください。
+    </p>
+  </section>
+
+  <section class="doc-section">
+    <h2>2. インストール</h2>
+    <h3>Tailwind CSS v4</h3>
+    <CodeBlock
+      code={`npm i @m3-baseui/react-tailwind @base-ui/react react react-dom
+npm i -D tailwindcss@^4 @tailwindcss/vite`}
+    />
+    <h3>vanilla-extract</h3>
+    <CodeBlock
+      code={`npm i @m3-baseui/react-vanilla-extract @m3-baseui/tokens @base-ui/react react react-dom
+npm i -D @vanilla-extract/css @vanilla-extract/recipes @vanilla-extract/vite-plugin`}
+    />
+    <div class="doc-callout">
+      <p>
+        vanilla-extract 利用時は <code>@m3-baseui/tokens</code> を直接インストールしてください。
+        アプリの CSS が <code>@m3-baseui/tokens/tokens.css</code> を import するためです。
+      </p>
+    </div>
+  </section>
+
+  <section class="doc-section">
+    <h2>3. CSS とビルド設定</h2>
+    <h3>Tailwind v4（Vite）</h3>
+    <CodeBlock
+      title="vite.config.ts"
+      code={`import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+});`}
+    />
+    <CodeBlock
+      title="app.css"
+      code={`@import '@m3-baseui/react-tailwind/preset.css';
+
+/* 公開コンポーネントの Tailwind クラスを生成するために必須 */
+@source "../node_modules/@m3-baseui/react-tailwind/dist";
+@source "./";`}
+    />
+    <div class="doc-callout">
+      <p>
+        <code>@source</code> で <code>react-tailwind/dist</code> を指定しないと、
+        コンポーネントがスタイルなしで描画されることがあります。最も多い導入ミスです。
+      </p>
+    </div>
+
+    <h3>vanilla-extract</h3>
+    <CodeBlock
+      title="vite.config.ts"
+      code={`import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+
+export default defineConfig({
+  plugins: [vanillaExtractPlugin(), react()],
+});`}
+    />
+    <CodeBlock title="app.css" code={`@import '@m3-baseui/tokens/tokens.css';`} />
+  </section>
+
+  <section class="doc-section">
+    <h2>4. ThemeProvider でラップ</h2>
+    <p>インタラクティブなコンポーネントはすべて ThemeProvider の内側で描画してください。</p>
+    <CodeBlock
+      code={`import { Button, ThemeProvider } from '@m3-baseui/react-tailwind';
+
+export default function App() {
+  return (
+    <ThemeProvider seed="#6750A4" scheme="tonalSpot" mode="system" contrast="standard">
+      <Button variant="filled">送信</Button>
+    </ThemeProvider>
+  );
+}`}
+    />
+  </section>
+
+  <section class="doc-section">
+    <h2>5. （任意）アイコン</h2>
+    <CodeBlock code={`npm i @m3-baseui/icons`} />
+    <p>Material Symbols フォントを HTML の <code>&lt;head&gt;</code> に追加します。</p>
+    <CodeBlock
+      code={`<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />`}
+    />
+  </section>
+
+  <section class="doc-section">
+    <h2>よくある問題</h2>
+    <ul>
+      <li><strong>スタイルが当たらない</strong> — Tailwind の <code>@source</code> と CSS import 順序を確認</li>
+      <li><strong>useTheme must be used within ThemeProvider</strong> — ルート/layout を ThemeProvider でラップ</li>
+      <li><strong>アイコンが空白</strong> — Material Symbols フォントリンクを追加</li>
+    </ul>
+  </section>
+</DocsLayout>

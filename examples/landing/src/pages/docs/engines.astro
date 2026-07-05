@@ -1,0 +1,108 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import CodeBlock from '../../components/docs/CodeBlock.astro';
+---
+
+<DocsLayout
+  title="スタイリングエンジン"
+  description="Tailwind CSS v4 と vanilla-extract の選び方、drop-in 互換、import の違い。"
+>
+  <h1>スタイリングエンジン</h1>
+  <p class="doc-lead">
+    m3-baseui は 2 つのスタイリングエンジンを提供します。React ロジックは
+    <code>@m3-baseui/core</code> に共通で、エンジン側はクラス解決器だけが異なります。
+    出力 DOM と <code>data-*</code> 属性は同一です。
+  </p>
+
+  <section class="doc-section">
+    <h2>比較</h2>
+    <table class="doc-props-table">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Tailwind CSS v4</th>
+          <th scope="col">vanilla-extract</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>パッケージ</td>
+          <td><code>@m3-baseui/react-tailwind</code></td>
+          <td><code>@m3-baseui/react-vanilla-extract</code></td>
+        </tr>
+        <tr>
+          <td>向いている場面</td>
+          <td>アプリが Tailwind v4 を使う</td>
+          <td>VE recipes ベースのスタイル</td>
+        </tr>
+        <tr>
+          <td>CSS 要件</td>
+          <td>preset + <code>@source</code></td>
+          <td><code>tokens.css</code> のみ</td>
+        </tr>
+        <tr>
+          <td>ビルド</td>
+          <td><code>@tailwindcss/vite</code></td>
+          <td><code>@vanilla-extract/vite-plugin</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="doc-section">
+    <h2>import の切替</h2>
+    <p>コンポーネント API は同一です。import パスだけ差し替えます。</p>
+    <CodeBlock
+      title="Tailwind"
+      code={`import { Button, ThemeProvider } from '@m3-baseui/react-tailwind';`}
+    />
+    <CodeBlock
+      title="vanilla-extract"
+      code={`import { Button, ThemeProvider } from '@m3-baseui/react-vanilla-extract';`}
+    />
+    <p>ツリーシェイキング向けにサブパス import も利用できます。</p>
+    <CodeBlock
+      code={`import { Button } from '@m3-baseui/react-tailwind/button';
+import { Dialog } from '@m3-baseui/react-tailwind/dialog';`}
+    />
+  </section>
+
+  <section class="doc-section">
+    <h2>@otomatty/* からの移行</h2>
+    <p>旧スコープから npm スコープが <code>@m3-baseui/*</code> に変更されています。</p>
+    <table class="doc-props-table">
+      <thead>
+        <tr>
+          <th scope="col">旧</th>
+          <th scope="col">新</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>@otomatty/react-tailwind</code></td>
+          <td><code>@m3-baseui/react-tailwind</code></td>
+        </tr>
+        <tr>
+          <td><code>@otomatty/react-vanilla-extract</code></td>
+          <td><code>@m3-baseui/react-vanilla-extract</code></td>
+        </tr>
+        <tr>
+          <td><code>@otomatty/tokens</code></td>
+          <td><code>@m3-baseui/tokens</code></td>
+        </tr>
+        <tr>
+          <td><code>@otomatty/icons</code></td>
+          <td><code>@m3-baseui/icons</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="doc-section">
+    <h2>このドキュメントサイトについて</h2>
+    <p>
+      公開ドキュメントのライブデモは Tailwind エンジン（<code>@m3-baseui/react-tailwind</code>）で描画しています。
+      vanilla-extract 版も同一 API・同一 DOM を出力します。drop-in 互換の詳細検証はローカルの Storybook を利用してください。
+    </p>
+  </section>
+</DocsLayout>
