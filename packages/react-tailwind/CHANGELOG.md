@@ -1,5 +1,76 @@
 # @m3-baseui/react-tailwind
 
+## 4.0.0
+
+### Major Changes
+
+- 890e72d: feat(button): M3 Expressive size system, shape morph, toggle, and color revisions
+
+  Bring Button up to M3 Expressive parity (Compose `Button{XSmall..XLarge}Tokens`
+  v0_11_0 + `Button.kt`). Both engines emit identical DOM/`data-*` (drop-in).
+
+  **New props**
+
+  - `size` (`xs` | `s` | `m` | `l` | `xl`, default `s`): heights 32/40/56/96/136dp,
+    icons 20/20/24/32/40dp, symmetric horizontal padding 12/16/24/48/64dp,
+    icon–label gap 4/8/8/12/16dp (XS is special-cased in Compose `Button.kt` to
+    12dp/4dp; S–XL use their `Button{Size}Tokens` values), and size-linked typescale
+    (XS·S labelLarge / M titleMedium / L headlineSmall / XL headlineLarge —
+    Compose does **not** use the Emphasized companions).
+  - `shape` (`round` | `square`, default `round`): square corners are
+    XS·S 12 / M 16 / L·XL 28 dp. The corner morphs smaller on press
+    (`PressedContainerShape`: XS·S 8 / M 12 / L·XL 16 dp).
+  - `selected` (toggle): adds `aria-pressed` + `data-selected`, applies the
+    Selected/Unselected color set (e.g. filled unselected =
+    `surface-container` + `on-surface-variant`), and swaps to the opposite shape
+    while selected.
+
+  **Breaking changes**
+
+  - Outlined/text label color moves from `primary` to `on-surface-variant`;
+    the outlined border moves from `outline` to `outline-variant` (disabled too),
+    with L 2dp / XL 3dp border widths.
+  - Disabled container opacity 0.12 → 0.1 and filled/elevated disabled label
+    `on-surface` → `on-surface-variant` (@0.38). **tonal is unchanged** upstream
+    (`FilledTonalButtonTokens` v0_103) and keeps 0.12 / `on-surface`.
+  - The S size gains a 20dp icon (was 18dp) and symmetric 16dp padding; the
+    pre-Expressive asymmetric with-icon padding is removed.
+  - Motion now uses the `spring-effects-default` easing (critically damped, no
+    bounce) per Compose `DefaultEffects`.
+
+- 191b5a4: Slider now follows the Material 3 Expressive spec (issue #111).
+
+  **Breaking (visual — no API/DOM changes):** the slider is a full visual swap from
+  the M3 2021 form to the Expressive shape system. Same components, props, and
+  `data-*` contract; refresh any visual-regression baselines.
+
+  - **16dp track** (was 4dp) and a **44dp control** height to hold the handle.
+  - **4×44dp bar handle** (`CornerFull`) replaces the 20dp circular thumb + 40dp
+    state layer. The state layer is gone; the handle shrinks **4→2dp on
+    pressed/focus** (hover stays 4dp) via the fast-spatial spring. Disabled keeps
+    the 4dp width.
+  - **6dp track gap** on each side of the handle with a **2dp inside corner**. The
+    active fill (indicator) and the inactive rail (drawn on the track pseudos) are
+    offset by the gap; the factory publishes the active-region fraction as
+    `--m3-slider-start` / `--m3-slider-end` and flags `data-range` on the root.
+  - **Inactive track → `secondary-container`** (was `surface-container-highest`).
+  - **Stop dots reverse**: `primary` on the inactive track, `secondary-container`
+    on the active track, `on-surface` when disabled.
+  - **Value indicator → `inverse-surface` / `inverse-on-surface`** (was
+    `primary` / `on-primary`) with a **12dp** bottom space (was 8dp).
+  - Drop-in fix: the handle's width transition now shares the fast-spatial spring
+    easing across both engines (previously the Tailwind build left it unspecified
+    while vanilla-extract used `easing.standard`).
+
+  Disabled per-token opacities are unchanged (inactive 0.12 / active + handle 0.38
+  on `on-surface`).
+
+### Patch Changes
+
+- Updated dependencies [890e72d]
+- Updated dependencies [191b5a4]
+  - @m3-baseui/core@4.0.0
+
 ## 3.0.0
 
 ### Major Changes
