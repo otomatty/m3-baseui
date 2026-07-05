@@ -14,12 +14,12 @@
 import * as React from 'react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 
-import type { ButtonVariant } from '../button/contract';
 import type {
   SplitButtonClasses,
   SplitButtonGroupOwnProps,
   SplitButtonLeadingOwnProps,
   SplitButtonTrailingOwnProps,
+  SplitButtonVariant,
 } from './contract';
 import { createSlot, mergeClassName } from '../../slot';
 import { cx } from '../../utils';
@@ -32,13 +32,17 @@ export type SplitButtonTrailingProps = SplitButtonTrailingOwnProps &
   Omit<React.ComponentPropsWithoutRef<typeof MenuPrimitive.Trigger>, 'color'>;
 
 /** The container color shared by both halves; set once on `Group`. */
-const VariantContext = React.createContext<ButtonVariant>('filled');
+const VariantContext = React.createContext<SplitButtonVariant>('filled');
 
-/** Default trailing chevron; rotation is driven by the engine's chevron class. */
+/**
+ * Default trailing chevron; rotation is driven by the engine's chevron class.
+ * The intrinsic size is the M3 Small `TrailingIconSize` (22dp); the engine class
+ * may still constrain it.
+ */
 function Chevron({ className }: { className: string }): React.JSX.Element {
   return (
     <span className={className} aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
         <path fill="currentColor" d="M7 10l5 5 5-5z" />
       </svg>
     </span>

@@ -227,7 +227,9 @@ export type {
   SplitButtonGroupOwnProps,
   SplitButtonLeadingOwnProps,
   SplitButtonTrailingOwnProps,
+  SplitButtonVariant,
 } from './components/split-button';
+export { SPLIT_BUTTON_VARIANTS } from './components/split-button';
 export {
   NAV_DRAWER_VARIANTS,
   type NavigationDrawerVariant,

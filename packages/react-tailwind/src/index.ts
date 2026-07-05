@@ -49,6 +49,7 @@ export { SegmentedButton, segmentedButtonTv } from './components/segmented-butto
 export { ButtonGroup, buttonGroup } from './components/button-group';
 export type { ButtonGroupProps, ButtonGroupVariant } from './components/button-group';
 export { SplitButton, splitButtonTv } from './components/split-button';
+export type { SplitButtonVariant } from '@m3-baseui/core';
 export { NavigationDrawer, navigationDrawerTv } from './components/navigation-drawer';
 export type { NavigationDrawerVariant } from './components/navigation-drawer';
 export { TopAppBar, topAppBarTv } from './components/top-app-bar';

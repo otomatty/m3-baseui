@@ -12,11 +12,20 @@
 import { createSplitButton } from '@m3-baseui/core';
 import { tv } from '../../tv';
 
-// Shared surface base for both the leading + trailing buttons.
+// Shape morphs (seam corners, trailing→circle) use the effects spring; the
+// chevron rotation is a spatial spring. Tailwind exposes the spring easings but
+// not their durations, so durations come from the raw custom properties.
+const SPRING_SHAPE =
+  'duration-[var(--md-sys-motion-duration-spring-effects-default)] ease-spring-effects-default';
+const SPRING_SPATIAL =
+  'duration-[var(--md-sys-motion-duration-spring-spatial-default)] ease-spring-spatial-default';
+
+// Shared surface base for both the leading + trailing buttons. The seam corners
+// morph on hover/press, so `border-radius` joins the spring transition.
 const surface = [
   'relative inline-flex items-center justify-center h-10 overflow-hidden cursor-pointer select-none border-0 outline-none',
   'text-label-large',
-  'transition-[background-color,color,border-color] duration-200 ease-standard',
+  `transition-[background-color,color,border-color,border-radius] ${SPRING_SHAPE}`,
   'before:absolute before:inset-0 before:bg-current before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-100',
   'hover:before:opacity-[var(--md-sys-state-hover)]',
   'focus-visible:before:opacity-[var(--md-sys-state-focus)]',
@@ -49,29 +58,40 @@ const VARIANT_ELEVATED = [
   'disabled:bg-on-surface/12 disabled:text-on-surface/38 disabled:shadow-none',
   'data-[disabled]:bg-on-surface/12 data-[disabled]:text-on-surface/38 data-[disabled]:shadow-none',
 ];
-const VARIANT_TEXT = [
-  'bg-transparent text-primary',
-  'disabled:text-on-surface/38',
-  'data-[disabled]:text-on-surface/38',
-];
 
 export const splitButtonTv = tv({
   slots: {
     group: 'inline-flex items-center gap-0.5',
-    // leading: outer (start) corner full, seam (end) corner reduced.
-    leading: [...surface, 'gap-2 px-6 rounded-s-full rounded-e-small'],
-    // trailing: seam (start) corner reduced, outer (end) corner full.
-    trailing: [...surface, 'group gap-1 px-3 rounded-s-small rounded-e-full'],
+    // leading: outer (start) corner full, seam (end) corner extra-small (4dp);
+    // the seam morphs to medium (12dp) on hover/press. Padding: 16dp outer / 12dp seam.
+    leading: [
+      ...surface,
+      'gap-2 pl-4 pr-3 rounded-s-full rounded-e-extra-small',
+      'hover:rounded-e-medium data-[pressed]:rounded-e-medium',
+    ],
+    // trailing: seam (start) corner extra-small, outer (end) full; seam morphs to
+    // medium on hover/press, and the whole button becomes a full circle while the
+    // menu is open (data-popup-open). Padding 13dp each side.
+    trailing: [
+      ...surface,
+      'group gap-1 px-[13px] rounded-s-extra-small rounded-e-full',
+      // Seam morphs to medium on hover/press — but not while the menu is open,
+      // where the whole button is a full circle (open must win over hover, matching
+      // the VE build for drop-in parity).
+      '[&:hover:not([data-popup-open])]:rounded-s-medium [&[data-pressed]:not([data-popup-open])]:rounded-s-medium',
+      'data-[popup-open]:rounded-full',
+    ],
     chevron: [
-      'inline-flex items-center justify-center shrink-0 [&>svg]:size-[18px]',
-      'transition-transform duration-200 ease-standard group-data-[popup-open]:rotate-180',
+      'inline-flex items-center justify-center shrink-0 [&>svg]:size-[22px]',
+      `transition-transform ${SPRING_SPATIAL} group-data-[popup-open]:rotate-180`,
     ],
     popup: [
       'min-w-[112px] max-w-[280px] py-2',
       'bg-surface-container text-on-surface rounded-extra-small shadow-level2',
       'origin-[var(--transform-origin)] transition-[opacity,transform] duration-150 ease-standard',
       'data-[starting-style]:opacity-0 data-[starting-style]:scale-95',
-      'data-[ending-style]:opacity-0',
+      // Close mirrors open (opacity + scale) — matches the VE build (drop-in).
+      'data-[ending-style]:opacity-0 data-[ending-style]:scale-95',
       'focus:outline-none',
     ],
     item: [
@@ -90,7 +110,6 @@ export const splitButtonTv = tv({
       tonal: { leading: VARIANT_TONAL, trailing: VARIANT_TONAL },
       outlined: { leading: VARIANT_OUTLINED, trailing: VARIANT_OUTLINED },
       elevated: { leading: VARIANT_ELEVATED, trailing: VARIANT_ELEVATED },
-      text: { leading: VARIANT_TEXT, trailing: VARIANT_TEXT },
     },
   },
   defaultVariants: {
