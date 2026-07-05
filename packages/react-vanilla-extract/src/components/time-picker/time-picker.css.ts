@@ -1,6 +1,7 @@
 /**
  * time-picker.css.ts — vanilla-extract styles for the M3 Time picker.
  * Same DOM + data-* hooks as the Tailwind build.
+ * Dimensions match Material Android timepicker dimens.
  */
 import { style } from '@vanilla-extract/css';
 import { vars } from '@m3-baseui/tokens/contract.css';
@@ -27,11 +28,29 @@ const bodyLarge = {
   letterSpacing: vars.sys.typescale.bodyLarge.letterSpacing,
 } as const;
 
+const stateLayerSelectors = {
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    background: 'currentColor',
+    opacity: 0,
+    pointerEvents: 'none',
+    transition: `opacity 100ms ${vars.sys.motion.easing.standard}`,
+  },
+  '&:hover::before': { opacity: vars.sys.state.hover },
+  '&:focus-visible::before': { opacity: vars.sys.state.focus },
+  '&:active::before': { opacity: vars.sys.state.pressed },
+  '&:focus-visible': {
+    outline: `2px solid rgb(${vars.sys.color.primary})`,
+    outlineOffset: '2px',
+  },
+} as const;
+
 export const root = style({
   display: 'inline-flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '8px',
   padding: '8px',
   color: `rgb(${vars.sys.color.onSurface})`,
 });
@@ -39,10 +58,17 @@ export const root = style({
 export const header = style({
   display: 'flex',
   alignItems: 'center',
-  gap: '8px',
+  gap: '12px',
+  minHeight: '98px',
+});
+
+export const display = style({
+  display: 'inline-flex',
+  alignItems: 'center',
 });
 
 export const field = style({
+  position: 'relative',
   display: 'inline-grid',
   placeItems: 'center',
   width: '96px',
@@ -58,6 +84,7 @@ export const field = style({
   border: '1px solid transparent',
   transition: 'background-color 100ms, color 100ms',
   selectors: {
+    ...stateLayerSelectors,
     '&[data-selected]': {
       background: `rgb(${vars.sys.color.primaryContainer})`,
       color: `rgb(${vars.sys.color.onPrimaryContainer})`,
@@ -70,35 +97,42 @@ export const colon = style({
   color: `rgb(${vars.sys.color.onSurface})`,
   paddingInline: '4px',
   lineHeight: 1,
+  alignSelf: 'center',
 });
 
 export const periods = style({
   display: 'inline-flex',
   flexDirection: 'column',
+  flexShrink: 0,
   borderRadius: vars.sys.shape.small,
   overflow: 'hidden',
   border: `1px solid rgb(${vars.sys.color.outline})`,
-  alignSelf: 'stretch',
+  width: '52px',
+  height: '98px',
   margin: 0,
   padding: 0,
   minInlineSize: 0,
+  boxSizing: 'border-box',
 });
 
 export const period = style({
+  position: 'relative',
   flex: 1,
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  paddingInline: '12px',
-  minHeight: '38px',
-  width: '56px',
+  minHeight: '48px',
+  height: '48px',
+  width: '100%',
   ...titleMedium,
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
   cursor: 'pointer',
   outline: 'none',
   border: 0,
   background: 'transparent',
+  overflow: 'hidden',
   selectors: {
+    ...stateLayerSelectors,
     '&[data-selected]': {
       background: `rgb(${vars.sys.color.secondaryContainer})`,
       color: `rgb(${vars.sys.color.onSecondaryContainer})`,
@@ -111,7 +145,7 @@ export const dial = style({
   position: 'relative',
   width: '256px',
   height: '256px',
-  marginBlock: '8px',
+  marginTop: '28px',
   padding: 0,
   minInlineSize: 0,
   border: 0,
@@ -134,7 +168,9 @@ export const dialNumber = style({
   userSelect: 'none',
   border: 0,
   background: 'transparent',
+  overflow: 'hidden',
   selectors: {
+    ...stateLayerSelectors,
     '&[data-selected]': {
       background: `rgb(${vars.sys.color.primary})`,
       color: `rgb(${vars.sys.color.onPrimary})`,
@@ -169,7 +205,7 @@ export const dialCenter = style({
 export const inputs = style({
   display: 'flex',
   alignItems: 'flex-start',
-  gap: '8px',
+  gap: '12px',
 });
 
 export const inputBox = style({

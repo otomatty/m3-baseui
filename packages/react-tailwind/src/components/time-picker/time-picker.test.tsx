@@ -32,6 +32,12 @@ describe('TimePicker dial', () => {
     expect(screen.getByRole('button', { name: 'Minutes' })).toHaveAttribute('data-selected');
   });
 
+  test('dial face is a div[role=group] so absolute % top/height resolve in browsers', () => {
+    render(<TimePicker variant="dial" defaultValue={{ hour: 10, minute: 30 }} />);
+    const clock = screen.getByRole('group', { name: 'Clock' });
+    expect(clock.tagName).toBe('DIV');
+  });
+
   test('PM toggle shifts the stored 24h hour by 12', () => {
     let picked: TimeValue | null = null;
     render(
@@ -84,5 +90,15 @@ describe('TimePicker tokens', () => {
 
   test('AM/PM selected fills with secondary-container', () => {
     expect(tp.period()).toContain('data-[selected]:bg-secondary-container');
+  });
+
+  test('M3 spec layout dimensions', () => {
+    expect(tp.header()).toContain('gap-3');
+    expect(tp.header()).toContain('min-h-[98px]');
+    expect(tp.periods()).toContain('w-[52px]');
+    expect(tp.periods()).toContain('h-[98px]');
+    expect(tp.period()).toContain('min-h-12');
+    expect(tp.dial()).toContain('mt-[28px]');
+    expect(tp.field()).toContain('hover:before:opacity-[var(--md-sys-state-hover)]');
   });
 });
