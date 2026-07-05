@@ -81,6 +81,11 @@ describe('Select tokens', () => {
     expect(s.item()).toContain('[&_[data-slot=select-trailing]]:text-on-surface-variant');
   });
 
+  test('item label uses label-large to match Menu list items', () => {
+    expect(s.item()).toContain('text-label-large');
+    expect(s.item()).not.toContain('text-body-large');
+  });
+
   test('disabled item is per-token (no blanket opacity): label + trailing on-surface/0.38, no state layer', () => {
     expect(s.item()).toContain('data-[disabled]:text-on-surface/[0.38]');
     expect(s.item()).toContain('data-[disabled]:before:opacity-0');

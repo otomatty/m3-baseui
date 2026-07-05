@@ -115,6 +115,7 @@ export type { SelectClasses } from './components/select';
 export {
   TEXT_FIELD_VARIANTS,
   type TextFieldVariant,
+  type TextFieldIconAction,
   type TextFieldOwnProps,
   type TextFieldProps,
   type TextFieldResolverArgs,
