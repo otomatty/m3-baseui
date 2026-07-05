@@ -10,8 +10,6 @@ import {
   item,
   itemIndicator,
   groupLabel,
-  scrollUpArrow,
-  scrollDownArrow,
   fieldRoot,
   field,
   fieldVariant,
@@ -35,8 +33,6 @@ export const Select = createSelect(
     item,
     itemIndicator,
     groupLabel,
-    scrollUpArrow,
-    scrollDownArrow,
   },
   // Exposed Dropdown Menu anchor (issue #96): the field state lives on the
   // trigger, so the label float / focus border resolve via `${field}[data-*]`.

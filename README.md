@@ -139,6 +139,9 @@ Each component ships in **both** engines with identical DOM + `data-*` state (dr
 | `Select` | `<Select.Root>` parts | outlined trigger + menu popup |
 | `Dialog` | `<Dialog.Root>` parts | scrim + surface dialog |
 | `Tooltip` | `<Tooltip.Root>` parts | plain (inverse-surface) tooltip |
+| `Carousel` | `<Carousel.Root variant>` parts | multi-browse / uncontained / hero / full-screen; keyboard-scrollable (see below) |
+
+**Carousel keyboard scrolling.** `Carousel.Root` is the scroll-snap scroller and is focusable by default (`tabIndex={0}`, the M3 "carousel" semantic role via `role="group"` + `aria-roledescription="carousel"`). When it holds focus, the arrow keys along the scroll axis advance one item at a time — `←`/`→` for horizontal layouts, `↑`/`↓` for `full-screen` — with a keyboard-only focus ring and `prefers-reduced-motion` honored for the scroll animation. Pass an `aria-label` so assistive tech can name the carousel, and override `tabIndex={-1}` if you provide your own prev/next controls instead.
 
 ## Roadmap
 

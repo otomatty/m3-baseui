@@ -445,7 +445,6 @@ export function App() {
                 <Select.Portal>
                   <Select.Positioner sideOffset={4}>
                     <Select.Popup>
-                      <Select.ScrollUpArrow />
                       {[
                         ['apple', 'りんご', '01'],
                         ['banana', 'バナナ', '02'],
@@ -466,7 +465,6 @@ export function App() {
                           <span data-slot="select-trailing">{meta}</span>
                         </Select.Item>
                       ))}
-                      <Select.ScrollDownArrow />
                     </Select.Popup>
                   </Select.Positioner>
                 </Select.Portal>
@@ -484,7 +482,6 @@ export function App() {
                   <Select.Portal>
                     <Select.Positioner sideOffset={4}>
                       <Select.Popup>
-                        <Select.ScrollUpArrow />
                         {[
                           ['apple', 'りんご', '01'],
                           ['banana', 'バナナ', '02'],
@@ -501,7 +498,6 @@ export function App() {
                             <span data-slot="select-trailing">{meta}</span>
                           </Select.Item>
                         ))}
-                        <Select.ScrollDownArrow />
                       </Select.Popup>
                     </Select.Positioner>
                   </Select.Portal>
@@ -1049,6 +1045,10 @@ export function App() {
           </Section>
 
           <Section title="Carousel">
+            {/* The scroller is keyboard-focusable: tab to it, then ←/→ (↑/↓ for
+                full-screen) advance one item at a time, with a focus-visible ring
+                and prefers-reduced-motion honored. Variants: multi-browse /
+                uncontained / hero / full-screen. */}
             <Carousel.Root aria-label="ギャラリー" className="max-w-md">
               {[
                 'bg-primary-container text-on-primary-container',
