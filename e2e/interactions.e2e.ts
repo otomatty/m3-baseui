@@ -318,3 +318,89 @@ test('Carousel scroller is focusable and arrow keys advance it (issue #78)', asy
   await page.keyboard.press('ArrowLeft');
   await expect.poll(scrollLeft).toBe(0);
 });
+
+// ---- issue #77: Carousel variant sizing, LoadingIndicator, Toolbar ----
+
+test('Carousel item dimensions follow the variant (multi-browse / uncontained / hero)', async ({
+  page,
+}) => {
+  // The first cell of each variant carries the M3 item measurements; both
+  // engines emit identical sizes (multi-browse 160×224, uncontained 224×224,
+  // hero 288×224). happy-dom has no layout, so this can only be checked here.
+  const firstItem = (label: string) =>
+    page.getByRole('group', { name: label, exact: true }).locator('> *').first().boundingBox();
+
+  const multiBrowse = await firstItem('ギャラリー');
+  expect(multiBrowse?.width).toBeCloseTo(160, 0);
+  expect(multiBrowse?.height).toBeCloseTo(224, 0);
+
+  const uncontained = await firstItem('アンコンテインド カルーセル');
+  expect(uncontained?.width).toBeCloseTo(224, 0);
+  expect(uncontained?.height).toBeCloseTo(224, 0);
+
+  const hero = await firstItem('ヒーロー カルーセル');
+  expect(hero?.width).toBeCloseTo(288, 0);
+  expect(hero?.height).toBeCloseTo(224, 0);
+});
+
+test('full-screen Carousel snaps on the vertical axis (↑/↓)', async ({ page }) => {
+  const carousel = page.getByRole('group', { name: '全画面 カルーセル', exact: true });
+  await expect(carousel).toHaveAttribute('data-variant', 'full-screen');
+
+  await carousel.focus();
+  const scrollTop = () => carousel.evaluate((el) => el.scrollTop);
+  await expect.poll(scrollTop).toBe(0);
+
+  // ArrowDown advances one slide down the vertical scroll axis; ArrowUp returns.
+  // (Horizontal arrows are ignored by the full-screen variant.)
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(() => carousel.evaluate((el) => el.scrollLeft)).toBe(0);
+  await page.keyboard.press('ArrowDown');
+  await expect.poll(scrollTop).toBeGreaterThan(0);
+  await page.keyboard.press('ArrowUp');
+  await expect.poll(scrollTop).toBe(0);
+});
+
+test('LoadingIndicator is an indeterminate progressbar (no aria-valuenow)', async ({ page }) => {
+  // Indeterminate-only: role="progressbar" with no aria-valuenow in either config.
+  const uncontained = page.getByRole('progressbar', {
+    name: '読み込み中インジケーター',
+    exact: true,
+  });
+  await expect(uncontained).toBeVisible();
+  await expect(uncontained).not.toHaveAttribute('aria-valuenow');
+  await expect(uncontained).not.toHaveAttribute('data-contained');
+
+  const contained = page.getByRole('progressbar', {
+    name: '読み込み中インジケーター（contained）',
+    exact: true,
+  });
+  await expect(contained).toBeVisible();
+  await expect(contained).not.toHaveAttribute('aria-valuenow');
+  // The container config is marked for CSS via data-contained.
+  await expect(contained).toHaveAttribute('data-contained', '');
+});
+
+test('Toolbar reflects variant + orientation and its actions are keyboard-reachable', async ({
+  page,
+}) => {
+  const horizontal = page.getByRole('toolbar', { name: '標準ツールバー', exact: true });
+  await expect(horizontal).toHaveAttribute('data-variant', 'standard');
+  await expect(horizontal).toHaveAttribute('data-orientation', 'horizontal');
+  // horizontal is the toolbar role's default, so aria-orientation stays implicit.
+  await expect(horizontal).not.toHaveAttribute('aria-orientation');
+
+  const vertical = page.getByRole('toolbar', { name: 'ビビッドなツールバー（縦）', exact: true });
+  await expect(vertical).toHaveAttribute('data-variant', 'vibrant');
+  await expect(vertical).toHaveAttribute('data-orientation', 'vertical');
+  await expect(vertical).toHaveAttribute('aria-orientation', 'vertical');
+
+  // The action icon buttons are in the tab order: focus the first, Tab reaches
+  // the next, and focus stays within the toolbar (reachable by keyboard).
+  const back = horizontal.getByRole('button', { name: '戻る' });
+  const forward = horizontal.getByRole('button', { name: '進む' });
+  await back.focus();
+  await expect(back).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(forward).toBeFocused();
+});

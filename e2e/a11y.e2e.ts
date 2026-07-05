@@ -67,3 +67,47 @@ test('open BottomSheet has no serious/critical a11y violations', async ({ page }
   );
   expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
 });
+
+// ---- issue #77: focused scans for Carousel / LoadingIndicator / Toolbar ----
+// These components live on the initial page (so the scan above covers them too),
+// but a scoped scan localizes any regression to the specific component and its
+// variants — all four Carousel layouts, both LoadingIndicator configs, and the
+// standard/vibrant × horizontal/vertical Toolbars.
+
+test('Carousel variants have no serious/critical a11y violations', async ({ page }) => {
+  const results = await new AxeBuilder({ page })
+    .include('[aria-roledescription="carousel"]')
+    .withTags(WCAG)
+    .analyze();
+  const blocking = results.violations.filter(
+    (v) => v.impact === 'serious' || v.impact === 'critical',
+  );
+  expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
+});
+
+test('LoadingIndicator configs have no serious/critical a11y violations', async ({ page }) => {
+  // Scope to the two loading indicators by their labels (role="progressbar" is
+  // shared with Progress).
+  const results = await new AxeBuilder({ page })
+    .include('[aria-label="読み込み中インジケーター"]')
+    .include('[aria-label="読み込み中インジケーター（contained）"]')
+    .withTags(WCAG)
+    .analyze();
+  const blocking = results.violations.filter(
+    (v) => v.impact === 'serious' || v.impact === 'critical',
+  );
+  expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
+});
+
+test('Toolbar variants have no serious/critical a11y violations', async ({ page }) => {
+  // `[data-variant]` scopes to the M3 Toolbar, excluding the bottom app bar's
+  // role="toolbar".
+  const results = await new AxeBuilder({ page })
+    .include('[role="toolbar"][data-variant]')
+    .withTags(WCAG)
+    .analyze();
+  const blocking = results.violations.filter(
+    (v) => v.impact === 'serious' || v.impact === 'critical',
+  );
+  expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
+});
