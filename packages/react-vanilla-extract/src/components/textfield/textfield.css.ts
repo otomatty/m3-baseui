@@ -5,7 +5,7 @@
  * focus/filled border key off Field's `data-focused` / `data-filled` /
  * `data-invalid` / `data-disabled`, read off the Root (the `root` class here).
  */
-import { style, styleVariants } from '@vanilla-extract/css';
+import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from '@m3-baseui/tokens/contract.css';
 
 type Typescale = {
@@ -41,17 +41,34 @@ export const field = style({
   height: '56px',
   paddingInline: '16px',
   boxSizing: 'border-box',
+  color: `rgb(${vars.sys.color.onSurface})`,
   transition: `border-color 150ms ${vars.sys.motion.easing.standard}, padding 150ms ${vars.sys.motion.easing.standard}`,
 });
 
 export const fieldVariant = styleVariants({
   filled: {
+    overflow: 'hidden',
     borderTopLeftRadius: vars.sys.shape.extraSmall,
     borderTopRightRadius: vars.sys.shape.extraSmall,
     background: `rgb(${vars.sys.color.surfaceContainerHighest})`,
-    borderBottom: `2px solid rgb(${vars.sys.color.outline})`,
+    // M3 filled resting active-indicator: 1dp on-surface-variant.
+    borderBottom: `1px solid rgb(${vars.sys.color.onSurfaceVariant})`,
     selectors: {
-      // M3 filled focus-active-indicator-height is 3dp (resting/error stay 2dp).
+      // M3 filled hover: state layer (on-surface × state-hover) + indicator color.
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        inset: 0,
+        borderRadius: 'inherit',
+        background: 'currentColor',
+        opacity: 0,
+        pointerEvents: 'none',
+        transition: `opacity ${vars.sys.motion.duration.short2} ${vars.sys.motion.easing.standard}`,
+      },
+      '&:hover::before': { opacity: vars.sys.state.hover },
+      [`${root}[data-disabled] &::before`]: { opacity: 0 },
+      '&:hover': { borderBottomColor: `rgb(${vars.sys.color.onSurface})` },
+      // M3 filled focus-active-indicator-height is 3dp.
       [`${root}[data-focused] &`]: {
         borderBottomWidth: '3px',
         borderBottomColor: `rgb(${vars.sys.color.primary})`,
@@ -60,9 +77,12 @@ export const fieldVariant = styleVariants({
     },
   },
   outlined: {
+    // Outlined hover = outline color only (no container state layer per M3).
+    overflow: 'visible',
     borderRadius: vars.sys.shape.extraSmall,
     border: `1px solid rgb(${vars.sys.color.outline})`,
     selectors: {
+      '&:hover': { borderColor: `rgb(${vars.sys.color.onSurface})` },
       // M3 outlined focus-outline-width is 3dp (matches Select's trigger);
       // padding drops 2px so content stays steady as the 1dp border grows.
       [`${root}[data-focused] &`]: {
@@ -76,10 +96,12 @@ export const fieldVariant = styleVariants({
 
 export const inputWrap = style({
   position: 'relative',
+  zIndex: 0,
   flex: 1,
   display: 'flex',
   alignItems: 'center',
   minWidth: 0,
+  overflow: 'visible',
 });
 
 export const input = style({
@@ -121,6 +143,7 @@ const floatFilled = {
 };
 const floatOutlined = {
   top: 0,
+  zIndex: 1,
   transform: 'translateY(-50%)',
   background: `rgb(${vars.sys.color.surface})`,
   paddingInline: '4px',
@@ -143,11 +166,34 @@ export const labelVariant = styleVariants({
 });
 
 export const icon = style({
-  display: 'flex',
+  display: 'inline-flex',
   alignItems: 'center',
+  justifyContent: 'center',
   flexShrink: 0,
   color: `rgb(${vars.sys.color.onSurfaceVariant})`,
 });
+
+globalStyle(`${icon} > svg`, { width: '24px', height: '24px' });
+
+export const iconButton = style({
+  position: 'relative',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+  width: '48px',
+  height: '48px',
+  padding: 0,
+  border: 'none',
+  background: 'transparent',
+  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
+  cursor: 'pointer',
+  selectors: {
+    [`${root}[data-disabled] &`]: { pointerEvents: 'none' },
+  },
+});
+
+globalStyle(`${iconButton} > svg`, { width: '24px', height: '24px' });
 
 export const supporting = style({
   display: 'flex',

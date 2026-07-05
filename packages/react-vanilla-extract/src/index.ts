@@ -26,7 +26,7 @@ export { Slider } from './components/slider';
 export { Select } from './components/select';
 
 export { TextField } from './components/textfield';
-export type { TextFieldProps, TextFieldVariant } from './components/textfield';
+export type { TextFieldIconAction, TextFieldProps, TextFieldVariant } from './components/textfield';
 export { NavigationBar } from './components/navigation-bar';
 export { Fab } from './components/fab';
 export type { FabProps, FabSize, FabColor } from './components/fab';

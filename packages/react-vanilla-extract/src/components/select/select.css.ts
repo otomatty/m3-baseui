@@ -93,11 +93,11 @@ export const item = style({
   userSelect: 'none',
   outline: 'none',
   color: `rgb(${vars.sys.color.onSurface})`,
-  fontFamily: vars.sys.typescale.bodyLarge.fontFamily,
-  fontWeight: vars.sys.typescale.bodyLarge.fontWeight,
-  fontSize: vars.sys.typescale.bodyLarge.fontSize,
-  lineHeight: vars.sys.typescale.bodyLarge.lineHeight,
-  letterSpacing: vars.sys.typescale.bodyLarge.letterSpacing,
+  fontFamily: vars.sys.typescale.labelLarge.fontFamily,
+  fontWeight: vars.sys.typescale.labelLarge.fontWeight,
+  fontSize: vars.sys.typescale.labelLarge.fontSize,
+  lineHeight: vars.sys.typescale.labelLarge.lineHeight,
+  letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
   selectors: {
     '&::before': {
       content: '""',

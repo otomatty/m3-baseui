@@ -12,9 +12,11 @@ export const TextField = createTextField(({ variant }) => ({
   label: cx(s.label, s.labelVariant[variant]),
   leadingIcon: s.icon,
   trailingIcon: s.icon,
+  leadingIconButton: s.iconButton,
+  trailingIconButton: s.iconButton,
   supporting: s.supporting,
   supportingText: s.supportingText,
   counter: s.counter,
 }));
 
-export type { TextFieldProps, TextFieldVariant } from '@m3-baseui/core';
+export type { TextFieldIconAction, TextFieldProps, TextFieldVariant } from '@m3-baseui/core';

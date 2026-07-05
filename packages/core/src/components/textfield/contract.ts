@@ -12,6 +12,12 @@ import type * as React from 'react';
 export const TEXT_FIELD_VARIANTS = ['filled', 'outlined'] as const;
 export type TextFieldVariant = (typeof TEXT_FIELD_VARIANTS)[number];
 
+export interface TextFieldIconAction {
+  /** Accessible name for the icon control (required when interactive). */
+  'aria-label': string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
 export interface TextFieldResolverArgs {
   variant: TextFieldVariant;
 }
@@ -27,10 +33,14 @@ export interface TextFieldSlotClasses {
   input: string;
   /** Field.Label — the floating label. */
   label: string;
-  /** Leading icon container. */
+  /** Leading icon container (decorative). */
   leadingIcon: string;
-  /** Trailing icon container. */
+  /** Trailing icon container (decorative). */
   trailingIcon: string;
+  /** Leading icon button shell (48dp touch target). */
+  leadingIconButton: string;
+  /** Trailing icon button shell (48dp touch target). */
+  trailingIconButton: string;
   /** Row under the box (supporting text + counter). */
   supporting: string;
   /** Field.Description / error message. */
@@ -54,6 +64,10 @@ export interface TextFieldOwnProps {
   leadingIcon?: React.ReactNode;
   /** Trailing icon. */
   trailingIcon?: React.ReactNode;
+  /** When set, renders `leadingIcon` as a 48dp icon button. */
+  leadingIconAction?: TextFieldIconAction;
+  /** When set, renders `trailingIcon` as a 48dp icon button. */
+  trailingIconAction?: TextFieldIconAction;
   /** Show a `current/maxLength` character counter (requires `maxLength`). */
   showCounter?: boolean;
   /** className applied to the inner input. */

@@ -23,7 +23,7 @@ export { Slider, sliderTv } from './components/slider';
 export { Select, selectTv } from './components/select';
 
 export { TextField, textFieldTv } from './components/textfield';
-export type { TextFieldProps, TextFieldVariant } from './components/textfield';
+export type { TextFieldProps, TextFieldVariant, TextFieldIconAction } from './components/textfield';
 export { NavigationBar, navigationBarTv } from './components/navigation-bar';
 export { Fab, fabTv } from './components/fab';
 export type { FabProps, FabSize, FabColor } from './components/fab';
