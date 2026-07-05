@@ -1,5 +1,44 @@
 # @m3-baseui/core
 
+## 2.0.0
+
+### Major Changes
+
+- ea3c7b9: FAB / Extended FAB / FAB Menu now follow the Material 3 Expressive spec.
+
+  **Breaking (FAB / FabMenu):**
+
+  - `size` is now `'small' | 'medium' | 'large'` mapping to **56 / 80 / 96 dp** (was `small` 40dp / `regular` 56dp / `large` 96dp). The pre-Expressive 40dp FAB is removed.
+  - The extended FAB is no longer a `size` value. Use the new `variant="extended"` prop, which combines with `size` — extended small/medium/large are 56/80/96 dp with title-medium / title-large / headline-small labels.
+  - The `surface` container color is removed (deprecated by M3). Colors are `primary | secondary | tertiary`; the default FAB color is now `primary`.
+  - Large FAB icon is 32dp (was 36dp); FAB Menu items use a title-medium label with 24dp leading/trailing padding.
+
+  **Tokens:** added the Expressive shape steps `largeIncreased` (20dp) and `extraLargeIncreased` (32dp), surfaced as `rounded-large-increased` / `rounded-extra-large-increased` (Tailwind) and `vars.sys.shape.largeIncreased` / `extraLargeIncreased` (vanilla-extract).
+
+  Migration: `size="regular"` → `size="small"`; old `size="small"` (40dp) → nearest is `size="small"` (56dp); `size="extended"` → `variant="extended"`; `color="surface"` → `color="primary"`.
+
+### Minor Changes
+
+- ab93138: Align the Progress indicators with the current Material 3 spec.
+
+  - **Circular**: default to the 40dp outer diameter (was 48dp) and add `size`
+    (spec range 24–240dp) and `thickness` (4dp default, 8dp thick) props; draw the
+    active arc and inactive track with a 4dp gap and rounded caps; replace the
+    static spinning arc with the M3 "advance" motion (the ring rotates while the
+    arc grows and shrinks).
+  - **Linear**: add a `thickness` prop (4dp default, 8dp thick) and replace the
+    single sliding bar with M3's disjoint two-segment indeterminate motion.
+  - **Wavy (M3 Expressive)**: add a `wavy` prop and `amplitude` to both
+    indicators for the determinate wavy active shape.
+  - Respect `prefers-reduced-motion` with static fallbacks in both engines.
+
+  Both engines keep emitting identical DOM and `data-*` state (drop-in parity).
+
+### Patch Changes
+
+- Updated dependencies [ea3c7b9]
+  - @m3-baseui/tokens@1.1.0
+
 ## 1.3.0
 
 ### Minor Changes
