@@ -564,7 +564,12 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
   </SideSheet.Portal>
 </SideSheet.Root>`,
     props: [
-      { name: 'SideSheet.Root side', type: "'left' | 'right'", default: "'right'", description: '表示する端' },
+      {
+        name: 'SideSheet.Root side',
+        type: "'left' | 'right'",
+        default: "'right'",
+        description: '表示する端',
+      },
       { name: 'open / onOpenChange', type: 'boolean', description: 'SideSheet.Root の制御モード' },
     ],
   },
