@@ -69,3 +69,53 @@ export const Widths: Story = {
     );
   },
 };
+
+// M3 Expressive `shape` prop: round = full circle, square = a rounded box.
+export const Shapes: Story = {
+  render: () => {
+    const { IconButton } = useM3();
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <IconButton variant="filled" shape="round" size="m" aria-label="Round">
+          <Icon name="add" />
+        </IconButton>
+        <IconButton variant="filled" shape="square" size="m" aria-label="Square">
+          <Icon name="add" />
+        </IconButton>
+        <IconButton variant="outlined" shape="round" size="m" aria-label="Round outlined">
+          <Icon name="edit" />
+        </IconButton>
+        <IconButton variant="outlined" shape="square" size="m" aria-label="Square outlined">
+          <Icon name="edit" />
+        </IconButton>
+      </div>
+    );
+  },
+};
+
+// Toggle: `selected` swaps to the opposite shape (round↔square) and the
+// Selected/Unselected color set — tonal selected is now visibly distinct.
+export const Toggle: Story = {
+  render: () => {
+    const { IconButton } = useM3();
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <IconButton variant="filled" selected={false} aria-label="Filled オフ">
+          <Icon name="favorite" />
+        </IconButton>
+        <IconButton variant="filled" selected aria-label="Filled オン">
+          <Icon name="favorite" filled />
+        </IconButton>
+        <IconButton variant="tonal" selected={false} aria-label="Tonal オフ">
+          <Icon name="star" />
+        </IconButton>
+        <IconButton variant="tonal" selected aria-label="Tonal オン">
+          <Icon name="star" filled />
+        </IconButton>
+        <IconButton variant="filled" shape="square" selected aria-label="Square 選択（→full）">
+          <Icon name="bookmark" filled />
+        </IconButton>
+      </div>
+    );
+  },
+};

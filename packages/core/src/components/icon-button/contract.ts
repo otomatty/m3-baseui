@@ -17,6 +17,10 @@ export type IconButtonSize = (typeof ICON_BUTTON_SIZES)[number];
 export const ICON_BUTTON_WIDTHS = ['narrow', 'default', 'wide'] as const;
 export type IconButtonWidth = (typeof ICON_BUTTON_WIDTHS)[number];
 
+/** M3 Expressive container shapes: `round` = full circle, `square` = rounded box. */
+export const ICON_BUTTON_SHAPES = ['round', 'square'] as const;
+export type IconButtonShape = (typeof ICON_BUTTON_SHAPES)[number];
+
 export interface IconButtonResolverArgs {
   variant: IconButtonVariant;
   /**
@@ -28,6 +32,8 @@ export interface IconButtonResolverArgs {
   size: IconButtonSize;
   /** Container width. @default 'default'. */
   width: IconButtonWidth;
+  /** Resting container shape. @default 'round'. */
+  shape: IconButtonShape;
 }
 
 export type IconButtonClassResolver = (args: IconButtonResolverArgs) => string;
@@ -39,9 +45,12 @@ export interface IconButtonOwnProps {
   size?: IconButtonSize;
   /** Container width (M3 Expressive). @default 'default' */
   width?: IconButtonWidth;
+  /** Resting container shape (M3 Expressive). @default 'round' */
+  shape?: IconButtonShape;
   /**
    * Selected state for toggle icon buttons. When provided, the button gets
-   * `aria-pressed` and a `data-selected` attribute for styling.
+   * `aria-pressed` and a `data-selected` attribute for styling, and morphs to
+   * the opposite shape while selected (round↔square).
    */
   selected?: boolean;
   /** Show the pointer-origin ripple on press. @default true */

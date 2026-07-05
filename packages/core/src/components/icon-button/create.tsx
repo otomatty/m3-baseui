@@ -28,6 +28,7 @@ export function createIconButton(resolve: IconButtonClassResolver) {
       variant = 'standard',
       size = 's',
       width = 'default',
+      shape = 'round',
       selected,
       ripple = true,
       className,
@@ -37,7 +38,7 @@ export function createIconButton(resolve: IconButtonClassResolver) {
     }: IconButtonProps & { render?: useRender.RenderProp },
     forwardedRef: React.Ref<HTMLButtonElement>,
   ): React.JSX.Element {
-    const cls = cx(resolve({ variant, selected, size, width }), className);
+    const cls = cx(resolve({ variant, selected, size, width, shape }), className);
 
     return useRender({
       render: render ?? <button type="button" />,
