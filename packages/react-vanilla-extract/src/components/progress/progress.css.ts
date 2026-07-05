@@ -7,9 +7,22 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import { vars } from '@m3-baseui/tokens/contract.css';
 
-const linearIndeterminate = keyframes({
-  '0%': { transform: 'translateX(-100%)' },
-  '100%': { transform: 'translateX(400%)' },
+// Disjoint linear indeterminate: two primary bars scale + slide across the track
+// out of phase (origin at the start edge). Matches the Tailwind preset keyframes.
+const linearPrimary = keyframes({
+  '0%': { transform: 'translateX(0) scaleX(0.08)' },
+  '36%': { transform: 'translateX(0) scaleX(0.08)' },
+  '55%': { transform: 'translateX(50%) scaleX(0.5)' },
+  '69%': { transform: 'translateX(84%) scaleX(0.66)' },
+  '100%': { transform: 'translateX(201%) scaleX(0.08)' },
+});
+
+const linearSecondary = keyframes({
+  '0%': { transform: 'translateX(0) scaleX(0.08)' },
+  '19%': { transform: 'translateX(0) scaleX(0.08)' },
+  '25%': { transform: 'translateX(38%) scaleX(0.4)' },
+  '44%': { transform: 'translateX(84%) scaleX(0.46)' },
+  '100%': { transform: 'translateX(160%) scaleX(0.08)' },
 });
 
 // Circular indeterminate: continuous ring rotation paired with the arc grow/
@@ -30,20 +43,20 @@ export const linearRoot = style({
   position: 'relative',
   display: 'block',
   width: '100%',
-  height: '4px',
+  // Height (thickness) comes from the factory inline so `thickness` is honored.
   overflow: 'hidden',
   borderRadius: vars.sys.shape.full,
   selectors: {
-    // Track-stop dot (4dp, primary) pinned at the inline-end (mirrors under RTL).
-    // It's a determinate-only M3 concept, so it's hidden while indeterminate.
+    // Track-stop dot (primary, full track height) pinned at the inline-end
+    // (mirrors under RTL). Determinate-only, so it's hidden while indeterminate.
     '&::after': {
       content: '""',
       position: 'absolute',
       insetInlineEnd: 0,
       top: '50%',
       transform: 'translateY(-50%)',
-      width: '4px',
-      height: '4px',
+      height: '100%',
+      aspectRatio: '1',
       borderRadius: vars.sys.shape.full,
       background: `rgb(${vars.sys.color.primary})`,
     },
@@ -78,19 +91,41 @@ export const linearTrack = style({
   },
 });
 
+// Primary bar. Determinate: width from Base UI. Indeterminate: full width,
+// scaled + slid by the disjoint `primary` keyframe (origin at the start edge).
 export const linearIndicator = style({
   position: 'absolute',
   top: 0,
   bottom: 0,
   left: 0,
+  transformOrigin: 'left center',
   background: `rgb(${vars.sys.color.primary})`,
   borderRadius: vars.sys.shape.full,
   transition: `width 200ms ${vars.sys.motion.easing.standard}`,
   selectors: {
     [`${linearRoot}[data-indeterminate] &`]: {
-      width: '40%',
+      width: '100%',
       transition: 'none',
-      animation: `${linearIndeterminate} 2s ease-in-out infinite`,
+      animation: `${linearPrimary} 2s linear infinite`,
+    },
+  },
+});
+
+// Second disjoint bar: only shown/animated while indeterminate.
+export const linearIndicatorSecondary = style({
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  left: 0,
+  width: '100%',
+  display: 'none',
+  transformOrigin: 'left center',
+  background: `rgb(${vars.sys.color.primary})`,
+  borderRadius: vars.sys.shape.full,
+  selectors: {
+    [`${linearRoot}[data-indeterminate] &`]: {
+      display: 'block',
+      animation: `${linearSecondary} 2s linear infinite`,
     },
   },
 });

@@ -16,8 +16,16 @@ export interface ProgressSlotClasses {
   indicator: string;
 }
 
+export interface LinearProgressSlotClasses extends ProgressSlotClasses {
+  /**
+   * The second disjoint bar. It's always in the DOM (drop-in parity) but only
+   * shown/animated for the indeterminate state, giving M3's two-segment motion.
+   */
+  indicatorSecondary: string;
+}
+
 export interface ProgressClasses {
-  linear: ProgressSlotClasses;
+  linear: LinearProgressSlotClasses;
   circular: ProgressSlotClasses;
 }
 
@@ -26,6 +34,8 @@ export interface LinearProgressOwnProps {
   value?: number | null;
   /** Maximum value. @default 100 */
   max?: number;
+  /** Track thickness in px (M3 default 4dp; thick variant 8dp). @default 4 */
+  thickness?: number;
 }
 
 export type LinearProgressProps = LinearProgressOwnProps &

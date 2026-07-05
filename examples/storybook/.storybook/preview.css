@@ -18,17 +18,45 @@
 /* Mirror the component keyframes from @m3-baseui/react-tailwind/preset.css (the linear
  * progress indeterminate slide) so the demo animates without importing preset. */
 @theme {
-  --animate-m3-linear-indeterminate: m3-linear-indeterminate 2s ease-in-out infinite;
+  --animate-m3-linear-primary: m3-linear-primary 2s linear infinite;
+  --animate-m3-linear-secondary: m3-linear-secondary 2s linear infinite;
   --animate-m3-circular-rotate: m3-circular-rotate 1.4s linear infinite;
   --animate-m3-circular-dash: m3-circular-dash 1.4s ease-in-out infinite;
 }
 
-@keyframes m3-linear-indeterminate {
+@keyframes m3-linear-primary {
   0% {
-    transform: translateX(-100%);
+    transform: translateX(0) scaleX(0.08);
+  }
+  36% {
+    transform: translateX(0) scaleX(0.08);
+  }
+  55% {
+    transform: translateX(50%) scaleX(0.5);
+  }
+  69% {
+    transform: translateX(84%) scaleX(0.66);
   }
   100% {
-    transform: translateX(400%);
+    transform: translateX(201%) scaleX(0.08);
+  }
+}
+
+@keyframes m3-linear-secondary {
+  0% {
+    transform: translateX(0) scaleX(0.08);
+  }
+  19% {
+    transform: translateX(0) scaleX(0.08);
+  }
+  25% {
+    transform: translateX(38%) scaleX(0.4);
+  }
+  44% {
+    transform: translateX(84%) scaleX(0.46);
+  }
+  100% {
+    transform: translateX(160%) scaleX(0.08);
   }
 }
 

@@ -10,11 +10,25 @@ describe('Progress.Linear', () => {
     expect(bar).not.toHaveAttribute('data-indeterminate');
   });
 
-  test('omitting value renders the indeterminate animation hook', () => {
-    render(<Progress.Linear aria-label="読み込み" />);
+  test('omitting value runs the disjoint two-bar indeterminate animation', () => {
+    const { container } = render(<Progress.Linear aria-label="読み込み" />);
     const bar = screen.getByRole('progressbar', { name: '読み込み' });
     expect(bar).toHaveAttribute('data-indeterminate');
-    expect(bar.className).toContain('h-1');
+    // M3 disjoint = two primary bars (primary + secondary) animate out of phase.
+    const track = container.querySelector('[class*="absolute"]');
+    const html = container.innerHTML;
+    expect(html).toContain('animate-m3-linear-primary');
+    expect(html).toContain('animate-m3-linear-secondary');
+    expect(track).toBeTruthy();
+  });
+
+  test('defaults to a 4dp track height and honors a custom thickness', () => {
+    const { rerender } = render(<Progress.Linear value={40} aria-label="読み込み" />);
+    let bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar.style.height).toBe('4px');
+    rerender(<Progress.Linear value={40} thickness={8} aria-label="読み込み" />);
+    bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar.style.height).toBe('8px');
   });
 
   test('normalizes a non-positive max before forwarding it', () => {

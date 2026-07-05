@@ -47,34 +47,38 @@ function normalizeProgress(
 
 export function createProgress(classes: ProgressClasses) {
   const Linear = React.forwardRef<HTMLDivElement, LinearProgressProps>(function Linear(
-    { value = null, max = 100, className, style, ...props },
+    { value = null, max = 100, thickness, className, style, ...props },
     ref,
   ) {
     // Base UI uses the forwarded value/max raw for both aria and the indicator
     // width, so clamp here to keep the range valid for out-of-bounds input.
     const { safeMax, clampedValue } = normalizeProgress(value, max);
+    // Track height is inline (not a class) so `thickness` is honored by both
+    // engines (M3 default 4dp, thick variant 8dp).
+    const safeThickness =
+      Number.isFinite(thickness) && (thickness as number) > 0 ? (thickness as number) : 4;
     // Publish the fill fraction as a CSS variable so the engine CSS can place the
     // M3 gap (between the active indicator and the inactive track) and the
     // track-stop dot from it — Base UI sizes the indicator with the same percent.
     // Indeterminate (null) omits it so the inactive track spans the full width.
-    const fillStyle =
-      clampedValue == null
-        ? style
-        : ({
-            ...style,
-            '--m3-progress': `${(clampedValue / safeMax) * 100}%`,
-          } as React.CSSProperties);
+    const rootStyle = {
+      ...style,
+      height: safeThickness,
+      ...(clampedValue == null ? {} : { '--m3-progress': `${(clampedValue / safeMax) * 100}%` }),
+    } as React.CSSProperties;
     return (
       <Progress.Root
         ref={ref}
         value={clampedValue}
         max={safeMax}
         className={mergeClassName(classes.linear.root, className)}
-        style={fillStyle}
+        style={rootStyle}
         {...props}
       >
         <Progress.Track className={classes.linear.track}>
           <Progress.Indicator className={classes.linear.indicator} />
+          {/* Second disjoint bar: idle for determinate, animated when indeterminate. */}
+          <span className={classes.linear.indicatorSecondary} aria-hidden="true" />
         </Progress.Track>
       </Progress.Root>
     );
