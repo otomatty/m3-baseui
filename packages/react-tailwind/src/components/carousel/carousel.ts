@@ -4,10 +4,18 @@
  * Root is a scroll-snap scroller (hidden scrollbar) that is keyboard-focusable:
  * a 3px secondary focus-visible ring makes that focus visible (WCAG 2.4.7), and
  * `motion-reduce:scroll-auto` drops the smooth snap animation under
- * `prefers-reduced-motion`. Items are snap-aligned, `large`-radius cells.
+ * `prefers-reduced-motion`. Items are snap-aligned, `extra-large`-radius (28dp)
+ * cells (every M3 sample masks items with `shapes.extraLarge`).
  * `multi-browse`, `uncontained`, and `hero` scroll horizontally (hero items are
  * wider and centre-snap; uncontained items are uniform and flow past the edge);
  * `full-screen` stacks full-size items vertically. Same DOM as the VE build.
+ *
+ * Note: M3's dynamic keylines (multi-browse large+medium+small, hero side peeks)
+ * and the scroll-driven mask/parallax + spring snap depend on a scroll-position→
+ * size mapping that CSS scroll-snap cannot express. The static item sizes here
+ * approximate the layout (multi-browse/hero show a trailing/adjacent peek via
+ * snap alignment); the dynamic keyline + mask transition remain a future
+ * enhancement (a JS scroll driver using `spring-spatial-default`).
  */
 import { createCarousel } from '@m3-baseui/core';
 import { tv } from '../../tv';
@@ -22,7 +30,7 @@ export const carouselTv = tv({
       // Reduced motion: jump instead of smooth-scrolling between snap cells.
       'motion-reduce:scroll-auto',
     ],
-    item: 'snap-start shrink-0 overflow-hidden rounded-large',
+    item: 'snap-start shrink-0 overflow-hidden rounded-extra-large',
   },
   variants: {
     variant: {
