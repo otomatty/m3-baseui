@@ -5,6 +5,11 @@
 import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from '@m3-baseui/tokens/contract.css';
 
+import { menuGroupLabel, selectMenuPopup } from '../menu/menu-surface.css';
+import { menuSelectableItemIndicator, selectMenuItem } from '../menu/menu-selectable-item.css';
+
+export { selectMenuPopup as popup, selectMenuItem as item, menuSelectableItemIndicator as itemIndicator, menuGroupLabel as groupLabel };
+
 export const trigger = style({
   position: 'relative',
   display: 'inline-flex',
@@ -63,92 +68,6 @@ export const icon = style({
   },
 });
 
-export const popup = style({
-  minWidth: 'max(112px, var(--anchor-width))',
-  maxWidth: '280px',
-  maxHeight: 'var(--available-height)',
-  paddingBlock: '8px',
-  overflow: 'auto',
-  background: `rgb(${vars.sys.color.surfaceContainer})`,
-  color: `rgb(${vars.sys.color.onSurface})`,
-  borderRadius: vars.sys.shape.extraSmall,
-  boxShadow: vars.sys.elevation.level2,
-  transformOrigin: 'var(--transform-origin)',
-  outline: 'none',
-  transition: `opacity 150ms ${vars.sys.motion.easing.standard}, transform 150ms ${vars.sys.motion.easing.standard}`,
-  selectors: {
-    '&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
-  },
-});
-
-const labelLarge = {
-  fontFamily: vars.sys.typescale.labelLarge.fontFamily,
-  fontWeight: vars.sys.typescale.labelLarge.fontWeight,
-  fontSize: vars.sys.typescale.labelLarge.fontSize,
-  lineHeight: vars.sys.typescale.labelLarge.lineHeight,
-  letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
-} as const;
-
-export const item = style({
-  position: 'relative',
-  display: 'grid',
-  gridTemplateColumns: '24px 1fr auto',
-  alignItems: 'center',
-  gap: '12px',
-  height: '48px',
-  paddingInline: '12px',
-  overflow: 'hidden',
-  cursor: 'pointer',
-  userSelect: 'none',
-  outline: 'none',
-  color: `rgb(${vars.sys.color.onSurface})`,
-  ...labelLarge,
-  selectors: {
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      inset: 0,
-      background: 'currentColor',
-      opacity: 0,
-      pointerEvents: 'none',
-      transition: `opacity 100ms ${vars.sys.motion.easing.standard}`,
-    },
-    '&:hover::before': { opacity: vars.sys.state.hover },
-    '&[data-highlighted]::before': { opacity: vars.sys.state.hover },
-    '&:active::before': { opacity: vars.sys.state.pressed },
-    // M3 selectable menu item: secondary-container fill + on-secondary-container label.
-    '&[data-selected]': {
-      background: `rgb(${vars.sys.color.secondaryContainer})`,
-      color: `rgb(${vars.sys.color.onSecondaryContainer})`,
-      borderRadius: vars.sys.shape.extraSmall,
-    },
-    // M3 disabled (per-token, not a blanket fade): label + trailing supporting
-    // text on-surface/0.38, no state layer.
-    '&[data-disabled]': {
-      color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
-      pointerEvents: 'none',
-    },
-    '&[data-disabled]::before': { opacity: 0 },
-  },
-});
-
-// M3 trailing supporting text sits in the last column. Descendant rules can't
-// live in a VE `style`, so scope them to the item class with globalStyle.
-globalStyle(`${item} [data-slot="select-trailing"]`, {
-  paddingLeft: '16px',
-  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-  fontFamily: vars.sys.typescale.labelLarge.fontFamily,
-  fontSize: vars.sys.typescale.labelLarge.fontSize,
-  lineHeight: vars.sys.typescale.labelLarge.lineHeight,
-  letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
-});
-globalStyle(`${item}[data-selected] [data-slot="select-trailing"]`, {
-  color: `rgb(${vars.sys.color.onSecondaryContainer})`,
-});
-globalStyle(`${item}[data-disabled] [data-slot="select-trailing"]`, {
-  color: `rgb(${vars.sys.color.onSurface} / 0.38)`,
-});
-
 // Sticky scroll affordances at the popup edges; surface-tinted with a chevron.
 const scrollArrowBase = {
   position: 'sticky',
@@ -166,35 +85,6 @@ export const scrollUpArrow = style({ ...scrollArrowBase, top: 0 });
 export const scrollDownArrow = style({ ...scrollArrowBase, bottom: 0 });
 globalStyle(`${scrollUpArrow} > svg`, { width: '20px', height: '20px' });
 globalStyle(`${scrollDownArrow} > svg`, { width: '20px', height: '20px' });
-
-export const itemIndicator = style({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: `rgb(${vars.sys.color.onSurface})`,
-  // keepMounted keeps the indicator in every item's grid; hide the glyph unless
-  // the parent item is selected so the 24px column stays reserved (labels align).
-  visibility: 'hidden',
-  selectors: {
-    [`${item}[data-selected] &`]: {
-      visibility: 'visible',
-      color: `rgb(${vars.sys.color.onSecondaryContainer})`,
-    },
-    // M3 disabled: the selected-check indicator dims with its row (own text color).
-    [`${item}[data-disabled] &`]: { color: `rgb(${vars.sys.color.onSurface} / 0.38)` },
-  },
-});
-
-export const groupLabel = style({
-  paddingInline: '12px',
-  paddingBlock: '8px',
-  color: `rgb(${vars.sys.color.onSurfaceVariant})`,
-  fontFamily: vars.sys.typescale.labelSmall.fontFamily,
-  fontWeight: vars.sys.typescale.labelSmall.fontWeight,
-  fontSize: vars.sys.typescale.labelSmall.fontSize,
-  lineHeight: vars.sys.typescale.labelSmall.lineHeight,
-  letterSpacing: vars.sys.typescale.labelSmall.letterSpacing,
-});
 
 /* ------------------------------------------------------------------ *
  * Exposed Dropdown Menu anchor (issue #96) — the Select as a TextField.

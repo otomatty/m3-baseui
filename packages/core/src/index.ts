@@ -304,3 +304,8 @@ export { TouchTarget } from './touch-target';
 
 // Utils
 export { cx, mergeRefs } from './utils';
+export {
+  assignListItemPositions,
+  getMenuListItemPosition,
+  type MenuListItemPosition,
+} from './menu-list-position';

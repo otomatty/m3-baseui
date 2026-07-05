@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Select, selectTv } from '../select/select';
 
 function Example(props: { disabled?: boolean }) {
@@ -13,6 +13,31 @@ function Example(props: { disabled?: boolean }) {
   );
 }
 
+function OpenableExample() {
+  return (
+    <Select.Root defaultValue="a">
+      <Select.Trigger aria-label="果物">
+        <Select.Value />
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Positioner>
+          <Select.Popup>
+            <Select.Item value="a">
+              <Select.ItemText>りんご</Select.ItemText>
+            </Select.Item>
+            <Select.Item value="b">
+              <Select.ItemText>バナナ</Select.ItemText>
+            </Select.Item>
+            <Select.Item value="c">
+              <Select.ItemText>さくらんぼ</Select.ItemText>
+            </Select.Item>
+          </Select.Popup>
+        </Select.Positioner>
+      </Select.Portal>
+    </Select.Root>
+  );
+}
+
 describe('Select', () => {
   test('renders a combobox trigger', () => {
     render(<Example />);
@@ -22,6 +47,27 @@ describe('Select', () => {
   test('disabled trigger carries data-disabled', () => {
     render(<Example disabled />);
     expect(screen.getByRole('combobox')).toHaveAttribute('data-disabled');
+  });
+
+  test('popup positions below the trigger without Base UI overlap mode (M3 menu)', async () => {
+    render(<OpenableExample />);
+    fireEvent.click(screen.getByRole('combobox'));
+    await waitFor(() => {
+      expect(document.querySelector('[data-side="bottom"]')).not.toBeNull();
+    });
+    expect(document.querySelector('[data-side="none"]')).toBeNull();
+  });
+
+  test('stamps data-position on each list item (issue #98)', async () => {
+    render(<OpenableExample />);
+    fireEvent.click(screen.getByRole('combobox'));
+    await waitFor(() => {
+      expect(screen.getAllByRole('option')).toHaveLength(3);
+    });
+    const options = screen.getAllByRole('option');
+    expect(options[0]).toHaveAttribute('data-position', 'first');
+    expect(options[1]).toHaveAttribute('data-position', 'middle');
+    expect(options[2]).toHaveAttribute('data-position', 'last');
   });
 });
 
@@ -63,7 +109,9 @@ describe('Select tokens', () => {
     expect(s.item()).not.toContain('text-body-large');
     expect(s.item()).toContain('data-[selected]:bg-secondary-container');
     expect(s.item()).toContain('data-[selected]:text-on-secondary-container');
-    expect(s.item()).toContain('data-[selected]:rounded-extra-small');
+    expect(s.item()).toContain('data-[selected]:data-[position=only]:rounded-extra-small');
+    expect(s.item()).toContain('data-[selected]:data-[position=first]:rounded-t-extra-small');
+    expect(s.item()).toContain('data-[selected]:data-[position=last]:rounded-b-extra-small');
     expect(s.itemIndicator()).toContain('text-on-surface');
     expect(s.itemIndicator()).not.toContain('text-primary');
     expect(s.itemIndicator()).toContain('group-data-[selected]:text-on-secondary-container');

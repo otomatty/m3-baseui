@@ -65,8 +65,19 @@ describe('Menu tokens', () => {
   test('selectable items reserve a 24px leading indicator column', () => {
     expect(m.checkboxItem()).toContain('grid-cols-[24px_1fr]');
     expect(m.radioItem()).toContain('grid-cols-[24px_1fr]');
-    // indicator stays mounted but is hidden unless the item is checked
     expect(m.itemIndicator()).toContain('group-data-[checked]:visible');
+  });
+
+  test('selectable items use secondary-container when checked (M3 selectable menu row)', () => {
+    expect(m.checkboxItem()).toContain('data-[checked]:bg-secondary-container');
+    expect(m.checkboxItem()).toContain('data-[checked]:text-on-secondary-container');
+    expect(m.radioItem()).toContain('data-[checked]:bg-secondary-container');
+  });
+
+  test('selectable items use M3 position-based checked shapes (issue #98)', () => {
+    expect(m.checkboxItem()).toContain('data-[checked]:data-[position=first]:rounded-t-extra-small');
+    expect(m.checkboxItem()).toContain('data-[checked]:data-[position=last]:rounded-b-extra-small');
+    expect(m.checkboxItem()).toContain('data-[checked]:data-[position=middle]:rounded-none');
   });
 });
 
