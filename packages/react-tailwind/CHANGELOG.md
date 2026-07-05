@@ -1,5 +1,212 @@
 # @m3-baseui/react-tailwind
 
+## 6.0.0
+
+### Major Changes
+
+- c73e8cb: ButtonGroup now follows the Material 3 Expressive spec (issue #119).
+
+  Aligned to Compose `ButtonGroupSmallTokens` / `ConnectedButtonGroupSmallTokens` +
+  `ButtonGroup.kt`. Both engines emit identical DOM / `data-*` (drop-in).
+
+  **Breaking (visual — no API/DOM changes):**
+
+  - **`standard` gap 8dp → 12dp** (`ButtonGroupSmallTokens.BetweenSpace`).
+  - **`connected` children are now equal-width flexible segments** so the press
+    squeeze can redistribute width (the M3 connected/segmented layout).
+  - **Press squeeze (`ButtonGroupDefaults.ExpandedRatio = 0.15`):** pressing a
+    connected child grows it by ~15% while its neighbours compress, animated with
+    the fast spatial spring (`flex-grow` + `spring-spatial-fast`). The ratio is kept
+    as the `--md-comp-button-group-expanded-ratio` custom property.
+  - **Connected seam morphs to `extra-small` (4dp) on press**
+    (`PressedInnerCornerCornerSize`).
+  - **A selected/toggled connected child rounds fully**
+    (`SelectedInnerCornerCornerSizePercent = 50%`).
+
+- c73e8cb: Carousel items now use the Material 3 Expressive `extra-large` (28dp) corner
+  (issue #116).
+
+  Aligned to Compose `carousel/Carousel.kt` + samples, where every layout masks
+  items with `MaterialTheme.shapes.extraLarge` (28dp). Previously items used
+  `large` (16dp). Both engines emit identical DOM / `data-*` (drop-in).
+
+  **Breaking (visual — no API/DOM changes):** item corner radius 16dp → 28dp.
+
+  Note: M3's dynamic keylines (multi-browse large+medium+small, hero side peeks)
+  and the scroll-driven mask/parallax with a spring snap depend on a
+  scroll-position→size mapping that CSS scroll-snap cannot express. The static item
+  sizes approximate the layout (multi-browse/hero already show a trailing/adjacent
+  peek via snap alignment); the dynamic keyline and mask transition are documented
+  as a future enhancement (a JS scroll driver using `spring-spatial-default`).
+
+- c73e8cb: LoadingIndicator now follows the Material 3 Expressive spec (issue #115).
+
+  Aligned to Compose `LoadingIndicatorTokens` + `LoadingIndicator.kt`. Both engines
+  emit identical DOM / `data-*` (drop-in).
+
+  **Breaking (visual — no API/DOM changes):**
+
+  - **Seven-shape morph.** The active indicator now continuously morphs through the
+    M3 shape sequence — SoftBurst → Cookie9Sided → Pentagon → Pill → Sunny →
+    Cookie4Sided → Oval — each shape held ~650ms (`MorphIntervalMillis`), layered
+    under a steady global rotation (`GlobalRotationDurationMillis` ≈ 4666ms). This
+    replaces the previous single flower path spun with a rotate + scale pulse. The
+    shapes are sampled to a uniform point count and interpolated via the Web
+    Animations API in the core factory (engine-agnostic), so both builds behave
+    identically and the morph disables under `prefers-reduced-motion`.
+  - **Contained config colors fixed.** The contained variant is now a
+    `primary-container` pill with an `on-primary-container` shape
+    (`ContainedContainerColor` / `ContainedActiveColor`); it was wrongly
+    `secondary-container` / `primary` in both engines.
+
+  Also adds a `prefers-reduced-motion` guard to the rotation (previously always ran).
+
+- c73e8cb: NavigationBar and NavigationRail now follow the Material 3 Expressive spec (issue #114).
+
+  Aligned to Compose `NavigationBarTokens` / `NavigationBarVerticalItemTokens` /
+  `NavigationRailCollapsedTokens` / `NavigationRailColorTokens`. Both engines emit
+  identical DOM / `data-*` (drop-in).
+
+  **Breaking (visual — no API/DOM changes):**
+
+  - **Active label color `on-surface` → `secondary`** (bar + rail;
+    `ItemActiveLabelTextColor = Secondary`) — the clearest Expressive change.
+  - **NavigationBar height 80dp → 64dp** (`NavigationBarTokens.ContainerHeight`)
+    with symmetric item padding for the shorter bar.
+  - **NavigationBar active indicator 64×32 → 56×32** (`NavigationBarVerticalItemTokens`;
+    the rail was already 56, only the bar was wrong).
+  - **NavigationRail collapsed width 80dp → 96dp**, top space 20 → 44dp, item gap
+    12 → 4dp, item height fixed at 64dp (`NavigationRailCollapsedTokens`).
+  - The active label emphasis is now the `labelMediumEmphasized` typescale (weight 700) instead of a raw `font-bold` (visually equivalent).
+  - The active-indicator **state layer is explicitly `on-secondary-container`**
+    (was `currentColor`), matching `NavigationRailColorTokens` for active + inactive.
+
+  **Motion:**
+
+  - Indicator / icon / label color transitions now use the `spring-effects-default`
+    easing (M3 `DefaultEffects`) instead of `ease-standard` 150ms.
+
+  Also: the Tailwind `tv` wrapper now teaches tailwind-merge the `…-emphasized`
+  typescale roles so an active `text-<color>` and `text-<role>-emphasized` no longer
+  collide.
+
+- c73e8cb: Progress (Linear + Circular) now follows the Material 3 Expressive spec (issue #117).
+
+  Aligned to Compose `ProgressIndicatorTokens` / `LinearProgressIndicatorTokens` /
+  `CircularProgressIndicatorTokens`. Both engines emit identical DOM / `data-*` (drop-in).
+
+  **Breaking (visual — no API/DOM changes):**
+
+  - **Inactive track color `surface-container-highest` → `secondary-container`**
+    (`ProgressIndicatorTokens.TrackColor`), linear + circular.
+  - **Wavy now applies to indeterminate too** (was determinate-only). Setting
+    `wavy` on an indeterminate indicator renders the Expressive wave:
+    - Linear: a full-width flowing wave at the 20dp
+      `IndeterminateActiveWaveWavelength` (the disjoint two-bar motion is retained
+      as the non-wavy default).
+    - Circular: a single sine-modulated arc spun by the ring rotation.
+  - **Circular wavy refinements:** amplitude 2 → **1.6dp** (`ActiveWaveAmplitude`),
+    wavelength ~12 → **15dp** (`ActiveWaveWavelength`), and the wavy ring's outer box
+    grows to **48dp** (`WaveSize`) while the 40dp ring stays put.
+
+  **Motion:** determinate value transitions now use the `spring-effects-default`
+  easing instead of `ease-standard`.
+
+- c73e8cb: SplitButton now follows the Material 3 Expressive spec (issue #118).
+
+  Aligned to Compose `SplitButtonSmallTokens` + `SplitButton.kt`. Both engines emit
+  identical DOM / `data-*` (drop-in).
+
+  **Breaking:**
+
+  - **The `text` variant is removed.** Per the M3 spec the split button has only
+    `filled | tonal | outlined | elevated` (there is no text split button). The
+    `variant` prop is now typed `SplitButtonVariant` (a split-button-specific type,
+    so `Button`'s shared `ButtonVariant` keeps `text`). New exports:
+    `SplitButtonVariant`, `SPLIT_BUTTON_VARIANTS`.
+  - **Seam corner `small` (8dp) → `extra-small` (4dp)** (`InnerCornerCornerSize`),
+    and it **morphs to `medium` (12dp) on hover/press** (`InnerHovered/PressedCornerCornerSize`).
+  - **The trailing button morphs to a full circle while the menu is open**
+    (`TrailingInnerSelectedCornerCornerSizePercent = 50%`), in addition to the
+    existing chevron rotation.
+  - Padding: leading 24dp → **16dp outer / 12dp seam**; trailing 12dp → **13dp**.
+    Trailing icon 18dp → **22dp** (`TrailingIconSize`).
+
+  **Motion:** shape morphs use the `spring-effects-default` easing; the chevron
+  rotation uses `spring-spatial-default`.
+
+  **Drop-in fix:** the popup close animation now matches between engines — both fade
+  **and** scale (0.95) on close (Tailwind previously faded only).
+
+- c73e8cb: Toolbar now follows the Material 3 Expressive spec more closely (issue #120).
+
+  Aligned to Compose `FloatingToolbarTokens` / `DockedToolbarTokens` +
+  `FloatingToolbar.kt`. Both engines emit identical DOM / `data-*` (drop-in).
+
+  **New prop:**
+
+  - `type` (`floating` | `docked`, default `floating`). `docked` is a
+    square-cornered, full-width `surface-container` bar (`DockedToolbarTokens`:
+    64dp height, 16dp leading/trailing, 4–32dp spacing) mirrored onto `data-type`.
+
+  **Breaking (visual — no API/DOM changes):**
+
+  - **Floating elevation `level3` → `level0`** (no shadow) — Compose `FloatingToolbar`
+    defaults to Level0.
+  - **Standard content color `on-surface-variant` → `on-surface`**
+    (`contentColorFor(SurfaceContainer)`). (Interactive children paint their own
+    color, so this only affects direct text content.)
+
+  **Motion:** a `data-expanded="false"` hook collapses the bar (scale + fade) with
+  the fast spatial spring, for consumer-driven show/hide.
+
+  Deferred: the vibrant toggle-_selected_ inversion (a selected action flipping to
+  surface-container / on-surface) and full unification of the vibrant child-color
+  mechanism are left for a follow-up — both require overriding IconButton's own
+  colors, which cannot be done drop-in via CSS specificity alone (it would need
+  `!important`, which vanilla-extract does not support).
+
+### Minor Changes
+
+- c73e8cb: NavigationRail gains the Material 3 Expressive expanded mode (issue #121).
+
+  Aligned to Compose `NavigationRailExpandedTokens` /
+  `NavigationRailHorizontalItemTokens` + `WideNavigationRail.kt`. Additive and
+  drop-in — both engines emit identical DOM / `data-*`.
+
+  **New props (on `NavigationRail.Root`):**
+
+  - `expanded`: widens the rail to 220–360dp (`ContainerWidthMinimum/Maximum`) and
+    lays its items out horizontally — icon left, label right (`labelLarge`), with a
+    56dp-tall active indicator, 16dp leading space and 8dp icon–label gap. The width
+    animates with the default spatial spring.
+  - `modal`: renders the expanded rail as an elevated `surface-container` sheet
+    (elevation Level2, 16dp corner). Implies `expanded`.
+
+  Both are surfaced via `data-expanded` / `data-modal` on the root, so the layout
+  switches purely in CSS without any DOM change. The collapsed vertical rail and the
+  existing `header` slot are unchanged.
+
+### Patch Changes
+
+- c73e8cb: SegmentedButton selection motion now uses the M3 Expressive springs (issue #122).
+
+  Compose drives the selection transition with the motion scheme (the
+  `OutlinedSegmentedButtonTokens` file carries no motion tokens). Matching that:
+  the selection color transition now rides the fast **effects** spring
+  (`spring-effects-fast`) and the checkmark's width — a spatial change (0→18dp) —
+  the fast **spatial** spring (`spring-spatial-fast`), both replacing the previous
+  `ease-standard` 150ms. Both engines emit identical values (drop-in); no DOM or
+  static-render change (visual baselines are unaffected).
+
+- Updated dependencies [c73e8cb]
+- Updated dependencies [c73e8cb]
+- Updated dependencies [c73e8cb]
+- Updated dependencies [c73e8cb]
+- Updated dependencies [c73e8cb]
+- Updated dependencies [c73e8cb]
+  - @m3-baseui/core@6.0.0
+
 ## 5.0.0
 
 ### Major Changes
