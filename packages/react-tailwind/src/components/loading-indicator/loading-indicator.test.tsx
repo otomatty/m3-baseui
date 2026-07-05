@@ -33,12 +33,29 @@ describe('LoadingIndicator tokens', () => {
     expect(s.root()).toContain('[&_svg]:size-[38px]');
     expect(s.indicator()).toContain('fill-primary');
     expect(s.indicator()).toContain('animate-m3-loading');
+    // Reduced motion halts the continuous rotation.
+    expect(s.indicator()).toContain('motion-reduce:animate-none');
   });
 
-  test('contained adds a 48dp secondary-container pill', () => {
+  test('Expressive: contained is a 48dp primary-container pill with on-primary-container shape', () => {
     const s = loadingIndicatorTv({ contained: true });
     expect(s.root()).toContain('size-12');
     expect(s.root()).toContain('rounded-full');
-    expect(s.root()).toContain('bg-secondary-container');
+    // Expressive contained config: PrimaryContainer / OnPrimaryContainer
+    // (was wrongly secondary-container / primary).
+    expect(s.root()).toContain('bg-primary-container');
+    expect(s.root()).not.toContain('bg-secondary-container');
+    expect(s.indicator()).toContain('fill-on-primary-container');
+  });
+
+  test('renders the 7-shape morph as a sampled SVG path', () => {
+    const { container } = render(<LoadingIndicator aria-label="morph" />);
+    const path = container.querySelector('path');
+    expect(path).toBeTruthy();
+    const d = path?.getAttribute('d') ?? '';
+    // A sampled closed polyline (M … L … Z), not the old single flower path.
+    expect(d.startsWith('M')).toBe(true);
+    expect(d.endsWith('Z')).toBe(true);
+    expect(d.split('L').length).toBeGreaterThan(20);
   });
 });

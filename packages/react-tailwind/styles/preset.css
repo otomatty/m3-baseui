@@ -25,9 +25,10 @@
   --animate-m3-wave-flow: m3-wave-flow 1s linear infinite;
   --animate-m3-circular-rotate: m3-circular-rotate 1.4s linear infinite;
   --animate-m3-circular-dash: m3-circular-dash 1.4s ease-in-out infinite;
-  /* M3 Expressive loading indicator: the active shape rotates while it morphs
-   * (approximated as a rotate + scale pulse). The VE build matches this period. */
-  --animate-m3-loading: m3-loading 1.2s ease-in-out infinite;
+  /* M3 Expressive loading indicator: the steady global rotation
+   * (GlobalRotationDurationMillis ≈ 4666ms, linear) layered under the WAAPI shape
+   * morph driven by the core factory. The VE build matches this period. */
+  --animate-m3-loading: m3-loading 4666ms linear infinite;
 }
 
 /* Disjoint linear indeterminate: two primary-colored bars scale + slide across
@@ -101,14 +102,9 @@
   }
 }
 
+/* Steady global rotation of the morphing shape (the morph itself is WAAPI). */
 @keyframes m3-loading {
-  0% {
-    transform: rotate(0deg) scale(1);
-  }
-  50% {
-    transform: rotate(180deg) scale(0.85);
-  }
-  100% {
-    transform: rotate(360deg) scale(1);
+  to {
+    transform: rotate(360deg);
   }
 }
