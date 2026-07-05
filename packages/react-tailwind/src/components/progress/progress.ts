@@ -22,8 +22,10 @@ export const linearTv = tv({
     // Height comes from the factory (inline) so `thickness` is honored.
     root: [
       'group relative block w-full overflow-hidden rounded-full',
+      // The dot is `--m3-thickness` tall (stroke height) and centered, so it stays
+      // correct when the wavy track grows taller than the stroke.
       "after:content-[''] after:absolute after:end-0 after:top-1/2 after:-translate-y-1/2",
-      'after:h-full after:aspect-square after:rounded-full after:bg-primary',
+      'after:h-[var(--m3-thickness,100%)] after:aspect-square after:rounded-full after:bg-primary',
       // Self variant (not `group-data-*`): the dot is on the root element itself,
       // which carries `data-indeterminate` — it isn't a descendant of `.group`.
       'data-[indeterminate]:after:hidden',
@@ -32,21 +34,29 @@ export const linearTv = tv({
     // 4dp gap separates it from the active indicator (`--m3-progress` + 4px). The
     // gap uses logical inline insets so it tracks the indicator (which Base UI
     // anchors at inline-start) under `dir="rtl"`. Indeterminate has no fraction,
-    // so the inactive track spans the full width.
+    // so the inactive track spans the full width. The flat track stays
+    // `--m3-thickness` tall and centered even when the wavy root is taller.
     track: [
       'absolute inset-0',
-      "before:content-[''] before:absolute before:inset-y-0 before:end-0",
+      "before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:end-0",
+      'before:h-[var(--m3-thickness,100%)]',
       'before:[inset-inline-start:calc(var(--m3-progress,0%)+4px)]',
       'before:bg-surface-container-highest before:rounded-full',
       'group-data-[indeterminate]:before:start-0',
     ],
     // Primary bar. Determinate: width from Base UI. Indeterminate: full width,
     // scaled + slid by the disjoint `primary` keyframe (origin at the start edge).
+    // Wavy determinate: a scrolling sine tile masks the solid bar into a wave.
     indicator: [
       'absolute inset-y-0 left-0 origin-left bg-primary rounded-full',
       'transition-[width] duration-200 ease-standard',
       'group-data-[indeterminate]:w-full group-data-[indeterminate]:transition-none',
       'group-data-[indeterminate]:animate-m3-linear-primary',
+      'group-data-[wavy]:rounded-none',
+      'group-data-[wavy]:[-webkit-mask-image:var(--m3-wave)] group-data-[wavy]:[mask-image:var(--m3-wave)]',
+      'group-data-[wavy]:[-webkit-mask-repeat:repeat-x] group-data-[wavy]:[mask-repeat:repeat-x]',
+      'group-data-[wavy]:[-webkit-mask-size:40px_100%] group-data-[wavy]:[mask-size:40px_100%]',
+      'group-data-[wavy]:animate-m3-wave-flow',
     ],
     // Second disjoint bar: only present visually while indeterminate.
     indicatorSecondary: [

@@ -82,6 +82,25 @@ describe('Progress.Linear', () => {
     expect(bar.style.getPropertyValue('--m3-progress')).toBe('50%');
     expect(bar.style.opacity).toBe('0.5');
   });
+
+  test('wavy determinate publishes the wave mask, grows taller and sets data-wavy', () => {
+    render(<Progress.Linear value={50} wavy amplitude={3} aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar).toHaveAttribute('data-wavy');
+    // Track grows to thickness + 2*amplitude (4 + 6) to fit the wave.
+    expect(bar.style.height).toBe('10px');
+    expect(bar.style.getPropertyValue('--m3-wave')).toContain('data:image/svg+xml');
+    // The flat track/dot stay at the stroke height.
+    expect(bar.style.getPropertyValue('--m3-thickness')).toBe('4px');
+  });
+
+  test('wavy is ignored while indeterminate (no data-wavy, no mask)', () => {
+    render(<Progress.Linear wavy aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar).toHaveAttribute('data-indeterminate');
+    expect(bar).not.toHaveAttribute('data-wavy');
+    expect(bar.style.getPropertyValue('--m3-wave')).toBe('');
+  });
 });
 
 describe('Progress.Circular', () => {
@@ -148,5 +167,28 @@ describe('Progress.Circular', () => {
       expect(arc.getAttribute('stroke-dasharray')).not.toContain('NaN');
       expect(arc.getAttribute('stroke-dashoffset') ?? '').not.toContain('NaN');
     }
+  });
+
+  test('wavy determinate draws sine-modulated paths (not plain arcs)', () => {
+    const { container } = render(<Progress.Circular value={50} wavy aria-label="処理中" />);
+    const bar = screen.getByRole('progressbar', { name: '処理中' });
+    expect(bar).toHaveAttribute('aria-valuenow', '50');
+    // Wavy uses <path> for the active wave (+ inactive arc); no dashed circles.
+    expect(container.querySelectorAll('circle')).toHaveLength(0);
+    const paths = container.querySelectorAll('path');
+    expect(paths.length).toBeGreaterThanOrEqual(2);
+    // The active wave path has many line segments (sine samples) and no NaN.
+    const active = paths[paths.length - 1] as SVGPathElement;
+    const d = active.getAttribute('d') ?? '';
+    expect(d).not.toContain('NaN');
+    expect(d.split('L').length).toBeGreaterThan(10);
+  });
+
+  test('wavy is ignored while indeterminate (still a spinning circle)', () => {
+    const { container } = render(<Progress.Circular wavy aria-label="処理中" />);
+    const bar = screen.getByRole('progressbar', { name: '処理中' });
+    expect(bar).toHaveAttribute('data-indeterminate');
+    expect(container.querySelectorAll('circle')).toHaveLength(1);
+    expect(container.querySelectorAll('path')).toHaveLength(0);
   });
 });

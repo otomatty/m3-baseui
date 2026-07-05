@@ -39,6 +39,13 @@ const circularDash = keyframes({
   '100%': { strokeDasharray: '60 100', strokeDashoffset: '-58' },
 });
 
+// Wavy linear: scroll the sine mask tile by one wavelength (40px) for a seamless
+// flowing wave. Matches the Tailwind preset keyframe.
+const waveFlow = keyframes({
+  '0%': { WebkitMaskPosition: '0 center', maskPosition: '0 center' },
+  '100%': { WebkitMaskPosition: '40px center', maskPosition: '40px center' },
+});
+
 export const linearRoot = style({
   position: 'relative',
   display: 'block',
@@ -47,15 +54,16 @@ export const linearRoot = style({
   overflow: 'hidden',
   borderRadius: vars.sys.shape.full,
   selectors: {
-    // Track-stop dot (primary, full track height) pinned at the inline-end
+    // Track-stop dot (primary, `--m3-thickness` tall) pinned at the inline-end
     // (mirrors under RTL). Determinate-only, so it's hidden while indeterminate.
+    // The stroke-height var keeps it correct when the wavy root is taller.
     '&::after': {
       content: '""',
       position: 'absolute',
       insetInlineEnd: 0,
       top: '50%',
       transform: 'translateY(-50%)',
-      height: '100%',
+      height: 'var(--m3-thickness, 100%)',
       aspectRatio: '1',
       borderRadius: vars.sys.shape.full,
       background: `rgb(${vars.sys.color.primary})`,
@@ -74,11 +82,14 @@ export const linearTrack = style({
   position: 'absolute',
   inset: 0,
   selectors: {
+    // `--m3-thickness` tall and centered so the flat track keeps its stroke
+    // height when the wavy root is taller.
     '&::before': {
       content: '""',
       position: 'absolute',
-      top: 0,
-      bottom: 0,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      height: 'var(--m3-thickness, 100%)',
       insetInlineEnd: 0,
       insetInlineStart: 'calc(var(--m3-progress, 0%) + 4px)',
       background: `rgb(${vars.sys.color.surfaceContainerHighest})`,
@@ -93,6 +104,7 @@ export const linearTrack = style({
 
 // Primary bar. Determinate: width from Base UI. Indeterminate: full width,
 // scaled + slid by the disjoint `primary` keyframe (origin at the start edge).
+// Wavy determinate: a scrolling sine tile (`--m3-wave`) masks the solid bar.
 export const linearIndicator = style({
   position: 'absolute',
   top: 0,
@@ -107,6 +119,16 @@ export const linearIndicator = style({
       width: '100%',
       transition: 'none',
       animation: `${linearPrimary} 2s linear infinite`,
+    },
+    [`${linearRoot}[data-wavy] &`]: {
+      borderRadius: 0,
+      WebkitMaskImage: 'var(--m3-wave)',
+      maskImage: 'var(--m3-wave)',
+      WebkitMaskRepeat: 'repeat-x',
+      maskRepeat: 'repeat-x',
+      WebkitMaskSize: '40px 100%',
+      maskSize: '40px 100%',
+      animation: `${waveFlow} 1s linear infinite`,
     },
   },
 });

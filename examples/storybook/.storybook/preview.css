@@ -20,6 +20,7 @@
 @theme {
   --animate-m3-linear-primary: m3-linear-primary 2s linear infinite;
   --animate-m3-linear-secondary: m3-linear-secondary 2s linear infinite;
+  --animate-m3-wave-flow: m3-wave-flow 1s linear infinite;
   --animate-m3-circular-rotate: m3-circular-rotate 1.4s linear infinite;
   --animate-m3-circular-dash: m3-circular-dash 1.4s ease-in-out infinite;
 }
@@ -57,6 +58,13 @@
   }
   100% {
     transform: translateX(160%) scaleX(0.08);
+  }
+}
+
+@keyframes m3-wave-flow {
+  to {
+    -webkit-mask-position-x: 40px;
+    mask-position-x: 40px;
   }
 }
 

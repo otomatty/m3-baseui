@@ -4,7 +4,9 @@
  *
  * `Linear` composes Base UI `Progress` (Root/Track/Indicator); the Root exposes
  * `data-indeterminate` / `data-progressing` / `data-complete`, which the engine
- * CSS keys off (the indeterminate slide animation lives in CSS). `Circular` is a
+ * CSS keys off (the disjoint indeterminate motion lives in CSS). The M3
+ * Expressive `wavy` shape masks the active bar with a scrolling sine tile
+ * (`--m3-wave`) and sets `data-wavy`. `Circular` is a
  * self-contained SVG ring with `role="progressbar"`: the active arc and the
  * inactive track are drawn via `stroke-dasharray`/`stroke-dashoffset` (normalized
  * to `pathLength="100"`) with a 4dp gap and rounded caps per M3. Indeterminate
@@ -28,6 +30,68 @@ const PATH_LENGTH = 100;
 // Static arc shown for indeterminate before/without motion (reduced-motion).
 const INDETERMINATE_ARC = 25;
 
+// ---- M3 Expressive wavy shape -------------------------------------------------
+// Linear waves at a fixed 40px wavelength (the flow keyframe advances one tile);
+// amplitudes default per shape. Circular derives its wave count from the ring.
+const LINEAR_WAVELENGTH = 40;
+const LINEAR_AMPLITUDE = 3;
+const CIRCULAR_AMPLITUDE = 2;
+
+const round = (n: number) => Math.round(n * 100) / 100;
+
+/**
+ * A repeating sine tile (one `LINEAR_WAVELENGTH`-wide period) as a `mask-image`
+ * data URI. The active bar is a solid `primary` rectangle; this mask carves it
+ * into a stroked wave of the given `thickness`, and the engine CSS scrolls it.
+ */
+function linearWaveMask(thickness: number, amplitude: number): string {
+  const height = thickness + 2 * amplitude;
+  const mid = height / 2;
+  const steps = 24;
+  let d = `M0 ${mid}`;
+  for (let i = 1; i <= steps; i++) {
+    const x = round((LINEAR_WAVELENGTH * i) / steps);
+    const y = round(mid - amplitude * Math.sin((i / steps) * 2 * Math.PI));
+    d += `L${x} ${y}`;
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${LINEAR_WAVELENGTH}" height="${height}" viewBox="0 0 ${LINEAR_WAVELENGTH} ${height}"><path d="${d}" fill="none" stroke="#000" stroke-width="${thickness}" stroke-linecap="round"/></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
+/** Point on a circle at `frac` of a turn from the top (12 o'clock), clockwise. */
+function pointOnCircle(cx: number, cy: number, r: number, frac: number): [number, number] {
+  const a = frac * 2 * Math.PI;
+  return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+}
+
+/** Plain (non-wavy) arc path between two fractions, starting at the top. */
+function arcPath(cx: number, cy: number, r: number, startFrac: number, endFrac: number): string {
+  const [x1, y1] = pointOnCircle(cx, cy, r, startFrac);
+  const [x2, y2] = pointOnCircle(cx, cy, r, endFrac);
+  const large = endFrac - startFrac > 0.5 ? 1 : 0;
+  return `M${round(x1)} ${round(y1)} A${r} ${r} 0 ${large} 1 ${round(x2)} ${round(y2)}`;
+}
+
+/** Sine-modulated (wavy) arc path: the radius oscillates `waves` times per turn. */
+function wavyArcPath(
+  cx: number,
+  cy: number,
+  r: number,
+  startFrac: number,
+  endFrac: number,
+  amplitude: number,
+  waves: number,
+): string {
+  const step = 1 / (waves * 16);
+  let d = '';
+  for (let f = startFrac; f <= endFrac + 1e-9; f += step) {
+    const rr = r + amplitude * Math.sin(f * waves * 2 * Math.PI);
+    const [x, y] = pointOnCircle(cx, cy, rr, f);
+    d += `${d ? 'L' : 'M'}${round(x)} ${round(y)}`;
+  }
+  return d;
+}
+
 /**
  * Normalize a determinate progress pair: a finite, positive `max` (NaN, Infinity
  * or a non-positive value falls back to 100) and the value clamped to `[0, max]`
@@ -47,7 +111,7 @@ function normalizeProgress(
 
 export function createProgress(classes: ProgressClasses) {
   const Linear = React.forwardRef<HTMLDivElement, LinearProgressProps>(function Linear(
-    { value = null, max = 100, thickness, className, style, ...props },
+    { value = null, max = 100, thickness, wavy = false, amplitude, className, style, ...props },
     ref,
   ) {
     // Base UI uses the forwarded value/max raw for both aria and the indicator
@@ -57,20 +121,32 @@ export function createProgress(classes: ProgressClasses) {
     // engines (M3 default 4dp, thick variant 8dp).
     const safeThickness =
       Number.isFinite(thickness) && (thickness as number) > 0 ? (thickness as number) : 4;
+    // Wavy applies to the determinate active bar only; the track grows taller to
+    // fit the wave and the engine CSS masks + scrolls it (see `--m3-wave`).
+    const wave = wavy && clampedValue != null;
+    const amp =
+      Number.isFinite(amplitude) && (amplitude as number) > 0
+        ? (amplitude as number)
+        : LINEAR_AMPLITUDE;
     // Publish the fill fraction as a CSS variable so the engine CSS can place the
     // M3 gap (between the active indicator and the inactive track) and the
     // track-stop dot from it — Base UI sizes the indicator with the same percent.
     // Indeterminate (null) omits it so the inactive track spans the full width.
+    // `--m3-thickness` keeps the flat track/stop dot at stroke height even when
+    // the wavy root is taller.
     const rootStyle = {
       ...style,
-      height: safeThickness,
+      height: wave ? safeThickness + 2 * amp : safeThickness,
+      '--m3-thickness': `${safeThickness}px`,
       ...(clampedValue == null ? {} : { '--m3-progress': `${(clampedValue / safeMax) * 100}%` }),
+      ...(wave ? { '--m3-wave': linearWaveMask(safeThickness, amp) } : {}),
     } as React.CSSProperties;
     return (
       <Progress.Root
         ref={ref}
         value={clampedValue}
         max={safeMax}
+        data-wavy={wave ? '' : undefined}
         className={mergeClassName(classes.linear.root, className)}
         style={rootStyle}
         {...props}
@@ -86,7 +162,17 @@ export function createProgress(classes: ProgressClasses) {
   Linear.displayName = 'M3Progress.Linear';
 
   const Circular = React.forwardRef<HTMLSpanElement, CircularProgressProps>(function Circular(
-    { value = null, max = 100, size, thickness, className, style, ...props },
+    {
+      value = null,
+      max = 100,
+      size,
+      thickness,
+      wavy = false,
+      amplitude,
+      className,
+      style,
+      ...props
+    },
     ref,
   ) {
     // Clamp the value so the drawn arc and the announced `aria-valuenow` agree,
@@ -113,6 +199,21 @@ export function createProgress(classes: ProgressClasses) {
     // active arc is (almost) full so a stray rounded-cap dot can't appear).
     const inactive = PATH_LENGTH - active - gap * 2;
 
+    // Wavy (determinate only): the active arc is drawn as a sine-modulated path.
+    // Pull the baseline in by the amplitude so the wave peaks stay inside the box.
+    const wave = wavy && !indeterminate;
+    const amp = Math.min(
+      Number.isFinite(amplitude) && (amplitude as number) > 0
+        ? (amplitude as number)
+        : CIRCULAR_AMPLITUDE,
+      Math.max(0, radius - safeThickness),
+    );
+    const waveRadius = radius - amp;
+    const waves = Math.max(3, Math.round((2 * Math.PI * waveRadius) / 12));
+    const gapFrac = safeThickness / (2 * Math.PI * waveRadius);
+    const inactiveStart = fraction + gapFrac;
+    const inactiveEnd = 1 - gapFrac;
+
     // Root sizing is inline (not a class) so `size` is honored by both engines.
     const rootStyle = { ...style, width: safeSize, height: safeSize } as React.CSSProperties;
     const common = {
@@ -137,38 +238,62 @@ export function createProgress(classes: ProgressClasses) {
         {...props}
       >
         <svg viewBox={`0 0 ${safeSize} ${safeSize}`} aria-hidden="true">
-          {/* Rotate so both arcs start at the top (12 o'clock) and grow clockwise. */}
-          <g transform={`rotate(-90 ${center} ${center})`}>
-            {indeterminate ? (
-              // One arc; the length + offset are animated by the engine CSS
-              // (advance = grow/shrink while the ring rotates). The inline dash is
-              // the static reduced-motion fallback.
-              <circle
-                {...common}
-                className={classes.circular.indicator}
-                strokeDasharray={`${INDETERMINATE_ARC} ${PATH_LENGTH}`}
-              />
-            ) : (
-              <>
-                {inactive > 0.5 ? (
-                  <circle
-                    {...common}
-                    className={classes.circular.track}
-                    strokeDasharray={`${inactive} ${PATH_LENGTH}`}
-                    strokeDashoffset={-(active + gap)}
-                  />
-                ) : null}
-                {active > 0 ? (
-                  <circle
-                    {...common}
-                    className={classes.circular.indicator}
-                    strokeDasharray={`${active} ${PATH_LENGTH}`}
-                    strokeDashoffset={0}
-                  />
-                ) : null}
-              </>
-            )}
-          </g>
+          {wave ? (
+            // Wavy determinate: sine-modulated active arc + a plain inactive arc,
+            // both anchored at the top (the paths carry their own geometry, so no
+            // rotate wrapper). Round caps come from the slot classes.
+            <>
+              {inactiveEnd - inactiveStart > 0.001 ? (
+                <path
+                  className={classes.circular.track}
+                  fill="none"
+                  strokeWidth={safeThickness}
+                  d={arcPath(center, center, waveRadius, inactiveStart, inactiveEnd)}
+                />
+              ) : null}
+              {fraction > 0 ? (
+                <path
+                  className={classes.circular.indicator}
+                  fill="none"
+                  strokeWidth={safeThickness}
+                  d={wavyArcPath(center, center, waveRadius, 0, fraction, amp, waves)}
+                />
+              ) : null}
+            </>
+          ) : (
+            // Rotate so both arcs start at the top (12 o'clock) and grow clockwise.
+            <g transform={`rotate(-90 ${center} ${center})`}>
+              {indeterminate ? (
+                // One arc; the length + offset are animated by the engine CSS
+                // (advance = grow/shrink while the ring rotates). The inline dash
+                // is the static reduced-motion fallback.
+                <circle
+                  {...common}
+                  className={classes.circular.indicator}
+                  strokeDasharray={`${INDETERMINATE_ARC} ${PATH_LENGTH}`}
+                />
+              ) : (
+                <>
+                  {inactive > 0.5 ? (
+                    <circle
+                      {...common}
+                      className={classes.circular.track}
+                      strokeDasharray={`${inactive} ${PATH_LENGTH}`}
+                      strokeDashoffset={-(active + gap)}
+                    />
+                  ) : null}
+                  {active > 0 ? (
+                    <circle
+                      {...common}
+                      className={classes.circular.indicator}
+                      strokeDasharray={`${active} ${PATH_LENGTH}`}
+                      strokeDashoffset={0}
+                    />
+                  ) : null}
+                </>
+              )}
+            </g>
+          )}
         </svg>
       </span>
     );
