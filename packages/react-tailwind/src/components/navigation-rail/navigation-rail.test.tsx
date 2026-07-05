@@ -80,4 +80,50 @@ describe('NavigationRail tokens', () => {
     expect(s.label()).toContain('group-data-[disabled]:text-on-surface/[0.38]');
     expect(s.indicator()).toContain('group-data-[disabled]:before:opacity-0');
   });
+
+  test('Expressive: expanded rail is 220–360dp with horizontal items', () => {
+    const s = navigationRailTv();
+    // The root exposes the named `rail` group and expands to 220–360dp.
+    expect(s.root()).toContain('group/rail');
+    expect(s.root()).toContain('data-[expanded]:w-[220px]');
+    expect(s.root()).toContain('data-[expanded]:max-w-[360px]');
+    // Items become horizontal (icon left, label right) with labelLarge.
+    expect(s.item()).toContain('group-data-[expanded]/rail:flex-row');
+    expect(s.item()).toContain('group-data-[expanded]/rail:h-14');
+    expect(s.label()).toContain('group-data-[expanded]/rail:text-label-large');
+    // Modal is an elevated surface-container sheet with a 16dp corner.
+    expect(s.root()).toContain('data-[modal]:shadow-level2');
+    expect(s.root()).toContain('data-[modal]:rounded-large');
+    expect(s.root()).toContain('data-[modal]:bg-surface-container');
+  });
+});
+
+describe('NavigationRail expanded', () => {
+  test('expanded prop surfaces data-expanded on the root', () => {
+    render(
+      <NavigationRail.Root aria-label="rail" expanded defaultValue={['home']}>
+        <NavigationRail.Item value="home" icon={<span>H</span>}>
+          ホーム
+        </NavigationRail.Item>
+      </NavigationRail.Root>,
+    );
+    // The ToggleGroup root is the element carrying data-expanded.
+    const home = screen.getByRole('button', { name: /ホーム/ });
+    const root = home.closest('[data-expanded]');
+    expect(root).not.toBeNull();
+  });
+
+  test('modal implies expanded and adds data-modal', () => {
+    render(
+      <NavigationRail.Root aria-label="rail" modal defaultValue={['home']}>
+        <NavigationRail.Item value="home" icon={<span>H</span>}>
+          ホーム
+        </NavigationRail.Item>
+      </NavigationRail.Root>,
+    );
+    const home = screen.getByRole('button', { name: /ホーム/ });
+    const root = home.closest('[data-modal]');
+    expect(root).not.toBeNull();
+    expect(root).toHaveAttribute('data-expanded');
+  });
 });

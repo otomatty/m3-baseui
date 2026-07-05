@@ -1021,6 +1021,30 @@ export function App() {
                 </NavigationRail.Item>
               </NavigationRail.Root>
             </div>
+            {/* expanded rail: 220–360dp wide with horizontal (icon + label) items. */}
+            <div className="mt-6 h-[400px] w-fit overflow-hidden rounded-large border border-outline-variant">
+              <NavigationRail.Root
+                expanded
+                value={rail}
+                onValueChange={setRail}
+                aria-label="拡張ナビゲーションレール"
+                header={
+                  <Fab color="primary" aria-label="作成">
+                    <Icon name="add" />
+                  </Fab>
+                }
+              >
+                <NavigationRail.Item value="home" icon={<Icon name="home" />}>
+                  ホーム
+                </NavigationRail.Item>
+                <NavigationRail.Item value="search" icon={<Icon name="search" />}>
+                  検索
+                </NavigationRail.Item>
+                <NavigationRail.Item value="favorites" icon={<Icon name="favorite" />}>
+                  お気に入り
+                </NavigationRail.Item>
+              </NavigationRail.Root>
+            </div>
           </Section>
 
           <Section title="Divider">

@@ -17,6 +17,23 @@ export const root = style({
   width: '96px',
   paddingBlock: '44px',
   background: `rgb(${vars.sys.color.surface})`,
+  // Expand/collapse width animates with the default spatial spring.
+  transition: `width ${vars.sys.motion.duration.springSpatialDefault} ${vars.sys.motion.easing.springSpatialDefault}`,
+  selectors: {
+    // Expanded: 220–360dp, items stretch to the horizontal layout.
+    '&[data-expanded]': {
+      width: '220px',
+      maxWidth: '360px',
+      alignItems: 'stretch',
+      paddingInline: '12px',
+    },
+    // Modal: an elevated surface-container sheet with a 16dp corner.
+    '&[data-modal]': {
+      background: `rgb(${vars.sys.color.surfaceContainer})`,
+      boxShadow: vars.sys.elevation.level2,
+      borderRadius: vars.sys.shape.large,
+    },
+  },
 });
 
 export const header = style({
@@ -47,6 +64,17 @@ export const item = style({
   selectors: {
     // M3 disabled is per-token (icon + label dimmed below), not a blanket fade.
     '&[data-disabled]': { pointerEvents: 'none' },
+    // Expanded: a horizontal item (icon left, label right), 56dp-tall indicator,
+    // 16dp leading, 8dp icon–label (NavigationRailHorizontalItemTokens).
+    [`${root}[data-expanded] &`]: {
+      height: '56px',
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      gap: '8px',
+      paddingInlineStart: '16px',
+      paddingInlineEnd: '24px',
+    },
   },
 });
 
@@ -57,6 +85,14 @@ export const iconWrap = style({
   justifyContent: 'center',
   width: '56px',
   height: '32px',
+  selectors: {
+    // Expanded: unconstrained so the indicator (absolute) spans the whole item.
+    [`${root}[data-expanded] &`]: {
+      position: 'static',
+      width: 'auto',
+      height: 'auto',
+    },
+  },
 });
 
 export const indicator = style({
@@ -115,6 +151,12 @@ export const label = style({
   letterSpacing: vars.sys.typescale.labelMedium.letterSpacing,
   transition: `color ${vars.sys.motion.duration.springEffectsDefault} ${vars.sys.motion.easing.springEffectsDefault}`,
   selectors: {
+    // Expanded horizontal items use labelLarge (NavigationRailHorizontalItemTokens).
+    [`${root}[data-expanded] &`]: {
+      fontSize: vars.sys.typescale.labelLarge.fontSize,
+      lineHeight: vars.sys.typescale.labelLarge.lineHeight,
+      letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+    },
     // Expressive: active label is `secondary`, emphasized via labelMediumEmphasized.
     [`${item}[data-pressed] &`]: {
       color: `rgb(${vars.sys.color.secondary})`,
