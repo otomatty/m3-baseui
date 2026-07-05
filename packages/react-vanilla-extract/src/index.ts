@@ -5,7 +5,7 @@
  * everything from one package.
  */
 export { Button } from './components/button';
-export type { ButtonProps, ButtonVariant } from './components/button';
+export type { ButtonProps, ButtonVariant, ButtonSize, ButtonShape } from './components/button';
 
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps, IconButtonVariant } from './components/icon-button';

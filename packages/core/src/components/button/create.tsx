@@ -29,6 +29,9 @@ export function createButton(resolve: ButtonClassResolver) {
   function Button(
     {
       variant = 'filled',
+      size = 's',
+      shape = 'round',
+      selected,
       startIcon,
       endIcon,
       ripple = true,
@@ -39,10 +42,10 @@ export function createButton(resolve: ButtonClassResolver) {
     }: ButtonProps & { render?: useRender.RenderProp },
     forwardedRef: React.Ref<HTMLButtonElement>,
   ): React.JSX.Element {
-    const cls = cx(resolve({ variant }), className);
+    const cls = cx(resolve({ variant, size, shape, selected }), className);
 
-    // M3: a leading/trailing icon trims the padding on its side to 16dp. The
-    // data-* markers let the engine CSS apply that without a resolver change.
+    // The `data-with-*-icon` markers flag icon presence for the DOM contract.
+    // (M3 Expressive drops the pre-Expressive asymmetric icon padding.)
     const iconMarkers: { [key: `data-${string}`]: string } = {};
     if (startIcon != null) iconMarkers['data-with-start-icon'] = '';
     if (endIcon != null) iconMarkers['data-with-end-icon'] = '';
@@ -53,6 +56,9 @@ export function createButton(resolve: ButtonClassResolver) {
       props: {
         ...rest,
         ...iconMarkers,
+        ...(selected !== undefined
+          ? { 'aria-pressed': selected, 'data-selected': selected ? '' : undefined }
+          : {}),
         className: cls,
         children: (
           <>
