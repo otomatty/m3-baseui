@@ -14,10 +14,24 @@ export const root = recipe({
     scrollSnapType: 'x mandatory',
     scrollBehavior: 'smooth',
     scrollbarWidth: 'none',
+    outline: 'none',
+    selectors: {
+      // Keyboard focus ring (M3: 3px secondary, 2px offset); keyboard-only.
+      '&:focus-visible': {
+        outline: `3px solid rgb(${vars.sys.color.secondary})`,
+        outlineOffset: '2px',
+      },
+    },
+    '@media': {
+      // Reduced motion: jump instead of smooth-scrolling between snap cells.
+      '(prefers-reduced-motion: reduce)': { scrollBehavior: 'auto' },
+    },
   },
   variants: {
     variant: {
       'multi-browse': {},
+      // Uniform, wider cells that scroll past the container edge.
+      uncontained: {},
       hero: {},
       'full-screen': {
         // gap 0: full-screen slides fill the viewport with no inter-slide gap.
@@ -43,6 +57,7 @@ export const item = recipe({
   variants: {
     variant: {
       'multi-browse': { width: '160px', height: '224px' },
+      uncontained: { width: '224px', height: '224px' },
       hero: { width: '288px', height: '224px', scrollSnapAlign: 'center' },
       'full-screen': { width: '100%', height: '100%', scrollSnapAlign: 'center' },
     },

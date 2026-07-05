@@ -1049,6 +1049,10 @@ export function App() {
           </Section>
 
           <Section title="Carousel">
+            {/* The scroller is keyboard-focusable: tab to it, then ←/→ (↑/↓ for
+                full-screen) advance one item at a time, with a focus-visible ring
+                and prefers-reduced-motion honored. Variants: multi-browse /
+                uncontained / hero / full-screen. */}
             <Carousel.Root aria-label="ギャラリー" className="max-w-md">
               {[
                 'bg-primary-container text-on-primary-container',

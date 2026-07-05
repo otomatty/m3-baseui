@@ -300,3 +300,21 @@ test('Slider value label appears while the thumb is pressed', async ({ page }) =
   await thumb.dispatchEvent('pointerup');
   await expect(label).toHaveCount(0);
 });
+
+test('Carousel scroller is focusable and arrow keys advance it (issue #78)', async ({ page }) => {
+  const carousel = page.getByRole('group', { name: 'ギャラリー' });
+  await expect(carousel).toHaveAttribute('aria-roledescription', 'carousel');
+
+  // Focusable scrollable region (WCAG scrollable-region-focusable).
+  await carousel.focus();
+  await expect.poll(() => carousel.evaluate((el) => el === document.activeElement)).toBe(true);
+
+  const scrollLeft = () => carousel.evaluate((el) => el.scrollLeft);
+  await expect.poll(scrollLeft).toBe(0);
+
+  // ArrowRight advances one item along the scroll axis; ArrowLeft returns.
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(scrollLeft).toBeGreaterThan(0);
+  await page.keyboard.press('ArrowLeft');
+  await expect.poll(scrollLeft).toBe(0);
+});
