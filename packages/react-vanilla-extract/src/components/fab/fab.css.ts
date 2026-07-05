@@ -1,48 +1,71 @@
 /**
- * fab.css.ts — vanilla-extract recipe for the M3 FAB.
+ * fab.css.ts — vanilla-extract recipe for the M3 (Expressive) FAB.
  * Same DOM + data-* hooks as the Tailwind build.
+ *
+ * Three sizes (small 56 / medium 80 / large 96 dp) × two variants (standard
+ * square, extended pill). The size×variant geometry is composed with
+ * compoundVariants so each M3 combination maps to exact dp values. The icon
+ * (svg) sizing is a descendant rule, which VE forbids inside a recipe variant,
+ * so each combination is a named style targeted with globalStyle — same output
+ * as the Tailwind build's `[&_svg]:size-*`.
  */
 import { globalStyle, style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@m3-baseui/tokens/contract.css';
 
-// Per-size containers. The icon (svg) sizing is a descendant rule, which VE
-// forbids inside a recipe variant, so each size is a named style we can target
-// with globalStyle — same output as the Tailwind build's `[&_svg]:size-*`.
-const sizeSmall = style({
-  width: '40px',
-  height: '40px',
-  borderRadius: vars.sys.shape.medium,
-});
-globalStyle(`${sizeSmall} svg`, { width: '24px', height: '24px' });
+// ---- Standard (icon-only square): container / corner / icon ----
+const stdSmall = style({ width: '56px', height: '56px', borderRadius: vars.sys.shape.large });
+globalStyle(`${stdSmall} svg`, { width: '24px', height: '24px' });
 
-const sizeRegular = style({
-  width: '56px',
+const stdMedium = style({
+  width: '80px',
+  height: '80px',
+  borderRadius: vars.sys.shape.largeIncreased,
+});
+globalStyle(`${stdMedium} svg`, { width: '28px', height: '28px' });
+
+const stdLarge = style({ width: '96px', height: '96px', borderRadius: vars.sys.shape.extraLarge });
+globalStyle(`${stdLarge} svg`, { width: '32px', height: '32px' });
+
+// ---- Extended (icon + label pill): height / corner / icon / padding / gap / label ----
+const extSmall = style({
   height: '56px',
-  borderRadius: vars.sys.shape.large,
-});
-globalStyle(`${sizeRegular} svg`, { width: '24px', height: '24px' });
-
-const sizeLarge = style({
-  width: '96px',
-  height: '96px',
-  borderRadius: vars.sys.shape.extraLarge,
-});
-globalStyle(`${sizeLarge} svg`, { width: '36px', height: '36px' });
-
-const sizeExtended = style({
-  height: '56px',
-  minWidth: '80px',
   paddingInline: '16px',
-  gap: '12px',
+  gap: '8px',
   borderRadius: vars.sys.shape.large,
-  fontFamily: vars.sys.typescale.labelLarge.fontFamily,
-  fontWeight: vars.sys.typescale.labelLarge.fontWeight,
-  fontSize: vars.sys.typescale.labelLarge.fontSize,
-  lineHeight: vars.sys.typescale.labelLarge.lineHeight,
-  letterSpacing: vars.sys.typescale.labelLarge.letterSpacing,
+  fontFamily: vars.sys.typescale.titleMedium.fontFamily,
+  fontWeight: vars.sys.typescale.titleMedium.fontWeight,
+  fontSize: vars.sys.typescale.titleMedium.fontSize,
+  lineHeight: vars.sys.typescale.titleMedium.lineHeight,
+  letterSpacing: vars.sys.typescale.titleMedium.letterSpacing,
 });
-globalStyle(`${sizeExtended} svg`, { width: '24px', height: '24px' });
+globalStyle(`${extSmall} svg`, { width: '24px', height: '24px' });
+
+const extMedium = style({
+  height: '80px',
+  paddingInline: '26px',
+  gap: '16px',
+  borderRadius: vars.sys.shape.largeIncreased,
+  fontFamily: vars.sys.typescale.titleLarge.fontFamily,
+  fontWeight: vars.sys.typescale.titleLarge.fontWeight,
+  fontSize: vars.sys.typescale.titleLarge.fontSize,
+  lineHeight: vars.sys.typescale.titleLarge.lineHeight,
+  letterSpacing: vars.sys.typescale.titleLarge.letterSpacing,
+});
+globalStyle(`${extMedium} svg`, { width: '28px', height: '28px' });
+
+const extLarge = style({
+  height: '96px',
+  paddingInline: '28px',
+  gap: '20px',
+  borderRadius: vars.sys.shape.extraLarge,
+  fontFamily: vars.sys.typescale.headlineSmall.fontFamily,
+  fontWeight: vars.sys.typescale.headlineSmall.fontWeight,
+  fontSize: vars.sys.typescale.headlineSmall.fontSize,
+  lineHeight: vars.sys.typescale.headlineSmall.lineHeight,
+  letterSpacing: vars.sys.typescale.headlineSmall.letterSpacing,
+});
+globalStyle(`${extLarge} svg`, { width: '32px', height: '32px' });
 
 export const fab = recipe({
   base: {
@@ -85,17 +108,11 @@ export const fab = recipe({
     },
   },
   variants: {
-    size: {
-      small: sizeSmall,
-      regular: sizeRegular,
-      large: sizeLarge,
-      extended: sizeExtended,
-    },
+    // Geometry is applied via compoundVariants (size × variant); these keys
+    // exist so the recipe accepts the resolver args.
+    size: { small: {}, medium: {}, large: {} },
+    variant: { standard: {}, extended: {} },
     color: {
-      surface: {
-        background: `rgb(${vars.sys.color.surfaceContainerHigh})`,
-        color: `rgb(${vars.sys.color.primary})`,
-      },
       primary: {
         background: `rgb(${vars.sys.color.primaryContainer})`,
         color: `rgb(${vars.sys.color.onPrimaryContainer})`,
@@ -110,8 +127,17 @@ export const fab = recipe({
       },
     },
   },
+  compoundVariants: [
+    { variants: { size: 'small', variant: 'standard' }, style: stdSmall },
+    { variants: { size: 'medium', variant: 'standard' }, style: stdMedium },
+    { variants: { size: 'large', variant: 'standard' }, style: stdLarge },
+    { variants: { size: 'small', variant: 'extended' }, style: extSmall },
+    { variants: { size: 'medium', variant: 'extended' }, style: extMedium },
+    { variants: { size: 'large', variant: 'extended' }, style: extLarge },
+  ],
   defaultVariants: {
-    size: 'regular',
-    color: 'surface',
+    size: 'small',
+    variant: 'standard',
+    color: 'primary',
   },
 });

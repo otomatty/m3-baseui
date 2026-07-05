@@ -66,7 +66,9 @@ export const vars = createGlobalThemeContract(
         small: 'md-sys-shape-small',
         medium: 'md-sys-shape-medium',
         large: 'md-sys-shape-large',
+        largeIncreased: 'md-sys-shape-large-increased',
         extraLarge: 'md-sys-shape-extra-large',
+        extraLargeIncreased: 'md-sys-shape-extra-large-increased',
         full: 'md-sys-shape-full',
       },
       elevation: {

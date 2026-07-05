@@ -134,8 +134,10 @@ export {
 export type { NavigationBarClasses } from './components/navigation-bar';
 export {
   FAB_SIZES,
+  FAB_VARIANTS,
   FAB_COLORS,
   type FabSize,
+  type FabVariant,
   type FabColor,
   type FabOwnProps,
   type FabProps,

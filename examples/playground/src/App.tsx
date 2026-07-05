@@ -689,16 +689,16 @@ export function App() {
 
           <Section title="FAB / FAB Menu">
             <div className="flex flex-wrap items-center gap-4">
-              <Fab size="small" color="surface" aria-label="編集">
+              <Fab size="small" color="primary" aria-label="編集">
                 <Icon name="edit" />
               </Fab>
-              <Fab color="primary" aria-label="追加">
+              <Fab size="medium" color="primary" aria-label="追加">
                 <Icon name="add" />
               </Fab>
               <Fab size="large" color="secondary" aria-label="作成">
                 <Icon name="edit" />
               </Fab>
-              <Fab size="extended" color="tertiary">
+              <Fab variant="extended" color="tertiary">
                 <Icon name="add" /> 作成
               </Fab>
               <FabMenu.Root>

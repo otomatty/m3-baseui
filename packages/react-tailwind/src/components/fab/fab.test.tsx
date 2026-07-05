@@ -3,24 +3,89 @@ import { render, screen } from '@testing-library/react';
 import { Fab } from '../fab/fab';
 
 describe('Fab', () => {
-  test('renders a button with the size + color classes', () => {
+  test('defaults to a 56dp small primary FAB', () => {
     render(
-      <Fab size="large" color="primary" aria-label="作成">
+      <Fab aria-label="追加">
         <svg viewBox="0 0 24 24" />
       </Fab>,
     );
-    const fab = screen.getByRole('button', { name: '作成' });
-    expect(fab.className).toContain('size-24');
+    const fab = screen.getByRole('button', { name: '追加' });
+    expect(fab.className).toContain('size-14'); // 56dp
+    expect(fab.className).toContain('rounded-large'); // 16dp
     expect(fab.className).toContain('bg-primary-container');
   });
 
-  test('extended FAB shows its label', () => {
-    render(
-      <Fab size="extended">
+  test('M3 Expressive sizes map to 56 / 80 / 96 dp with growing corners + icons', () => {
+    const { rerender } = render(
+      <Fab size="small" aria-label="s">
+        <svg />
+      </Fab>,
+    );
+    let fab = screen.getByRole('button', { name: 's' });
+    expect(fab.className).toContain('size-14');
+    expect(fab.className).toContain('rounded-large');
+
+    rerender(
+      <Fab size="medium" aria-label="m">
+        <svg />
+      </Fab>,
+    );
+    fab = screen.getByRole('button', { name: 'm' });
+    expect(fab.className).toContain('size-20'); // 80dp
+    expect(fab.className).toContain('rounded-large-increased'); // 20dp
+
+    rerender(
+      <Fab size="large" aria-label="l">
+        <svg />
+      </Fab>,
+    );
+    fab = screen.getByRole('button', { name: 'l' });
+    expect(fab.className).toContain('size-24'); // 96dp
+    expect(fab.className).toContain('rounded-extra-large'); // 28dp
+  });
+
+  test('extended FAB is a label pill; typescale grows with size', () => {
+    const { rerender } = render(
+      <Fab variant="extended" size="small">
         <svg viewBox="0 0 24 24" /> 作成
       </Fab>,
     );
-    expect(screen.getByRole('button', { name: /作成/ })).toBeInTheDocument();
+    let fab = screen.getByRole('button', { name: /作成/ });
+    expect(fab.className).toContain('h-14'); // 56dp height
+    expect(fab.className).toContain('text-title-medium');
+
+    rerender(
+      <Fab variant="extended" size="medium">
+        <svg /> 作成
+      </Fab>,
+    );
+    fab = screen.getByRole('button', { name: /作成/ });
+    expect(fab.className).toContain('h-20'); // 80dp
+    expect(fab.className).toContain('text-title-large');
+
+    rerender(
+      <Fab variant="extended" size="large">
+        <svg /> 作成
+      </Fab>,
+    );
+    fab = screen.getByRole('button', { name: /作成/ });
+    expect(fab.className).toContain('h-24'); // 96dp
+    expect(fab.className).toContain('text-headline-small');
+  });
+
+  test('container color maps to container / on-container tokens', () => {
+    const { rerender } = render(
+      <Fab color="secondary" aria-label="s">
+        <svg />
+      </Fab>,
+    );
+    expect(screen.getByRole('button', { name: 's' }).className).toContain('bg-secondary-container');
+    rerender(
+      <Fab color="tertiary" aria-label="t">
+        <svg />
+      </Fab>,
+    );
+    expect(screen.getByRole('button', { name: 't' }).className).toContain('bg-tertiary-container');
   });
 
   test('uses M3 elevation level3 at rest and level4 on hover', () => {

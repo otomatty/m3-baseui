@@ -19,7 +19,7 @@ import { Ripple } from '../../ripple/Ripple';
 
 export interface FabMenuTriggerProps
   extends Omit<React.ComponentPropsWithoutRef<typeof MenuPrimitive.Trigger>, 'color'> {
-  /** M3 FAB size. @default 'regular' */
+  /** M3 FAB size. @default 'small' */
   size?: FabSize;
   /** M3 FAB container color. @default 'primary' */
   color?: FabColor;
@@ -46,13 +46,13 @@ export interface FabMenuItemProps
  */
 export function createFabMenu(resolveFab: FabClassResolver, classes: FabMenuClasses) {
   const Trigger = React.forwardRef<HTMLButtonElement, FabMenuTriggerProps>(function Trigger(
-    { size = 'regular', color = 'primary', ripple = true, className, children, ...rest },
+    { size = 'small', color = 'primary', ripple = true, className, children, ...rest },
     ref,
   ) {
     return (
       <MenuPrimitive.Trigger
         ref={ref}
-        className={mergeClassName(resolveFab({ size, color }), className)}
+        className={mergeClassName(resolveFab({ size, color, variant: 'standard' }), className)}
         {...rest}
       >
         {children}
