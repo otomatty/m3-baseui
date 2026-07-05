@@ -1,7 +1,7 @@
 ---
 import Layout from './Layout.astro';
-import { SiteHeader } from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter.astro';
+import { DocsNav } from '../components/docs/DocsNav';
 
 interface Props {
   title: string;
@@ -12,7 +12,11 @@ const { title, description } = Astro.props;
 ---
 
 <Layout title={title} description={description}>
-  <SiteHeader currentPath={Astro.url.pathname} client:load />
-  <slot />
-  <SiteFooter />
+  <DocsNav currentPath={Astro.url.pathname} client:load />
+  <main class="min-w-0 lg:ml-20">
+    <slot />
+  </main>
+  <div class="lg:ml-20">
+    <SiteFooter />
+  </div>
 </Layout>

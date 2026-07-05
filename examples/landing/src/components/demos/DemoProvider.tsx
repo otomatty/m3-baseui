@@ -6,7 +6,7 @@ interface DemoProviderProps {
 
 /**
  * Doc live demos inherit the site theme (mode + dynamic color) written onto
- * <html> by SiteHeader — so we intentionally do NOT wrap a ThemeProvider here
+ * <html> by DocsNav — so we intentionally do NOT wrap a ThemeProvider here
  * (that would pin the demo to a fixed seed/mode and ignore the theme toggle).
  * No component reads ThemeProvider context, so the tokens on <html> suffice.
  */
