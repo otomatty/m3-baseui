@@ -458,24 +458,21 @@ export function DocsNav({ currentPath = '/docs' }: DocsNavProps) {
 
       {/* --- Desktop: full-height NavigationRail + hover flyout --- */}
       <aside
-        className="fixed left-0 top-0 z-30 hidden h-screen w-20 flex-col border-r border-outline-variant bg-surface lg:flex"
+        className="fixed left-0 top-0 z-30 hidden h-screen w-20 bg-surface lg:block [box-shadow:inset_-1px_0_0_0_rgb(var(--md-sys-color-outline-variant))]"
         onBlur={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFlyoutOpen(false);
         }}
       >
-        <a
-          href="/"
-          className="flex h-16 shrink-0 items-center justify-center"
-          aria-label="ホームへ戻る"
-        >
-          <Icon name="palette" className="text-primary" size={28} />
-        </a>
-
-        <div className="min-h-0 flex-1">
+        <div className="relative h-full">
           <NavigationRail.Root
             value={[active]}
             aria-label="ドキュメントのセクション"
-            className="h-full"
+            className="h-full bg-transparent pb-32"
+            header={
+              <a href="/" className="flex items-center justify-center" aria-label="ホームへ戻る">
+                <Icon name="palette" className="text-primary" size={28} />
+              </a>
+            }
           >
             {RAIL_ITEMS.map((item) => (
               <NavigationRail.Item
@@ -497,43 +494,43 @@ export function DocsNav({ currentPath = '/docs' }: DocsNavProps) {
               </NavigationRail.Item>
             ))}
           </NavigationRail.Root>
-        </div>
 
-        <div className="flex shrink-0 flex-col items-center gap-1 py-3">
-          <Dialog.Root>
-            <Dialog.Trigger
-              render={
-                <IconButton variant="standard" aria-label="テーマ設定">
-                  <Icon name={dark ? 'dark_mode' : 'light_mode'} />
-                </IconButton>
-              }
-            />
-            <Dialog.Portal>
-              <Dialog.Backdrop />
-              <Dialog.Popup style={{ width: '360px' }}>
-                <Dialog.Title>テーマ設定</Dialog.Title>
-                <ThemeMenuBody mode={mode} seed={seed} onMode={changeMode} onSeed={changeSeed} />
-                <Dialog.Actions>
-                  <Dialog.Close render={<Button variant="text">閉じる</Button>} />
-                </Dialog.Actions>
-              </Dialog.Popup>
-            </Dialog.Portal>
-          </Dialog.Root>
-
-          <IconButton
-            variant="standard"
-            render={
-              // biome-ignore lint/a11y/useAnchorContent: icon + accessible name are injected by IconButton's render
-              <a
-                href="https://github.com/otomatty/m3-baseui"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub リポジトリ（新しいタブで開く）"
+          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-1 py-3">
+            <Dialog.Root>
+              <Dialog.Trigger
+                render={
+                  <IconButton variant="standard" aria-label="テーマ設定">
+                    <Icon name={dark ? 'dark_mode' : 'light_mode'} />
+                  </IconButton>
+                }
               />
-            }
-          >
-            <GithubMark />
-          </IconButton>
+              <Dialog.Portal>
+                <Dialog.Backdrop />
+                <Dialog.Popup style={{ width: '360px' }}>
+                  <Dialog.Title>テーマ設定</Dialog.Title>
+                  <ThemeMenuBody mode={mode} seed={seed} onMode={changeMode} onSeed={changeSeed} />
+                  <Dialog.Actions>
+                    <Dialog.Close render={<Button variant="text">閉じる</Button>} />
+                  </Dialog.Actions>
+                </Dialog.Popup>
+              </Dialog.Portal>
+            </Dialog.Root>
+
+            <IconButton
+              variant="standard"
+              render={
+                // biome-ignore lint/a11y/useAnchorContent: icon + accessible name are injected by IconButton's render
+                <a
+                  href="https://github.com/otomatty/m3-baseui"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub リポジトリ（新しいタブで開く）"
+                />
+              }
+            >
+              <GithubMark />
+            </IconButton>
+          </div>
         </div>
 
         {/* Hover/focus flyout: slides out from behind the rail. The clip
