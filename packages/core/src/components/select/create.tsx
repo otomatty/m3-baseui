@@ -4,7 +4,7 @@
  *
  * Base UI Select composition exposed as a namespace. The Trigger is styled as an
  * M3 outlined field; the Popup is an M3 menu surface (112–280dp, at least anchor
- * width). Selectable items use label-large, secondary-container fill when
+ * width) positioned below the anchor (no trigger overlap). Selectable items use label-large, secondary-container fill when
  * selected, and a leading check (on-secondary-container when selected). Scroll
  * arrows are sticky affordances when the list overflows.
  */
@@ -13,6 +13,7 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { Field } from '@base-ui/react/field';
 
 import type { SelectClasses, SelectFieldClassResolver, SelectFieldOwnProps } from './contract';
+import { assignListItemPositions } from '../../menu-list-position';
 import { createSlot, mergeClassName, type ClassValue } from '../../slot';
 
 /** Default chevron glyphs for the scroll arrows. */
@@ -35,6 +36,8 @@ function ArrowDropDown(): React.JSX.Element {
 
 type ScrollUpProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpArrow>;
 type ScrollDownProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownArrow>;
+type PositionerProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.Positioner>;
+type SelectPopupProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.Popup>;
 
 type SelectRootProps = React.ComponentProps<typeof SelectPrimitive.Root>;
 /** `Select.Field` props: field styling + the forwarded `Select.Root` props. */
@@ -89,6 +92,31 @@ export function createSelect(classes: SelectClasses, field: SelectFieldClassReso
     );
   });
   ScrollDownArrow.displayName = 'M3Select.ScrollDownArrow';
+
+  /**
+   * Positions the menu below the anchor without overlapping it. Base UI Select
+   * defaults to `alignItemWithTrigger` (native-select text alignment); M3 Menus
+   * and Exposed Dropdown Menus detach the surface under the anchor instead.
+   */
+  const Positioner = React.forwardRef<
+    React.ElementRef<typeof SelectPrimitive.Positioner>,
+    PositionerProps
+  >(function Positioner(
+    { alignItemWithTrigger = false, side = 'bottom', sideOffset = 4, align = 'start', ...props },
+    ref,
+  ) {
+    return (
+      <SelectPrimitive.Positioner
+        ref={ref}
+        alignItemWithTrigger={alignItemWithTrigger}
+        side={side}
+        sideOffset={sideOffset}
+        align={align}
+        {...props}
+      />
+    );
+  });
+  Positioner.displayName = 'M3Select.Positioner';
 
   /**
    * Exposed Dropdown Menu anchor: the Select rendered as a TextField. Wraps
@@ -168,6 +196,25 @@ export function createSelect(classes: SelectClasses, field: SelectFieldClassReso
   );
   SelectFieldComponent.displayName = 'M3Select.Field';
 
+  const Item = createSlot(SelectPrimitive.Item, classes.item, { ripple: true });
+  const Popup = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Popup>, SelectPopupProps>(
+    function Popup({ className, children, ...props }, ref) {
+      const positionedChildren = assignListItemPositions(children, (child) => child.type === Item, {
+        shouldRecurseInto: (child) => child.type === SelectPrimitive.Group,
+      });
+      return (
+        <SelectPrimitive.Popup
+          ref={ref}
+          className={mergeClassName(classes.popup, className as ClassValue)}
+          {...props}
+        >
+          {positionedChildren}
+        </SelectPrimitive.Popup>
+      );
+    },
+  );
+  Popup.displayName = 'M3Select.Popup';
+
   return {
     Root: SelectPrimitive.Root,
     /** Exposed Dropdown Menu anchor (TextField + Select). */
@@ -178,10 +225,10 @@ export function createSelect(classes: SelectClasses, field: SelectFieldClassReso
     Value: createSlot(SelectPrimitive.Value, classes.value),
     Icon: createSlot(SelectPrimitive.Icon, classes.icon),
     Portal: SelectPrimitive.Portal,
-    Positioner: SelectPrimitive.Positioner,
-    Popup: createSlot(SelectPrimitive.Popup, classes.popup),
+    Positioner,
+    Popup,
     List: SelectPrimitive.List,
-    Item: createSlot(SelectPrimitive.Item, classes.item, { ripple: true }),
+    Item,
     ItemText: SelectPrimitive.ItemText,
     // keepMounted so the 24px indicator column stays populated on every item
     // (labels align); the check glyph is hidden via CSS unless the item is selected.
