@@ -1119,6 +1119,18 @@ export function App() {
                 </IconButton>
               </Toolbar>
             </div>
+            {/* docked: a full-width, square-cornered surface-container bar. */}
+            <Toolbar type="docked" aria-label="ドックツールバー" className="mt-6">
+              <IconButton aria-label="元に戻す">
+                <Icon name="undo" />
+              </IconButton>
+              <IconButton aria-label="やり直す">
+                <Icon name="redo" />
+              </IconButton>
+              <IconButton aria-label="項目を追加">
+                <Icon name="add" />
+              </IconButton>
+            </Toolbar>
           </Section>
 
           <Section title="Carousel">

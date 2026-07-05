@@ -4,7 +4,12 @@
 import { createToolbar } from '@m3-baseui/core';
 import { toolbar } from './toolbar.css';
 
-export const Toolbar = createToolbar(({ variant, orientation }) =>
-  toolbar({ variant, orientation }),
+export const Toolbar = createToolbar(({ type, variant, orientation }) =>
+  toolbar({ type, variant, orientation }),
 );
-export type { ToolbarProps, ToolbarVariant, ToolbarOrientation } from '@m3-baseui/core';
+export type {
+  ToolbarProps,
+  ToolbarType,
+  ToolbarVariant,
+  ToolbarOrientation,
+} from '@m3-baseui/core';

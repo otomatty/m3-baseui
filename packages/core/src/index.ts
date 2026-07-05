@@ -269,8 +269,10 @@ export {
   type SideSheetOwnProps,
 } from './components/side-sheet';
 export {
+  TOOLBAR_TYPES,
   TOOLBAR_VARIANTS,
   TOOLBAR_ORIENTATIONS,
+  type ToolbarType,
   type ToolbarVariant,
   type ToolbarOrientation,
   type ToolbarResolverArgs,

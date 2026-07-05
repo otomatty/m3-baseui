@@ -80,6 +80,7 @@ test.describe('component visual regression (issue #77)', () => {
     ['ビビッドなツールバー', 'toolbar-vibrant-horizontal'],
     ['標準ツールバー（縦）', 'toolbar-standard-vertical'],
     ['ビビッドなツールバー（縦）', 'toolbar-vibrant-vertical'],
+    ['ドックツールバー', 'toolbar-docked-horizontal'],
   ] as const;
   for (const [label, name] of TOOLBARS) {
     test(name, async ({ page }) => {
