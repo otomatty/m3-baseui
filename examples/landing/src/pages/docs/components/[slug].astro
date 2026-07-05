@@ -1,0 +1,84 @@
+---
+import DocsLayout from '../../../layouts/DocsLayout.astro';
+import CodeBlock from '../../../components/docs/CodeBlock.astro';
+import PropsTable from '../../../components/docs/PropsTable.astro';
+import { DocDemo } from '../../../components/demos/DocDemo';
+import { getAllComponentSlugs, getComponentDoc, getM3DocUrl } from '../../../data/components';
+
+export function getStaticPaths() {
+  return getAllComponentSlugs().map((slug) => ({ params: { slug } }));
+}
+
+const slug = Astro.params.slug ?? '';
+const doc = getComponentDoc(slug);
+
+if (!doc) {
+  return Astro.redirect('/docs/components');
+}
+
+const m3DocUrl = getM3DocUrl(slug);
+---
+
+<DocsLayout title={doc.name} description={doc.description}>
+  <nav class="doc-breadcrumb" aria-label="パンくず">
+    <a href="/docs/components">コンポーネント</a>
+    <span aria-hidden="true"> / </span>
+    <span>{doc.name}</span>
+  </nav>
+
+  <h1>{doc.name}</h1>
+  <p class="doc-lead">{doc.description}</p>
+
+  {
+    m3DocUrl && (
+      <p class="doc-m3-ref">
+        <span class="material-symbols-outlined" aria-hidden="true">
+          menu_book
+        </span>
+        参考: Material Design 3 公式ガイドライン{' '}
+        <a href={m3DocUrl} target="_blank" rel="noopener noreferrer">
+          {m3DocUrl.replace('https://m3.material.io', 'm3.material.io')}
+        </a>
+      </p>
+    )
+  }
+
+  {
+    doc.demoId && (
+      <section class="doc-section">
+        <h2>ライブデモ</h2>
+        <div class="doc-demo-panel">
+          <DocDemo demoId={doc.demoId} client:visible />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="doc-section">
+    <h2>Import</h2>
+    <CodeBlock code={doc.importCode} />
+  </section>
+
+  <section class="doc-section">
+    <h2>使用例</h2>
+    <CodeBlock code={doc.usageCode} />
+  </section>
+
+  <section class="doc-section">
+    <h2>Props</h2>
+    <PropsTable props={doc.props} />
+  </section>
+
+  {
+    doc.notes && doc.notes.length > 0 && (
+      <section class="doc-section">
+        <h2>補足</h2>
+        {doc.notes.map((note) => (
+          <div class="doc-callout">
+            <p>{note}</p>
+          </div>
+        ))}
+      </section>
+    )
+  }
+</DocsLayout>

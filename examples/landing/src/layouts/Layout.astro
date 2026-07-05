@@ -62,6 +62,22 @@ const jsonLd = Astro.site
     />
 
     {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+    <!-- Restore the persisted theme (mode + dynamic color) before first paint to
+         avoid a flash. The full scheme is recomputed on header hydration. -->
+    <script is:inline>
+      (function () {
+        try {
+          var raw = localStorage.getItem('m3-docs-theme');
+          if (!raw) return;
+          var t = JSON.parse(raw);
+          if (t && t.mode) document.documentElement.setAttribute('data-theme', t.mode);
+          if (t && t.css) document.documentElement.style.cssText += t.css;
+        } catch {
+          // ignore storage read/parse errors
+        }
+      })();
+    </script>
   </head>
   <body>
     <slot />

@@ -38,3 +38,54 @@ for (const scheme of ['light', 'dark'] as const) {
     });
   });
 }
+
+// ---- issue #77: per-variant component visual regression ----
+// Element-scoped screenshots isolate each M3 layout so a regression points at the
+// exact variant. Snapshots run in light mode (deterministic default) with the
+// morphing loading indicator frozen by the config's `animations: 'disabled'`.
+test.describe('component visual regression (issue #77)', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' });
+    await blockWebfonts(page);
+    await prepare(page);
+  });
+
+  const CAROUSELS = [
+    ['ギャラリー', 'carousel-multi-browse'],
+    ['ヒーロー カルーセル', 'carousel-hero'],
+    ['全画面 カルーセル', 'carousel-full-screen'],
+  ] as const;
+  for (const [label, name] of CAROUSELS) {
+    test(name, async ({ page }) => {
+      await expect(page.getByRole('group', { name: label, exact: true })).toHaveScreenshot(
+        `${name}.png`,
+      );
+    });
+  }
+
+  const INDICATORS = [
+    ['読み込み中インジケーター', 'loading-uncontained'],
+    ['読み込み中インジケーター（contained）', 'loading-contained'],
+  ] as const;
+  for (const [label, name] of INDICATORS) {
+    test(name, async ({ page }) => {
+      await expect(page.getByRole('progressbar', { name: label, exact: true })).toHaveScreenshot(
+        `${name}.png`,
+      );
+    });
+  }
+
+  const TOOLBARS = [
+    ['標準ツールバー', 'toolbar-standard-horizontal'],
+    ['ビビッドなツールバー', 'toolbar-vibrant-horizontal'],
+    ['標準ツールバー（縦）', 'toolbar-standard-vertical'],
+    ['ビビッドなツールバー（縦）', 'toolbar-vibrant-vertical'],
+  ] as const;
+  for (const [label, name] of TOOLBARS) {
+    test(name, async ({ page }) => {
+      await expect(page.getByRole('toolbar', { name: label, exact: true })).toHaveScreenshot(
+        `${name}.png`,
+      );
+    });
+  }
+});

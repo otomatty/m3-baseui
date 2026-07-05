@@ -1,0 +1,28 @@
+---
+import { Code } from 'astro-expressive-code/components';
+
+interface Props {
+  code: string;
+  title?: string;
+  lang?: string;
+}
+
+const { code, title, lang } = Astro.props;
+
+function inferLang(fileTitle?: string, explicitLang?: string): string {
+  if (explicitLang) return explicitLang;
+  if (fileTitle?.endsWith('.tsx')) return 'tsx';
+  if (fileTitle?.endsWith('.ts')) return 'ts';
+  if (fileTitle?.endsWith('.css')) return 'css';
+  if (fileTitle?.endsWith('.html')) return 'html';
+  if (fileTitle?.endsWith('.json')) return 'json';
+  return 'tsx';
+}
+
+const resolvedLang = inferLang(title, lang);
+const meta = title ? `title="${title}"` : '';
+---
+
+<div class="doc-code-block">
+  <Code code={code} lang={resolvedLang} meta={meta} />
+</div>

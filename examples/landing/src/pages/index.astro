@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
 import { LiveDemo } from '../components/LiveDemo';
 
 const title = 'm3-baseui — Base UI 上の Material Design 3 コンポーネント';
@@ -49,9 +49,9 @@ export function App() {
 }`;
 ---
 
-<Layout title={title} description={description}>
+<SiteLayout title={title} description={description}>
   <!-- Hero -->
-  <header class="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 pt-24 pb-16 text-center">
+  <header class="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 pt-16 pb-16 text-center">
     <span
       class="rounded-full border border-outline-variant px-4 py-1 text-label-large text-on-surface-variant"
     >
@@ -65,10 +65,16 @@ export function App() {
     </p>
     <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
       <a
-        href="#install"
+        href="/docs/getting-started"
         class="rounded-full bg-primary px-6 py-3 text-label-large text-on-primary transition-opacity hover:opacity-90"
       >
-        はじめる
+        ドキュメントを見る
+      </a>
+      <a
+        href="/docs/components"
+        class="rounded-full border border-outline px-6 py-3 text-label-large text-primary transition-colors hover:bg-primary/8"
+      >
+        コンポーネント
       </a>
       <a
         href="https://github.com/otomatty/m3-baseui"
@@ -114,7 +120,10 @@ export function App() {
 
   <!-- Install + usage -->
   <section id="install" class="mx-auto max-w-5xl px-6 py-12" aria-labelledby="install-heading">
-    <h2 id="install-heading" class="mb-8 text-headline-small text-on-surface">導入</h2>
+    <h2 id="install-heading" class="mb-4 text-headline-small text-on-surface">導入</h2>
+    <p class="mb-8 text-body-medium text-on-surface-variant">
+      詳しい手順は <a class="text-primary underline" href="/docs/getting-started">導入ガイド</a> を参照してください。
+    </p>
     <div class="grid gap-6 lg:grid-cols-2">
       <div class="flex flex-col gap-3">
         <h3 class="text-title-medium text-on-surface-variant">インストール</h3>
@@ -128,14 +137,4 @@ export function App() {
       </div>
     </div>
   </section>
-
-  <!-- Footer -->
-  <footer class="mx-auto max-w-5xl px-6 py-16 text-center text-body-small text-on-surface-variant">
-    <p>
-      MIT License ·
-      <a class="text-primary underline" href="https://github.com/otomatty/m3-baseui"
-        >github.com/otomatty/m3-baseui</a
-      >
-    </p>
-  </footer>
-</Layout>
+</SiteLayout>
