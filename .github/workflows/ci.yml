@@ -1,8 +1,17 @@
 name: CI
 
+# pull_request: feature branches (one run per PR update).
+# push (main only): post-merge verification; avoids duplicate runs when a PR
+# branch is pushed (push + pull_request would otherwise fire together).
 on:
-  push:
   pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci:
