@@ -142,9 +142,12 @@ export function createProgress(classes: ProgressClasses) {
     // Indeterminate (null) omits it so the inactive track spans the full width.
     // `--m3-thickness` keeps the flat track/stop dot at stroke height even when
     // the wavy root is taller.
+    // Computed `height` goes before `...style` so an explicit caller
+    // `style.height` still wins (back-compat); the internal `--m3-*` vars go
+    // after so they always resolve regardless of caller style.
     const rootStyle = {
-      ...style,
       height: wave ? safeThickness + 2 * amp : safeThickness,
+      ...style,
       '--m3-thickness': `${safeThickness}px`,
       ...(clampedValue == null ? {} : { '--m3-progress': `${(clampedValue / safeMax) * 100}%` }),
       ...(wave ? { '--m3-wave': linearWaveMask(safeThickness, amp) } : {}),
@@ -225,7 +228,9 @@ export function createProgress(classes: ProgressClasses) {
     const inactiveEnd = 1 - gapFrac;
 
     // Root sizing is inline (not a class) so `size` is honored by both engines.
-    const rootStyle = { ...style, width: safeSize, height: safeSize } as React.CSSProperties;
+    // Computed size goes first so an explicit caller `style.width/height` still
+    // wins (back-compat: pre-`size` callers sized the ring via inline style).
+    const rootStyle = { width: safeSize, height: safeSize, ...style } as React.CSSProperties;
     const common = {
       cx: center,
       cy: center,

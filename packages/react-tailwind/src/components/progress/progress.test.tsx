@@ -83,6 +83,14 @@ describe('Progress.Linear', () => {
     expect(bar.style.opacity).toBe('0.5');
   });
 
+  test('an explicit caller style height wins over the thickness default', () => {
+    render(<Progress.Linear value={50} style={{ height: 12 }} aria-label="読み込み" />);
+    const bar = screen.getByRole('progressbar', { name: '読み込み' });
+    expect(bar.style.height).toBe('12px');
+    // internal vars still resolve
+    expect(bar.style.getPropertyValue('--m3-progress')).toBe('50%');
+  });
+
   test('wavy determinate publishes the wave mask, grows taller and sets data-wavy', () => {
     render(<Progress.Linear value={50} wavy amplitude={3} aria-label="読み込み" />);
     const bar = screen.getByRole('progressbar', { name: '読み込み' });
@@ -127,6 +135,13 @@ describe('Progress.Circular', () => {
     expect(bar.style.width).toBe('40px');
     expect(bar.style.height).toBe('40px');
     expect(container.querySelector('svg')?.getAttribute('viewBox')).toBe('0 0 40 40');
+  });
+
+  test('an explicit caller style width/height wins over the default size', () => {
+    render(<Progress.Circular value={50} style={{ width: 64, height: 64 }} aria-label="処理中" />);
+    const bar = screen.getByRole('progressbar', { name: '処理中' });
+    expect(bar.style.width).toBe('64px');
+    expect(bar.style.height).toBe('64px');
   });
 
   test('honors a custom size and thickness', () => {
