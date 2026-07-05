@@ -178,6 +178,25 @@ describe('Button', () => {
     expect(btn.className).toContain('text-on-surface-variant');
   });
 
+  test('text toggle communicates selection: selected raises the label to primary', () => {
+    const { rerender } = render(
+      <Button variant="text" selected={false}>
+        Tt
+      </Button>,
+    );
+    const btn = screen.getByRole('button', { name: 'Tt' });
+    // Unselected (resting) stays on-surface-variant...
+    expect(btn.className).toContain('text-on-surface-variant');
+    expect(btn.className).not.toContain('text-primary');
+    // ...selected raises emphasis to primary so the toggle state is visible.
+    rerender(
+      <Button variant="text" selected>
+        Tt
+      </Button>,
+    );
+    expect(screen.getByRole('button', { name: 'Tt' }).className).toContain('text-primary');
+  });
+
   // ---- Icons ---------------------------------------------------------------
 
   test('leading icon mounts an icon slot', () => {

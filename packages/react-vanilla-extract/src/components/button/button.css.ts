@@ -304,6 +304,13 @@ export const button = recipe({
         },
       },
     },
+    // text: no Selected/Unselected tokens exist upstream (TextButtonTokens), so
+    // selection raises the label emphasis to primary (base = unselected
+    // on-surface-variant) to communicate the toggle state.
+    {
+      variants: { variant: 'text', toggle: 'on' } as { variant: 'text'; toggle: 'on' },
+      style: { color: `rgb(${vars.sys.color.primary})` },
+    },
   ],
   defaultVariants: {
     variant: 'filled',

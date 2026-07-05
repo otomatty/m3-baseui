@@ -1,7 +1,7 @@
 ---
-'@m3-baseui/core': minor
-'@m3-baseui/react-tailwind': minor
-'@m3-baseui/react-vanilla-extract': minor
+'@m3-baseui/core': major
+'@m3-baseui/react-tailwind': major
+'@m3-baseui/react-vanilla-extract': major
 ---
 
 feat(button): M3 Expressive size system, shape morph, toggle, and color revisions

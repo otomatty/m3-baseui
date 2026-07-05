@@ -159,6 +159,10 @@ export const button = tv({
         'data-[disabled]:bg-on-surface/10 data-[disabled]:border-transparent',
       ],
     },
+    // text: no Selected/Unselected tokens exist upstream (TextButtonTokens),
+    // so selection raises the label emphasis to primary (base = unselected
+    // on-surface-variant) to communicate the toggle state.
+    { variant: 'text', toggle: 'on', class: 'text-primary' },
   ],
   defaultVariants: {
     variant: 'filled',
