@@ -190,6 +190,14 @@ describe('Progress.Circular', () => {
     expect(d.split('L').length).toBeGreaterThan(10);
   });
 
+  test('wavy draws a real path (not an M-only path) for a tiny value', () => {
+    const { container } = render(<Progress.Circular value={0.2} wavy aria-label="処理中" />);
+    const active = container.querySelectorAll('path');
+    const d = (active[active.length - 1] as SVGPathElement).getAttribute('d') ?? '';
+    // A tiny span must still include the endpoint, so it has at least one line-to.
+    expect(d).toContain('L');
+  });
+
   test('wavy is ignored while indeterminate (still a spinning circle)', () => {
     const { container } = render(<Progress.Circular wavy aria-label="処理中" />);
     const bar = screen.getByRole('progressbar', { name: '処理中' });

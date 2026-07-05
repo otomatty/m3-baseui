@@ -82,9 +82,13 @@ function wavyArcPath(
   amplitude: number,
   waves: number,
 ): string {
-  const step = 1 / (waves * 16);
+  // Sample evenly and always include `endFrac`: a fixed-step loop would drop the
+  // endpoint for a tiny span (`endFrac - startFrac < step`), leaving an `M`-only
+  // path that renders nothing.
+  const samples = Math.max(1, Math.ceil((endFrac - startFrac) / (1 / (waves * 16))));
   let d = '';
-  for (let f = startFrac; f <= endFrac + 1e-9; f += step) {
+  for (let i = 0; i <= samples; i++) {
+    const f = startFrac + ((endFrac - startFrac) * i) / samples;
     const rr = r + amplitude * Math.sin(f * waves * 2 * Math.PI);
     const [x, y] = pointOnCircle(cx, cy, rr, f);
     d += `${d ? 'L' : 'M'}${round(x)} ${round(y)}`;

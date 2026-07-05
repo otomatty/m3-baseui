@@ -40,7 +40,7 @@ export const linearTv = tv({
       'absolute inset-0',
       "before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:end-0",
       'before:h-[var(--m3-thickness,100%)]',
-      'before:[inset-inline-start:calc(var(--m3-progress,0%)+4px)]',
+      'before:[inset-inline-start:calc(var(--m3-progress,0%)_+_4px)]',
       'before:bg-surface-container-highest before:rounded-full',
       'group-data-[indeterminate]:before:start-0',
     ],

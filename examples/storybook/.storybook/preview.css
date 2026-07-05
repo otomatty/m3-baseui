@@ -23,6 +23,7 @@
   --animate-m3-wave-flow: m3-wave-flow 1s linear infinite;
   --animate-m3-circular-rotate: m3-circular-rotate 1.4s linear infinite;
   --animate-m3-circular-dash: m3-circular-dash 1.4s ease-in-out infinite;
+  --animate-m3-loading: m3-loading 1.2s ease-in-out infinite;
 }
 
 @keyframes m3-linear-primary {
@@ -86,6 +87,19 @@
   100% {
     stroke-dasharray: 60 100;
     stroke-dashoffset: -58;
+  }
+}
+
+/* M3 Expressive loading indicator morph (used by the LoadingIndicator stories). */
+@keyframes m3-loading {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(0.85);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
   }
 }
 
