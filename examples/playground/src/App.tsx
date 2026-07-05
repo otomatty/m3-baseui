@@ -75,6 +75,30 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+/** The shared set of Carousel slides — reused across every variant demo so the
+ *  four layouts differ only by their `variant`, not their content. */
+function CarouselSlides() {
+  return (
+    <>
+      {[
+        'bg-primary-container text-on-primary-container',
+        'bg-secondary-container text-on-secondary-container',
+        'bg-tertiary-container text-on-tertiary-container',
+        'bg-error-container text-on-error-container',
+        'bg-surface-container-highest text-on-surface',
+      ].map((swatch, i) => (
+        <Carousel.Item
+          // biome-ignore lint/suspicious/noArrayIndexKey: static demo list
+          key={i}
+          className={`${swatch} flex items-end p-3 text-label-large`}
+        >
+          画像 {i + 1}
+        </Carousel.Item>
+      ))}
+    </>
+  );
+}
+
 function SnackbarDemo() {
   const { add } = useSnackbar();
   return (
@@ -1012,13 +1036,14 @@ export function App() {
 
           <Section title="LoadingIndicator">
             <div className="flex items-center gap-6">
-              <LoadingIndicator aria-label="読み込み中" />
-              <LoadingIndicator aria-label="読み込み中（contained）" contained />
+              <LoadingIndicator aria-label="読み込み中インジケーター" />
+              <LoadingIndicator aria-label="読み込み中インジケーター（contained）" contained />
             </div>
           </Section>
 
           <Section title="Toolbar">
-            <div className="flex flex-col items-start gap-6">
+            {/* standard / vibrant × horizontal / vertical — the four M3 configs. */}
+            <div className="flex flex-wrap items-start gap-6">
               <Toolbar aria-label="標準ツールバー">
                 <IconButton aria-label="戻る">
                   <Icon name="undo" />
@@ -1041,31 +1066,62 @@ export function App() {
                   <Icon name="format_underlined" />
                 </IconButton>
               </Toolbar>
+              <Toolbar aria-label="標準ツールバー（縦）" orientation="vertical">
+                <IconButton aria-label="上">
+                  <Icon name="arrow_upward" />
+                </IconButton>
+                <IconButton aria-label="下">
+                  <Icon name="arrow_downward" />
+                </IconButton>
+                <IconButton aria-label="もっと見る">
+                  <Icon name="more_vert" />
+                </IconButton>
+              </Toolbar>
+              <Toolbar
+                aria-label="ビビッドなツールバー（縦）"
+                variant="vibrant"
+                orientation="vertical"
+              >
+                <IconButton aria-label="左揃え">
+                  <Icon name="format_align_left" />
+                </IconButton>
+                <IconButton aria-label="中央揃え">
+                  <Icon name="format_align_center" />
+                </IconButton>
+                <IconButton aria-label="右揃え">
+                  <Icon name="format_align_right" />
+                </IconButton>
+              </Toolbar>
             </div>
           </Section>
 
           <Section title="Carousel">
             {/* The scroller is keyboard-focusable: tab to it, then ←/→ (↑/↓ for
                 full-screen) advance one item at a time, with a focus-visible ring
-                and prefers-reduced-motion honored. Variants: multi-browse /
-                uncontained / hero / full-screen. */}
-            <Carousel.Root aria-label="ギャラリー" className="max-w-md">
-              {[
-                'bg-primary-container text-on-primary-container',
-                'bg-secondary-container text-on-secondary-container',
-                'bg-tertiary-container text-on-tertiary-container',
-                'bg-error-container text-on-error-container',
-                'bg-surface-container-highest text-on-surface',
-              ].map((swatch, i) => (
-                <Carousel.Item
-                  // biome-ignore lint/suspicious/noArrayIndexKey: static demo list
-                  key={i}
-                  className={`${swatch} flex items-end p-3 text-label-large`}
-                >
-                  画像 {i + 1}
-                </Carousel.Item>
-              ))}
-            </Carousel.Root>
+                and prefers-reduced-motion honored. All four M3 layouts —
+                multi-browse / uncontained / hero / full-screen — share the same
+                slides via <CarouselSlides />. */}
+            <div className="flex flex-col gap-6">
+              <Carousel.Root aria-label="ギャラリー" className="max-w-md">
+                <CarouselSlides />
+              </Carousel.Root>
+              <Carousel.Root
+                aria-label="アンコンテインド カルーセル"
+                variant="uncontained"
+                className="max-w-md"
+              >
+                <CarouselSlides />
+              </Carousel.Root>
+              <Carousel.Root aria-label="ヒーロー カルーセル" variant="hero" className="max-w-md">
+                <CarouselSlides />
+              </Carousel.Root>
+              {/* full-screen items are 100%×100%, so bound the scroller's height. */}
+              <div className="h-72 max-w-md">
+                <Carousel.Root aria-label="全画面 カルーセル" variant="full-screen">
+                  <CarouselSlides />
+                </Carousel.Root>
+              </div>
+            </div>
           </Section>
 
           <Section title="List">
