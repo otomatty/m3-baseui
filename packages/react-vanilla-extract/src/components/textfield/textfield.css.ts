@@ -100,6 +100,10 @@ export const fieldVariant = styleVariants({
         border: `3px solid rgb(${vars.sys.color.primary})`,
         paddingInline: '14px',
       },
+      // Icon sides rest at 12px; on focus drop them to 10px (mirrors Tailwind)
+      // so the growing border doesn't push the icon/control inward.
+      [`${root}[data-focused] &:has([data-slot^="leading-icon"])`]: { paddingLeft: '10px' },
+      [`${root}[data-focused] &:has([data-slot^="trailing-icon"])`]: { paddingRight: '10px' },
       [`${root}[data-invalid] &`]: { borderColor: `rgb(${vars.sys.color.error})` },
     },
   },

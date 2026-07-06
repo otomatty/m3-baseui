@@ -154,6 +154,14 @@ describe('TextField tokens', () => {
     expect(field).toContain('px-4');
   });
 
+  test('outlined focus keeps icon-side padding steady (compensates the 3dp border)', () => {
+    const field = textFieldTv({ variant: 'outlined' }).field();
+    // Resting icon sides = 12px; on focus the border grows +2px so those sides
+    // drop to 10px (higher specificity than px-[14px]) to avoid an inward shift.
+    expect(field).toContain('group-data-[focused]:has-[[data-slot^=leading-icon]]:pl-[10px]');
+    expect(field).toContain('group-data-[focused]:has-[[data-slot^=trailing-icon]]:pr-[10px]');
+  });
+
   test('multiline field grows from a min height and top-aligns content', () => {
     const c = textFieldTv({ variant: 'outlined', multiline: true });
     // Fixed 56dp height only applies to single-line; multiline uses a min-height

@@ -83,6 +83,10 @@ export const textFieldTv = tv({
           // M3 outlined focus-outline-width is 3dp (matches Select's trigger);
           // padding drops 2px so content stays steady as the 1dp border grows.
           'group-data-[focused]:border-[3px] group-data-[focused]:border-primary group-data-[focused]:px-[14px]',
+          // Icon sides rest at 12px padding; on focus the border grows +2px, so
+          // drop those sides to 10px too (higher specificity than px-[14px]) to
+          // keep the icon/control from shifting inward.
+          'group-data-[focused]:has-[[data-slot^=leading-icon]]:pl-[10px] group-data-[focused]:has-[[data-slot^=trailing-icon]]:pr-[10px]',
           'group-data-[invalid]:border-error',
         ],
         label: [
