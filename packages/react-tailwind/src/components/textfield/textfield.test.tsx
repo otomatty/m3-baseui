@@ -38,6 +38,26 @@ describe('TextField', () => {
     );
     expect(screen.getByText('5/10')).toBeInTheDocument();
   });
+
+  test('multiline renders a native textarea wired to the floating label', () => {
+    render(<TextField multiline label="説明" rows={4} />);
+    const control = screen.getByLabelText('説明');
+    // M3 textarea = multi-line <textarea>, still associated with the label.
+    expect(control).toHaveProperty('tagName', 'TEXTAREA');
+    expect(control).toHaveAttribute('rows', '4');
+  });
+
+  test('multiline still forwards value/counter behaviour', () => {
+    render(<TextField multiline label="説明" showCounter maxLength={20} defaultValue="ab" />);
+    expect(screen.getByText('2/20')).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('説明'), { target: { value: 'abcd' } });
+    expect(screen.getByText('4/20')).toBeInTheDocument();
+  });
+
+  test('single-line default stays an <input>', () => {
+    render(<TextField label="名前" />);
+    expect(screen.getByLabelText('名前')).toHaveProperty('tagName', 'INPUT');
+  });
 });
 
 describe('TextField tokens', () => {
@@ -85,13 +105,46 @@ describe('TextField tokens', () => {
   test('outlined floated label stays above the border notch (not clipped)', () => {
     const label = textFieldTv({ variant: 'outlined' }).label();
     expect(label).toContain('group-data-[focused]:z-[1]');
-    expect(label).toContain('group-data-[focused]:bg-surface');
+    // The notch mask is background-independent: defaults to surface, but a field
+    // on another background can override --md-textfield-notch.
+    expect(label).toContain(
+      'group-data-[focused]:bg-[var(--md-textfield-notch,var(--color-surface))]',
+    );
     expect(label).toContain('group-data-[focused]:leading-none');
   });
 
   test('filled field keeps overflow hidden for the hover state layer', () => {
     const field = textFieldTv({ variant: 'filled' }).field();
     expect(field).toContain('overflow-hidden');
+  });
+
+  test('icon spacing follows M3 tokens: 16dp icon-to-input, 12dp icon-side edge', () => {
+    const field = textFieldTv({ variant: 'filled' }).field();
+    // md.comp.*-text-field icon-input-space = 16px (gap between icon and input).
+    expect(field).toContain('gap-4');
+    // with-leading-icon / with-trailing-icon leading/trailing space = 12px.
+    expect(field).toContain('has-[[data-slot^=leading-icon]]:pl-3');
+    expect(field).toContain('has-[[data-slot^=trailing-icon]]:pr-3');
+    // Baseline (no icon) leading/trailing space stays 16px.
+    expect(field).toContain('px-4');
+  });
+
+  test('multiline field grows from a min height and top-aligns content', () => {
+    const c = textFieldTv({ variant: 'outlined', multiline: true });
+    // Fixed 56dp height only applies to single-line; multiline uses a min-height
+    // so the textarea can grow, and content/label anchor to the top.
+    expect(c.field()).toContain('min-h-14');
+    // No fixed `h-14` token (min-h-14 is fine — check exact tokens, not substrings).
+    expect(c.field().split(' ')).not.toContain('h-14');
+    expect(c.field()).toContain('items-start');
+    // The textarea itself is user-resizable vertically (M3 `resize: vertical`).
+    expect(c.input()).toContain('resize-y');
+  });
+
+  test('single-line keeps the fixed 56dp height', () => {
+    const field = textFieldTv({ variant: 'filled', multiline: false }).field();
+    expect(field).toContain('h-14');
+    expect(field).not.toContain('min-h-14');
   });
 
   test('interactive trailing icon exposes a 48dp touch target', () => {

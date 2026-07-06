@@ -20,6 +20,8 @@ export interface TextFieldIconAction {
 
 export interface TextFieldResolverArgs {
   variant: TextFieldVariant;
+  /** Multi-line text area (renders a `<textarea>`); drives layout/height styles. */
+  multiline: boolean;
 }
 
 export interface TextFieldSlotClasses {
@@ -54,6 +56,10 @@ export type TextFieldClassResolver = (args: TextFieldResolverArgs) => TextFieldS
 export interface TextFieldOwnProps {
   /** M3 text field variant. @default 'filled' */
   variant?: TextFieldVariant;
+  /** Render as a multi-line text area (M3 textarea). @default false */
+  multiline?: boolean;
+  /** Initial visible rows when `multiline`. @default 2 */
+  rows?: number;
   /** Floating label. */
   label?: React.ReactNode;
   /** Helper text shown beneath the field (replaced by error color when invalid). */

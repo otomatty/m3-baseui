@@ -36,3 +36,22 @@ export const States: Story = {
     );
   },
 };
+
+export const Multiline: Story = {
+  render: () => {
+    const { TextField } = useM3();
+    return (
+      <div className="flex flex-wrap items-start gap-4">
+        <TextField multiline label="メッセージ" rows={3} supportingText="複数行入力（textarea）" />
+        <TextField
+          variant="outlined"
+          multiline
+          label="コメント"
+          rows={4}
+          showCounter
+          maxLength={200}
+        />
+      </div>
+    );
+  },
+};

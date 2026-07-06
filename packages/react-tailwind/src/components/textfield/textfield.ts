@@ -17,11 +17,15 @@ export const textFieldTv = tv({
   slots: {
     root: 'flex flex-col gap-1 min-w-[210px]',
     field: [
-      'relative flex items-stretch gap-3 h-14 px-4 box-border text-on-surface',
+      // gap-4 = M3 icon-input-space (16dp); px-4 = leading/trailing-space (16dp),
+      // dropping to 12dp (pl-3/pr-3) on the side that actually carries an icon
+      // (M3 with-leading-icon / with-trailing-icon leading/trailing-space).
+      'relative flex gap-4 px-4 box-border text-on-surface',
+      'has-[[data-slot^=leading-icon]]:pl-3 has-[[data-slot^=trailing-icon]]:pr-3',
       'transition-[border-color,padding] duration-150 ease-standard',
       'group-data-[disabled]:opacity-[0.38] group-data-[disabled]:pointer-events-none',
     ],
-    inputWrap: 'relative z-0 flex-1 flex items-center min-w-0 overflow-visible',
+    inputWrap: 'relative z-0 flex-1 flex min-w-0 overflow-visible',
     input: [
       'peer w-full bg-transparent outline-none border-0 p-0 text-body-large text-on-surface',
       'placeholder:text-on-surface-variant',
@@ -82,21 +86,52 @@ export const textFieldTv = tv({
           'group-data-[invalid]:border-error',
         ],
         label: [
+          // The floated label masks the outline notch. Its background defaults to
+          // `surface` but reads `--md-textfield-notch`, so a field placed on a
+          // non-surface background can match it (true notch without extra DOM).
           'group-data-[focused]:top-0 group-data-[focused]:-translate-y-1/2 group-data-[focused]:z-[1]',
-          'group-data-[focused]:text-body-small group-data-[focused]:bg-surface group-data-[focused]:px-1 group-data-[focused]:leading-none',
+          'group-data-[focused]:text-body-small group-data-[focused]:bg-[var(--md-textfield-notch,var(--color-surface))] group-data-[focused]:px-1 group-data-[focused]:leading-none',
           'group-data-[filled]:top-0 group-data-[filled]:-translate-y-1/2 group-data-[filled]:z-[1]',
-          'group-data-[filled]:text-body-small group-data-[filled]:bg-surface group-data-[filled]:px-1 group-data-[filled]:leading-none',
+          'group-data-[filled]:text-body-small group-data-[filled]:bg-[var(--md-textfield-notch,var(--color-surface))] group-data-[filled]:px-1 group-data-[filled]:leading-none',
         ],
       },
     },
+    // Single-line is a fixed 56dp box; multiline grows from a 56dp min-height and
+    // top-aligns its content so the <textarea> can expand (M3 text area).
+    multiline: {
+      false: {
+        field: 'items-stretch h-14',
+        inputWrap: 'items-center',
+      },
+      true: {
+        field: 'items-start min-h-14',
+        inputWrap: 'items-start',
+        input: 'resize-y block leading-normal',
+        // Anchor the resting label to the top line instead of the vertical center.
+        label: 'translate-y-0',
+      },
+    },
   },
+  compoundVariants: [
+    {
+      variant: 'filled',
+      multiline: true,
+      class: { input: 'pt-6 pb-2', label: 'top-6' },
+    },
+    {
+      variant: 'outlined',
+      multiline: true,
+      class: { input: 'py-4', label: 'top-4' },
+    },
+  ],
   defaultVariants: {
     variant: 'filled',
+    multiline: false,
   },
 });
 
-export const TextField = createTextField(({ variant }) => {
-  const c = textFieldTv({ variant });
+export const TextField = createTextField(({ variant, multiline }) => {
+  const c = textFieldTv({ variant, multiline });
   return {
     root: c.root(),
     field: c.field(),

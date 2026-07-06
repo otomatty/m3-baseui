@@ -57,6 +57,8 @@ export function createTextField(resolve: TextFieldClassResolver) {
   function TextField(
     {
       variant = 'filled',
+      multiline = false,
+      rows,
       label,
       supportingText,
       error = false,
@@ -75,9 +77,9 @@ export function createTextField(resolve: TextFieldClassResolver) {
       disabled,
       ...rest
     }: TextFieldProps,
-    forwardedRef: React.Ref<HTMLInputElement>,
+    forwardedRef: React.Ref<HTMLInputElement | HTMLTextAreaElement>,
   ): React.JSX.Element {
-    const c = resolve({ variant });
+    const c = resolve({ variant, multiline });
     const reactId = React.useId();
     const inputId = id ?? reactId;
 
@@ -89,9 +91,9 @@ export function createTextField(resolve: TextFieldClassResolver) {
       () => String(defaultValue ?? '').length,
     );
     const count = isControlled ? String(value ?? '').length : uncontrolledCount;
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       if (!isControlled) setUncontrolledCount(event.target.value.length);
-      onChange?.(event);
+      onChange?.(event as React.ChangeEvent<HTMLInputElement>);
     };
 
     const showSupporting = supportingText != null || (showCounter && maxLength != null);
@@ -118,7 +120,10 @@ export function createTextField(resolve: TextFieldClassResolver) {
           ) : null}
           <span className={c.inputWrap}>
             <Field.Control
-              ref={forwardedRef}
+              // M3 textarea = a native <textarea>; single-line = <input>. Base UI
+              // Field.Control merges its control props onto whichever host we pass.
+              render={multiline ? <textarea rows={rows ?? 2} /> : undefined}
+              ref={forwardedRef as React.Ref<HTMLInputElement>}
               id={inputId}
               className={cx(c.input, inputClassName)}
               value={value as string | number | readonly string[] | undefined}
