@@ -53,13 +53,10 @@ export interface TextFieldSlotClasses {
 
 export type TextFieldClassResolver = (args: TextFieldResolverArgs) => TextFieldSlotClasses;
 
+/** M3-specific props shared by the single-line and multiline text field. */
 export interface TextFieldOwnProps {
   /** M3 text field variant. @default 'filled' */
   variant?: TextFieldVariant;
-  /** Render as a multi-line text area (M3 textarea). @default false */
-  multiline?: boolean;
-  /** Initial visible rows when `multiline`. @default 2 */
-  rows?: number;
   /** Floating label. */
   label?: React.ReactNode;
   /** Helper text shown beneath the field (replaced by error color when invalid). */
@@ -76,9 +73,28 @@ export interface TextFieldOwnProps {
   trailingIconAction?: TextFieldIconAction;
   /** Show a `current/maxLength` character counter (requires `maxLength`). */
   showCounter?: boolean;
-  /** className applied to the inner input. */
+  /** className applied to the inner input/textarea. */
   inputClassName?: string;
 }
 
-export type TextFieldProps = TextFieldOwnProps &
-  Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>;
+/** Single-line text field — renders a native `<input>`. */
+export type TextFieldInputProps = TextFieldOwnProps & {
+  /** @default false */
+  multiline?: false;
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>;
+
+/** Multi-line M3 text area — renders a native `<textarea>`. */
+export type TextFieldTextareaProps = TextFieldOwnProps & {
+  /** Render as a multi-line text area (M3 textarea). */
+  multiline: true;
+  /** Initial visible rows. @default 2 */
+  rows?: number;
+} & Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'>;
+
+/**
+ * Discriminated on `multiline`: the single-line branch carries `<input>` types,
+ * the multiline branch carries `<textarea>` types (textarea change events and
+ * props such as `rows` / `wrap` / `cols`), so consumers of either path stay
+ * fully typed.
+ */
+export type TextFieldProps = TextFieldInputProps | TextFieldTextareaProps;

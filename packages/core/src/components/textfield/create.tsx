@@ -11,7 +11,12 @@
 import * as React from 'react';
 import { Field } from '@base-ui/react/field';
 
-import type { TextFieldClassResolver, TextFieldIconAction, TextFieldProps } from './contract';
+import type {
+  TextFieldClassResolver,
+  TextFieldIconAction,
+  TextFieldInputProps,
+  TextFieldProps,
+} from './contract';
 import { cx } from '../../utils';
 import { TouchTarget } from '../../touch-target';
 
@@ -55,7 +60,14 @@ function TextFieldIconSlot({
 
 export function createTextField(resolve: TextFieldClassResolver) {
   function TextField(
-    {
+    props: TextFieldProps,
+    forwardedRef: React.Ref<HTMLInputElement | HTMLTextAreaElement>,
+  ): React.JSX.Element {
+    // Public props are a union (input | textarea); internally we work off the
+    // input shape widened with the multiline discriminant + `rows`. Textarea-only
+    // passthrough props (e.g. `wrap`, `cols`) still flow through `...rest` at
+    // runtime and are merged onto the <textarea> by Base UI's render prop.
+    const {
       variant = 'filled',
       multiline = false,
       rows,
@@ -76,9 +88,13 @@ export function createTextField(resolve: TextFieldClassResolver) {
       onChange,
       disabled,
       ...rest
-    }: TextFieldProps,
-    forwardedRef: React.Ref<HTMLInputElement | HTMLTextAreaElement>,
-  ): React.JSX.Element {
+    } = props as Omit<TextFieldInputProps, 'onChange'> & {
+      multiline?: boolean;
+      rows?: number;
+      // Widened so the multiline <textarea> event flows through untouched; the
+      // public union still narrows onChange per branch for consumers.
+      onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+    };
     const c = resolve({ variant, multiline });
     const reactId = React.useId();
     const inputId = id ?? reactId;
@@ -93,7 +109,7 @@ export function createTextField(resolve: TextFieldClassResolver) {
     const count = isControlled ? String(value ?? '').length : uncontrolledCount;
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       if (!isControlled) setUncontrolledCount(event.target.value.length);
-      onChange?.(event as React.ChangeEvent<HTMLInputElement>);
+      onChange?.(event);
     };
 
     const showSupporting = supportingText != null || (showCounter && maxLength != null);

@@ -54,6 +54,31 @@ describe('TextField', () => {
     expect(screen.getByText('4/20')).toBeInTheDocument();
   });
 
+  test('multiline props are typed as a <textarea> (wrap/cols pass through)', () => {
+    // The discriminated union exposes textarea-only props on the multiline path;
+    // this would not type-check on the single-line (<input>) branch.
+    render(<TextField multiline label="説明" wrap="soft" cols={30} />);
+    const control = screen.getByLabelText('説明');
+    expect(control).toHaveAttribute('wrap', 'soft');
+    expect(control).toHaveAttribute('cols', '30');
+  });
+
+  test('multiline onChange receives a textarea change event', () => {
+    let target: EventTarget | null = null;
+    render(
+      <TextField
+        multiline
+        label="説明"
+        onChange={(e) => {
+          // e is typed ChangeEvent<HTMLTextAreaElement> on the multiline branch.
+          target = e.target;
+        }}
+      />,
+    );
+    fireEvent.change(screen.getByLabelText('説明'), { target: { value: 'x' } });
+    expect((target as unknown as HTMLElement)?.tagName).toBe('TEXTAREA');
+  });
+
   test('single-line default stays an <input>', () => {
     render(<TextField label="名前" />);
     expect(screen.getByLabelText('名前')).toHaveProperty('tagName', 'INPUT');

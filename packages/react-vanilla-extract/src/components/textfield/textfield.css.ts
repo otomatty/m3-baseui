@@ -137,7 +137,9 @@ export const inputVariant = styleVariants({
 
 // Multiline: the control is a user-resizable <textarea>; padding leaves room for
 // the floated label above (filled) / balances the border (outlined).
-export const inputMultiBase = style({ resize: 'vertical', display: 'block' });
+// lineHeight:'normal' mirrors the Tailwind build's `leading-normal`, overriding
+// the body-large typescale line-height so multi-line spacing matches (drop-in).
+export const inputMultiBase = style({ resize: 'vertical', display: 'block', lineHeight: 'normal' });
 export const inputMulti = styleVariants({
   filled: { paddingTop: '24px', paddingBottom: '8px' },
   outlined: { paddingBlock: '16px' },

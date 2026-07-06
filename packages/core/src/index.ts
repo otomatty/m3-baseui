@@ -133,6 +133,8 @@ export {
   type TextFieldVariant,
   type TextFieldIconAction,
   type TextFieldOwnProps,
+  type TextFieldInputProps,
+  type TextFieldTextareaProps,
   type TextFieldProps,
   type TextFieldResolverArgs,
   type TextFieldSlotClasses,
