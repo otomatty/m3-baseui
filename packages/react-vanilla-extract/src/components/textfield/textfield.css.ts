@@ -36,13 +36,24 @@ export const root = style({
 export const field = style({
   position: 'relative',
   display: 'flex',
-  alignItems: 'stretch',
-  gap: '12px',
-  height: '56px',
+  // gap = M3 icon-input-space (16dp); paddingInline = leading/trailing-space
+  // (16dp), tightening to 12dp on the side carrying an icon.
+  gap: '16px',
   paddingInline: '16px',
   boxSizing: 'border-box',
   color: `rgb(${vars.sys.color.onSurface})`,
   transition: `border-color 150ms ${vars.sys.motion.easing.standard}, padding 150ms ${vars.sys.motion.easing.standard}`,
+  selectors: {
+    '&:has([data-slot^="leading-icon"])': { paddingLeft: '12px' },
+    '&:has([data-slot^="trailing-icon"])': { paddingRight: '12px' },
+  },
+});
+
+// Single-line is a fixed 56dp box; multiline grows from a 56dp min-height and
+// top-aligns content so the <textarea> can expand (M3 text area).
+export const fieldLayout = styleVariants({
+  single: { alignItems: 'stretch', height: '56px' },
+  multi: { alignItems: 'flex-start', minHeight: '56px' },
 });
 
 export const fieldVariant = styleVariants({
@@ -89,6 +100,10 @@ export const fieldVariant = styleVariants({
         border: `3px solid rgb(${vars.sys.color.primary})`,
         paddingInline: '14px',
       },
+      // Icon sides rest at 12px; on focus drop them to 10px (mirrors Tailwind)
+      // so the growing border doesn't push the icon/control inward.
+      [`${root}[data-focused] &:has([data-slot^="leading-icon"])`]: { paddingLeft: '10px' },
+      [`${root}[data-focused] &:has([data-slot^="trailing-icon"])`]: { paddingRight: '10px' },
       [`${root}[data-invalid] &`]: { borderColor: `rgb(${vars.sys.color.error})` },
     },
   },
@@ -99,9 +114,13 @@ export const inputWrap = style({
   zIndex: 0,
   flex: 1,
   display: 'flex',
-  alignItems: 'center',
   minWidth: 0,
   overflow: 'visible',
+});
+
+export const inputWrapLayout = styleVariants({
+  single: { alignItems: 'center' },
+  multi: { alignItems: 'flex-start' },
 });
 
 export const input = style({
@@ -118,6 +137,16 @@ export const input = style({
 export const inputVariant = styleVariants({
   filled: { paddingTop: '12px' },
   outlined: {},
+});
+
+// Multiline: the control is a user-resizable <textarea>; padding leaves room for
+// the floated label above (filled) / balances the border (outlined).
+// lineHeight:'normal' mirrors the Tailwind build's `leading-normal`, overriding
+// the body-large typescale line-height so multi-line spacing matches (drop-in).
+export const inputMultiBase = style({ resize: 'vertical', display: 'block', lineHeight: 'normal' });
+export const inputMulti = styleVariants({
+  filled: { paddingTop: '24px', paddingBottom: '8px' },
+  outlined: { paddingBlock: '16px' },
 });
 
 export const label = style({
@@ -145,7 +174,9 @@ const floatOutlined = {
   top: 0,
   zIndex: 1,
   transform: 'translateY(-50%)',
-  background: `rgb(${vars.sys.color.surface})`,
+  // Notch mask: default surface, overridable via --md-textfield-notch so a field
+  // on a non-surface background stays background-independent.
+  background: `var(--md-textfield-notch, rgb(${vars.sys.color.surface}))`,
   paddingInline: '4px',
   ...type(vars.sys.typescale.bodySmall),
 };
@@ -163,6 +194,13 @@ export const labelVariant = styleVariants({
       [`${root}[data-filled] &`]: floatOutlined,
     },
   },
+});
+
+// Multiline resting label anchors to the top line (the float selectors above,
+// keyed off the root's data-focused/filled, keep higher specificity and win).
+export const labelMulti = styleVariants({
+  filled: { top: '24px', transform: 'translateY(0)' },
+  outlined: { top: '16px', transform: 'translateY(0)' },
 });
 
 export const icon = style({
