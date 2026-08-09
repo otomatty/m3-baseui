@@ -1,10 +1,6 @@
-import * as React from 'react';
 import type { Decorator, Preview } from '@storybook/react-vite';
-import { tokens } from '@m3-baseui/tokens';
 import {
   ThemeProvider,
-  applyScheme,
-  generateScheme,
   type ContrastLevel,
   type SchemeVariant,
   type ThemeMode,
@@ -21,7 +17,6 @@ const SCHEMES: SchemeVariant[] = [
   'fidelity',
 ];
 const CONTRASTS: ContrastLevel[] = ['standard', 'medium', 'high'];
-const COLOR_ROLES = Object.keys(tokens.sys.color);
 
 type StorybookGlobals = {
   engine: EngineId;
@@ -34,95 +29,9 @@ type StorybookThemeArgs = {
   contrast: ContrastLevel;
 };
 
-function kebab(name: string): string {
-  return name
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
-    .toLowerCase();
-}
-
-function resolveThemeMode(mode: ThemeMode): 'light' | 'dark' {
-  if (mode !== 'system') return mode;
-  if (typeof window === 'undefined' || !window.matchMedia) return 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
-function clearAppliedScheme(element: HTMLElement): void {
-  for (const role of COLOR_ROLES) {
-    element.style.removeProperty(`--md-sys-color-${kebab(role)}`);
-  }
-}
-
-/** Sync `<html data-theme>` — see preview decorator comment for rationale. */
-function DocumentThemeSync({ mode }: { mode: ThemeMode }): null {
-  React.useEffect(() => {
-    const root = document.documentElement;
-    if (mode === 'system') {
-      root.removeAttribute('data-theme');
-    } else {
-      root.setAttribute('data-theme', mode);
-    }
-    return () => {
-      root.removeAttribute('data-theme');
-    };
-  }, [mode]);
-  return null;
-}
-
 /**
- * Mirror dynamic color onto `<html>` so portaled surfaces (Dialog, Menu, sheets)
- * inherit the same `--md-sys-color-*` vars as the ThemeProvider wrapper.
- */
-function DocumentDynamicColorSync({
-  seed,
-  scheme,
-  contrast,
-  mode,
-}: StorybookThemeArgs & { mode: ThemeMode }): null {
-  React.useEffect(() => {
-    const root = document.documentElement;
-    if (!seed) {
-      clearAppliedScheme(root);
-      return;
-    }
-
-    const apply = () => {
-      const schemes = generateScheme(seed, scheme, contrast);
-      applyScheme(root, resolveThemeMode(mode) === 'dark' ? schemes.dark : schemes.light);
-    };
-
-    apply();
-
-    if (mode !== 'system' || typeof window === 'undefined' || !window.matchMedia) {
-      return () => {
-        clearAppliedScheme(root);
-      };
-    }
-
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const onChange = () => apply();
-    mq.addEventListener('change', onChange);
-    return () => {
-      mq.removeEventListener('change', onChange);
-      clearAppliedScheme(root);
-    };
-  }, [seed, scheme, contrast, mode]);
-
-  return null;
-}
-
-/**
- * Global decorator: wires the theme Controls + the Engine / Color mode toolbars
- * into the tree. `ThemeProvider` writes the generated `--md-sys-color-*`
- * channels onto its wrapper when a seed is set; baseline tokens from tokens.css
- * apply via `data-theme` on `<html>` (synced by {@link DocumentThemeSync}).
- * {@link DocumentDynamicColorSync} duplicates dynamic vars onto `<html>` for
- * portal targets that render outside the provider wrapper.
- *
- * tokens.css applies dark vars via `[data-theme='dark']` and via
- * `@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) }`.
- * ThemeProvider only sets `data-theme` on its own wrapper, so `<html>` must be
- * synced separately or Light mode on a dark OS keeps inheriting dark `:root` vars.
+ * Global decorator: ThemeProvider writes `--md-sys-color-*` + `data-theme` onto
+ * `document.documentElement` (portal-safe). No separate html sync helpers.
  */
 const withTheme: Decorator = (Story, context) => {
   const { seed, scheme, contrast } = context.args as StorybookThemeArgs;
@@ -130,8 +39,6 @@ const withTheme: Decorator = (Story, context) => {
 
   return (
     <EngineProvider engine={engine}>
-      <DocumentThemeSync mode={colorMode} />
-      <DocumentDynamicColorSync seed={seed} scheme={scheme} contrast={contrast} mode={colorMode} />
       <ThemeProvider
         seed={seed || undefined}
         scheme={scheme}
@@ -161,10 +68,10 @@ const preview: Preview = {
       },
     },
     colorMode: {
-      description: 'Light / dark color mode for the preview canvas',
+      description: 'Color mode',
       toolbar: {
-        title: 'Color mode',
-        icon: 'mirror',
+        title: 'Color',
+        icon: 'circlehollow',
         items: [
           { value: 'light', title: 'Light', icon: 'sun' },
           { value: 'dark', title: 'Dark', icon: 'moon' },
@@ -174,8 +81,10 @@ const preview: Preview = {
       },
     },
   },
-  initialGlobals: { engine: 'tailwind', colorMode: 'light' },
-  // Project-level args/argTypes apply to every story and surface in Controls.
+  initialGlobals: {
+    engine: 'tailwind',
+    colorMode: 'light',
+  },
   args: {
     seed: '#6750A4',
     scheme: 'tonalSpot',
@@ -190,7 +99,7 @@ const preview: Preview = {
       name: 'Scheme',
     },
     contrast: {
-      control: 'inline-radio',
+      control: 'select',
       options: CONTRASTS,
       table: { category: 'Theme' },
       name: 'Contrast',
@@ -199,12 +108,6 @@ const preview: Preview = {
   parameters: {
     layout: 'fullscreen',
     controls: { expanded: true },
-    a11y: { test: 'todo' },
-    options: {
-      storySort: {
-        order: ['Overview', 'Components'],
-      },
-    },
   },
 };
 

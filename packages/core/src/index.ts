@@ -299,13 +299,18 @@ export {
   ThemeProvider,
   useTheme,
   type ThemeMode,
+  type ThemeTarget,
   type ThemeProviderProps,
   type ThemeContextValue,
 } from './theme/ThemeProvider';
 export {
   generateScheme,
   applyScheme,
+  clearScheme,
+  syncDocumentTheme,
+  resetDocumentTheme,
   schemeToCssText,
+  type SyncDocumentThemeInput,
   type SchemeVariant,
   type ContrastLevel,
   type Scheme,

@@ -87,10 +87,14 @@ export default defineConfig({
   </section>
 
   <section class="doc-section">
-    <h2>4. ThemeProvider でラップ</h2>
-    <p>インタラクティブなコンポーネントはすべて ThemeProvider の内側で描画してください。</p>
+    <h2>4. テーマを載せる（任意）</h2>
+    <p>
+      コンポーネントは CSS 変数だけを読みます。デフォルト色だけでよければ
+      <code>tokens.css</code> の import で十分です。seed やホスト色・ライト/ダーク切替が必要なら
+      <code>ThemeProvider</code> か <code>syncDocumentTheme</code> を使います（どちらも <code>:root</code> に書きます）。
+    </p>
     <CodeBlock
-      code={`import { Button, ThemeProvider } from '@m3-baseui/react-tailwind';
+      code={`import { Button, ThemeProvider, syncDocumentTheme } from '@m3-baseui/react-tailwind';
 
 export default function App() {
   return (
@@ -98,7 +102,10 @@ export default function App() {
       <Button variant="filled">送信</Button>
     </ThemeProvider>
   );
-}`}
+}
+
+// または命令的に:
+// syncDocumentTheme({ mode: 'dark', seed: '#6750A4' });`}
     />
   </section>
 
@@ -118,7 +125,7 @@ export default function App() {
     <h2>よくある問題</h2>
     <ul>
       <li><strong>スタイルが当たらない</strong> — Tailwind の <code>@source</code> と CSS import 順序を確認</li>
-      <li><strong>useTheme must be used within ThemeProvider</strong> — ルート/layout を ThemeProvider でラップ</li>
+      <li><strong>useTheme must be used within ThemeProvider</strong> — <code>useTheme</code> を使うときだけ Provider でラップ</li>
       <li><strong>アイコンが空白</strong> — Material Symbols フォントリンクを追加</li>
     </ul>
   </section>

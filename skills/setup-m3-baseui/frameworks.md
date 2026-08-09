@@ -110,6 +110,7 @@ Adjust `@source` paths relative to `globals.css` location.
 import { ThemeProvider } from '@m3-baseui/react-tailwind';
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  // Writes --md-sys-color-* onto <html> (optional if baseline tokens.css is enough)
   return (
     <ThemeProvider seed="#6750A4" scheme="tonalSpot" mode="system">
       {children}

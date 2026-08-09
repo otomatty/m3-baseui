@@ -511,9 +511,7 @@ export const COMPONENT_DOCS: ComponentDoc[] = [
   </Dialog.Portal>
 </Dialog.Root>`,
     props: [{ name: 'open / onOpenChange', type: 'boolean', description: '制御モードの開閉状態' }],
-    notes: [
-      'ポータル描画のため ThemeProvider の動的配色は document ルートへ伝播させる必要がある場合があります。',
-    ],
+    notes: ['ポータルも documentElement の変数を継承（ThemeProvider target=document 既定）。'],
   },
   {
     slug: 'bottom-sheet',
