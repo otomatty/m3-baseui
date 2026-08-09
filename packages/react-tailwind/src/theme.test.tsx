@@ -3,12 +3,13 @@
  * ThemeProvider is sugar over syncDocumentTheme; components read CSS vars only.
  */
 import { afterEach, describe, expect, test } from 'bun:test';
-import { render, cleanup, act } from '@testing-library/react';
+import { act, cleanup, render } from '@testing-library/react';
 import {
   ThemeProvider,
   applyScheme,
   clearScheme,
   generateScheme,
+  resetDocumentTheme,
   syncDocumentTheme,
   useTheme,
 } from '@m3-baseui/core';
@@ -17,8 +18,7 @@ const BASELINE_SEED = '#6750A4';
 
 afterEach(() => {
   cleanup();
-  clearScheme(document.documentElement);
-  document.documentElement.removeAttribute('data-theme');
+  resetDocumentTheme(document.documentElement);
 });
 
 describe('clearScheme / applyScheme', () => {
@@ -41,19 +41,72 @@ describe('syncDocumentTheme', () => {
     );
     dispose();
     expect(root.style.getPropertyValue('--md-sys-color-primary')).toBe('');
+    expect(root.getAttribute('data-theme')).toBeNull();
   });
 
   test('colors prop wins over seed', () => {
     const custom = { ...generateScheme(BASELINE_SEED).light, primary: '1 2 3' };
-    syncDocumentTheme({ mode: 'light', seed: BASELINE_SEED, colors: custom });
+    const dispose = syncDocumentTheme({
+      mode: 'light',
+      seed: BASELINE_SEED,
+      colors: custom,
+    });
     expect(document.documentElement.style.getPropertyValue('--md-sys-color-primary')).toBe('1 2 3');
+    dispose();
   });
 
   test('mode-only clears inline scheme so tokens.css can drive colors', () => {
     applyScheme(document.documentElement, generateScheme(BASELINE_SEED).light);
-    syncDocumentTheme({ mode: 'dark' });
+    const dispose = syncDocumentTheme({ mode: 'dark' });
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     expect(document.documentElement.style.getPropertyValue('--md-sys-color-primary')).toBe('');
+    dispose();
+  });
+
+  test('dispose restores prior data-theme and inline colors', () => {
+    const root = document.documentElement;
+    const prior = { ...generateScheme(BASELINE_SEED).light, primary: '9 9 9' };
+    applyScheme(root, prior);
+    root.setAttribute('data-theme', 'light');
+
+    const dispose = syncDocumentTheme({ mode: 'dark', seed: BASELINE_SEED });
+    expect(root.getAttribute('data-theme')).toBe('dark');
+    dispose();
+
+    expect(root.getAttribute('data-theme')).toBe('light');
+    expect(root.style.getPropertyValue('--md-sys-color-primary')).toBe('9 9 9');
+  });
+
+  test('disposing an older layer leaves a newer shared-root layer intact', () => {
+    const root = document.documentElement;
+    const aColors = { ...generateScheme(BASELINE_SEED).light, primary: '1 1 1' };
+    const bColors = { ...generateScheme(BASELINE_SEED).dark, primary: '2 2 2' };
+    const disposeA = syncDocumentTheme({ mode: 'light', colors: aColors });
+    const disposeB = syncDocumentTheme({ mode: 'dark', colors: bColors });
+
+    disposeA();
+    expect(root.getAttribute('data-theme')).toBe('dark');
+    expect(root.style.getPropertyValue('--md-sys-color-primary')).toBe('2 2 2');
+
+    disposeB();
+    expect(root.getAttribute('data-theme')).toBeNull();
+    expect(root.style.getPropertyValue('--md-sys-color-primary')).toBe('');
+  });
+
+  test('disposing the newer layer restores the older shared-root layer', () => {
+    const root = document.documentElement;
+    const aColors = { ...generateScheme(BASELINE_SEED).light, primary: '1 1 1' };
+    const bColors = { ...generateScheme(BASELINE_SEED).dark, primary: '2 2 2' };
+    const disposeA = syncDocumentTheme({ mode: 'light', colors: aColors });
+    const disposeB = syncDocumentTheme({ mode: 'dark', colors: bColors });
+
+    disposeB();
+    expect(root.getAttribute('data-theme')).toBe('light');
+    expect(root.style.getPropertyValue('--md-sys-color-primary')).toBe('1 1 1');
+
+    disposeA();
+    expect(root.getAttribute('data-theme')).toBeNull();
+    expect(root.style.getPropertyValue('--md-sys-color-primary')).toBe('');
   });
 });
 
@@ -108,6 +161,20 @@ describe('ThemeProvider', () => {
     );
   });
 
+  test('unmount restores document theme baseline', () => {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', 'light');
+    const { unmount } = render(
+      <ThemeProvider seed={BASELINE_SEED} mode="dark">
+        <span>child</span>
+      </ThemeProvider>,
+    );
+    expect(root.getAttribute('data-theme')).toBe('dark');
+    unmount();
+    expect(root.getAttribute('data-theme')).toBe('light');
+    expect(root.style.getPropertyValue('--md-sys-color-primary')).toBe('');
+  });
+
   test('target="scope" keeps colors on the wrapper', () => {
     const { container } = render(
       <ThemeProvider seed={BASELINE_SEED} mode="light" target="scope" className="scope-root">
@@ -119,8 +186,6 @@ describe('ThemeProvider', () => {
     expect((scope as HTMLElement).style.getPropertyValue('--md-sys-color-primary')).toBe(
       generateScheme(BASELINE_SEED).light.primary,
     );
-    // document may still get data-theme from a previous test cleared in afterEach —
-    // scope mode must not rely on document inline colors.
     expect(document.documentElement.style.getPropertyValue('--md-sys-color-primary')).toBe('');
   });
 });

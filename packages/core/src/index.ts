@@ -308,6 +308,7 @@ export {
   applyScheme,
   clearScheme,
   syncDocumentTheme,
+  resetDocumentTheme,
   schemeToCssText,
   type SyncDocumentThemeInput,
   type SchemeVariant,

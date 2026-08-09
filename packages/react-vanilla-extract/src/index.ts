@@ -80,6 +80,7 @@ export {
   applyScheme,
   clearScheme,
   syncDocumentTheme,
+  resetDocumentTheme,
   schemeToCssText,
   type ThemeMode,
   type ThemeTarget,

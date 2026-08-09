@@ -152,34 +152,121 @@ export interface SyncDocumentThemeInput {
   root?: HTMLElement;
 }
 
+type InlineColorSnapshot = Record<string, string>;
+
+interface ThemeLayer {
+  id: symbol;
+  mode: 'light' | 'dark';
+  /** `null` = clear inline colors (mode-only / tokens.css baseline). */
+  scheme: Scheme | null;
+}
+
+interface RootThemeState {
+  /** DOM snapshot before the first layer on this root. */
+  baseline: { dataTheme: string | null; inline: InlineColorSnapshot };
+  layers: ThemeLayer[];
+}
+
+const rootThemeStates = new WeakMap<HTMLElement, RootThemeState>();
+
+function captureInlineColors(root: HTMLElement): InlineColorSnapshot {
+  const inline: InlineColorSnapshot = {};
+  for (const role of ROLE_KEYS) {
+    const prop = colorVar(role);
+    const value = root.style.getPropertyValue(prop);
+    if (value !== '') inline[prop] = value;
+  }
+  return inline;
+}
+
+function restoreInlineColors(root: HTMLElement, inline: InlineColorSnapshot): void {
+  clearScheme(root);
+  for (const [prop, value] of Object.entries(inline)) {
+    root.style.setProperty(prop, value);
+  }
+}
+
+function applyThemeLayer(root: HTMLElement, layer: ThemeLayer): void {
+  root.setAttribute('data-theme', layer.mode);
+  if (layer.scheme) applyScheme(root, layer.scheme);
+  else clearScheme(root);
+}
+
+function restoreThemeBaseline(root: HTMLElement, baseline: RootThemeState['baseline']): void {
+  restoreInlineColors(root, baseline.inline);
+  if (baseline.dataTheme === null) root.removeAttribute('data-theme');
+  else root.setAttribute('data-theme', baseline.dataTheme);
+}
+
+/**
+ * Wipe layer ownership and DOM theme attrs for a root.
+ * Useful in tests; apps rarely need this if every sync is disposed.
+ */
+export function resetDocumentTheme(root: HTMLElement = document.documentElement): void {
+  rootThemeStates.delete(root);
+  clearScheme(root);
+  root.removeAttribute('data-theme');
+}
+
 /**
  * Single write path for app themes: put colors on `:root` (portal-safe) and set
- * `data-theme`. Returns a disposer that clears inline color vars.
+ * `data-theme`. Returns a disposer that removes **this** call's layer only.
  *
- * Priority: `colors` → `seed` → baseline `tokens.css` (inline cleared).
+ * Overlapping calls on the same root form a stack: disposing a lower layer does
+ * not erase a newer one; disposing the last layer restores the pre-sync baseline
+ * (`data-theme` + inline `--md-sys-color-*`).
+ *
+ * Priority per call: `colors` → `seed` → baseline `tokens.css` (inline cleared).
  */
 export function syncDocumentTheme(input: SyncDocumentThemeInput): () => void {
   const root = input.root ?? document.documentElement;
-  root.setAttribute('data-theme', input.mode);
 
-  if (input.colors) {
-    applyScheme(root, input.colors);
-    return () => clearScheme(root);
+  let state = rootThemeStates.get(root);
+  if (!state) {
+    state = {
+      baseline: {
+        dataTheme: root.getAttribute('data-theme'),
+        inline: captureInlineColors(root),
+      },
+      layers: [],
+    };
+    rootThemeStates.set(root, state);
   }
 
-  if (input.seed) {
+  let scheme: Scheme | null = null;
+  if (input.colors) {
+    scheme = input.colors;
+  } else if (input.seed) {
     const pair = generateScheme(
       input.seed,
       input.variant ?? 'tonalSpot',
       input.contrast ?? 'standard',
     );
-    applyScheme(root, input.mode === 'dark' ? pair.dark : pair.light);
-    return () => clearScheme(root);
+    scheme = input.mode === 'dark' ? pair.dark : pair.light;
   }
 
-  clearScheme(root);
+  const layer: ThemeLayer = {
+    id: Symbol('m3-theme-layer'),
+    mode: input.mode,
+    scheme,
+  };
+  state.layers.push(layer);
+  applyThemeLayer(root, layer);
+
   return () => {
-    /* mode-only: leave data-theme; caller may remove it */
+    const current = rootThemeStates.get(root);
+    if (!current) return;
+    const index = current.layers.findIndex((entry) => entry.id === layer.id);
+    if (index === -1) return;
+    current.layers.splice(index, 1);
+
+    if (current.layers.length === 0) {
+      restoreThemeBaseline(root, current.baseline);
+      rootThemeStates.delete(root);
+      return;
+    }
+
+    applyThemeLayer(root, current.layers[current.layers.length - 1]!);
   };
 }
 
