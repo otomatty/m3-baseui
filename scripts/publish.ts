@@ -6,6 +6,9 @@
  *      protocol to the concrete version while packing, so consumers get an
  *      installable range. (`changeset publish` / `npm publish` from the package
  *      dir would leave `workspace:*` in place → EUNSUPPORTEDPROTOCOL on install.)
+ *      Bun reads those concrete versions from **bun.lock workspace metadata**,
+ *      not live package.json — so `version-packages` must refresh the lockfile
+ *      after bumps, and we assert packed `@m3-baseui/*` deps match package.json.
  *   2. `npm publish <tarball>` uploads it. `bun publish` has unreliable .npmrc
  *      auth in CI (it ignores ~/.npmrc and errors with "missing authentication"
  *      — oven-sh/bun#24124), whereas npm reads the token from ~/.npmrc reliably.
@@ -26,18 +29,19 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import {
+  assertResolvedWorkspaceDeps,
+  loadWorkspaceVersions,
+  type Manifest,
+} from './publish-lib.ts';
 
 const root = join(import.meta.dir, '..');
 const packagesDir = join(root, 'packages');
 
-interface Manifest {
-  name?: string;
-  version?: string;
-  private?: boolean;
-}
-
 let published = 0;
 let skipped = 0;
+
+const workspaceVersions = loadWorkspaceVersions(packagesDir);
 
 for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
   if (!entry.isDirectory()) continue;
@@ -63,8 +67,9 @@ for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
   }
 
   // Pack with bun (resolves workspace:* → concrete versions), verify the packed
-  // manifest carries no leftover workspace: range, then upload with npm.
-  const { tarball, cleanup } = packResolved(dir, name);
+  // manifest carries no leftover workspace: range and matches workspace package.json
+  // versions, then upload with npm.
+  const { tarball, cleanup } = packResolved(dir, name, workspaceVersions);
   try {
     console.log(`▲ publishing ${name}@${version}`);
     execFileSync('npm', ['publish', tarball, '--access', 'public'], { stdio: 'inherit' });
@@ -130,9 +135,13 @@ async function isPublished(name: string, version: string): Promise<boolean> {
 /**
  * Packs the package with bun and returns the tarball path plus a cleanup fn.
  * Throws if no tarball is produced or if its manifest still has a workspace:
- * range (the exact bug this script exists to prevent).
+ * range / wrong @m3-baseui dependency versions.
  */
-function packResolved(dir: string, name: string): { tarball: string; cleanup: () => void } {
+function packResolved(
+  dir: string,
+  name: string,
+  workspaceVersions: Record<string, string>,
+): { tarball: string; cleanup: () => void } {
   const out = mkdtempSync(join(tmpdir(), 'm3-pack-'));
   const cleanup = () => rmSync(out, { recursive: true, force: true });
   try {
@@ -145,12 +154,10 @@ function packResolved(dir: string, name: string): { tarball: string; cleanup: ()
       throw new Error(`${name}: bun pm pack produced no .tgz artifact`);
     }
     const tarball = join(out, tgz);
-    const manifest = execFileSync('tar', ['-xzOf', tarball, 'package/package.json'], {
+    const manifestText = execFileSync('tar', ['-xzOf', tarball, 'package/package.json'], {
       encoding: 'utf8',
     });
-    if (manifest.includes('workspace:')) {
-      throw new Error(`${name}: packed manifest still contains a "workspace:" range`);
-    }
+    assertResolvedWorkspaceDeps(JSON.parse(manifestText) as Manifest, workspaceVersions);
     return { tarball, cleanup };
   } catch (err) {
     cleanup();
