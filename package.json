@@ -12,7 +12,7 @@
     "gen:tokens": "bun run --filter @m3-baseui/tokens gen",
     "build": "bun run --filter @m3-baseui/tokens build && bun run --filter @m3-baseui/core build && bun run --filter @m3-baseui/icons build && bun run --filter @m3-baseui/react-tailwind build && bun run --filter @m3-baseui/react-vanilla-extract build",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version-packages": "changeset version && bun install",
     "release": "bun run build && bun run scripts/publish.ts",
     "typecheck": "bun run --filter '*' typecheck",
     "test": "bun --conditions=@m3/source test",
