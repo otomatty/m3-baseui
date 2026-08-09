@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ThemeFab } from '../components/ThemeFab';
 
 interface Props {
   title: string;
@@ -81,5 +82,6 @@ const jsonLd = Astro.site
   </head>
   <body>
     <slot />
+    <ThemeFab client:load />
   </body>
 </html>

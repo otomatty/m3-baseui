@@ -6,69 +6,52 @@ const title = 'm3-baseui — Base UI 上の Material Design 3 コンポーネン
 const description =
   'Base UI をベースに Material Design 3 を実装した React コンポーネントライブラリ。vanilla-extract と Tailwind CSS v4 の両エンジンに drop-in 互換で対応し、動的配色・アクセシビリティに対応します。';
 
-const features = [
+const lead =
+  'M3 準拠の React コンポーネントを、Tailwind CSS v4 または vanilla-extract から drop-in で使えます。';
+
+const nextSteps = [
   {
-    icon: 'palette',
-    title: 'Material Design 3 準拠',
-    body: '動的配色（HCT）・ステートレイヤー・タイポスケールまで M3 の仕様に沿って実装。シード色からテーマを自動生成します。',
+    href: '/docs/getting-started',
+    title: '導入',
+    body: 'インストール、CSS 配線、ThemeProvider の設定手順。',
   },
   {
-    icon: 'accessibility_new',
-    title: 'Base UI でアクセシブル',
-    body: 'キーボード操作・ARIA・フォーカス管理は Base UI が担保。axe による a11y テストを CI で常時実行しています。',
+    href: '/docs/theming',
+    title: 'テーマ・動的配色',
+    body: 'seed / scheme / contrast / mode による M3 動的配色。',
   },
   {
-    icon: 'swap_horiz',
-    title: '2 つのスタイリングエンジン',
-    body: 'vanilla-extract と Tailwind CSS v4 のどちらでも、同一 DOM・同一 data-* 属性を出力する drop-in 互換。',
+    href: '/docs/components',
+    title: 'コンポーネント',
+    body: 'Button、TextField、Dialog など全 API リファレンス。',
   },
   {
-    icon: 'bolt',
-    title: 'トークン単一ソース',
-    body: '--md-sys-* CSS 変数がエンジン非依存の境界。トークンを 1 箇所で定義し、全エンジンの生成物へ反映します。',
+    href: '/docs/engines',
+    title: 'スタイリングエンジン',
+    body: 'Tailwind v4 と vanilla-extract の選び方と違い。',
   },
 ];
 
-const installCode = `# Tailwind CSS v4 版（peer deps を含む）
-bun add @m3-baseui/react-tailwind @m3-baseui/tokens \\
-  react react-dom @base-ui/react tailwindcss
-
-# vanilla-extract 版（peer deps を含む）
-bun add @m3-baseui/react-vanilla-extract @m3-baseui/tokens \\
-  react react-dom @base-ui/react \\
-  @vanilla-extract/css @vanilla-extract/recipes`;
-
-const usageCode = `import { ThemeProvider, Button } from '@m3-baseui/react-tailwind';
-
-export function App() {
-  return (
-    <ThemeProvider seed="#6750A4" scheme="tonalSpot" mode="system">
-      <Button variant="filled">はじめる</Button>
-    </ThemeProvider>
-  );
-}`;
+const installCode =
+  'bun add @m3-baseui/react-tailwind @m3-baseui/tokens react react-dom @base-ui/react tailwindcss';
 ---
 
 <SiteLayout title={title} description={description}>
   <!-- Hero -->
-  <header class="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 pt-16 pb-16 text-center">
-    <span
-      class="rounded-full border border-outline-variant px-4 py-1 text-label-large text-on-surface-variant"
-    >
-      Material Design 3 · Base UI · React
-    </span>
-    <h1 class="max-w-3xl text-display-medium font-medium text-on-surface">
-      Base UI 上の<br />Material Design 3
+  <header class="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 pt-16 pb-10 text-center">
+    <p class="text-headline-large font-medium text-primary">m3-baseui</p>
+    <h1 class="max-w-3xl text-display-small font-medium text-on-surface">
+      Base UI 上の Material Design 3
     </h1>
-    <p class="max-w-2xl text-body-large text-on-surface-variant">
-      {description}
+    <p class="max-w-xl text-body-large text-on-surface-variant">
+      {lead}
     </p>
     <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
       <a
         href="/docs/getting-started"
         class="rounded-full bg-primary px-6 py-3 text-label-large text-on-primary transition-opacity hover:opacity-90"
       >
-        ドキュメントを見る
+        導入ガイド
       </a>
       <a
         href="/docs/components"
@@ -76,65 +59,65 @@ export function App() {
       >
         コンポーネント
       </a>
+    </div>
+    <p class="text-body-small text-on-surface-variant">
       <a
+        class="text-primary underline"
         href="https://github.com/otomatty/m3-baseui"
-        class="rounded-full border border-outline px-6 py-3 text-label-large text-primary transition-colors hover:bg-primary/8"
+        rel="noopener noreferrer"
+        target="_blank"
       >
         GitHub
       </a>
-    </div>
+    </p>
   </header>
 
-  <!-- Live demo (React island) -->
-  <section class="mx-auto max-w-5xl px-6 py-12" aria-labelledby="demo-heading">
-    <h2 id="demo-heading" class="mb-6 text-headline-small text-on-surface">ライブデモ</h2>
-    <p class="mb-6 text-body-medium text-on-surface-variant">
-      実際に動くコンポーネントです。シード色やモードを切り替えると、動的配色がリアルタイムに反映されます。
+  <!-- Compact demo (React island) -->
+  <section class="mx-auto max-w-5xl px-6 py-8" aria-labelledby="demo-heading">
+    <h2 id="demo-heading" class="sr-only">ライブデモ</h2>
+    <p class="mb-4 text-center text-body-medium text-on-surface-variant">
+      右下のパレット FAB からテーマカラーを切り替えられます。
     </p>
-    <div class="rounded-3xl border border-outline-variant bg-surface-container-low p-6 sm:p-10">
+    <div class="rounded-2xl border border-outline-variant bg-surface-container-low p-4 sm:p-6">
       <LiveDemo client:visible />
     </div>
   </section>
 
-  <!-- Features -->
-  <section class="mx-auto max-w-5xl px-6 py-12" aria-labelledby="features-heading">
-    <h2 id="features-heading" class="mb-8 text-headline-small text-on-surface">特徴</h2>
-    <div class="grid gap-4 sm:grid-cols-2">
+  <!-- Next steps -->
+  <section class="mx-auto max-w-5xl px-6 py-12" aria-labelledby="next-heading">
+    <h2 id="next-heading" class="mb-6 text-headline-small text-on-surface">次のステップ</h2>
+    <ul class="flex flex-col divide-y divide-outline-variant">
       {
-        features.map((f) => (
-          <article class="flex flex-col gap-3 rounded-2xl bg-surface-container p-6">
-            <span
-              class="material-symbols-outlined text-primary"
-              style="font-size:32px"
-              aria-hidden="true"
+        nextSteps.map((step) => (
+          <li>
+            <a
+              class="group flex flex-col gap-1 py-5 transition-colors hover:text-primary sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+              href={step.href}
             >
-              {f.icon}
-            </span>
-            <h3 class="text-title-large text-on-surface">{f.title}</h3>
-            <p class="text-body-medium text-on-surface-variant">{f.body}</p>
-          </article>
+              <span class="text-title-medium text-on-surface group-hover:text-primary">
+                {step.title}
+              </span>
+              <span class="text-body-medium text-on-surface-variant sm:text-right">
+                {step.body}
+              </span>
+            </a>
+          </li>
         ))
       }
-    </div>
+    </ul>
   </section>
 
-  <!-- Install + usage -->
+  <!-- Quick install -->
   <section id="install" class="mx-auto max-w-5xl px-6 py-12" aria-labelledby="install-heading">
-    <h2 id="install-heading" class="mb-4 text-headline-small text-on-surface">導入</h2>
-    <p class="mb-8 text-body-medium text-on-surface-variant">
-      詳しい手順は <a class="text-primary underline" href="/docs/getting-started">導入ガイド</a> を参照してください。
+    <h2 id="install-heading" class="mb-4 text-headline-small text-on-surface">
+      クイックインストール
+    </h2>
+    <pre
+      class="overflow-x-auto rounded-2xl bg-surface-container-highest p-5 text-body-medium text-on-surface"><code>{installCode}</code></pre>
+    <p class="mt-4 text-body-medium text-on-surface-variant">
+      詳しくは
+      <a class="text-primary underline" href="/docs/getting-started">導入ガイド</a>
+      を参照してください。
     </p>
-    <div class="grid gap-6 lg:grid-cols-2">
-      <div class="flex flex-col gap-3">
-        <h3 class="text-title-medium text-on-surface-variant">インストール</h3>
-        <pre
-          class="overflow-x-auto rounded-2xl bg-surface-container-highest p-5 text-body-medium text-on-surface"><code>{installCode}</code></pre>
-      </div>
-      <div class="flex flex-col gap-3">
-        <h3 class="text-title-medium text-on-surface-variant">使い方</h3>
-        <pre
-          class="overflow-x-auto rounded-2xl bg-surface-container-highest p-5 text-body-medium text-on-surface"><code>{usageCode}</code></pre>
-      </div>
-    </div>
   </section>
 </SiteLayout>
