@@ -42,7 +42,8 @@ for (const scheme of ['light', 'dark'] as const) {
 // ---- issue #77: per-variant component visual regression ----
 // Element-scoped screenshots isolate each M3 layout so a regression points at the
 // exact variant. Snapshots run in light mode (deterministic default) with the
-// morphing loading indicator frozen by the config's `animations: 'disabled'`.
+// morphing loading indicator frozen via `prefers-reduced-motion` (rAF morph is
+// not stopped by Playwright's `animations: 'disabled'`).
 test.describe('component visual regression (issue #77)', () => {
   test.beforeEach(async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
@@ -69,6 +70,10 @@ test.describe('component visual regression (issue #77)', () => {
   ] as const;
   for (const [label, name] of INDICATORS) {
     test(name, async ({ page }) => {
+      // Morph is rAF (not CSS), so Playwright `animations: 'disabled'` cannot
+      // freeze it — honor prefers-reduced-motion so the factory skips the loop.
+      await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+      await prepare(page);
       await expect(page.getByRole('progressbar', { name: label, exact: true })).toHaveScreenshot(
         `${name}.png`,
       );
