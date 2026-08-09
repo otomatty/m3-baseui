@@ -3,6 +3,7 @@ import { FabMenu } from '@m3-baseui/react-tailwind';
 import { Icon } from '@m3-baseui/icons';
 import {
   applyTheme,
+  DEFAULT_SEED,
   readStored,
   SEEDS,
   THEME_CHANGE_EVENT,
@@ -21,13 +22,15 @@ function SeedSwatch({ value }: { value: string }) {
 }
 
 export function ThemeFab() {
+  // Match DocsNav: SSR/client first paint uses defaults, then hydrate from storage.
   const [mode, setMode] = useState<ThemeMode>('light');
-  const [seed, setSeed] = useState(readStored().seed);
+  const [seed, setSeed] = useState(DEFAULT_SEED);
 
   useEffect(() => {
     const stored = readStored();
     setMode(stored.mode);
     setSeed(stored.seed);
+    applyTheme(stored.mode, stored.seed);
 
     const onThemeChange = (event: Event) => {
       const detail = (event as CustomEvent<ThemeChangeDetail>).detail;
