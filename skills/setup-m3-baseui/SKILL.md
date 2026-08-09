@@ -21,7 +21,7 @@ Copy and track progress:
 - [ ] Step 2: Choose styling engine (one only)
 - [ ] Step 3: Install packages
 - [ ] Step 4: Wire CSS / build config
-- [ ] Step 5: Wrap app with ThemeProvider
+- [ ] Step 5: Theme on `:root` (ThemeProvider or syncDocumentTheme)
 - [ ] Step 6: (Optional) Add icons
 - [ ] Step 7: Verify
 ```
@@ -162,12 +162,14 @@ See [frameworks.md](frameworks.md) for Next.js App Router, Astro islands, and SS
 
 ---
 
-## Step 5: Wrap app with ThemeProvider
+## Step 5: Theme on `:root` (optional sugar)
 
-All interactive components must render inside `ThemeProvider`:
+Components read **CSS variables only** — they do not require React context for color.
+Baseline colors come from `tokens.css`. To set a seed, host palette, or toggle light/dark,
+write vars onto `document.documentElement` via `ThemeProvider` or `syncDocumentTheme`.
 
 ```tsx
-import { Button, ThemeProvider } from '@m3-baseui/react-tailwind';
+import { Button, ThemeProvider, syncDocumentTheme } from '@m3-baseui/react-tailwind';
 // VE: '@m3-baseui/react-vanilla-extract'
 
 export default function App() {
@@ -177,16 +179,24 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
+// Imperative / host theme:
+// syncDocumentTheme({ mode: 'dark', colors: hostScheme });
+// syncDocumentTheme({ mode: 'light', seed: '#6750A4' });
 ```
 
 | Prop | Default | Notes |
 | --- | --- | --- |
-| `seed` | — | Hex color; enables dynamic color via material-color-utilities |
-| `scheme` | `tonalSpot` | M3 scheme variant |
+| `colors` | — | Explicit `Scheme` (host theme). Wins over `seed` |
+| `seed` | — | Hex color; Dynamic Color via material-color-utilities |
+| `scheme` | `tonalSpot` | M3 scheme variant (with `seed`) |
 | `mode` | `system` | `light` \| `dark` \| `system` |
-| `contrast` | `standard` | Contrast level |
+| `resolveMode` | prefers-color-scheme | Override system resolution (e.g. VS Code body class) |
+| `target` | `document` | `document` writes `<html>`; `scope` is wrapper-only |
+| `contrast` | `standard` | Contrast level for seed generation |
 
-For Next.js App Router, mark the provider wrapper `'use client'` or place it in a dedicated client component.
+`ThemeProvider` is optional unless you use `useTheme()`. For Next.js App Router, mark the
+provider wrapper `'use client'` when you do use it.
 
 Compound components use namespace API: `Menu.Root`, `Dialog.Trigger`, `Select.Item`, etc.
 
@@ -220,14 +230,14 @@ Update CSS `@import` paths and `@source` paths accordingly. Remove old `@otomatt
 1. Run `bash scripts/verify-setup.sh` (or the skill's bundled copy).
 2. Start dev server; confirm a `Button variant="filled"` renders with M3 colors and ripple.
 3. Run the project's typecheck (`tsc --noEmit`, `npm run typecheck`, etc.).
-4. Toggle light/dark via `ThemeProvider` / `useTheme()` if dynamic color is used.
+4. Toggle light/dark via `syncDocumentTheme({ mode })`, `ThemeProvider` props, or `useTheme().setMode`.
 
 ### Common failures
 
 | Symptom | Fix |
 | --- | --- |
 | Components render but no M3 styling | Add `@source` for `react-tailwind/dist`; check CSS import order |
-| `useTheme must be used within ThemeProvider` | Wrap route/layout with `ThemeProvider` |
+| `useTheme must be used within ThemeProvider` | Only needed when calling `useTheme()` — wrap that subtree |
 | Tailwind layout utilities missing | Ensure `@import 'tailwindcss'` is present (via preset) |
 | Icons show blank squares | Add Material Symbols font link |
 | VE build error | Add `vanillaExtractPlugin()`; import `tokens.css` once |

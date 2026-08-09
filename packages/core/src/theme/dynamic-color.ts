@@ -129,6 +129,60 @@ export function applyScheme(element: HTMLElement, scheme: Scheme): void {
   }
 }
 
+/** Remove inline `--md-sys-color-*` props so stylesheet tokens (tokens.css) win again. */
+export function clearScheme(element: HTMLElement): void {
+  for (const role of ROLE_KEYS) {
+    element.style.removeProperty(colorVar(role));
+  }
+}
+
+export interface SyncDocumentThemeInput {
+  /** Resolved light/dark — sets `data-theme` on the root. */
+  mode: 'light' | 'dark';
+  /**
+   * Explicit scheme (host theme, precomputed palette). Wins over `seed`.
+   * Pass the scheme for the active mode; switching colors = call again with a new scheme.
+   */
+  colors?: Scheme;
+  /** Generate a scheme from a Material seed hex. Ignored when `colors` is set. */
+  seed?: string;
+  variant?: SchemeVariant;
+  contrast?: ContrastLevel;
+  /** Defaults to `document.documentElement`. */
+  root?: HTMLElement;
+}
+
+/**
+ * Single write path for app themes: put colors on `:root` (portal-safe) and set
+ * `data-theme`. Returns a disposer that clears inline color vars.
+ *
+ * Priority: `colors` → `seed` → baseline `tokens.css` (inline cleared).
+ */
+export function syncDocumentTheme(input: SyncDocumentThemeInput): () => void {
+  const root = input.root ?? document.documentElement;
+  root.setAttribute('data-theme', input.mode);
+
+  if (input.colors) {
+    applyScheme(root, input.colors);
+    return () => clearScheme(root);
+  }
+
+  if (input.seed) {
+    const pair = generateScheme(
+      input.seed,
+      input.variant ?? 'tonalSpot',
+      input.contrast ?? 'standard',
+    );
+    applyScheme(root, input.mode === 'dark' ? pair.dark : pair.light);
+    return () => clearScheme(root);
+  }
+
+  clearScheme(root);
+  return () => {
+    /* mode-only: leave data-theme; caller may remove it */
+  };
+}
+
 /** Serialize a scheme to CSS declarations (useful for SSR style injection). */
 export function schemeToCssText(scheme: Scheme): string {
   let css = '';

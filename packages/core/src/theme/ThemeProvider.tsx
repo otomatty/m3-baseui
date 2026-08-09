@@ -1,23 +1,25 @@
 'use client';
 /**
- * ThemeProvider — injects an M3 color scheme into a DOM scope and manages
- * light/dark mode. Both styling engines read the same `--md-sys-color-*` vars,
- * so dynamic color needs no engine-specific code.
+ * ThemeProvider — thin React sugar over `syncDocumentTheme`.
  *
- * Modes:
- *   'light' | 'dark'  force a mode
- *   'system'          follow prefers-color-scheme (default)
+ * Theme = `--md-sys-color-*` on a root element (default: `document.documentElement`).
+ * Components never read React context for color; they only read CSS variables.
+ * Dynamic switching = change `colors` / `seed` / `mode` props (or call
+ * `syncDocumentTheme` / `applyScheme` imperatively).
  *
- * If `seed` is provided, a scheme is generated at runtime via material-color-
- * utilities and applied to the wrapper element. Without a seed, the baseline
- * variables from `@m3-baseui/tokens/tokens.css` remain in effect.
+ * `target="document"` (default) writes to `<html>` so portaled surfaces
+ * (Dialog, Menu, …) inherit the same vars. `target="scope"` keeps the old
+ * wrapper-scoped behavior for rare nested themes.
  */
 import * as React from 'react';
 
 import {
   applyScheme,
+  clearScheme,
   generateScheme,
+  syncDocumentTheme,
   type ContrastLevel,
+  type Scheme,
   type SchemeVariant,
 } from './dynamic-color';
 
@@ -37,14 +39,33 @@ export function useTheme(): ThemeContextValue {
   return ctx;
 }
 
+export type ThemeTarget = 'document' | 'scope';
+
 export interface ThemeProviderProps {
   children: React.ReactNode;
-  /** Seed color (hex). When set, a scheme is generated and applied. */
+  /**
+   * Explicit color scheme for the active mode (host theme / custom palette).
+   * Takes precedence over `seed`. Switch colors by passing a new object.
+   */
+  colors?: Scheme;
+  /** Seed hex — generates light/dark via Material Dynamic Color when `colors` is omitted. */
   seed?: string;
+  /** Dynamic Color variant used with `seed`. @default 'tonalSpot' */
   scheme?: SchemeVariant;
   contrast?: ContrastLevel;
   /** Initial / controlled mode. @default 'system' */
   mode?: ThemeMode;
+  /**
+   * How to resolve `mode="system"`. Defaults to `prefers-color-scheme`.
+   * Pass a host-aware function for VS Code webviews etc.
+   */
+  resolveMode?: () => 'light' | 'dark';
+  /**
+   * Where to write CSS variables.
+   * - `document` (default): `document.documentElement` — portal-safe
+   * - `scope`: the provider wrapper only — nested / demo islands
+   */
+  target?: ThemeTarget;
   /** Render as a different element. @default 'div' */
   as?: 'div' | 'span';
   className?: string;
@@ -56,19 +77,22 @@ function usePrefersDark(): boolean {
     if (typeof window === 'undefined' || !window.matchMedia) return;
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     setDark(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setDark(e.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
+    const handler = (e: MediaQueryListEvent) => setDark(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
   }, []);
   return dark;
 }
 
 export function ThemeProvider({
   children,
+  colors,
   seed,
   scheme = 'tonalSpot',
   contrast = 'standard',
   mode: modeProp = 'system',
+  resolveMode: resolveModeProp,
+  target = 'document',
   as: As = 'div',
   className,
 }: ThemeProviderProps): React.JSX.Element {
@@ -76,23 +100,45 @@ export function ThemeProvider({
   React.useEffect(() => setMode(modeProp), [modeProp]);
 
   const prefersDark = usePrefersDark();
-  const resolvedMode: 'light' | 'dark' =
-    mode === 'system' ? (prefersDark ? 'dark' : 'light') : mode;
+  const resolvedMode: 'light' | 'dark' = React.useMemo(() => {
+    if (mode !== 'system') return mode;
+    if (resolveModeProp) return resolveModeProp();
+    return prefersDark ? 'dark' : 'light';
+  }, [mode, resolveModeProp, prefersDark]);
 
-  const ref = React.useRef<HTMLDivElement | null>(null);
+  const scopeRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Generate the scheme once per seed/variant/contrast change.
-  const schemes = React.useMemo(
-    () => (seed ? generateScheme(seed, scheme, contrast) : null),
-    [seed, scheme, contrast],
-  );
+  // Document target: single write path shared with imperative API.
+  React.useLayoutEffect(() => {
+    if (target !== 'document') return;
+    if (typeof document === 'undefined') return;
+    return syncDocumentTheme({
+      mode: resolvedMode,
+      colors,
+      seed,
+      variant: scheme,
+      contrast,
+    });
+  }, [target, resolvedMode, colors, seed, scheme, contrast]);
 
-  // Apply the active scheme's variables whenever inputs change.
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el || !schemes) return;
-    applyScheme(el, resolvedMode === 'dark' ? schemes.dark : schemes.light);
-  }, [schemes, resolvedMode]);
+  // Scope target: legacy wrapper-local vars (portals will not see them).
+  React.useLayoutEffect(() => {
+    if (target !== 'scope') return;
+    const el = scopeRef.current;
+    if (!el) return;
+    el.setAttribute('data-theme', resolvedMode);
+    if (colors) {
+      applyScheme(el, colors);
+      return () => clearScheme(el);
+    }
+    if (seed) {
+      const pair = generateScheme(seed, scheme, contrast);
+      applyScheme(el, resolvedMode === 'dark' ? pair.dark : pair.light);
+      return () => clearScheme(el);
+    }
+    clearScheme(el);
+    return undefined;
+  }, [target, resolvedMode, colors, seed, scheme, contrast]);
 
   const value = React.useMemo<ThemeContextValue>(
     () => ({ mode, resolvedMode, setMode }),
@@ -101,7 +147,11 @@ export function ThemeProvider({
 
   return (
     <ThemeContext.Provider value={value}>
-      <As ref={ref as never} className={className} data-theme={resolvedMode}>
+      <As
+        ref={scopeRef as never}
+        className={className}
+        {...(target === 'scope' ? { 'data-theme': resolvedMode } : {})}
+      >
         {children}
       </As>
     </ThemeContext.Provider>

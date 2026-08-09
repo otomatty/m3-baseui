@@ -1,4 +1,4 @@
-import { applyScheme, generateScheme } from '@m3-baseui/react-tailwind';
+import { syncDocumentTheme } from '@m3-baseui/react-tailwind';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -53,12 +53,10 @@ export function readStored(): StoredTheme {
   return { mode: prefersDark ? 'dark' : 'light', seed: DEFAULT_SEED };
 }
 
-/** Apply the generated scheme + mode onto `<html>` and cache the color vars. */
+/** Apply theme onto `<html>` via the library sync API and cache for FOUC-less loads. */
 export function applyTheme(mode: ThemeMode, seed: string): void {
   const root = document.documentElement;
-  const schemes = generateScheme(seed, 'tonalSpot', 'standard');
-  applyScheme(root, mode === 'dark' ? schemes.dark : schemes.light);
-  root.setAttribute('data-theme', mode);
+  syncDocumentTheme({ mode, seed, variant: 'tonalSpot', contrast: 'standard' });
 
   let css = '';
   for (let i = 0; i < root.style.length; i += 1) {

@@ -7,11 +7,14 @@ This repository implements the architecture in [`m3-baseui-design.md`](./m3-base
 ## Layers
 
 ```
-Layer 4  Theme / Dynamic Color   ThemeProvider, seed → scheme, light/dark/contrast   (@m3-baseui/core)
 Layer 3  Styling (engine)        VE recipes / Tailwind variants                      (@m3-baseui/react-*)
 Layer 2  Token (engine-neutral)  --md-ref-* / --md-sys-* CSS variables               (@m3-baseui/tokens)
 Layer 1  Behavior (Base UI)      a11y / focus / keyboard / data-* state              (@base-ui-components/react)
 ```
+
+**Theme is not a separate consumer layer.** Color is Layer 2: write `--md-sys-color-*` onto
+`document.documentElement` (via `syncDocumentTheme`, `ThemeProvider`, or your own code).
+`@m3-baseui/core` also ships Dynamic Color helpers (`generateScheme`) as optional sugar.
 
 Layer 2 (CSS variables) is the engine-neutral boundary. Everything above it is engine-specific; everything below is fully shared.
 
@@ -20,7 +23,7 @@ Layer 2 (CSS variables) is the engine-neutral boundary. Everything above it is e
 | Package | Role |
 | --- | --- |
 | `@m3-baseui/tokens` | Single TS token source → generates `tokens.css`, the VE contract, and the Tailwind v4 `@theme` preset |
-| `@m3-baseui/core` | `ThemeProvider`, dynamic color, `Ripple`, state-layer model, and the headless component factories |
+| `@m3-baseui/core` | Headless factories, `Ripple`, `syncDocumentTheme` / `ThemeProvider`, Dynamic Color |
 | `@m3-baseui/react-vanilla-extract` | Components implemented with vanilla-extract recipes |
 | `@m3-baseui/react-tailwind` | Components implemented with tailwind-variants + the Tailwind v4 preset |
 | `@m3-baseui/icons` | Material Symbols wrapper (optional) |
@@ -90,9 +93,10 @@ In your app's CSS, in this order:
 ```
 
 ```tsx
-import { Button, ThemeProvider } from '@m3-baseui/react-tailwind';
+import { Button, ThemeProvider, syncDocumentTheme } from '@m3-baseui/react-tailwind';
 
 export default function App() {
+  // ThemeProvider writes seed colors onto <html> (portal-safe). Optional if tokens.css defaults are enough.
   return (
     <ThemeProvider seed="#6750A4" scheme="tonalSpot" mode="system" contrast="standard">
       <Button variant="filled">送信</Button>
@@ -100,6 +104,10 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
+// Dynamic switch without Provider:
+// syncDocumentTheme({ mode: 'dark', seed: '#6750A4' });
+// syncDocumentTheme({ mode: 'light', colors: hostScheme });
 ```
 
 ## Usage (vanilla-extract)

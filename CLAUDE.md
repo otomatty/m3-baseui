@@ -6,13 +6,13 @@ vanilla-extract と Tailwind CSS v4 の両エンジンに対応する。**作業
 
 ## プロジェクト構成
 
-4 レイヤー: **Behavior（Base UI）→ Token（CSS変数）→ Styling（エンジン別）→ Theme**。
-Layer 2（`--md-sys-*` CSS 変数）がエンジン非依存の境界線。
+4 レイヤーではなく **Behavior → Token → Styling**。色テーマは Token（`:root` の CSS 変数）に
+書き込むだけ（`syncDocumentTheme` / `ThemeProvider` は糖衣）。Layer 2（`--md-sys-*`）が境界線。
 
 | パッケージ | 役割 |
 | --- | --- |
 | `@m3-baseui/tokens` | トークン単一ソース → `tokens.css` / VE契約 / Tailwind `@theme` を生成 |
-| `@m3-baseui/core` | `ThemeProvider`・動的配色・`Ripple`・`slot.tsx`・`create-*` ファクトリ（エンジン非依存ロジック） |
+| `@m3-baseui/core` | `create-*` ファクトリ・`Ripple`・`syncDocumentTheme` / `ThemeProvider`・Dynamic Color |
 | `@m3-baseui/react-tailwind` | tailwind-variants でクラス解決 + Tailwind v4 プリセット |
 | `@m3-baseui/react-vanilla-extract` | vanilla-extract recipe でクラス解決 |
 | `@m3-baseui/icons` | Material Symbols ラッパー（任意） |
@@ -50,8 +50,8 @@ bun run --filter @m3/example-playground build
 > Tailwind / vanilla-extract の両プラグインを `viteFinal` で有効化し、両エンジンを同時に
 > import する。ストーリーはコンポーネントを直接 import せず `src/engine.tsx` の `useM3()`
 > から取得し、ツールバーの **Engine** グローバルで実エンジンを切替える（drop-in 互換の生確認）。
-> シード/スキーム/コントラスト/モードは preview のグローバル args として **Controls** に露出し、
-> デコレータが `ThemeProvider` へ配線する。a11y（axe）は `@storybook/addon-a11y` で有効。
+> シード/スキーム/コントラスト/モードは preview の Controls / ツールバーから
+> `ThemeProvider`（`:root` 書き込み）へ配線する。a11y（axe）は `@storybook/addon-a11y` で有効。
 
 ## 中核ルール（不変条件）
 

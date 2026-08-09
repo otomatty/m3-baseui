@@ -5,13 +5,13 @@ import CodeBlock from '../../components/docs/CodeBlock.astro';
 
 <DocsLayout
   title="テーマ・動的配色"
-  description="ThemeProvider、seed / scheme / contrast / mode による M3 動的配色の設定方法。"
+  description="テーマは :root の CSS 変数。syncDocumentTheme / ThemeProvider / colors で動的に切り替える。"
 >
   <h1>テーマ・動的配色</h1>
   <p class="doc-lead">
-    m3-baseui は Material Color Utilities（HCT）でシード色から配色スキームを生成します。
-    <code>ThemeProvider</code> が <code>--md-sys-color-*</code> CSS 変数を書き込み、
-    全コンポーネントがトークン経由で色を参照します。
+    テーマの真実は <code>document.documentElement</code> 上の
+    <code>--md-sys-color-*</code> です。コンポーネントは React Context ではなく CSS 変数だけを読みます。
+    色やライト/ダークの切替は、その変数を書き換えるだけです。
   </p>
 
   <p class="doc-m3-ref">
@@ -22,18 +22,33 @@ import CodeBlock from '../../components/docs/CodeBlock.astro';
     </a>
   </p>
 
-  <div class="doc-callout">
+  <section class="doc-section">
+    <h2>一本の書き込み API</h2>
+    <CodeBlock
+      code={`import { syncDocumentTheme, generateScheme } from '@m3-baseui/react-tailwind';
+
+// シードから生成して :root へ
+syncDocumentTheme({ mode: 'dark', seed: '#6750A4' });
+
+// ホスト色や任意パレットを直接渡す（VS Code webview など）
+const colors = /* --vscode-* 等から組み立てた Scheme */;
+syncDocumentTheme({ mode: 'light', colors });
+
+// ライト/ダークだけ切替（インライン色を消して tokens.css に戻す）
+syncDocumentTheme({ mode: 'dark' });`}
+    />
     <p>
-      このドキュメントサイト左側の
-      <a href="https://m3.material.io/components/navigation-rail/overview" target="_blank" rel="noopener noreferrer">Navigation rail</a>
-      下部のテーマ設定（モバイルではメニューから開くドロワー下部）から、
-      シード色（カラー）とライト / ダークモードを切り替えられます。
-      選択内容は <code>localStorage</code> に保存され、サイト全体へリアルタイムに反映されます。
+      優先順位は <code>colors</code> → <code>seed</code> → ベースライン（<code>tokens.css</code>）です。
+      Dialog / Menu などのポータルも <code>:root</code> を継承するため、別途 html 同期は不要です。
     </p>
-  </div>
+  </section>
 
   <section class="doc-section">
-    <h2>ThemeProvider</h2>
+    <h2>ThemeProvider（React 糖衣）</h2>
+    <p>
+      必須ではありません。mode トグル（<code>useTheme</code>）や seed 連動が欲しいときの薄いラッパです。
+      既定で <code>document.documentElement</code> に書き込みます。
+    </p>
     <CodeBlock
       code={`<ThemeProvider
   seed="#6750A4"
@@ -41,6 +56,11 @@ import CodeBlock from '../../components/docs/CodeBlock.astro';
   mode="system"
   contrast="standard"
 >
+  {children}
+</ThemeProvider>
+
+// ホストテーマ: colors を渡す（seed より優先）
+<ThemeProvider colors={hostScheme} mode="dark">
   {children}
 </ThemeProvider>`}
     />
@@ -55,51 +75,62 @@ import CodeBlock from '../../components/docs/CodeBlock.astro';
       </thead>
       <tbody>
         <tr>
+          <td><code>colors</code></td>
+          <td><code>Scheme</code></td>
+          <td>—</td>
+          <td>明示スキーム。ホスト色・動的切替向け。seed より優先</td>
+        </tr>
+        <tr>
           <td><code>seed</code></td>
           <td><code>string</code></td>
           <td>—</td>
-          <td>16 進シード色。設定すると動的配色が有効になります</td>
+          <td>16 進シード色。Dynamic Color で light/dark を生成</td>
         </tr>
         <tr>
           <td><code>scheme</code></td>
           <td><code>SchemeVariant</code></td>
           <td><code>tonalSpot</code></td>
-          <td>tonalSpot / vibrant / expressive / neutral / content / fidelity</td>
+          <td>seed 用バリアント</td>
         </tr>
         <tr>
           <td><code>mode</code></td>
           <td><code>'light' | 'dark' | 'system'</code></td>
           <td><code>system</code></td>
-          <td>ライト / ダーク / OS 設定に追従</td>
+          <td>ライト / ダーク / OS（または resolveMode）</td>
+        </tr>
+        <tr>
+          <td><code>resolveMode</code></td>
+          <td><code>() =&gt; 'light' | 'dark'</code></td>
+          <td>prefers-color-scheme</td>
+          <td>mode=system 時の解決。VS Code body class 等を渡せる</td>
+        </tr>
+        <tr>
+          <td><code>target</code></td>
+          <td><code>'document' | 'scope'</code></td>
+          <td><code>document</code></td>
+          <td>書き込み先。通常は document のまま</td>
         </tr>
         <tr>
           <td><code>contrast</code></td>
           <td><code>'standard' | 'medium' | 'high'</code></td>
           <td><code>standard</code></td>
-          <td>コントラストレベル</td>
+          <td>seed 生成時のコントラスト</td>
         </tr>
       </tbody>
     </table>
   </section>
 
   <section class="doc-section">
-    <h2>useTheme でモード切替</h2>
+    <h2>動的切替（React）</h2>
     <CodeBlock
-      code={`import { IconButton, useTheme } from '@m3-baseui/react-tailwind';
+      code={`const [mode, setMode] = useState<'light' | 'dark'>('light');
+const [seed, setSeed] = useState('#6750A4');
 
-function ModeToggle() {
-  const { resolvedMode, setMode } = useTheme();
-  const dark = resolvedMode === 'dark';
-  return (
-    <IconButton
-      variant="tonal"
-      aria-label={dark ? 'ライトモード' : 'ダークモード'}
-      onClick={() => setMode(dark ? 'light' : 'dark')}
-    >
-      …
-    </IconButton>
-  );
-}`}
+useLayoutEffect(() => {
+  return syncDocumentTheme({ mode, seed });
+}, [mode, seed]);
+
+// または ThemeProvider の props / useTheme().setMode で同様に切替`}
     />
   </section>
 
@@ -114,17 +145,5 @@ function ModeToggle() {
       Tailwind 利用時は <code>@m3-baseui/tokens/theme.css</code> が
       <code>@theme</code> プリセットへマップし、<code>bg-primary</code> 等のユーティリティが使えます。
     </p>
-  </section>
-
-  <section class="doc-section">
-    <h2>ポータルと動的配色</h2>
-    <div class="doc-callout">
-      <p>
-        Dialog / Menu / Select などポータル描画するコンポーポントは、
-        ThemeProvider の外側 DOM にマウントされる場合があります。
-        アプリ全体で動的配色を使う場合は、生成された CSS 変数が
-        <code>document.documentElement</code> まで届くよう layout 設計に注意してください。
-      </p>
-    </div>
   </section>
 </DocsLayout>
