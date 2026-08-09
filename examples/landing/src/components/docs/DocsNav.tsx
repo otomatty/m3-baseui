@@ -7,11 +7,18 @@ import {
   NavigationDrawer,
   NavigationRail,
   TopAppBar,
-  applyScheme,
-  generateScheme,
 } from '@m3-baseui/react-tailwind';
 import { Icon } from '@m3-baseui/icons';
 import { COMPONENT_GROUPS } from '../../config/docs-nav';
+import {
+  applyTheme,
+  DEFAULT_SEED,
+  readStored,
+  SEEDS,
+  THEME_CHANGE_EVENT,
+  type ThemeChangeDetail,
+  type ThemeMode,
+} from '../../lib/docs-theme';
 
 /**
  * DocsNav — the M3-official-style navigation for the docs.
@@ -25,26 +32,6 @@ import { COMPONENT_GROUPS } from '../../config/docs-nav';
  * the whole static site and portaled surfaces react.
  */
 const cn = (...c: Array<string | false | undefined>): string => c.filter(Boolean).join(' ');
-
-type Mode = 'light' | 'dark';
-
-interface SeedOption {
-  name: string;
-  value: string;
-}
-
-const STORAGE_KEY = 'm3-docs-theme';
-const DEFAULT_SEED = '#6750A4';
-
-const SEEDS: SeedOption[] = [
-  { name: 'パープル', value: '#6750A4' },
-  { name: 'ブルー', value: '#00639B' },
-  { name: 'グリーン', value: '#386A20' },
-  { name: 'レッド', value: '#B3261E' },
-  { name: 'オレンジ', value: '#8B5000' },
-  { name: 'ピンク', value: '#7D5260' },
-  { name: 'ティール', value: '#006A6A' },
-];
 
 interface RailItem {
   value: string;
@@ -166,53 +153,6 @@ function CollapsibleGroups({ currentPath }: GroupsProps) {
   );
 }
 
-interface StoredTheme {
-  mode: Mode;
-  seed: string;
-  css?: string;
-}
-
-function readStored(): StoredTheme {
-  if (typeof window === 'undefined') return { mode: 'light', seed: DEFAULT_SEED };
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Partial<StoredTheme>;
-      return {
-        mode: parsed.mode === 'dark' ? 'dark' : 'light',
-        seed: typeof parsed.seed === 'string' ? parsed.seed : DEFAULT_SEED,
-      };
-    }
-  } catch {
-    // ignore malformed storage
-  }
-  const prefersDark =
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches;
-  return { mode: prefersDark ? 'dark' : 'light', seed: DEFAULT_SEED };
-}
-
-/** Apply the generated scheme + mode onto <html> and cache the color vars. */
-function applyTheme(mode: Mode, seed: string): void {
-  const root = document.documentElement;
-  const schemes = generateScheme(seed, 'tonalSpot', 'standard');
-  applyScheme(root, mode === 'dark' ? schemes.dark : schemes.light);
-  root.setAttribute('data-theme', mode);
-
-  let css = '';
-  for (let i = 0; i < root.style.length; i += 1) {
-    const prop = root.style[i];
-    if (prop.startsWith('--md-sys-color-')) {
-      css += `${prop}: ${root.style.getPropertyValue(prop)};`;
-    }
-  }
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ mode, seed, css }));
-  } catch {
-    // ignore storage write errors
-  }
-}
-
 /** GitHub のロゴマーク（Material Symbols には無いため SVG で実装）。 */
 function GithubMark() {
   return (
@@ -223,9 +163,9 @@ function GithubMark() {
 }
 
 interface ThemeMenuBodyProps {
-  mode: Mode;
+  mode: ThemeMode;
   seed: string;
-  onMode: (m: Mode) => void;
+  onMode: (m: ThemeMode) => void;
   onSeed: (s: string) => void;
 }
 
@@ -301,7 +241,7 @@ interface DocsNavProps {
 
 export function DocsNav({ currentPath = '/docs' }: DocsNavProps) {
   const active = activeValue(currentPath);
-  const [mode, setMode] = useState<Mode>('light');
+  const [mode, setMode] = useState<ThemeMode>('light');
   const [seed, setSeed] = useState<string>(DEFAULT_SEED);
   const [flyoutOpen, setFlyoutOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -313,12 +253,21 @@ export function DocsNav({ currentPath = '/docs' }: DocsNavProps) {
     setMode(stored.mode);
     setSeed(stored.seed);
     applyTheme(stored.mode, stored.seed);
+
+    const onThemeChange = (event: Event) => {
+      const detail = (event as CustomEvent<ThemeChangeDetail>).detail;
+      setMode(detail.mode);
+      setSeed(detail.seed);
+    };
+
+    window.addEventListener(THEME_CHANGE_EVENT, onThemeChange);
     return () => {
       if (closeTimer.current) window.clearTimeout(closeTimer.current);
+      window.removeEventListener(THEME_CHANGE_EVENT, onThemeChange);
     };
   }, []);
 
-  const changeMode = (next: Mode) => {
+  const changeMode = (next: ThemeMode) => {
     setMode(next);
     applyTheme(next, seed);
   };
