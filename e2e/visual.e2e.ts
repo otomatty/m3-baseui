@@ -3,10 +3,9 @@
  * (issue #4). Baselines are tagged per engine + platform by Playwright, so the
  * `tailwind` and `vanilla-extract` projects each keep their own set.
  *
- * Determinism: the only networked asset is the Material Symbols webfont, whose
- * load state would otherwise vary between machines. We block it so icons render
- * as their (consistent) ligature text everywhere; body text falls back to the
- * locally installed sans-serif, which matches the CI Linux runner. Refresh
+ * Determinism: icon glyphs are inline SVG (no webfont). We still abort Google
+ * Fonts in case a leftover stylesheet is added, so body text stays on the
+ * locally installed sans-serif and matches the CI Linux runner. Refresh
  * baselines with `bun run test:e2e:update`.
  *
  * `ThemeProvider mode="system"` follows `prefers-color-scheme`, so we drive the

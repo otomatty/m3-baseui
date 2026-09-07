@@ -342,8 +342,8 @@ body {
   color: rgb(var(--md-sys-color-on-surface-variant));
 }
 
-.doc-m3-ref .material-symbols-outlined {
-  font-size: 18px;
+.doc-m3-ref svg {
+  flex: none;
   color: rgb(var(--md-sys-color-primary));
 }
 

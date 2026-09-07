@@ -2,12 +2,15 @@ import { defineConfig } from 'tsup';
 import { addUseClient } from '../../scripts/add-use-client';
 
 /**
- * Single-entry bundle. The Icon wrapper is a client component, so we re-assert
- * `'use client'` after the build (esbuild strips module-level directives while
- * bundling).
+ * Two entries: the default Icon wrapper (small core glyph set) and `all`
+ * (full catalog). Both are client components, so we re-assert `'use client'`
+ * after the build (esbuild strips module-level directives while bundling).
  */
 export default defineConfig({
-  entry: ['src/index.tsx'],
+  entry: {
+    index: 'src/index.tsx',
+    all: 'src/all.tsx',
+  },
   format: ['esm'],
   target: 'es2022',
   dts: true,
@@ -16,6 +19,6 @@ export default defineConfig({
   treeshake: true,
   splitting: false,
   async onSuccess() {
-    await addUseClient(['dist/index.js']);
+    await addUseClient(['dist/index.js', 'dist/all.js']);
   },
 });

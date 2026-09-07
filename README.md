@@ -26,7 +26,7 @@ Layer 2 (CSS variables) is the engine-neutral boundary. Everything above it is e
 | `@m3-baseui/core` | Headless factories, `Ripple`, `syncDocumentTheme` / `ThemeProvider`, Dynamic Color |
 | `@m3-baseui/react-vanilla-extract` | Components implemented with vanilla-extract recipes |
 | `@m3-baseui/react-tailwind` | Components implemented with tailwind-variants + the Tailwind v4 preset |
-| `@m3-baseui/icons` | Material Symbols wrapper (optional) |
+| `@m3-baseui/icons` | Material Symbols as inline SVG (optional) |
 | `@m3/example-playground` | Runnable Vite + Tailwind v4 demo |
 | `@m3/example-playground-ve` | Same demo rendered with the vanilla-extract build (validates the VE compile) |
 
@@ -62,7 +62,13 @@ npm i @m3-baseui/react-vanilla-extract @base-ui/react react react-dom
 #   …plus @vanilla-extract/css and @vanilla-extract/vite-plugin in your build
 ```
 
-`@m3-baseui/icons` is optional (Material Symbols wrapper). See **Usage** below for the CSS wiring.
+`@m3-baseui/icons` is optional (Material Symbols as inline SVG). No webfont is required. The default import is a small subset; use `@m3-baseui/icons/all` for every symbol.
+
+```tsx
+import { Icon } from '@m3-baseui/icons';
+
+<Icon name="settings" />
+```
 
 ## Requirements
 
@@ -158,3 +164,4 @@ Next per the design doc: composites (TextField / NavigationBar / FAB / Snackbar)
 ## License
 
 MIT. Bundles concepts from Base UI (MIT) and `@material/material-color-utilities` (Apache-2.0).
+`@m3-baseui/icons` includes Material Symbols path data (Apache-2.0, Google / @material-symbols/svg-400).

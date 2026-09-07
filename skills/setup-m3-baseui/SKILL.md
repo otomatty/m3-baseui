@@ -93,15 +93,16 @@ Install `@m3-baseui/tokens` directly — the app CSS imports `@m3-baseui/tokens/
 npm i @m3-baseui/icons
 ```
 
-Add Material Symbols font in HTML `<head>`:
+`<Icon name="settings" />` renders an inline SVG (Material Symbols, weight 400). No webfont `<link>` is required.
 
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-/>
+The default entry is a small subset (glyphs this repo uses). Import `@m3-baseui/icons/all` for the full catalog.
+
+```tsx
+import { Icon } from '@m3-baseui/icons';
+// import { Icon } from '@m3-baseui/icons/all';
+
+<Icon name="settings" />
+<Icon name="favorite" filled size={20} />
 ```
 
 ---
@@ -239,7 +240,7 @@ Update CSS `@import` paths and `@source` paths accordingly. Remove old `@otomatt
 | Components render but no M3 styling | Add `@source` for `react-tailwind/dist`; check CSS import order |
 | `useTheme must be used within ThemeProvider` | Only needed when calling `useTheme()` — wrap that subtree |
 | Tailwind layout utilities missing | Ensure `@import 'tailwindcss'` is present (via preset) |
-| Icons show blank squares | Add Material Symbols font link |
+| Icons missing | Use a valid Material Symbols `name`, or import `@m3-baseui/icons/all` for the full catalog |
 | VE build error | Add `vanillaExtractPlugin()`; import `tokens.css` once |
 
 ---

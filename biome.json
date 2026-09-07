@@ -8,6 +8,7 @@
       "!**/node_modules",
       "!**/dist",
       "!packages/tokens/src/generated",
+      "!packages/icons/src/generated",
       "!packages/tokens/styles",
       "!**/*.css",
       "!**/*.astro"

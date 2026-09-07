@@ -2,6 +2,7 @@
 import DocsLayout from '../../../layouts/DocsLayout.astro';
 import CodeBlock from '../../../components/docs/CodeBlock.astro';
 import PropsTable from '../../../components/docs/PropsTable.astro';
+import MdIcon from '../../../components/docs/MdIcon.astro';
 import { DocDemo } from '../../../components/demos/DocDemo';
 import { getAllComponentSlugs, getComponentDoc, getM3DocUrl } from '../../../data/components';
 
@@ -32,9 +33,7 @@ const m3DocUrl = getM3DocUrl(slug);
   {
     m3DocUrl && (
       <p class="doc-m3-ref">
-        <span class="material-symbols-outlined" aria-hidden="true">
-          menu_book
-        </span>
+        <MdIcon name="menu_book" size={18} />
         参考: Material Design 3 公式ガイドライン{' '}
         <a href={m3DocUrl} target="_blank" rel="noopener noreferrer">
           {m3DocUrl.replace('https://m3.material.io', 'm3.material.io')}

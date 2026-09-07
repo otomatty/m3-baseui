@@ -1,0 +1,23 @@
+---
+import { getGlyph, ICON_VIEW_BOX } from '@m3-baseui/icons';
+
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 24, class: className } = Astro.props;
+const d = getGlyph(name);
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox={ICON_VIEW_BOX}
+  fill="currentColor"
+  aria-hidden="true"
+>
+  {d ? <path d={d} /> : null}
+</svg>
