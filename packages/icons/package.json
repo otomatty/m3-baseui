@@ -1,6 +1,6 @@
 {
   "name": "@m3-baseui/icons",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Material Symbols as inline SVG — optional, no webfont required.",
   "type": "module",
   "license": "MIT",
