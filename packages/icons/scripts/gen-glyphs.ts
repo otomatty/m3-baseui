@@ -17,7 +17,10 @@ const svgRoot = dirname(require.resolve('@material-symbols/svg-400/package.json'
 const outlinedDir = join(svgRoot, 'outlined');
 
 const VIEW_BOX = '0 -960 960 960';
-const ICON_NAME_RE = /<(?:Icon|MdIcon)\b[^>]*?\bname=["']([a-z0-9_]+)["']/gs;
+const ICON_ATTR_RE = /<(?:Icon|MdIcon)\b[^>]*?\bname=["']([a-z0-9_]+)["']/gs;
+const ICON_EXPR_RE = /<(?:Icon|MdIcon)\b[^>]*\bname=\{([^}]+)\}/g;
+const QUOTED_SNAKE_RE = /['"]([a-z][a-z0-9_]*)['"]/g;
+const ICON_FIELD_RE = /\bicon:\s*['"]([a-z][a-z0-9_]*)['"]/g;
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'generated', '.git']);
 
 /** Material Icons ligature names that Material Symbols SVG files renamed. */
@@ -52,13 +55,27 @@ function walk(dir: string, acc: string[] = []): string[] {
   return acc;
 }
 
-function usedNames(): Set<string> {
+function usesM3Icon(src: string): boolean {
+  return src.includes('@m3-baseui/icons') || /\bMdIcon\b/.test(src);
+}
+
+function usedNames(catalog: Record<string, string>): Set<string> {
   const names = new Set<string>();
   for (const file of walk(join(repoRoot, 'examples')).concat(walk(join(pkgRoot, 'src')))) {
     const src = readFileSync(file, 'utf8');
-    ICON_NAME_RE.lastIndex = 0;
-    for (const m of src.matchAll(ICON_NAME_RE)) {
+    for (const m of src.matchAll(ICON_ATTR_RE)) {
       if (m[1]) names.add(m[1]);
+    }
+    for (const m of src.matchAll(ICON_EXPR_RE)) {
+      for (const q of (m[1] ?? '').matchAll(QUOTED_SNAKE_RE)) {
+        const name = q[1];
+        if (name && catalog[name]) names.add(name);
+      }
+    }
+    if (usesM3Icon(src)) {
+      for (const m of src.matchAll(ICON_FIELD_RE)) {
+        if (m[1]) names.add(m[1]);
+      }
     }
   }
   return names;
@@ -137,7 +154,7 @@ for (const [from, to] of Object.entries(ALIASES)) {
   }
 }
 
-const coreNames = usedNames();
+const coreNames = usedNames(regular);
 if (coreNames.size === 0) {
   throw new Error('no Icon/MdIcon names found in examples or this package');
 }

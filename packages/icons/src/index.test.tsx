@@ -54,4 +54,17 @@ describe('getGlyph', () => {
   test('does not ship the full Material Symbols catalog in the default entry', () => {
     expect(getGlyph('10k')).toBeUndefined();
   });
+
+  test('includes icons passed via JSX expressions and icon fields', () => {
+    for (const name of [
+      'dark_mode',
+      'light_mode',
+      'rocket_launch',
+      'layers',
+      'touch_app',
+      'contrast',
+    ]) {
+      expect(getGlyph(name)).toMatch(/^[Mm]/);
+    }
+  });
 });

@@ -115,16 +115,20 @@ export default function App() {
     <p>
       <code>Icon</code> は Material Symbols をインライン SVG で描画します。Web フォントの読み込みは不要です。
       デフォルト import はよく使うサブセットです。全カタログが必要なときは
-      <code>@m3-baseui/icons/all</code> を使います。
+      <code>@m3-baseui/icons/all</code> を使います。どちらか一方だけを import してください。
     </p>
+    <h3>通常（サブセット）</h3>
     <CodeBlock
       code={`import { Icon } from '@m3-baseui/icons';
 
 <Icon name="settings" />
-<Icon name="favorite" filled size={20} />
+<Icon name="favorite" filled size={20} />`}
+    />
+    <h3>全カタログ</h3>
+    <CodeBlock
+      code={`import { Icon } from '@m3-baseui/icons/all';
 
-// サブセットに無いアイコン:
-import { Icon } from '@m3-baseui/icons/all';`}
+<Icon name="settings" />`}
     />
   </section>
 
