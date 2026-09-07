@@ -1,60 +1,17 @@
 'use client';
 /**
- * @m3-baseui/icons — thin wrapper over Material Symbols (variable font).
+ * @m3-baseui/icons — Material Symbols as inline SVG.
  *
- * Load the font in your app (e.g. via Google Fonts):
- *   <link rel="stylesheet"
- *     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+ * Default entry ships only glyphs used by this repo so the consumer bundle
+ * stays small. Import `@m3-baseui/icons/all` for the full catalog.
  *
- * Then: <Icon name="settings" filled />
+ *   <Icon name="settings" filled />
  */
-import type * as React from 'react';
+import { createIcon } from './create-icon';
+import { getGlyph, ICON_VIEW_BOX } from './generated/core';
 
-export type IconStyle = 'outlined' | 'rounded' | 'sharp';
+export type { IconProps, IconStyle } from './create-icon';
 
-export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
-  /** Material Symbols ligature name, e.g. "settings". */
-  name: string;
-  /** Symbol style family. @default 'outlined' */
-  variant?: IconStyle;
-  /** Fill the glyph. @default false */
-  filled?: boolean;
-  /** Optical size in px (20–48). @default 24 */
-  size?: number;
-  /** Weight (100–700). @default 400 */
-  weight?: number;
-}
+export const Icon = createIcon(getGlyph, ICON_VIEW_BOX);
 
-const FAMILY: Record<IconStyle, string> = {
-  outlined: 'Material Symbols Outlined',
-  rounded: 'Material Symbols Rounded',
-  sharp: 'Material Symbols Sharp',
-};
-
-export function Icon({
-  name,
-  variant = 'outlined',
-  filled = false,
-  size = 24,
-  weight = 400,
-  style,
-  ...rest
-}: IconProps): React.JSX.Element {
-  return (
-    <span
-      aria-hidden="true"
-      {...rest}
-      style={{
-        fontFamily: FAMILY[variant],
-        fontWeight: weight,
-        fontSize: size,
-        lineHeight: 1,
-        display: 'inline-flex',
-        fontVariationSettings: `'FILL' ${filled ? 1 : 0}, 'wght' ${weight}, 'opsz' ${size}`,
-        ...style,
-      }}
-    >
-      {name}
-    </span>
-  );
-}
+export { ICON_VIEW_BOX, getGlyph };

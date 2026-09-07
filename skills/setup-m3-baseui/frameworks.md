@@ -177,7 +177,7 @@ import { LiveDemo } from '../components/LiveDemo';
 <LiveDemo client:visible />
 ```
 
-5. Add Material Symbols font in layout `<head>` if using `@m3-baseui/icons`.
+5. Icons are inline SVG — no Material Symbols font in `<head>`.
 
 6. `ThemeProvider` lives inside the React island component, not the `.astro` layout.
 

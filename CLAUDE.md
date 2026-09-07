@@ -15,7 +15,7 @@ vanilla-extract と Tailwind CSS v4 の両エンジンに対応する。**作業
 | `@m3-baseui/core` | `create-*` ファクトリ・`Ripple`・`syncDocumentTheme` / `ThemeProvider`・Dynamic Color |
 | `@m3-baseui/react-tailwind` | tailwind-variants でクラス解決 + Tailwind v4 プリセット |
 | `@m3-baseui/react-vanilla-extract` | vanilla-extract recipe でクラス解決 |
-| `@m3-baseui/icons` | Material Symbols ラッパー（任意） |
+| `@m3-baseui/icons` | Material Symbols をインライン SVG で描画（任意） |
 | `examples/playground` | Vite + Tailwind v4 デモ |
 
 ## コマンド
