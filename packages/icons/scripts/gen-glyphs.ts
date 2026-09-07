@@ -59,6 +59,10 @@ function usesM3Icon(src: string): boolean {
   return src.includes('@m3-baseui/icons') || /\bMdIcon\b/.test(src);
 }
 
+function glyph(source: Record<string, string>, name: string): string | undefined {
+  return Object.hasOwn(source, name) ? source[name] : undefined;
+}
+
 function usedNames(catalog: Record<string, string>): Set<string> {
   const names = new Set<string>();
   for (const file of walk(join(repoRoot, 'examples')).concat(walk(join(pkgRoot, 'src')))) {
@@ -69,7 +73,7 @@ function usedNames(catalog: Record<string, string>): Set<string> {
     for (const m of src.matchAll(ICON_EXPR_RE)) {
       for (const q of (m[1] ?? '').matchAll(QUOTED_SNAKE_RE)) {
         const name = q[1];
-        if (name && catalog[name]) names.add(name);
+        if (name && glyph(catalog, name)) names.add(name);
       }
     }
     if (usesM3Icon(src)) {
@@ -84,7 +88,7 @@ function usedNames(catalog: Record<string, string>): Set<string> {
 function pick(source: Record<string, string>, names: Set<string>): Record<string, string> {
   const out: Record<string, string> = {};
   for (const name of names) {
-    const d = source[name];
+    const d = glyph(source, name);
     if (d) out[name] = d;
   }
   return out;
@@ -114,10 +118,13 @@ export const fill: Record<string, string> = JSON.parse(
 );
 
 export function getGlyph(name: string, filled = false): string | undefined {
-  if (filled) {
-    return fill[name] ?? regular[name];
+  if (filled && Object.hasOwn(fill, name)) {
+    return fill[name];
   }
-  return regular[name];
+  if (Object.hasOwn(regular, name)) {
+    return regular[name];
+  }
+  return undefined;
 }
 `;
   const abs = join(pkgRoot, relPath);
@@ -159,12 +166,12 @@ if (coreNames.size === 0) {
   throw new Error('no Icon/MdIcon names found in examples or this package');
 }
 
-const missing = [...coreNames].filter((n) => !regular[n]).sort();
+const missing = [...coreNames].filter((n) => !glyph(regular, n)).sort();
 if (missing.length > 0) {
   console.warn(`  skipping unknown names: ${missing.join(', ')}`);
 }
 
-const knownCore = new Set([...coreNames].filter((n) => regular[n]));
+const knownCore = new Set([...coreNames].filter((n) => glyph(regular, n)));
 console.log(`@m3-baseui/icons — core set ${knownCore.size} / ${names.length} glyphs`);
 emitModule('src/generated/core.ts', pick(regular, knownCore), pick(fill, knownCore));
 emitModule('src/generated/all.ts', regular, fill);

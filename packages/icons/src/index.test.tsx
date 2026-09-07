@@ -40,6 +40,13 @@ describe('Icon', () => {
     expect(container.querySelector('path')).toBeNull();
   });
 
+  test('does not treat Object.prototype keys as glyphs', () => {
+    expect(getGlyph('constructor')).toBeUndefined();
+    expect(getGlyph('toString')).toBeUndefined();
+    const { container } = render(<Icon name="constructor" />);
+    expect(container.querySelector('path')).toBeNull();
+  });
+
   test('forwards className onto the svg', () => {
     const { container } = render(<Icon name="close" className="text-primary" />);
     expect(container.querySelector('svg')).toHaveClass('text-primary');

@@ -16,8 +16,11 @@ export const fill: Record<string, string> = JSON.parse(
 );
 
 export function getGlyph(name: string, filled = false): string | undefined {
-  if (filled) {
-    return fill[name] ?? regular[name];
+  if (filled && Object.hasOwn(fill, name)) {
+    return fill[name];
   }
-  return regular[name];
+  if (Object.hasOwn(regular, name)) {
+    return regular[name];
+  }
+  return undefined;
 }
