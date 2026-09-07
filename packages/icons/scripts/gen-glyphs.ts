@@ -19,8 +19,8 @@ const outlinedDir = join(svgRoot, 'outlined');
 const VIEW_BOX = '0 -960 960 960';
 const ICON_ATTR_RE = /<(?:Icon|MdIcon)\b[^>]*?\bname=["']([a-z0-9_]+)["']/gs;
 const ICON_EXPR_RE = /<(?:Icon|MdIcon)\b[^>]*\bname=\{([^}]+)\}/g;
-const QUOTED_SNAKE_RE = /['"]([a-z][a-z0-9_]*)['"]/g;
-const ICON_FIELD_RE = /\bicon:\s*['"]([a-z][a-z0-9_]*)['"]/g;
+const QUOTED_SNAKE_RE = /['"]([a-z0-9_]+)['"]/g;
+const ICON_FIELD_RE = /\bicon:\s*['"]([a-z0-9_]+)['"]/g;
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'generated', '.git']);
 
 /** Material Icons ligature names that Material Symbols SVG files renamed. */
