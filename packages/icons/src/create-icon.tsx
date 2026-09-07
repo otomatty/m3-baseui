@@ -1,11 +1,11 @@
 'use client';
-import type * as React from 'react';
+import * as React from 'react';
 
 export type IconStyle = 'outlined' | 'rounded' | 'sharp';
 
 export type GetGlyph = (name: string, filled?: boolean) => string | undefined;
 
-export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, 'name'> {
+export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, 'name' | 'ref'> {
   /** Material Symbols ligature name, e.g. "settings". */
   name: string;
   /** Symbol style. Rounded/sharp currently render the outlined SVG. @default 'outlined' */
@@ -19,15 +19,18 @@ export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, 'name'> {
 }
 
 export function createIcon(getGlyph: GetGlyph, viewBox: string) {
-  return function Icon({
-    name,
-    variant = 'outlined',
-    filled = false,
-    size = 24,
-    weight: _weight = 400,
-    style,
-    ...rest
-  }: IconProps): React.JSX.Element {
+  const Icon = React.forwardRef<SVGSVGElement, IconProps>(function Icon(
+    {
+      name,
+      variant = 'outlined',
+      filled = false,
+      size = 24,
+      weight: _weight = 400,
+      style,
+      ...rest
+    },
+    ref,
+  ) {
     switch (variant) {
       case 'outlined':
       case 'rounded':
@@ -50,9 +53,12 @@ export function createIcon(getGlyph: GetGlyph, viewBox: string) {
         fill="currentColor"
         style={{ display: 'inline-flex', flexShrink: 0, ...style }}
         {...rest}
+        ref={ref}
       >
         {d ? <path d={d} /> : null}
       </svg>
     );
-  };
+  });
+  Icon.displayName = 'M3Icon';
+  return Icon;
 }

@@ -51,6 +51,13 @@ describe('Icon', () => {
     const { container } = render(<Icon name="close" className="text-primary" />);
     expect(container.querySelector('svg')).toHaveClass('text-primary');
   });
+
+  test('forwards ref to the svg element', () => {
+    const ref = { current: null as SVGSVGElement | null };
+    render(<Icon name="close" ref={ref} />);
+    expect(ref.current).not.toBeNull();
+    expect(ref.current?.tagName.toLowerCase()).toBe('svg');
+  });
 });
 
 describe('getGlyph', () => {
